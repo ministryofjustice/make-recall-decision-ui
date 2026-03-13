@@ -109,6 +109,15 @@ export type RecommendationResponse = {
   isRecalledOnNewChargedOffence?: boolean,
   isServingFTSentenceForTerroristOffence?: boolean,
   hasBeenChargedWithTerroristOrStateThreatOffence?: boolean,
+  wasReferredToParoleBoard244ZB?: boolean,
+  wasRepatriatedForMurder?: boolean,
+  isServingSOPCSentence?: boolean,
+  isServingDCRSentence?: boolean,
+  isChargedWithOffence?: boolean,
+  isServingTerroristOrNationalSecurityOffence?: boolean,
+  isAtRiskOfInvolvedInForeignPowerThreat?: boolean,
+  isYouthSentenceOver12Months?: boolean,
+  isYouthChargedWithSeriousOffence?: boolean,
 };
 
 export namespace RecommendationResponse {

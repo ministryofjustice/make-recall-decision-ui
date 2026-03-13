@@ -12,13 +12,15 @@ export const testForErrorSummary = (expectedErrors: { href: string; message?: st
     .should('exist')
     .and('have.class', 'govuk-error-summary__list')
     .and('contain.html', 'li')
-    .as('errorSummaryList')
-  cy.get('@errorSummaryList').find('li').should('have.length.at.least', 1).as('errorSummaryListItems')
 
   expectedErrors.forEach(expectedError => {
-    if (expectedError.message) {
-      cy.get('@errorSummaryListItems').should('contain.text', expectedError.message)
-    }
-    cy.get('@errorSummaryListItems').should('contain.html', `a href="#${expectedError.href}"`)
+    cy.get('@errorSummary')
+      .find(`a[href="#${expectedError.href}"]`)
+      .should('exist')
+      .then($a => {
+        if (expectedError.message) {
+          expect($a.text().trim()).to.equal(expectedError.message)
+        }
+      })
   })
 }

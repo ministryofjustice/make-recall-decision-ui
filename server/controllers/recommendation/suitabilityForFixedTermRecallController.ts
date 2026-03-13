@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
-import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
@@ -12,6 +11,9 @@ import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
 } from '../../utils/fixedTermRecallUtils'
+import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
+import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
+import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -42,44 +44,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...caseSummaryOverview,
     ...caseSummaryRisk,
   }
-  const popName = recommendation.personOnProbation.name
 
-  const inputDisplayValues = {
-    isSentence48MonthsOrOver: {
-      label: `Is ${popName}'s sentence 48 months or over?`,
-      hint: `Use the total length if ${popName} is serving consecutive sentences.`,
-      value: unsavedValues?.isSentence48MonthsOrOver || booleanToYesNo(recommendation.isSentence48MonthsOrOver),
-    },
-    isUnder18: {
-      label: `Is ${popName} under 18?`,
-      value: unsavedValues?.isUnder18 || booleanToYesNo(recommendation.isUnder18),
-    },
-    isMappaCategory4: {
-      label: `Is ${popName} in MAPPA category 4?`,
-      value: unsavedValues?.isMappaCategory4 || booleanToYesNo(recommendation.isMappaCategory4),
-    },
-    isMappaLevel2Or3: {
-      label: `Is ${popName}'s MAPPA level 2 or 3?`,
-      value: unsavedValues?.isMappaLevel2Or3 || booleanToYesNo(recommendation.isMappaLevel2Or3),
-    },
-    isRecalledOnNewChargedOffence: {
-      label: `Is ${popName} being recalled on a new charged offence?`,
-      value:
-        unsavedValues?.isRecalledOnNewChargedOffence || booleanToYesNo(recommendation.isRecalledOnNewChargedOffence),
-    },
-    isServingFTSentenceForTerroristOffence: {
-      label: `Is ${popName} serving a fixed term sentence for a terrorist offence?`,
-      value:
-        unsavedValues?.isServingFTSentenceForTerroristOffence ||
-        booleanToYesNo(recommendation.isServingFTSentenceForTerroristOffence),
-    },
-    hasBeenChargedWithTerroristOrStateThreatOffence: {
-      label: `Has ${popName} been charged with a terrorist or state threat offence?`,
-      value:
-        unsavedValues?.hasBeenChargedWithTerroristOrStateThreatOffence ||
-        booleanToYesNo(recommendation.hasBeenChargedWithTerroristOrStateThreatOffence),
-    },
-  }
+  const formOptions = getFormOptions(
+    flags.flagFTR56Enabled,
+    recommendation.personOnProbation.name,
+    recommendation.sentenceGroup,
+  )
+
+  const inputDisplayValues = suitabilityInputDisplayValues(formOptions, unsavedValues, recommendation)
 
   const warningPanel =
     recommendation.recallType !== null && !isFixedTermRecallMandatoryForRecommendation(recommendation)
@@ -91,15 +63,20 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals = {
     ...res.locals,
-    caseSummary,
     page: {
       id: 'suitabilityForFixedTermRecall',
       warningPanel,
     },
+    caseSummary,
     inputDisplayValues,
+    sentenceGroupDetails: getSentenceGroupDetailsFromEnum(recommendation.sentenceGroup),
   }
 
-  res.render(`pages/recommendations/suitabilityForFixedTermRecall`)
+  if (flags.flagFTR56Enabled) {
+    res.render('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
+  } else {
+    res.render(`pages/recommendations/suitabilityForFixedTermRecall`)
+  }
   next()
 }
 
@@ -120,15 +97,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const errors: NamedFormError[] = []
   const valuesToSave: Record<string, unknown> = {}
 
-  const fieldIds = [
-    'isSentence48MonthsOrOver',
-    'isUnder18',
-    'isMappaCategory4',
-    'isMappaLevel2Or3',
-    'isRecalledOnNewChargedOffence',
-    'isServingFTSentenceForTerroristOffence',
-    'hasBeenChargedWithTerroristOrStateThreatOffence',
-  ]
+  const fieldIds = Object.keys(
+    getFormOptions(flags.flagFTR56Enabled, recommendation.personOnProbation.name, recommendation.sentenceGroup),
+  )
 
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
 
