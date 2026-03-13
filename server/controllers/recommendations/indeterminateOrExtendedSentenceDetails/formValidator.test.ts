@@ -67,7 +67,7 @@ describe('validateIndeterminateDetails', () => {
       {
         href: '#option-1',
         name: 'indeterminateOrExtendedSentenceDetails',
-        text: 'Select all the criteria that apply to {{ fullName }}',
+        text: 'Select at least one of the criteria',
         errorId: 'noIndeterminateDetailsSelected',
       },
     ])
