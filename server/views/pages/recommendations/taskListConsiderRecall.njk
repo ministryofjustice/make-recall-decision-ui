@@ -100,8 +100,8 @@
             {% if allTasksCompleted == true %}
                 <div>
                     <form novalidate method="post">
-                        <input type="hidden" name="_csrf"
-                               value="{{ csrfToken }}" /> {{ formSubmitButton({ marginTop: "7" }) }}
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                        {{ formSubmitButton({ marginTop: "7" }) }}
                     </form>
                 </div>
             {% endif %}
