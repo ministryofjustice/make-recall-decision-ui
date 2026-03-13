@@ -4,6 +4,8 @@ import setResponsePropertiesToNull from '../support/commands'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
+import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
+import ppPaths from '../../server/routes/paths/pp'
 
 context('Make a recommendation - form validation', () => {
   const crn = 'X34983'
@@ -41,43 +43,88 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Licence conditions', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task(
-      'getCaseV2',
-      caseTemplate()
-        .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-        .withAllConvictionsReleasedOnLicence()
-        .build(),
-    )
+  describe('Licence conditions', () => {
+    ;[true, false].forEach(ftr56Enabled => {
+      describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
+        ;[true, false].forEach(hasFromPageId => {
+          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+            cy.signIn()
+            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+            cy.task(
+              'getCaseV2',
+              caseTemplate()
+                .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+                .withAllConvictionsReleasedOnLicence()
+                .build(),
+            )
 
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'licenceConditionsBreached',
-      errorText: 'Select one or more licence conditions',
+            cy.task('getStatuses', { statusCode: 200, response: [] })
+            cy.visit(
+              `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+            )
+
+            // Back link
+            if (ftr56Enabled && !hasFromPageId) {
+              testBackLink(
+                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                'Back to Consider a recall questions',
+                false,
+              )
+            } else {
+              testStandardBackLink()
+            }
+
+            cy.clickButton('Continue')
+            cy.assertErrorMessage({
+              fieldName: 'licenceConditionsBreached',
+              errorText: 'Select one or more licence conditions',
+            })
+          })
+        })
+      })
     })
   })
 
-  it('Alternatives tried', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/alternatives-tried`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'alternativesToRecallTried',
-      errorText: 'Select which alternatives to recall have been tried already',
-    })
-    cy.selectCheckboxes('What alternatives to recall have been tried already?', [
-      'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-    ])
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
-      errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
+  describe('Alternatives tried', () => {
+    ;[true, false].forEach(ftr56Enabled => {
+      describe(`FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
+        ;[true, false].forEach(hasFromPageId => {
+          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+            cy.signIn()
+            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+            cy.task('getStatuses', { statusCode: 200, response: [] })
+
+            cy.visit(
+              `${routeUrls.recommendations}/${recommendationId}/alternatives-tried?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+            )
+
+            // Back link
+            if (ftr56Enabled && !hasFromPageId) {
+              testBackLink(
+                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                'Back to Consider a recall questions',
+                false,
+              )
+            } else {
+              testStandardBackLink()
+            }
+
+            cy.clickButton('Continue')
+            cy.assertErrorMessage({
+              fieldName: 'alternativesToRecallTried',
+              errorText: 'Select which alternatives to recall have been tried already',
+            })
+            cy.selectCheckboxes('What alternatives to recall have been tried already?', [
+              'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
+            ])
+            cy.clickButton('Continue')
+            cy.assertErrorMessage({
+              fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
+              errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
+            })
+          })
+        })
+      })
     })
   })
 
@@ -202,7 +249,10 @@ context('Make a recommendation - form validation', () => {
 
   it('Recall type', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, recallType: undefined },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
     cy.clickButton('Continue')
@@ -214,7 +264,10 @@ context('Make a recommendation - form validation', () => {
 
   it('Recall type (indeterminate)', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, recallType: undefined },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
     cy.clickButton('Continue')
@@ -226,7 +279,10 @@ context('Make a recommendation - form validation', () => {
 
   it('fixed term additional licence conditions', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, recallType: undefined },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/fixed-licence`)
     cy.clickButton('Continue')
