@@ -3,7 +3,7 @@ import ppPaths from '../../routes/paths/pp'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation, flags } = res.locals
+  const { recommendation } = res.locals
 
   let nextPageId = 'suitability-for-fixed-term-recall'
 
@@ -18,7 +18,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     nextPageId = 'recall-type-indeterminate'
   } else if (isExtendedSentence) {
     nextPageId = 'recall-type-extended'
-  } else if (flags?.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
+  } else if (recommendation?.sentenceGroup === SentenceGroup.ADULT_SDS) {
     nextPageId = ppPaths.checkMappaInformation
   }
 
