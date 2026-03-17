@@ -10,10 +10,12 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
+  isFixedTermRecallMandatoryForValueKeysFTR56,
 } from '../../utils/fixedTermRecallUtils'
 import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
 import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
 import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -53,13 +55,29 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const inputDisplayValues = suitabilityInputDisplayValues(formOptions, unsavedValues, recommendation)
 
-  const warningPanel =
-    recommendation.recallType !== null && !isFixedTermRecallMandatoryForRecommendation(recommendation)
-      ? {
-          title: 'Changes could affect your recall recommendation choices',
-          body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
-        }
-      : undefined
+  const warningPanelDetails = {
+    title: 'Changes could affect your recall recommendation choices',
+    body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+  }
+
+  let warningPanel = null
+
+  if (flags.flagFTR56Enabled) {
+    warningPanel =
+      // In the FTR56 flow, rationale is exclusively recorded for the YOUTH_SDS flow
+      // so the warning is only required when the sentenceGroup is YOUTH_SDS
+      recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
+      recommendation.recallType !== null &&
+      !isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
+        ? warningPanelDetails
+        : undefined
+  } else {
+    warningPanel =
+      recommendation.recallType !== null &&
+      !isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
+        ? warningPanelDetails
+        : undefined
+  }
 
   res.locals = {
     ...res.locals,
@@ -121,8 +139,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
     }
   })
 
-  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation)
-  const ftrIsMandatoryUpdated = isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
+  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
+  const ftrIsMandatoryUpdated = flags.flagFTR56Enabled
+    ? isFixedTermRecallMandatoryForValueKeysFTR56(recommendation.sentenceGroup, valuesToSave as Record<string, boolean>)
+    : isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
   if (ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
     valuesToSave.recallType = {
       ...recommendation.recallType,

@@ -4,6 +4,7 @@ import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTe
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import config from '../../../../server/config'
 import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
+import { testSummaryList } from '../../../componentTests/summaryList.tests'
 
 context('Suitability for fixed term recall page', () => {
   const recommendationId = faker.number.int()
@@ -25,8 +26,18 @@ context('Suitability for fixed term recall page', () => {
           `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
         )
         cy.getElement(
+          `Check ${recommendation.personOnProbation.name}'s suitability for a standard or fixed term recall`,
+        ).should('exist')
+        cy.getElement(
           `Answer the following questions to assess what recall type is appropriate for ${recommendation.personOnProbation.name}`,
         ).should('exist')
+        cy.get('.app-summary-card').within(() => {
+          cy.get('h2').should('contain.text', 'Fixed term recall exclusion criteria')
+          cy.get('h3').should('contain.text', 'Sentence Group')
+          cy.get('p.govuk-body').should('contain.text', 'Selected in sentence information step')
+          cy.get('.govuk-grid-column-two-thirds').should('contain.text', 'Adult determinate sentence')
+        })
+        cy.get('.moj-banner--warning').should('not.exist')
         ;[
           {
             label: `Is ${recommendation.personOnProbation.name} being recalled because of being charged with an offence?`,
@@ -124,7 +135,7 @@ context('Suitability for fixed term recall page', () => {
       })
     })
 
-    describe('when sentence group if YOUTH_SDS', () => {
+    describe('when sentence group is YOUTH_SDS', () => {
       const recommendation = RecommendationResponseGenerator.generate({ sentenceGroup: SentenceGroup.YOUTH_SDS })
       beforeEach(() => {
         cy.task('getRecommendation', { statusCode: 200, response: recommendation })
@@ -139,44 +150,113 @@ context('Suitability for fixed term recall page', () => {
           `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
         )
         cy.getElement(
+          `Check ${recommendation.personOnProbation.name}'s suitability for a standard or fixed term recall`,
+        ).should('exist')
+        cy.getElement(
           `Check the following information to assess what recall type is appropriate for ${recommendation.personOnProbation.name}`,
         ).should('exist')
-        ;[
-          {
-            label: `Is ${recommendation.personOnProbation.name} sentence 12 months or over?`,
-            fieldId: 'isYouthSentenceOver12Months',
-          },
-          {
-            label: `Is ${recommendation.personOnProbation.name} being recalled because of being charged with a serious offence?`,
-            fieldId: 'isYouthChargedWithSeriousOffence',
-          },
-        ].forEach((testCase, index) => {
-          testRadioButtons(cy.get('.govuk-form-group').eq(index), {
-            legend: {
-              text: testCase.label,
-            },
-            options: [
-              {
-                input: {
-                  id: testCase.fieldId,
-                  value: 'YES',
+
+        // MAPPA information card
+        cy.get('.app-summary-card')
+          .eq(0)
+          .within(() => {
+            cy.get('h2').should('contain.text', 'MAPPA Information')
+            cy.get('h3').eq(0).should('contain.text', 'From NDelius')
+            cy.get('.mappa-widget').within(() => {
+              cy.get('h2').should('contain.text', 'Cat 2/Level 1 MAPPA')
+              cy.get('p').should('contain.text', 'Last updated: 24 September 2022')
+            })
+            testSummaryList(cy.get('[data-qa="check-mappa-information-summary-list"]'), {
+              rows: [
+                {
+                  key: 'MAPPA level 2 or 3',
+                  value: 'No',
                 },
-                label: {
-                  text: 'Yes',
-                },
-              },
-              {
-                input: {
-                  id: `${testCase.fieldId}-2`,
-                  value: 'NO',
-                },
-                label: {
-                  text: 'No',
-                },
-              },
-            ],
+              ],
+            })
+            cy.get('h3').eq(1).should('contain.text', 'Recall type MAPPA criteria')
           })
+
+        cy.get('.app-summary-card')
+          .eq(1)
+          .within(() => {
+            cy.get('h2').should('contain.text', 'Fixed term recall exclusion criteria')
+            cy.get('h3').should('contain.text', 'Sentence Group')
+            cy.get('p.govuk-body').should('contain.text', 'Selected in sentence information step')
+            cy.get('.govuk-grid-column-two-thirds').should('contain.text', 'Youth determinate sentence')
+            ;[
+              {
+                label: `Is ${recommendation.personOnProbation.name} sentence 12 months or over?`,
+                fieldId: 'isYouthSentenceOver12Months',
+              },
+              {
+                label: `Is ${recommendation.personOnProbation.name} being recalled because of being charged with a serious offence?`,
+                fieldId: 'isYouthChargedWithSeriousOffence',
+              },
+            ].forEach((testCase, index) => {
+              testRadioButtons(cy.get('.govuk-form-group').eq(index), {
+                legend: {
+                  text: testCase.label,
+                },
+                options: [
+                  {
+                    input: {
+                      id: testCase.fieldId,
+                      value: 'YES',
+                    },
+                    label: {
+                      text: 'Yes',
+                    },
+                  },
+                  {
+                    input: {
+                      id: `${testCase.fieldId}-2`,
+                      value: 'NO',
+                    },
+                    label: {
+                      text: 'No',
+                    },
+                  },
+                ],
+              })
+            })
+          })
+      })
+
+      it("should not display a banner when the recall type rationale won't be overwritten", () => {
+        const nonMandatoryRecommendation = RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+          recallType: 'any',
+          isYouthSentenceOver12Months: false,
+          isYouthChargedWithSeriousOffence: false,
         })
+
+        cy.task('getRecommendation', { statusCode: 200, response: nonMandatoryRecommendation })
+        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+
+        cy.get('.moj-banner--warning').should('not.exist')
+      })
+
+      it('should display a banner when the recall type rationale will be overwritten', () => {
+        const mandatoryRecommendation = RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+          recallType: 'any',
+          isYouthSentenceOver12Months: true,
+          isYouthChargedWithSeriousOffence: true,
+        })
+
+        cy.task('getRecommendation', { statusCode: 200, response: mandatoryRecommendation })
+        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+
+        cy.get('.moj-banner--warning')
+          .should('exist')
+          .within(() => {
+            cy.get('h2').should('contain.text', 'Changes could affect your recall recommendation choices')
+            cy.get('p.govuk-body').should(
+              'contain.text',
+              `Changing your answers could make ${mandatoryRecommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+            )
+          })
       })
 
       it('should handle form errors', () => {

@@ -9,7 +9,9 @@ import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/
 import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
+  isFixedTermRecallMandatoryForValueKeysFTR56,
 } from '../../utils/fixedTermRecallUtils'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../caseSummary/getCaseSection')
@@ -337,6 +339,94 @@ describe('post', () => {
     })
   })
 
+  describe('post with valid data FTR56', () => {
+    const testCases: {
+      name: string
+      previouslyMandatory: boolean
+      updatedMandatory: boolean
+      detailsExpected: boolean
+    }[] = [
+      {
+        name: 'previously discretionary - now discrestionary - details not updated',
+        previouslyMandatory: false,
+        updatedMandatory: false,
+        detailsExpected: false,
+      },
+      {
+        name: 'previously discretionary - now mandatory - details not updated',
+        previouslyMandatory: false,
+        updatedMandatory: true,
+        detailsExpected: false,
+      },
+      {
+        name: 'previously mandatory - now mandatory - details not updated',
+        previouslyMandatory: true,
+        updatedMandatory: true,
+        detailsExpected: false,
+      },
+      {
+        name: 'previously mandatory - now discretionary - details updated to clear value',
+        previouslyMandatory: true,
+        updatedMandatory: false,
+        detailsExpected: true,
+      },
+    ]
+    testCases.forEach(({ name, previouslyMandatory, updatedMandatory, detailsExpected }) => {
+      it(name, async () => {
+        ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValue(previouslyMandatory)
+        ;(isFixedTermRecallMandatoryForValueKeysFTR56 as jest.Mock).mockReturnValue(updatedMandatory)
+        const req = mockReq({
+          params: { recommendationId: '123' },
+          body: {
+            isYouthSentenceOver12Months: 'YES',
+            isYouthChargedWithSeriousOffence: 'YES',
+          },
+        })
+        const priorRecommendation = RecommendationResponseGenerator.generate({
+          recallType: 'any',
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+        })
+        const res = mockRes({
+          token: 'token1',
+          locals: {
+            recommendation: priorRecommendation,
+            urlInfo: { basePath },
+            statuses: [],
+            flags: {
+              flagFTR56Enabled: true,
+            },
+          },
+        })
+        const next = mockNext()
+
+        await suitabilityForFixedTermRecallController.post(req, res, next)
+
+        expect(updateRecommendation).toHaveBeenCalledWith({
+          recommendationId: '123',
+          token: 'token1',
+          valuesToSave: {
+            isYouthSentenceOver12Months: true,
+            isYouthChargedWithSeriousOffence: true,
+            ...(detailsExpected
+              ? {
+                  recallType: {
+                    selected: { value: priorRecommendation.recallType.selected.value },
+                    allOptions: priorRecommendation.recallType.allOptions,
+                  },
+                }
+              : {}),
+          },
+          featureFlags: {
+            flagFTR56Enabled: true,
+          },
+        })
+
+        expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
+        expect(next).not.toHaveBeenCalled() // end of the line for posts.
+      })
+    })
+  })
+
   it('post with invalid data', async () => {
     const req = mockReq({
       params: { recommendationId: '123' },
@@ -431,6 +521,60 @@ describe('post', () => {
       isRecalledOnNewChargedOffence: '',
       isServingFTSentenceForTerroristOffence: '',
       hasBeenChargedWithTerroristOrStateThreatOffence: '',
+    })
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with invalid data FTR56', async () => {
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      originalUrl: 'some-url',
+      body: {
+        isYouthChargedWithSeriousOffence: '',
+        isYouthSentenceOver12Months: '',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: {
+          personOnProbation: { name: faker.person.fullName() },
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+        },
+        urlInfo: { basePath },
+        statuses: [],
+        flags: {
+          flagFTR56Enabled: true,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await suitabilityForFixedTermRecallController.post(req, res, next)
+    expect(updateRecommendation).not.toHaveBeenCalled()
+
+    expect(req.session.errors).toEqual([
+      {
+        name: 'isYouthSentenceOver12Months',
+        text: "Select whether {{ fullName }}'s sentence is 12 months or over",
+        href: '#isYouthSentenceOver12Months',
+        errorId: 'noIsYouthSentenceOver12Months',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        name: 'isYouthChargedWithSeriousOffence',
+        text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
+        href: '#isYouthChargedWithSeriousOffence',
+        errorId: 'noIsYouthChargedWithSeriousOffence',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+    expect(req.session.unsavedValues).toEqual({
+      isYouthSentenceOver12Months: '',
+      isYouthChargedWithSeriousOffence: '',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })

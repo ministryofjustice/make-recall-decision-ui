@@ -76,6 +76,15 @@ export type RecommendationOptions = {
   isRecalledOnNewChargedOffence?: boolean
   isServingFTSentenceForTerroristOffence?: boolean
   hasBeenChargedWithTerroristOrStateThreatOffence?: boolean
+  wasReferredToParoleBoard244ZB?: boolean
+  wasRepatriatedForMurder?: boolean
+  isServingSOPCSentence?: boolean
+  isServingDCRSentence?: boolean
+  isChargedWithOffence?: boolean
+  isServingTerroristOrNationalSecurityOffence?: boolean
+  isAtRiskOfInvolvedInForeignPowerThreat?: boolean
+  isYouthSentenceOver12Months?: boolean
+  isYouthChargedWithSeriousOffence?: boolean
 }
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
@@ -281,5 +290,14 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     isRecalledOnNewChargedOffence: options?.isRecalledOnNewChargedOffence,
     isServingFTSentenceForTerroristOffence: options?.isServingFTSentenceForTerroristOffence,
     hasBeenChargedWithTerroristOrStateThreatOffence: options?.hasBeenChargedWithTerroristOrStateThreatOffence,
+    wasReferredToParoleBoard244ZB: options?.wasReferredToParoleBoard244ZB,
+    wasRepatriatedForMurder: options?.wasRepatriatedForMurder,
+    isServingSOPCSentence: options?.isServingSOPCSentence,
+    isServingDCRSentence: options?.isServingDCRSentence,
+    isChargedWithOffence: options?.isChargedWithOffence,
+    isServingTerroristOrNationalSecurityOffence: options?.isServingTerroristOrNationalSecurityOffence,
+    isAtRiskOfInvolvedInForeignPowerThreat: options?.isAtRiskOfInvolvedInForeignPowerThreat,
+    isYouthSentenceOver12Months: options?.isYouthSentenceOver12Months,
+    isYouthChargedWithSeriousOffence: options?.isYouthChargedWithSeriousOffence,
   }),
 }

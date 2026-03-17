@@ -33,14 +33,14 @@ describe('availableRecallTypesForRecommendation', () => {
     )
     ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
 
-    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation, false)
 
     expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
   })
   it('all types are available when FTR is discretionary', () => {
     ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
 
-    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation, false)
 
     expect(actualAvailableRecallTypes).toEqual(formOptions.recallType)
   })

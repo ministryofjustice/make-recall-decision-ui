@@ -9,10 +9,12 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
+import { FeatureFlags } from '../../@types/featureFlags'
 
 function get(_: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals as {
+  const { recommendation, flags } = res.locals as {
     recommendation: RecommendationResponse
+    flags: FeatureFlags
   }
 
   res.locals = {
@@ -25,9 +27,9 @@ function get(_: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: availableRecallTypesForRecommendation(recommendation),
+    availableRecallTypes: availableRecallTypesForRecommendation(recommendation, flags.flagFTR56Enabled),
     personOnProbationName: recommendation.personOnProbation.fullName,
-    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation),
+    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled),
   }
 
   res.render(`pages/recommendations/recallType`)
