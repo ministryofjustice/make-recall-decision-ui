@@ -1,7 +1,8 @@
 import { Request, NextFunction, Response } from 'express'
-import { getCaseSummary } from '../../data/makeDecisionApiClient'
+import { getCaseSummary, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { RiskResponse } from '../../@types/make-recall-decision-api'
 import routeUrls from '../../routes/routeUrls'
+import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -17,7 +18,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     mappaData,
     page: {
       id: 'checkMappaInformation',
-      nextPageId: `${routeUrls.recommendations}/${recommendation.id}/suitability-for-fixed-term-recall`,
     },
   }
 
@@ -25,4 +25,25 @@ async function get(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-export default { get }
+async function post(req: Request, res: Response, next: NextFunction) {
+  const { recommendationId } = req.params
+  const {
+    urlInfo,
+    flags: featureFlags,
+    user: { token },
+  } = res.locals
+
+  const { _csrf, ...valuesToSave } = req.body
+
+  await updateRecommendation({
+    recommendationId,
+    valuesToSave,
+    token,
+    featureFlags,
+  })
+
+  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/suitability-for-fixed-term-recall`
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+}
+
+export default { get, post }
