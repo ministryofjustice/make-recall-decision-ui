@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import ppPaths from '../../routes/paths/pp'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
@@ -17,6 +18,8 @@ function get(req: Request, res: Response, next: NextFunction) {
     nextPageId = 'recall-type-indeterminate'
   } else if (isExtendedSentence) {
     nextPageId = 'recall-type-extended'
+  } else if (recommendation?.sentenceGroup === SentenceGroup.ADULT_SDS) {
+    nextPageId = ppPaths.checkMappaInformation
   }
 
   res.locals = {

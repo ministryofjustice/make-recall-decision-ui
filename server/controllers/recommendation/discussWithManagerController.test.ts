@@ -1,6 +1,5 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import discussWithManagerController from './discussWithManagerController'
-import randomEnum from '../../@types/enum.testFactory'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 describe('get', () => {
@@ -16,15 +15,13 @@ describe('get', () => {
   ]
   ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
     describe(description, () => {
-      it('present with suitability for standard or fixed term recall ', async () => {
+      it('present with Youth SDS', async () => {
         const res = mockRes({
           locals: {
             recommendation: {
               isIndeterminateSentence: ftr56Enabled ? undefined : false,
               isExtendedSentence: ftr56Enabled ? undefined : false,
-              sentenceGroup: ftr56Enabled
-                ? randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED])
-                : undefined,
+              sentenceGroup: ftr56Enabled ? SentenceGroup.YOUTH_SDS : undefined,
             },
             flags: { flagFTR56Enabled: ftr56Enabled },
           },
@@ -37,6 +34,24 @@ describe('get', () => {
         expect(res.locals.nextPageId).toEqual('suitability-for-fixed-term-recall')
         expect(next).toHaveBeenCalled()
       })
+
+      it('present with Adult SDS', async () => {
+        const res = mockRes({
+          locals: {
+            recommendation: {
+              isIndeterminateSentence: ftr56Enabled ? undefined : false,
+              isExtendedSentence: ftr56Enabled ? undefined : false,
+              sentenceGroup: ftr56Enabled ? SentenceGroup.ADULT_SDS : undefined,
+            },
+            flags: { flagFTR56Enabled: ftr56Enabled },
+          },
+        })
+        await discussWithManagerController.get(mockReq(), res, mockNext())
+        expect(res.locals.nextPageId).toEqual(
+          ftr56Enabled ? 'check-mappa-information' : 'suitability-for-fixed-term-recall',
+        )
+      })
+
       it('present with indeterminate', async () => {
         const res = mockRes({
           locals: {
@@ -51,6 +66,7 @@ describe('get', () => {
         await discussWithManagerController.get(mockReq(), res, mockNext())
         expect(res.locals.nextPageId).toEqual('recall-type-indeterminate')
       })
+
       it('present with extended', async () => {
         const res = mockRes({
           locals: {
