@@ -12,6 +12,8 @@ import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
 import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import ppcsPaths from '../../server/routes/paths/ppcs'
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
+import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
+import ppPaths from '../../server/routes/paths/pp'
 
 // remove isIndeterminateSentence and isExtendedSentence from completeRecommendationResponse.json once FTR56 is live
 // (can't add this comment to the json file, as json standard doesn't allow comments)
@@ -451,193 +453,299 @@ context('Make a recommendation', () => {
     beforeEach(() => {
       cy.signIn()
     })
+    ;[true, false].forEach(ftr56Enabled => {
+      describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
+        ;[true, false].forEach(hasFromPageId => {
+          describe(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+            it('licence conditions - select saved conditions', () => {
+              cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+              cy.task('getStatuses', { statusCode: 200, response: [] })
 
-    it('licence conditions - select saved conditions', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
+              cy.task(
+                'getCaseV2',
+                caseTemplate()
+                  .withActiveConviction(
+                    standardActiveConvictionTemplate()
+                      .withDescription('Robbery - 05714')
+                      .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
+                  )
+                  .withAllConvictionsReleasedOnLicence()
+                  .build(),
+              )
 
-      cy.task(
-        'getCaseV2',
-        caseTemplate()
-          .withActiveConviction(
-            standardActiveConvictionTemplate()
-              .withDescription('Robbery - 05714')
-              .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
-          )
-          .withAllConvictionsReleasedOnLicence()
-          .build(),
-      )
+              cy.visit(
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              )
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-      cy.getSelectableOptionByLabel(
-        'What licence conditions has Jane Bloggs breached?',
-        'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-      ).should('be.checked')
+              // Back link
+              if (ftr56Enabled && !hasFromPageId) {
+                testBackLink(
+                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                  'Back to Consider a recall questions',
+                  false,
+                )
+              } else {
+                testStandardBackLink()
+              }
 
-      cy.getSelectableOptionByLabel(
-        'What licence conditions has Jane Bloggs breached?',
-        'Not commit any offence',
-      ).should('be.checked')
-      cy.getSelectableOptionByLabel(
-        'What licence conditions has Jane Bloggs breached?',
-        'Poss, own, control, inspect specified items /docs',
-      ).should('be.checked')
-    })
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+              ).should('be.checked')
 
-    it('licence conditions - display CVL licence conditions', () => {
-      const cvlLicenceConditionsBreached = {
-        standardLicenceConditions: {
-          selected: ['9ce9d594-e346-4785-9642-c87e764bee37'],
-          allOptions: [{ code: '9ce9d594-e346-4785-9642-c87e764bee37', text: 'This is a standard licence condition' }],
-        },
-        additionalLicenceConditions: {
-          selected: ['9ce9d594-e346-4785-9642-c87e764bee39', '9ce9d594-e346-4785-9642-c87e764bee41'],
-          allOptions: [
-            {
-              code: '9ce9d594-e346-4785-9642-c87e764bee39',
-              text: 'This is an additional licence condition',
-            },
-            { code: '9ce9d594-e346-4785-9642-c87e764bee41', text: 'Address approved Text' },
-          ],
-        },
-        bespokeLicenceConditions: {
-          selected: ['9ce9d594-e346-4785-9642-c87e764bee45'],
-          allOptions: [{ code: '9ce9d594-e346-4785-9642-c87e764bee45', text: 'This is a bespoke condition' }],
-        },
-      }
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'Not commit any offence',
+              ).should('be.checked')
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'Poss, own, control, inspect specified items /docs',
+              ).should('be.checked')
+            })
 
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, cvlLicenceConditionsBreached, licenceConditionsBreached: null },
+            it('licence conditions - display CVL licence conditions', () => {
+              const cvlLicenceConditionsBreached = {
+                standardLicenceConditions: {
+                  selected: ['9ce9d594-e346-4785-9642-c87e764bee37'],
+                  allOptions: [
+                    {
+                      code: '9ce9d594-e346-4785-9642-c87e764bee37',
+                      text: 'This is a standard licence condition',
+                    },
+                  ],
+                },
+                additionalLicenceConditions: {
+                  selected: ['9ce9d594-e346-4785-9642-c87e764bee39', '9ce9d594-e346-4785-9642-c87e764bee41'],
+                  allOptions: [
+                    {
+                      code: '9ce9d594-e346-4785-9642-c87e764bee39',
+                      text: 'This is an additional licence condition',
+                    },
+                    { code: '9ce9d594-e346-4785-9642-c87e764bee41', text: 'Address approved Text' },
+                  ],
+                },
+                bespokeLicenceConditions: {
+                  selected: ['9ce9d594-e346-4785-9642-c87e764bee45'],
+                  allOptions: [{ code: '9ce9d594-e346-4785-9642-c87e764bee45', text: 'This is a bespoke condition' }],
+                },
+              }
+
+              cy.task('getRecommendation', {
+                statusCode: 200,
+                response: {
+                  ...completeRecommendationResponse,
+                  cvlLicenceConditionsBreached,
+                  licenceConditionsBreached: null,
+                },
+              })
+
+              cy.task(
+                'getCaseV2',
+                caseTemplate()
+                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+                  .withAllConvictionsNotReleasedOnLicence()
+                  .withCvlLicence()
+                  .build(),
+              )
+
+              cy.task('getStatuses', { statusCode: 200, response: [] })
+              cy.visit(
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              )
+
+              // Back link
+              if (ftr56Enabled && !hasFromPageId) {
+                testBackLink(
+                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                  'Back to Consider a recall questions',
+                  false,
+                )
+              } else {
+                testStandardBackLink()
+              }
+
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'This is a standard licence condition',
+              ).should('be.checked')
+
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'Freedom of movement',
+              ).should('be.checked')
+
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'This is a bespoke condition',
+              ).should('be.checked')
+            })
+
+            it('licence conditions - display CVL licence conditions - missing data', () => {
+              cy.task('getRecommendation', {
+                statusCode: 200,
+                response: { ...completeRecommendationResponse, licenceConditionsBreached: null },
+              })
+
+              cy.task(
+                'getCaseV2',
+                caseTemplate()
+                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+                  .withAllConvictionsNotReleasedOnLicence()
+                  .withCvlLicenceMissingData()
+                  .build(),
+              )
+
+              cy.task('getStatuses', { statusCode: 200, response: [] })
+              cy.visit(
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              )
+
+              // Back link
+              if (ftr56Enabled && !hasFromPageId) {
+                testBackLink(
+                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                  'Back to Consider a recall questions',
+                  false,
+                )
+              } else {
+                testStandardBackLink()
+              }
+
+              cy.getElement('There are no standard licence conditions in CVL. Check the licence document.').should(
+                'exist',
+              )
+              cy.getElement('There are no additional licence conditions in CVL. Check the licence document.').should(
+                'exist',
+              )
+              cy.getElement('There are no bespoke licence conditions in CVL. Check the licence document.').should(
+                'exist',
+              )
+            })
+
+            it('licence conditions - display Delius licence conditions', () => {
+              cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
+
+              cy.task(
+                'getCaseV2',
+                caseTemplate()
+                  .withActiveConviction(
+                    standardActiveConvictionTemplate()
+                      .withDescription('Burglary - 05714')
+                      .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
+                  )
+                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
+                  .withAllConvictionsNotReleasedOnLicence()
+                  .build(),
+              )
+
+              cy.task('getStatuses', { statusCode: 200, response: [] })
+              cy.visit(
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              )
+
+              // Back link
+              if (ftr56Enabled && !hasFromPageId) {
+                testBackLink(
+                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                  'Back to Consider a recall questions',
+                  false,
+                )
+              } else {
+                testStandardBackLink()
+              }
+
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+              ).should('be.checked')
+
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'Not commit any offence',
+              ).should('be.checked')
+              cy.getSelectableOptionByLabel(
+                'What licence conditions has Jane Bloggs breached?',
+                'Poss, own, control, inspect specified items /docs',
+              ).should('be.checked')
+            })
+
+            it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
+              cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+              cy.task('getStatuses', { statusCode: 200, response: [] })
+
+              cy.task(
+                'getCaseV2',
+                caseTemplate()
+                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Burglary - 05714'))
+                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
+                  .withAllConvictionsNotReleasedOnLicence()
+                  .build(),
+              )
+
+              cy.visit(
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              )
+
+              // Back link
+              if (ftr56Enabled && !hasFromPageId) {
+                testBackLink(
+                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                  'Back to Consider a recall questions',
+                  false,
+                )
+              } else {
+                testStandardBackLink()
+              }
+
+              cy.getElement(
+                'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
+              ).should('exist')
+              cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
+            })
+
+            it('licence conditions - shows message if person has no active custodial convictions', () => {
+              cy.visit(
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              )
+              cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+              cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+              cy.task(
+                'getCaseV2',
+                caseTemplate()
+                  .withActiveConviction(
+                    standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNonCustodial(),
+                  )
+                  .withActiveConviction(
+                    standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNonCustodial(),
+                  )
+                  .withAllConvictionsNotReleasedOnLicence()
+                  .build(),
+              )
+
+              cy.task('getStatuses', { statusCode: 200, response: [] })
+              cy.visit(
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              )
+
+              // Back link
+              if (ftr56Enabled && !hasFromPageId) {
+                testBackLink(
+                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                  'Back to Consider a recall questions',
+                  false,
+                )
+              } else {
+                testStandardBackLink()
+              }
+
+              cy.getElement(
+                'This person has no active convictions. Double-check that the information in NDelius is correct.',
+              ).should('exist')
+            })
+          })
+        })
       })
-
-      cy.task(
-        'getCaseV2',
-        caseTemplate()
-          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-          .withAllConvictionsNotReleasedOnLicence()
-          .withCvlLicence()
-          .build(),
-      )
-
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-
-      cy.getSelectableOptionByLabel(
-        'What licence conditions has Jane Bloggs breached?',
-        'This is a standard licence condition',
-      ).should('be.checked')
-
-      cy.getSelectableOptionByLabel('What licence conditions has Jane Bloggs breached?', 'Freedom of movement').should(
-        'be.checked',
-      )
-
-      cy.getSelectableOptionByLabel(
-        'What licence conditions has Jane Bloggs breached?',
-        'This is a bespoke condition',
-      ).should('be.checked')
-    })
-
-    it('licence conditions - display CVL licence conditions - missing data', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, licenceConditionsBreached: null },
-      })
-
-      cy.task(
-        'getCaseV2',
-        caseTemplate()
-          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-          .withAllConvictionsNotReleasedOnLicence()
-          .withCvlLicenceMissingData()
-          .build(),
-      )
-
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-
-      cy.getElement('There are no standard licence conditions in CVL. Check the licence document.').should('exist')
-      cy.getElement('There are no additional licence conditions in CVL. Check the licence document.').should('exist')
-      cy.getElement('There are no bespoke licence conditions in CVL. Check the licence document.').should('exist')
-    })
-
-    it('licence conditions - display Delius licence conditions', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-
-      cy.task(
-        'getCaseV2',
-        caseTemplate()
-          .withActiveConviction(
-            standardActiveConvictionTemplate()
-              .withDescription('Burglary - 05714')
-              .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
-          )
-          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
-          .withAllConvictionsNotReleasedOnLicence()
-          .build(),
-      )
-
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-
-      cy.getSelectableOptionByLabel(
-        'What licence conditions has Jane Bloggs breached?',
-        'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-      ).should('be.checked')
-
-      cy.getSelectableOptionByLabel(
-        'What licence conditions has Jane Bloggs breached?',
-        'Not commit any offence',
-      ).should('be.checked')
-      cy.getSelectableOptionByLabel(
-        'What licence conditions has Jane Bloggs breached?',
-        'Poss, own, control, inspect specified items /docs',
-      ).should('be.checked')
-    })
-
-    it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task(
-        'getCaseV2',
-        caseTemplate()
-          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Burglary - 05714'))
-          .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
-          .withAllConvictionsNotReleasedOnLicence()
-          .build(),
-      )
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-      cy.getElement(
-        'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
-      ).should('exist')
-      cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
-    })
-
-    it('licence conditions - shows message if person has no active custodial convictions', () => {
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.task(
-        'getCaseV2',
-        caseTemplate()
-          .withActiveConviction(
-            standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNonCustodial(),
-          )
-          .withActiveConviction(
-            standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNonCustodial(),
-          )
-          .withAllConvictionsNotReleasedOnLicence()
-          .build(),
-      )
-
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/licence-conditions`)
-      cy.getElement(
-        'This person has no active convictions. Double-check that the information in NDelius is correct.',
-      ).should('exist')
     })
   })
 

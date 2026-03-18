@@ -3,9 +3,16 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import inputDisplayValuesAlternativesToRecallTried from '../recommendations/alternativesToRecallTried/inputDisplayValues'
 import validateAlternativesTried from '../recommendations/alternativesToRecallTried/formValidator'
+import ppPaths from '../../routes/paths/pp'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    urlInfo: { basePath, fromPageId },
+  } = res.locals
+
+  const backLinkUrl =
+    res.locals.flags.flagFTR56Enabled && !fromPageId ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
 
   res.locals = {
     ...res.locals,
@@ -17,6 +24,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
+    backLinkUrl,
   }
 
   res.render(`pages/recommendations/alternativesToRecallTried`)
@@ -51,7 +59,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
+
+  return res.redirect(
+    303,
+    nextPageLinkUrl({
+      nextPageId: flags.flagFTR56Enabled ? ppPaths.sentenceInformation : ppPaths.taskListConsiderRecall,
+      urlInfo,
+    }),
+  )
 }
 
 export default { get, post }

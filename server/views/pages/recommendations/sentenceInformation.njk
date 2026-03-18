@@ -21,7 +21,7 @@
                 })
             }}
 
-            <form novalidate method="post">
+            <form novalidate method="post" class="govuk-!-margin-top-7">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
                 {{
@@ -30,7 +30,7 @@
                         fieldset: {
                             legend: {
                                 text: "Which sentence group does " + pageData.fullName + "'s sentence type fall into?",
-                                classes: "govuk-fieldset__legend--m govuk-!-margin-top-7"
+                                classes: "govuk-fieldset__legend--m"
                             }
                         },
                         items: radioCheckboxItems({
@@ -41,7 +41,7 @@
                     })
                 }}
 
-                {{ formSubmitButton({ label: "Continue" }) }}
+                {{ formSubmitButton({ label: "Continue", marginTop: "7" }) }}
             </form>
         </div>
     </div>

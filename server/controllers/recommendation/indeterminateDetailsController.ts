@@ -3,6 +3,10 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import inputDisplayValuesIndeterminateDetails from '../recommendations/indeterminateOrExtendedSentenceDetails/inputDisplayValues'
 import validateIndeterminateDetails from '../recommendations/indeterminateOrExtendedSentenceDetails/formValidator'
+import {
+  indeterminateOrExtendedSentenceDetails,
+  indeterminateOrExtendedSentenceDetailsFtr56,
+} from '../recommendations/indeterminateOrExtendedSentenceDetails/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -19,6 +23,12 @@ function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues: res.locals.unsavedValues,
     apiValues: recommendation,
   })
+
+  res.locals.fullName = recommendation.personOnProbation?.name
+
+  res.locals.indeterminateOrExtendedSentenceDetails = res.locals.flags.flagFTR56Enabled
+    ? indeterminateOrExtendedSentenceDetailsFtr56
+    : indeterminateOrExtendedSentenceDetails
 
   res.render(`pages/recommendations/indeterminateOrExtendedSentenceDetails`)
   next()
@@ -37,6 +47,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     urlInfo,
     token,
+    ftr56Enabled: flags.flagFTR56Enabled,
   })
 
   if (errors) {

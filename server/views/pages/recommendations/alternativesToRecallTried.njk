@@ -3,7 +3,11 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
-    {{ backLink() }}
+    {% if backLinkUrl %}
+        {{ backLink({ text: 'Back to Consider a recall questions', href: backLinkUrl, doBrowserBack: false }) }}
+    {% else %}
+        {{ backLink() }}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -61,7 +65,7 @@
 
                 </fieldset>
                 </div>
-                {{ formSubmitButton() }}
+                {{ formSubmitButton({ marginTop: "7" }) }}
             </form>
         </div>
     </div>

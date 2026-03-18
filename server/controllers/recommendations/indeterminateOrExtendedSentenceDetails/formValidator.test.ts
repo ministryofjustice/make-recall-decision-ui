@@ -65,7 +65,7 @@ describe('validateIndeterminateDetails', () => {
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
-        href: '#indeterminateOrExtendedSentenceDetails',
+        href: '#option-1',
         name: 'indeterminateOrExtendedSentenceDetails',
         text: 'Select at least one of the criteria',
         errorId: 'noIndeterminateDetailsSelected',
@@ -99,6 +99,37 @@ describe('validateIndeterminateDetails', () => {
         href: '#indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
         name: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
         text: 'Enter details about {{ fullName }} being out of touch',
+        errorId: 'missingIndeterminateDetail',
+      },
+    ])
+  })
+
+  it('ftr56: returns an error, if a selected checkbox is missing details, and no valuesToSave', async () => {
+    const ftr56Enabled = true
+    const requestBody = {
+      crn: 'X514364',
+      indeterminateOrExtendedSentenceDetails: ['BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE'],
+      'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE': ' ', // whitespace
+    }
+    const { errors, unsavedValues, valuesToSave } = await validateIndeterminateDetails({
+      requestBody,
+      urlInfo,
+      ftr56Enabled,
+    })
+    expect(valuesToSave).toBeUndefined()
+    expect(unsavedValues).toEqual({
+      indeterminateOrExtendedSentenceDetails: [
+        {
+          details: ' ',
+          value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+        },
+      ],
+    })
+    expect(errors).toEqual([
+      {
+        href: '#indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+        name: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+        text: 'Enter details about the behaviour likely to result in a sexual or violent offence',
         errorId: 'missingIndeterminateDetail',
       },
     ])
