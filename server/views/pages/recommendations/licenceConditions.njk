@@ -1,7 +1,11 @@
 {% extends "../../partials/layout.njk" %}
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 {% block beforeContent %}
-    {{ backLink() }}
+    {% if backLinkUrl %}
+        {{ backLink({ text: 'Back to Consider a recall questions', href: backLinkUrl, doBrowserBack: false }) }}
+    {% else %}
+        {{ backLink() }}
+    {% endif %}
 {% endblock %}
 {% block content %}
     <div class="govuk-grid-row">
@@ -19,7 +23,7 @@
                         {% include './licenceConditionsNDelius.njk' %}
                     {% endif %}
                 {% endif %}
-                {{ formSubmitButton() }}
+                {{ formSubmitButton({ marginTop: "7" }) }}
             </form>
         </div>
     </div>

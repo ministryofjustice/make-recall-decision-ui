@@ -1,8 +1,10 @@
+import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import indeterminateTypeController from './indeterminateTypeController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import ppPaths from '../../routes/paths/pp'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -50,6 +52,75 @@ describe('get', () => {
     await indeterminateTypeController.get(mockReq(), res, next)
 
     expect(res.locals.inputDisplayValues).toEqual({ value: 'IPP' })
+  })
+
+  it('Ftr56: load with existing data', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: { name: 'Joe Bloggs' },
+          sentenceGroup: 'INDETERMINATE',
+          indeterminateSentenceType: {
+            selected: 'DHMP',
+            allOptions: [
+              { value: 'LIFE', text: 'Life sentence' },
+              {
+                value: 'IPP',
+                text: 'Imprisonment for public protection (IPP)',
+              },
+              { value: 'DPP', text: 'Detention for public protection (DPP)' },
+              {
+                value: 'DHMP',
+                text: 'Detention at His Majesty’s pleasure (DHMP)',
+                hint: 'Youth indeterminate sentence',
+              },
+            ],
+          },
+        },
+        token: 'token1',
+        flags: { flagFTR56Enabled: true },
+      },
+    })
+    const next = mockNext()
+    await indeterminateTypeController.get(mockReq(), res, next)
+
+    expect(res.locals.inputDisplayValues).toEqual({ value: 'DHMP' })
+  })
+
+  it('Ftr56: redirects to Sentence Information page if sentenceGroup does not exists', async () => {
+    const basePath = faker.internet.url()
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        token: 'token1',
+        flags: { flagFTR56Enabled: true },
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+    await indeterminateTypeController.get(mockReq(), res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppPaths.sentenceInformation}`)
+    expect(res.render).not.toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
+  })
+
+  it('Ftr56: redirects to Sentence Information page if sentenceGroup is not INDETERMINATE', async () => {
+    const basePath = faker.internet.url()
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: 'DETERMINATE' },
+        token: 'token1',
+        flags: { flagFTR56Enabled: true },
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+    await indeterminateTypeController.get(mockReq(), res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppPaths.sentenceInformation}`)
+    expect(res.render).not.toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
   })
 
   it('initial load with error data', async () => {
@@ -140,6 +211,75 @@ describe('post', () => {
       },
       token: 'token1',
       featureFlags: {},
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('Ftr56: post with valid data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        indeterminateSentenceType: 'IPP',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: {
+          personOnProbation: { name: 'Joe Bloggs' },
+          indeterminateSentenceType: {
+            selected: 'IPP',
+            allOptions: [
+              { value: 'LIFE', text: 'Life sentence' },
+              {
+                value: 'IPP',
+                text: 'Imprisonment for public protection (IPP)',
+              },
+              { value: 'DPP', text: 'Detention for public protection (DPP)' },
+              {
+                value: 'DHMP',
+                text: 'Detention at His Majesty’s pleasure (DHMP)',
+                hint: 'Youth indeterminate sentence',
+              },
+            ],
+          },
+        },
+        urlInfo: { basePath },
+        statuses: [],
+        flags: {
+          flagFTR56Enabled: true,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await indeterminateTypeController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      valuesToSave: {
+        indeterminateSentenceType: {
+          selected: 'IPP',
+          allOptions: [
+            { value: 'LIFE', text: 'Life sentence' },
+            {
+              value: 'IPP',
+              text: 'Imprisonment for public protection (IPP)',
+            },
+            { value: 'DPP', text: 'Detention for public protection (DPP)' },
+            { value: 'DHMP', text: 'Detention at His Majesty’s pleasure (DHMP)' },
+          ],
+        },
+      },
+      token: 'token1',
+      featureFlags: { flagFTR56Enabled: true },
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)

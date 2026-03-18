@@ -289,8 +289,47 @@ describe('post', () => {
     expect(req.session.errors).toEqual([
       {
         errorId: 'noIndeterminateDetailsSelected',
-        href: '#indeterminateOrExtendedSentenceDetails',
+        href: '#option-1',
         text: 'Select at least one of the criteria',
+        name: 'indeterminateOrExtendedSentenceDetails',
+        invalidParts: undefined,
+        values: undefined,
+      },
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('Ftr56: post with invalid data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        recallType: 'STANDARD',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+        flags: {
+          flagFTR56Enabled: true,
+        },
+      },
+    })
+
+    await indeterminateDetailsController.post(req, res, mockNext())
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'noIndeterminateDetailsSelectedFtr56',
+        href: '#option-1',
+        text: 'Select all the criteria that apply to {{ fullName }}',
         name: 'indeterminateOrExtendedSentenceDetails',
         invalidParts: undefined,
         values: undefined,

@@ -12,6 +12,7 @@ import { transformLicenceConditions } from '../caseSummary/licenceConditions/tra
 import { cleanseUiList } from '../../utils/lists'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import EVENTS from '../../utils/constants'
+import ppPaths from '../../routes/paths/pp'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
@@ -19,8 +20,12 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
     user: { username, region, token },
+    urlInfo: { basePath, fromPageId },
     flags: featureFlags,
   } = res.locals
+
+  const backLinkUrl =
+    res.locals.flags.flagFTR56Enabled && !fromPageId ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
 
   res.locals = {
     ...res.locals,
@@ -32,6 +37,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
+    backLinkUrl,
   }
 
   const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(recommendation.crn, 'licence-conditions', token)
@@ -217,7 +223,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-recall-rationale', urlInfo }))
   }
 
-  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
+  return res.redirect(
+    303,
+    nextPageLinkUrl({
+      nextPageId: flags.flagFTR56Enabled ? ppPaths.alternativesTried : ppPaths.taskListConsiderRecall,
+      urlInfo,
+    }),
+  )
 }
 
 function error(errorId: string) {

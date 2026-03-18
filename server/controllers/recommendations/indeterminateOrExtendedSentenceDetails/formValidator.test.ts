@@ -65,7 +65,7 @@ describe('validateIndeterminateDetails', () => {
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
-        href: '#indeterminateOrExtendedSentenceDetails',
+        href: '#option-1',
         name: 'indeterminateOrExtendedSentenceDetails',
         text: 'Select at least one of the criteria',
         errorId: 'noIndeterminateDetailsSelected',
@@ -129,7 +129,7 @@ describe('validateIndeterminateDetails', () => {
       {
         href: '#indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
         name: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
-        text: 'Enter details about the behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
+        text: 'Enter details about the behaviour likely to result in a sexual or violent offence',
         errorId: 'missingIndeterminateDetail',
       },
     ])
