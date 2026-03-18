@@ -3,9 +3,13 @@ import { hasData } from '../../utils/utils'
 import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    flags: { flagFTR56Enabled },
+  } = res.locals
 
   const triggerLeadingToRecallCompleted = hasData(recommendation.triggerLeadingToRecall)
   const responseToProbationCompleted = hasData(recommendation.responseToProbation)
@@ -14,23 +18,34 @@ async function get(req: Request, res: Response, next: NextFunction) {
     hasData(recommendation.cvlLicenceConditionsBreached) ||
     !!recommendation.additionalLicenceConditionsText?.length
   const alternativesToRecallTriedCompleted = hasData(recommendation.alternativesToRecallTried)
+  const sentenceGroupCompleted = hasData(recommendation.sentenceGroup)
+  const indeterminateSentenceTypeCompleted = hasData(recommendation.indeterminateSentenceType)
   const isExtendedSentenceCompleted = hasData(recommendation.isExtendedSentence)
   const isIndeterminateSentenceCompleted = hasData(recommendation.isIndeterminateSentence)
 
-  const allTasksCompleted =
-    triggerLeadingToRecallCompleted &&
-    responseToProbationCompleted &&
-    licenceConditionsBreachedCompleted &&
-    alternativesToRecallTriedCompleted &&
-    isExtendedSentenceCompleted &&
-    isIndeterminateSentenceCompleted
+  const allTasksCompleted = flagFTR56Enabled
+    ? triggerLeadingToRecallCompleted &&
+      licenceConditionsBreachedCompleted &&
+      alternativesToRecallTriedCompleted &&
+      sentenceGroupCompleted &&
+      (recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || indeterminateSentenceTypeCompleted)
+    : triggerLeadingToRecallCompleted &&
+      responseToProbationCompleted &&
+      licenceConditionsBreachedCompleted &&
+      alternativesToRecallTriedCompleted &&
+      isExtendedSentenceCompleted &&
+      isIndeterminateSentenceCompleted
 
   res.locals = {
     ...res.locals,
+    flagFTR56Enabled,
+    isIndeterminateSentence: recommendation.sentenceGroup === SentenceGroup.INDETERMINATE,
     triggerLeadingToRecallCompleted,
     responseToProbationCompleted,
     licenceConditionsBreachedCompleted,
     alternativesToRecallTriedCompleted,
+    sentenceGroupCompleted,
+    indeterminateSentenceTypeCompleted,
     isExtendedSentenceCompleted,
     isIndeterminateSentenceCompleted,
     allTasksCompleted,

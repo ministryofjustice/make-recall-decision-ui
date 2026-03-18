@@ -5,6 +5,19 @@ import routeUrls from '../../../routes/routeUrls'
 import type { FeatureFlags } from '../../../@types/featureFlags'
 import { UrlInfo } from '../../../@types/pagesForms'
 
+/**
+ * Determines the URL for the next page.
+ *
+ * The following priority is followed to determine the URL:
+ *  1. If URL info with fromPageId is present, use that.
+ *  2. If nextPagePath is provided, use that.
+ *  3. Otherwise, construct the URL using the basePath and nextPageId.
+ *
+ * @param nextPageId - the URL slug for the next page, which will be appended to the basePath to construct the URL if
+ *                     relevant
+ * @param nextPagePath - an optional URL path for the next page, which takes precedence over nextPageId if provided
+ * @param urlInfo - the URL information, including fromPageId (if any), fromHeading (if any) and basePath
+ */
 export const nextPageLinkUrl = ({
   nextPageId,
   nextPagePath,
@@ -22,6 +35,13 @@ export const nextPageLinkUrl = ({
   return nextPagePath || `${urlInfo.basePath}${nextPageId}`
 }
 
+/**
+ * Determines the URL using the fromPageId and fromAnchor query parameters, if they exist (null otherwise).
+ *
+ * This is used to return the user to the page they came from, rather than the next page in the sequence.
+ *
+ * @param urlInfo The URL information, including fromPageId (if any), fromAnchor (if any), and basePath.
+ */
 export const makeUrlForFromPage = ({ urlInfo }: { urlInfo: UrlInfo }) => {
   const { fromPageId, fromAnchor, basePath } = urlInfo
   if (fromPageId) {
