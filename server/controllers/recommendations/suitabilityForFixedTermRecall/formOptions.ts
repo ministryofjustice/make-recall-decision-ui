@@ -2,7 +2,7 @@ import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 export default (ftr56Enabled: boolean, popName: string, sentenceGroup: SentenceGroup) => {
   if (ftr56Enabled === true) {
-    if (sentenceGroup !== SentenceGroup.YOUTH_SDS) {
+    if (sentenceGroup === SentenceGroup.ADULT_SDS) {
       return {
         isChargedWithOffence: {
           label: `Is ${popName} being recalled because of being charged with an offence?`,

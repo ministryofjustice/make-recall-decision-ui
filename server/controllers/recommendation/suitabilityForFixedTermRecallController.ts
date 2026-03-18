@@ -16,6 +16,7 @@ import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixe
 import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
 import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import routeUrls from '../../routes/routeUrls'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -24,6 +25,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     flags,
     unsavedValues,
   } = res.locals
+
+  // This screen isn't shown for indeterminate or extended sentences in the FTR56 flow
+  if (
+    flags.flagFTR56Enabled &&
+    [SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(recommendation.sentenceGroup)
+  ) {
+    res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/indeterminate-details`)
+  }
 
   const { caseSummary: caseSummaryOverview } = await getCaseSection(
     'overview',
