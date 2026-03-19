@@ -129,6 +129,7 @@ context('Arrest Issues page', () => {
         {
           href: 'hasArrestIssues',
           message: "Select whether there's anything the police should know",
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
       ])
     })
@@ -150,6 +151,7 @@ context('Arrest Issues page', () => {
         {
           href: 'hasArrestIssuesDetailsYes',
           message: 'Enter details of the arrest issues',
+          errorStyleClass: 'govuk-textarea--error',
         },
       ])
     })

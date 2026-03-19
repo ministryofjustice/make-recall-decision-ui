@@ -154,7 +154,8 @@ async function post(req: Request, res: Response, next: NextFunction) {
     const errorId = 'noIndexOffenceSelected'
     errors.push(
       makeErrorObject({
-        id: 'indexOffence',
+        id: 'indexOffence-1-input', // error summary links should point to the first radio item
+        name: 'indexOffence',
         text: strings.errors[errorId],
         errorId,
       }),

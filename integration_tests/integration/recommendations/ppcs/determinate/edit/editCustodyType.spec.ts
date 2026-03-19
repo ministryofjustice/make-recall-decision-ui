@@ -85,7 +85,13 @@ context('Determinate sentence - edit custody type page', () => {
       cy.get('button').click()
 
       testForErrorPageTitle()
-      testForErrorSummary([{ href: 'custodyType', message: 'Enter custody type' }])
+      testForErrorSummary([
+        {
+          href: 'custodyType',
+          message: 'Enter custody type',
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+        },
+      ])
     })
   })
 })

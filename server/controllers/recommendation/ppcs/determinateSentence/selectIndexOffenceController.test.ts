@@ -496,11 +496,11 @@ describe('Select Index Offence Controller', () => {
         beforeEach(async () => selectIndexOffenceController.post(noIndexSelectedReq, noIndexSelectedRes, next))
         it('- Redirects to the original url', async () =>
           expect(noIndexSelectedRes.redirect).toHaveBeenCalledWith(303, expectedOriginUrl))
-        it('- Sets the expected eroor details on the request', async () =>
+        it('- Sets the expected error details on the request', async () =>
           expect(noIndexSelectedReq.session.errors).toEqual([
             {
               errorId: 'noIndexOffenceSelected',
-              href: '#indexOffence',
+              href: '#indexOffence-1-input',
               invalidParts: undefined,
               name: 'indexOffence',
               text: 'Select an index offence',

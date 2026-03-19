@@ -147,7 +147,13 @@ context('Sentence Information page', () => {
       cy.get('button').click()
 
       testForErrorPageTitle()
-      testForErrorSummary([{ href: 'sentenceGroup', message: 'Select a sentence group' }])
+      testForErrorSummary([
+        {
+          href: 'sentenceGroup',
+          message: 'Select a sentence group',
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+        },
+      ])
     })
   })
 })

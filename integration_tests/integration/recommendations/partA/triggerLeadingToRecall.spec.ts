@@ -152,6 +152,7 @@ context('Trigger leading to recall Page', () => {
                 {
                   href: 'triggerLeadingToRecall',
                   message: `Explain what has made you consider recalling ${recommendation.personOnProbation.name}`,
+                  errorStyleClass: 'govuk-textarea--error',
                 },
               ])
             })
