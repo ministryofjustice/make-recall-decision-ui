@@ -113,6 +113,9 @@
                         classes: 'govuk-!-margin-bottom-6 app-summary-card--medium-title',
                         html: youthMappaHtml
                     }) }}
+
+                    <input type="hidden" name="isMappaLevel2Or3" value="{{ 'YES' if (not caseSummary.mappa.error and caseSummary.mappa.level > 1) else 'NO' }}" />
+                    <input type="hidden" name="isMappaCategory4" value="{{ 'YES' if (not mappaData.error and mappaData.category == 4) else 'NO' }}" />
                 {% endif %}
 
                 {{ appSummaryCard({

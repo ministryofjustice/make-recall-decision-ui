@@ -7,15 +7,17 @@ export const isFixedTermRecallMandatoryForRecommendation = (
 ) =>
   ftr56Enabled
     ? isFixedTermRecallMandatoryFTR56(recommendation.sentenceGroup, {
-        wasReferredToParoleBoard244ZB: recommendation.wasReferredToParoleBoard244ZB,
-        wasRepatriatedForMurder: recommendation.wasRepatriatedForMurder,
-        isServingSOPCSentence: recommendation.isServingSOPCSentence,
-        isServingDCRSentence: recommendation.isServingDCRSentence,
-        isChargedWithOffence: recommendation.isChargedWithOffence,
-        isServingTerroristOrNationalSecurityOffence: recommendation.isServingTerroristOrNationalSecurityOffence,
-        isAtRiskOfInvolvedInForeignPowerThreat: recommendation.isAtRiskOfInvolvedInForeignPowerThreat,
-        isYouthSentenceOver12Months: recommendation.isYouthSentenceOver12Months,
-        isYouthChargedWithSeriousOffence: recommendation.isYouthChargedWithSeriousOffence,
+        wasReferredToParoleBoard244ZB: recommendation?.wasReferredToParoleBoard244ZB,
+        wasRepatriatedForMurder: recommendation?.wasRepatriatedForMurder,
+        isServingSOPCSentence: recommendation?.isServingSOPCSentence,
+        isServingDCRSentence: recommendation?.isServingDCRSentence,
+        isChargedWithOffence: recommendation?.isChargedWithOffence,
+        isServingTerroristOrNationalSecurityOffence: recommendation?.isServingTerroristOrNationalSecurityOffence,
+        isAtRiskOfInvolvedInForeignPowerThreat: recommendation?.isAtRiskOfInvolvedInForeignPowerThreat,
+        isYouthSentenceOver12Months: recommendation?.isYouthSentenceOver12Months,
+        isYouthChargedWithSeriousOffence: recommendation?.isYouthChargedWithSeriousOffence,
+        isMappaCategory4: recommendation?.isMappaCategory4,
+        isMappaLevel2Or3: recommendation?.isMappaLevel2Or3,
       })
     : isFixedTermRecallMandatory(
         recommendation?.isSentence48MonthsOrOver,
@@ -52,6 +54,8 @@ export const isFixedTermRecallMandatoryForValueKeysFTR56 = (
     isAtRiskOfInvolvedInForeignPowerThreat: values?.isAtRiskOfInvolvedInForeignPowerThreat,
     isYouthSentenceOver12Months: values?.isYouthSentenceOver12Months,
     isYouthChargedWithSeriousOffence: values?.isYouthChargedWithSeriousOffence,
+    isMappaCategory4: values?.isMappaCategory4,
+    isMappaLevel2Or3: values?.isMappaLevel2Or3,
   })
 
 export const isFixedTermRecallMandatory = (
@@ -83,6 +87,8 @@ type MandatoryFTRCriteria = {
   isAtRiskOfInvolvedInForeignPowerThreat?: boolean
   isYouthSentenceOver12Months?: boolean
   isYouthChargedWithSeriousOffence?: boolean
+  isMappaCategory4?: boolean
+  isMappaLevel2Or3?: boolean
 }
 
 export const isFixedTermRecallMandatoryFTR56 = (sentenceGroup: SentenceGroup, criteria: MandatoryFTRCriteria) => {
@@ -94,12 +100,18 @@ export const isFixedTermRecallMandatoryFTR56 = (sentenceGroup: SentenceGroup, cr
       (criteria.isServingDCRSentence ?? true) ||
       (criteria.isChargedWithOffence ?? true) ||
       (criteria.isServingTerroristOrNationalSecurityOffence ?? true) ||
-      (criteria.isAtRiskOfInvolvedInForeignPowerThreat ?? true)
+      (criteria.isAtRiskOfInvolvedInForeignPowerThreat ?? true) ||
+      (criteria.isMappaCategory4 ?? true) ||
+      (criteria.isMappaLevel2Or3 ?? true)
     )
   }
 
   if (sentenceGroup === SentenceGroup.YOUTH_SDS) {
-    return !((criteria.isYouthSentenceOver12Months ?? true) || (criteria.isYouthChargedWithSeriousOffence ?? true))
+    return !(
+      (criteria.isYouthSentenceOver12Months ?? true) ||
+      (criteria.isYouthChargedWithSeriousOffence ?? true) ||
+      (criteria.isMappaLevel2Or3 ?? true)
+    )
   }
 
   return false

@@ -378,6 +378,8 @@ describe('post', () => {
         const req = mockReq({
           params: { recommendationId: '123' },
           body: {
+            isMappaLevel2Or3: 'YES',
+            isMappaCategory4: 'YES',
             isYouthSentenceOver12Months: 'YES',
             isYouthChargedWithSeriousOffence: 'YES',
           },
@@ -405,6 +407,8 @@ describe('post', () => {
           recommendationId: '123',
           token: 'token1',
           valuesToSave: {
+            isMappaCategory4: true,
+            isMappaLevel2Or3: true,
             isYouthSentenceOver12Months: true,
             isYouthChargedWithSeriousOffence: true,
             ...(detailsExpected
@@ -568,6 +572,22 @@ describe('post', () => {
         text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
         href: '#isYouthChargedWithSeriousOffence',
         errorId: 'noIsYouthChargedWithSeriousOffence',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        name: 'isMappaLevel2Or3',
+        text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+        href: '#isMappaLevel2Or3',
+        errorId: 'noIsMappaLevel2Or3',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
+        name: 'isMappaCategory4',
+        text: 'Select whether {{ fullName }} is in MAPPA category 4',
+        href: '#isMappaCategory4',
+        errorId: 'noIsMappaCategory4',
         invalidParts: undefined,
         values: undefined,
       },

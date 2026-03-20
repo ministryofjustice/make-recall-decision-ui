@@ -227,6 +227,8 @@ context('Suitability for fixed term recall page', () => {
         const nonMandatoryRecommendation = RecommendationResponseGenerator.generate({
           sentenceGroup: SentenceGroup.YOUTH_SDS,
           recallType: 'any',
+          isMappaCategory4: false,
+          isMappaLevel2Or3: false,
           isYouthSentenceOver12Months: false,
           isYouthChargedWithSeriousOffence: false,
         })
@@ -241,6 +243,8 @@ context('Suitability for fixed term recall page', () => {
         const mandatoryRecommendation = RecommendationResponseGenerator.generate({
           sentenceGroup: SentenceGroup.YOUTH_SDS,
           recallType: 'any',
+          isMappaCategory4: true,
+          isMappaLevel2Or3: true,
           isYouthSentenceOver12Months: true,
           isYouthChargedWithSeriousOffence: true,
         })

@@ -90,6 +90,7 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             sentenceGroup: SentenceGroup.YOUTH_SDS,
             isYouthSentenceOver12Months: undefined,
             isYouthChargedWithSeriousOffence: undefined,
+            isMappaLevel2Or3: undefined,
           }),
           true,
         ),
@@ -103,6 +104,7 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             sentenceGroup: SentenceGroup.YOUTH_SDS,
             isYouthSentenceOver12Months: false,
             isYouthChargedWithSeriousOffence: false,
+            isMappaLevel2Or3: false,
           }),
           true,
         ),
@@ -116,6 +118,7 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             sentenceGroup: SentenceGroup.YOUTH_SDS,
             isYouthSentenceOver12Months: true,
             isYouthChargedWithSeriousOffence: true,
+            isMappaLevel2Or3: true,
           }),
           true,
         ),
@@ -123,16 +126,17 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
     })
 
     describe(' Returns false when any exclusion criteria fields are true', () => {
-      generateBooleanCombinations(2)
+      generateBooleanCombinations(3)
         .filter(c => !c.every(b => !b))
         .forEach(combination => {
-          it(`${combination[0]} - ${combination[1]}`, () => {
+          it(`${combination[0]} - ${combination[1]} - ${combination[2]}`, () => {
             expect(
               isFixedTermRecallMandatoryForRecommendation(
                 RecommendationResponseGenerator.generate({
                   sentenceGroup: SentenceGroup.YOUTH_SDS,
                   isYouthSentenceOver12Months: combination[0],
                   isYouthChargedWithSeriousOffence: combination[1],
+                  isMappaLevel2Or3: combination[2],
                 }),
                 true,
               ),
@@ -155,6 +159,8 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             wasRepatriatedForMurder: undefined,
             isServingSOPCSentence: undefined,
             isServingDCRSentence: undefined,
+            isMappaCategory4: undefined,
+            isMappaLevel2Or3: undefined,
           }),
           true,
         ),
@@ -173,6 +179,8 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             isChargedWithOffence: false,
             isServingTerroristOrNationalSecurityOffence: false,
             isAtRiskOfInvolvedInForeignPowerThreat: false,
+            isMappaCategory4: false,
+            isMappaLevel2Or3: false,
           }),
           true,
         ),
@@ -191,6 +199,8 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             wasRepatriatedForMurder: true,
             isServingSOPCSentence: true,
             isServingDCRSentence: true,
+            isMappaCategory4: true,
+            isMappaLevel2Or3: true,
           }),
           true,
         ),
@@ -198,10 +208,10 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
     })
 
     describe(' Returns false when any exclusion criteria fields are true', () => {
-      generateBooleanCombinations(7)
+      generateBooleanCombinations(9)
         .filter(c => !c.every(b => !b))
         .forEach(combination => {
-          it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
+          it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
             expect(
               isFixedTermRecallMandatoryForRecommendation(
                 RecommendationResponseGenerator.generate({
@@ -213,6 +223,8 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
                   wasRepatriatedForMurder: combination[4],
                   isServingSOPCSentence: combination[5],
                   isServingDCRSentence: combination[6],
+                  isMappaCategory4: combination[7],
+                  isMappaLevel2Or3: combination[8],
                 }),
                 true,
               ),
@@ -330,6 +342,7 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
         isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.YOUTH_SDS, {
           isYouthSentenceOver12Months: undefined,
           isYouthChargedWithSeriousOffence: undefined,
+          isMappaLevel2Or3: undefined,
         }),
       ).toBeFalsy()
     })
@@ -338,6 +351,7 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
         isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.YOUTH_SDS, {
           isYouthSentenceOver12Months: false,
           isYouthChargedWithSeriousOffence: false,
+          isMappaLevel2Or3: false,
         }),
       ).toBeTruthy()
     })
@@ -346,18 +360,20 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
         isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.YOUTH_SDS, {
           isYouthSentenceOver12Months: true,
           isYouthChargedWithSeriousOffence: true,
+          isMappaLevel2Or3: true,
         }),
       ).toBeFalsy()
     })
     describe('returns false when any exclusion criteria fields are true', () => {
-      generateBooleanCombinations(2)
+      generateBooleanCombinations(3)
         .filter(c => !c.every(b => !b))
         .forEach(combination => {
-          it(`${combination[0]} - ${combination[1]}`, () => {
+          it(`${combination[0]} - ${combination[1]} - ${combination[2]}`, () => {
             expect(
               isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.YOUTH_SDS, {
                 isYouthSentenceOver12Months: combination[0],
                 isYouthChargedWithSeriousOffence: combination[1],
+                isMappaLevel2Or3: combination[2],
               }),
             ).toBeFalsy()
           })
@@ -376,6 +392,8 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
           wasRepatriatedForMurder: undefined,
           isServingSOPCSentence: undefined,
           isServingDCRSentence: undefined,
+          isMappaLevel2Or3: undefined,
+          isMappaCategory4: undefined,
         }),
       ).toBeFalsy()
     })
@@ -389,6 +407,8 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
           wasRepatriatedForMurder: false,
           isServingSOPCSentence: false,
           isServingDCRSentence: false,
+          isMappaLevel2Or3: false,
+          isMappaCategory4: false,
         }),
       ).toBeTruthy()
     })
@@ -402,14 +422,16 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
           wasRepatriatedForMurder: true,
           isServingSOPCSentence: true,
           isServingDCRSentence: true,
+          isMappaLevel2Or3: true,
+          isMappaCategory4: true,
         }),
       ).toBeFalsy()
     })
     describe('returns false when any exclusion criteria fields are true', () => {
-      generateBooleanCombinations(7)
+      generateBooleanCombinations(9)
         .filter(c => !c.every(b => !b))
         .forEach(combination => {
-          it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
+          it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}}`, () => {
             expect(
               isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.ADULT_SDS, {
                 isChargedWithOffence: combination[0],
@@ -419,6 +441,8 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
                 wasRepatriatedForMurder: combination[4],
                 isServingSOPCSentence: combination[5],
                 isServingDCRSentence: combination[6],
+                isMappaLevel2Or3: combination[7],
+                isMappaCategory4: combination[8],
               }),
             ).toBeFalsy()
           })

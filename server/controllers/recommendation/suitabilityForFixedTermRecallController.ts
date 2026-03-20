@@ -124,9 +124,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const errors: NamedFormError[] = []
   const valuesToSave: Record<string, unknown> = {}
 
-  const fieldIds = Object.keys(
-    getFormOptions(flags.flagFTR56Enabled, recommendation.personOnProbation.name, recommendation.sentenceGroup),
-  )
+  const fieldIds = [
+    ...Object.keys(
+      getFormOptions(flags.flagFTR56Enabled, recommendation.personOnProbation.name, recommendation.sentenceGroup),
+    ),
+    ...(recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS ? ['isMappaLevel2Or3', 'isMappaCategory4'] : []),
+  ]
 
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
 
