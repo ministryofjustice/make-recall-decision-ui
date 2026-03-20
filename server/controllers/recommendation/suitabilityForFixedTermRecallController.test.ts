@@ -238,6 +238,94 @@ describe('get', () => {
       })
     })
   })
+
+  describe('redirects when FTR56 flag is enabled and sentenceGroup is not Determinate', () => {
+    ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(testCase => {
+      it(`redirects when sentence group is ${testCase}`, async () => {
+        const res = mockRes({
+          locals: {
+            recommendation: {
+              id: '1',
+              sentenceGroup: testCase,
+            },
+            token: 'token1',
+            flags: { flagFTR56Enabled: true },
+          },
+        })
+
+        await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+        expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/indeterminate-details`)
+      })
+    })
+  })
+
+  it('shows the warning banner when FTR56 is enabled, the sentenceGroup is YOUTH_SDS and the recallType is null', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: {
+            name: 'Test McTest',
+          },
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+          recallType: '123',
+          isYouthSentenceOver12Months: true,
+          isYouthChargedWithSeriousOffence: true,
+          isMappaLevel2Or3: true,
+        },
+        flags: {
+          flagFTR56Enabled: true,
+        },
+      },
+    })
+
+    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.page.warningPanel).toEqual({
+      body: `Changing your answers could make Test McTest eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+      title: 'Changes could affect your recall recommendation choices',
+    })
+  })
+
+  it('does not show the warning banner when FTR56 flag is enabled and sentenceGRoup is ADULT_SDS', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: {
+            name: 'Test McTest',
+          },
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+          recallType: '123',
+        },
+        flags: {
+          flagFTR56Enabled: true,
+        },
+      },
+    })
+
+    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.page.warningPanel).toBe(undefined)
+  })
+
+  it('renders the correct template when FTR56 flag is enabled', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: {
+            name: faker.person.fullName(),
+          },
+        },
+        flags: {
+          flagFTR56Enabled: true,
+        },
+      },
+    })
+
+    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
+  })
 })
 
 describe('post', () => {
@@ -255,7 +343,7 @@ describe('post', () => {
       detailsExpected: boolean
     }[] = [
       {
-        name: 'previously discretionary - now discrestionary - details not updated',
+        name: 'previously discretionary - now discretionary - details not updated',
         previouslyMandatory: false,
         updatedMandatory: false,
         detailsExpected: false,
@@ -347,7 +435,7 @@ describe('post', () => {
       detailsExpected: boolean
     }[] = [
       {
-        name: 'previously discretionary - now discrestionary - details not updated',
+        name: 'previously discretionary - now discretionary - details not updated',
         previouslyMandatory: false,
         updatedMandatory: false,
         detailsExpected: false,
@@ -378,8 +466,10 @@ describe('post', () => {
         const req = mockReq({
           params: { recommendationId: '123' },
           body: {
-            isMappaLevel2Or3: 'YES',
+            // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
+            // it's still required in the Part A so we're just checking it's being updated in the API
             isMappaCategory4: 'YES',
+            isMappaLevel2Or3: 'YES',
             isYouthSentenceOver12Months: 'YES',
             isYouthChargedWithSeriousOffence: 'YES',
           },
@@ -572,22 +662,6 @@ describe('post', () => {
         text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
         href: '#isYouthChargedWithSeriousOffence',
         errorId: 'noIsYouthChargedWithSeriousOffence',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        name: 'isMappaLevel2Or3',
-        text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
-        href: '#isMappaLevel2Or3',
-        errorId: 'noIsMappaLevel2Or3',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        name: 'isMappaCategory4',
-        text: 'Select whether {{ fullName }} is in MAPPA category 4',
-        href: '#isMappaCategory4',
-        errorId: 'noIsMappaCategory4',
         invalidParts: undefined,
         values: undefined,
       },

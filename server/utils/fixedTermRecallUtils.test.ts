@@ -41,25 +41,9 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
       ),
     ).toBeTruthy()
   })
-  it(' Returns false when all exclusion criteria fields are true', () => {
-    expect(
-      isFixedTermRecallMandatoryForRecommendation(
-        RecommendationResponseGenerator.generate({
-          isSentence48MonthsOrOver: true,
-          isUnder18: true,
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-          isRecalledOnNewChargedOffence: true,
-          isServingFTSentenceForTerroristOffence: true,
-          hasBeenChargedWithTerroristOrStateThreatOffence: true,
-        }),
-        false,
-      ),
-    ).toBeFalsy()
-  })
   describe(' Returns false when any exclusion criteria fields are true', () => {
     generateBooleanCombinations(7)
-      .filter(c => !c.every(b => !b))
+      .filter(c => c.some(b => b))
       .forEach(combination => {
         it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
           expect(
@@ -111,23 +95,9 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
       ).toBeTruthy()
     })
 
-    it('returns false when all exclusion criteria fields are true', () => {
-      expect(
-        isFixedTermRecallMandatoryForRecommendation(
-          RecommendationResponseGenerator.generate({
-            sentenceGroup: SentenceGroup.YOUTH_SDS,
-            isYouthSentenceOver12Months: true,
-            isYouthChargedWithSeriousOffence: true,
-            isMappaLevel2Or3: true,
-          }),
-          true,
-        ),
-      ).toBeFalsy()
-    })
-
     describe(' Returns false when any exclusion criteria fields are true', () => {
       generateBooleanCombinations(3)
-        .filter(c => !c.every(b => !b))
+        .filter(c => c.some(b => b))
         .forEach(combination => {
           it(`${combination[0]} - ${combination[1]} - ${combination[2]}`, () => {
             expect(
@@ -187,29 +157,9 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
       ).toBeTruthy()
     })
 
-    it('returns false when all exclusion criteria fields are true', () => {
-      expect(
-        isFixedTermRecallMandatoryForRecommendation(
-          RecommendationResponseGenerator.generate({
-            sentenceGroup: SentenceGroup.ADULT_SDS,
-            isChargedWithOffence: true,
-            isServingTerroristOrNationalSecurityOffence: true,
-            isAtRiskOfInvolvedInForeignPowerThreat: true,
-            wasReferredToParoleBoard244ZB: true,
-            wasRepatriatedForMurder: true,
-            isServingSOPCSentence: true,
-            isServingDCRSentence: true,
-            isMappaCategory4: true,
-            isMappaLevel2Or3: true,
-          }),
-          true,
-        ),
-      ).toBeFalsy()
-    })
-
     describe(' Returns false when any exclusion criteria fields are true', () => {
       generateBooleanCombinations(9)
-        .filter(c => !c.every(b => !b))
+        .filter(c => c.some(b => b))
         .forEach(combination => {
           it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
             expect(
@@ -262,25 +212,10 @@ describe('isFixedTermMandatoryForValueKeys', () => {
       }),
     ).toBeTruthy()
   })
-  it(' Returns false when all exclusion criteria fields are true', () => {
-    expect(
-      isFixedTermRecallMandatoryForRecommendation(
-        {
-          isSentence48MonthsOrOver: true,
-          isUnder18: true,
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-          isRecalledOnNewChargedOffence: true,
-          isServingFTSentenceForTerroristOffence: true,
-          hasBeenChargedWithTerroristOrStateThreatOffence: true,
-        },
-        false,
-      ),
-    ).toBeFalsy()
-  })
+
   describe(' Returns false when any exclusion criteria fields are true', () => {
     generateBooleanCombinations(7)
-      .filter(c => !c.every(b => !b))
+      .filter(c => c.some(b => b))
       .forEach(combination => {
         it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
           expect(
@@ -311,12 +246,10 @@ describe('isFixedTermRecallMandatory', () => {
   it(' Returns true when all exclusion criteria fields are false', () => {
     expect(isFixedTermRecallMandatory(false, false, false, false, false, false, false)).toBeTruthy()
   })
-  it(' Returns false when all exclusion criteria fields are true', () => {
-    expect(isFixedTermRecallMandatory(true, true, true, true, true, true, true)).toBeFalsy()
-  })
+
   describe(' Returns false when any exclusion criteria fields are true', () => {
     generateBooleanCombinations(7)
-      .filter(c => !c.every(b => !b))
+      .filter(c => c.some(b => b))
       .forEach(combination => {
         it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
           expect(
@@ -355,18 +288,10 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
         }),
       ).toBeTruthy()
     })
-    it('returns false when all exclusion criteria fields are true', () => {
-      expect(
-        isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.YOUTH_SDS, {
-          isYouthSentenceOver12Months: true,
-          isYouthChargedWithSeriousOffence: true,
-          isMappaLevel2Or3: true,
-        }),
-      ).toBeFalsy()
-    })
+
     describe('returns false when any exclusion criteria fields are true', () => {
       generateBooleanCombinations(3)
-        .filter(c => !c.every(b => !b))
+        .filter(c => c.some(b => b))
         .forEach(combination => {
           it(`${combination[0]} - ${combination[1]} - ${combination[2]}`, () => {
             expect(
@@ -412,24 +337,9 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
         }),
       ).toBeTruthy()
     })
-    it('returns false when all exclusion criteria fields are true', () => {
-      expect(
-        isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.ADULT_SDS, {
-          isChargedWithOffence: true,
-          isServingTerroristOrNationalSecurityOffence: true,
-          isAtRiskOfInvolvedInForeignPowerThreat: true,
-          wasReferredToParoleBoard244ZB: true,
-          wasRepatriatedForMurder: true,
-          isServingSOPCSentence: true,
-          isServingDCRSentence: true,
-          isMappaLevel2Or3: true,
-          isMappaCategory4: true,
-        }),
-      ).toBeFalsy()
-    })
     describe('returns false when any exclusion criteria fields are true', () => {
       generateBooleanCombinations(9)
-        .filter(c => !c.every(b => !b))
+        .filter(c => c.some(b => b))
         .forEach(combination => {
           it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}}`, () => {
             expect(

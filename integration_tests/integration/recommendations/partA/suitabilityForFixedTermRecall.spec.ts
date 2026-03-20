@@ -5,10 +5,42 @@ import { RecommendationResponseGenerator } from '../../../../data/recommendation
 import config from '../../../../server/config'
 import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { testSummaryList } from '../../../componentTests/summaryList.tests'
+import { CaseSummaryOverviewResponseGenerator } from '../../../../data/caseSummary/overview/caseSummaryOverviewResponseGenerator'
+import { CaseSummaryRiskResponseGenerator } from '../../../../data/caseSummary/risk/caseSummaryRiskResponseGenerator'
 
 context('Suitability for fixed term recall page', () => {
   const recommendationId = faker.number.int()
   const testPageUrl = `/recommendations/${recommendationId}/suitability-for-fixed-term-recall`
+  const caseSummaryOverviewResponse = CaseSummaryOverviewResponseGenerator.generate({
+    activeConvictions: [
+      {
+        mainOffence: {
+          code: '001',
+          description: 'Shoplifting',
+        },
+        additionalOffences: [],
+        sentence: {
+          description: 'ORA Suspended Sentence Order',
+          isCustodial: false,
+          length: 16,
+          lengthUnits: 'weeks',
+          licenceExpiryDate: '2026-11-24',
+        },
+      },
+    ],
+  })
+  const caseSummaryRiskResponse = CaseSummaryRiskResponseGenerator.generate({
+    personalDetailsOverview: {
+      dateOfBirth: '2000-11-09',
+      age: 21,
+    },
+    mappa: {
+      level: 1,
+      category: 2,
+      lastUpdatedDate: '2026-02-01T00:00:00Z',
+      error: null,
+    },
+  })
 
   describe('with FTR56 flag enabled', () => {
     describe('when sentence group is ADULT_SDS', () => {
@@ -141,6 +173,8 @@ context('Suitability for fixed term recall page', () => {
         cy.task('getRecommendation', { statusCode: 200, response: recommendation })
         cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.signIn()
+        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseSummaryOverviewResponse })
+        cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: caseSummaryRiskResponse })
       })
 
       it('should display correctly when sentence group is YOUTH_SDS', () => {
@@ -164,7 +198,7 @@ context('Suitability for fixed term recall page', () => {
             cy.get('h3').eq(0).should('contain.text', 'From NDelius')
             cy.get('.mappa-widget').within(() => {
               cy.get('h2').should('contain.text', 'Cat 2/Level 1 MAPPA')
-              cy.get('p').should('contain.text', 'Last updated: 24 September 2022')
+              cy.get('p').should('contain.text', 'Last updated: 1 February 2026')
             })
             testSummaryList(cy.get('[data-qa="check-mappa-information-summary-list"]'), {
               rows: [
@@ -186,7 +220,7 @@ context('Suitability for fixed term recall page', () => {
             cy.get('.govuk-grid-column-two-thirds').should('contain.text', 'Youth determinate sentence')
             ;[
               {
-                label: `Is ${recommendation.personOnProbation.name} sentence 12 months or over?`,
+                label: `Is ${recommendation.personOnProbation.name}'s sentence 12 months or over?`,
                 fieldId: 'isYouthSentenceOver12Months',
               },
               {
@@ -227,7 +261,6 @@ context('Suitability for fixed term recall page', () => {
         const nonMandatoryRecommendation = RecommendationResponseGenerator.generate({
           sentenceGroup: SentenceGroup.YOUTH_SDS,
           recallType: 'any',
-          isMappaCategory4: false,
           isMappaLevel2Or3: false,
           isYouthSentenceOver12Months: false,
           isYouthChargedWithSeriousOffence: false,
@@ -243,7 +276,6 @@ context('Suitability for fixed term recall page', () => {
         const mandatoryRecommendation = RecommendationResponseGenerator.generate({
           sentenceGroup: SentenceGroup.YOUTH_SDS,
           recallType: 'any',
-          isMappaCategory4: true,
           isMappaLevel2Or3: true,
           isYouthSentenceOver12Months: true,
           isYouthChargedWithSeriousOffence: true,
@@ -290,6 +322,8 @@ context('Suitability for fixed term recall page', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.signIn()
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseSummaryOverviewResponse })
+      cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: caseSummaryRiskResponse })
     })
 
     it('should display correctly', () => {
@@ -307,9 +341,8 @@ context('Suitability for fixed term recall page', () => {
       ).should('exist')
 
       cy.getElement('9 November 2000 (age 21)').should('exist')
-      cy.getElement('Robbery (other than armed robbery)').should('exist')
-      cy.getElement('Shoplifting Burglary').should('exist')
-      cy.getElement('ORA Adult Custody (inc PSS)').should('exist')
+      cy.getElement('Shoplifting').should('exist')
+      cy.getElement('ORA Suspended Sentence Order').should('exist')
       cy.getElement('16 weeks').should('exist')
 
       // radios

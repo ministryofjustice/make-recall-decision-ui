@@ -29,7 +29,7 @@ describe('suitability for fixed term recall form options', () => {
         isYouthChargedWithSeriousOffence: {
           label: 'Is Test Test being recalled because of being charged with a serious offence?',
         },
-        isYouthSentenceOver12Months: { label: 'Is Test Test sentence 12 months or over?' },
+        isYouthSentenceOver12Months: { label: "Is Test Test's sentence 12 months or over?" },
       })
     })
   })

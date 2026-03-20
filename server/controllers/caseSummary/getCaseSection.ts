@@ -24,6 +24,8 @@ import { formOptions } from '../recommendations/formOptions/formOptions'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { LastCompletedRecommendationsResponse } from '../../@types/make-recall-decision-api/models/LastCompletedRecommendationsResponse'
 
+// @todo - getCaseSection is currently typing the response completely incorrectly
+// it's not a problem for now, but worth looking at at some point
 const getCaseSection = async (
   sectionId: CaseSectionId,
   crn: string,

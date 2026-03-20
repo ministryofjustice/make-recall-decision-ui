@@ -32,6 +32,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     [SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(recommendation.sentenceGroup)
   ) {
     res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/indeterminate-details`)
+    return next()
   }
 
   const { caseSummary: caseSummaryOverview } = await getCaseSection(
@@ -104,7 +105,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   } else {
     res.render(`pages/recommendations/suitabilityForFixedTermRecall`)
   }
-  next()
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
@@ -128,7 +129,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     ...Object.keys(
       getFormOptions(flags.flagFTR56Enabled, recommendation.personOnProbation.name, recommendation.sentenceGroup),
     ),
-    ...(recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS ? ['isMappaLevel2Or3', 'isMappaCategory4'] : []),
   ]
 
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
@@ -150,6 +150,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
       valuesToSave[key] = value === 'YES'
     }
   })
+
+  // We can't validate these fields as they're set from the NDelius value,
+  // but they're still required so we add them in here
+  if (flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+    valuesToSave.isMappaLevel2Or3 = req.body.isMappaLevel2Or3 === 'YES'
+    valuesToSave.isMappaCategory4 = req.body.isMappaCategory4 === 'YES'
+  }
 
   const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
   const ftrIsMandatoryUpdated = flags.flagFTR56Enabled

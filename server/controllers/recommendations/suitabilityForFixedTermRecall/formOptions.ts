@@ -30,7 +30,7 @@ export default (ftr56Enabled: boolean, popName: string, sentenceGroup: SentenceG
     // Youth flow questions
     return {
       isYouthSentenceOver12Months: {
-        label: `Is ${popName} sentence 12 months or over?`,
+        label: `Is ${popName}'s sentence 12 months or over?`,
       },
       isYouthChargedWithSeriousOffence: {
         label: `Is ${popName} being recalled because of being charged with a serious offence?`,
