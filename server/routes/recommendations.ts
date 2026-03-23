@@ -207,6 +207,7 @@ ppRouteBuilder.get('emergency-recall', emergencyRecallController.get)
 ppRouteBuilder.post('emergency-recall', emergencyRecallController.post)
 
 ppRouteBuilder.get(ppPaths.checkMappaInformation, checkMappaInformationController.get)
+ppRouteBuilder.post(ppPaths.checkMappaInformation, checkMappaInformationController.post)
 
 ppRouteBuilder.get('suitability-for-fixed-term-recall', suitabilityForFixedTermRecallController.get)
 ppRouteBuilder.post('suitability-for-fixed-term-recall', suitabilityForFixedTermRecallController.post)
