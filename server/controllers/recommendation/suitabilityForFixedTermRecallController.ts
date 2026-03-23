@@ -162,12 +162,25 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const ftrIsMandatoryUpdated = flags.flagFTR56Enabled
     ? isFixedTermRecallMandatoryForValueKeysFTR56(recommendation.sentenceGroup, valuesToSave as Record<string, boolean>)
     : isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
+
   if (ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
     valuesToSave.recallType = {
       ...recommendation.recallType,
       selected: {
         value: recommendation.recallType?.selected.value,
       },
+    }
+  }
+
+  // Fix the logic for FTR56
+  if (flags.flagFTR56Enabled) {
+    if (!ftrMandatoryPreviously && ftrIsMandatoryUpdated) {
+      valuesToSave.recallType = {
+        ...recommendation.recallType,
+        selected: {
+          value: null,
+        },
+      }
     }
   }
 

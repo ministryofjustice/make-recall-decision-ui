@@ -508,7 +508,18 @@ describe('post', () => {
                     allOptions: priorRecommendation.recallType.allOptions,
                   },
                 }
-              : {}),
+              : {
+                  ...(!previouslyMandatory && updatedMandatory
+                    ? {
+                        recallType: {
+                          allOptions: [],
+                          selected: {
+                            value: null,
+                          },
+                        },
+                      }
+                    : {}),
+                }),
           },
           featureFlags: {
             flagFTR56Enabled: true,
