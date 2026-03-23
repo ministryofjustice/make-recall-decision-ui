@@ -28,7 +28,7 @@ export type RecommendationOptions = {
   crn?: string
   alternativesToRecallTried?: boolean
   custodyStatus?: boolean
-  hasArrestIssues?: SelectedWithDetailsOptions
+  hasArrestIssues?: NoneOrOption<SelectedWithDetailsOptions>
   fixedTermAdditionalLicenceConditions?: SelectedWithDetailsOptions
   hasContrabandRisk?: SelectedWithDetailsOptions
   hasVictimsInContactScheme?: boolean
@@ -116,7 +116,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
         ? SelectedWithDetailsGenerator.generate(options?.fixedTermAdditionalLicenceConditions)
         : undefined,
     hasArrestIssues:
-      (options?.hasArrestIssues ?? true) ? SelectedWithDetailsGenerator.generate(options?.hasArrestIssues) : undefined,
+      options?.hasArrestIssues === 'none' ? undefined : SelectedWithDetailsGenerator.generate(options?.hasArrestIssues),
     hasContrabandRisk:
       (options?.hasContrabandRisk ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.hasContrabandRisk)
