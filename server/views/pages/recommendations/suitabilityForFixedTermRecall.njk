@@ -37,10 +37,6 @@
                 </ul>
             {% endset %}
             <div {% if loop.index > 1 %}class='govuk-!-margin-top-2 govuk-!-padding-top-2 border-top'{% endif %}>
-
-                {{ conviction.sentence.length | dump }}
-                {{ conviction.sentence.lengthUnits | dump }}
-
                 {{ govukSummaryList({
                     classes: 'govuk-summary-list--no-border',
                     attributes: {
