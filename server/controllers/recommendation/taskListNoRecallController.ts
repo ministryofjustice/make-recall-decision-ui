@@ -28,6 +28,7 @@ function get(req: Request, res: Response, next: NextFunction) {
       id: 'taskListNoRecall',
     },
     recommendation,
+    ftr56Enabled: featureFlags.flagFTR56Enabled,
   }
   if (recommendation.isIndeterminateSentence) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-indeterminate'
