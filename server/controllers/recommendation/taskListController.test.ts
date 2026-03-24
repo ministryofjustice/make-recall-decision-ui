@@ -90,6 +90,7 @@ describe('get', () => {
       hasVictimsInContactScheme: true,
       isExtendedSentence: true,
       isIndeterminateSentence: true,
+      sentenceGroup: false,
       isMainAddressWherePersonCanBeFound: true,
       isThisAnEmergencyRecall: true,
       isUnderIntegratedOffenderManagement: true,

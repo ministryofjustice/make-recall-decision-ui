@@ -4,6 +4,7 @@ import { hasData, hasValue, isEmptyStringOrWhitespace } from '../../../utils/uti
 import type { FeatureFlags } from '../../../@types/featureFlags'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -66,6 +67,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     responseToProbation: hasValue(recommendation.responseToProbation),
     isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
     isExtendedSentence: hasValue(recommendation.isExtendedSentence),
+    sentenceGroup: hasValue(recommendation.sentenceGroup),
     previousReleases: isPreviousReleasesComplete(recommendation),
     previousRecalls: isPreviousRecallsComplete(recommendation),
     indeterminateSentenceType:
@@ -84,6 +86,14 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     const reasonsForNoRecall = hasValue(recommendation.reasonsForNoRecall)
     const nextAppointment = hasValue(recommendation.nextAppointment)
 
+    const sentenceValidation = _featureFlags?.flagFTR56Enabled
+      ? statuses.sentenceGroup
+      : statuses.isIndeterminateSentence && statuses.isExtendedSentence
+
+    const indeterminateValidation = _featureFlags?.flagFTR56Enabled
+      ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || !!statuses.indeterminateSentenceType
+      : !recommendation.isIndeterminateSentence || !!statuses.indeterminateSentenceType
+
     return {
       statuses: {
         ...statuses,
@@ -96,10 +106,9 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
         statuses.responseToProbation &&
-        statuses.isIndeterminateSentence &&
-        statuses.isExtendedSentence &&
+        sentenceValidation &&
         statuses.licenceConditionsBreached &&
-        (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
+        indeterminateValidation &&
         whyConsideredRecall &&
         reasonsForNoRecall &&
         nextAppointment,

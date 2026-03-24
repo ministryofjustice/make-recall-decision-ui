@@ -17,7 +17,7 @@ set suitabilityForFixedTermRecall = hasData(recommendation.isUnder18) or
                     <span class="moj-task-list__task-name">
                         <a aria-describedby='task-list-status-mappa' href="{{ changeLinkUrl({ pageUrlSlug: 'check-mappa-information', urlInfo: urlInfo, fromAnchor: 'heading-recommendation' }) }}">MAPPA information to assess recall type</a>
                     </span>
-                    <span id='task-list-status-mappa'>{{ taskStatus({ hasData: hasData(recommendation.personOnProbation.mappa) }) }}</span>
+                    <span id='task-list-status-mappa'>{{ taskStatus({ hasData: hasData(recommendation.personOnProbation.ftr56MappaReviewed) }) }}</span>
                 </li>
             {% endif %}
             {% if recommendation.sentenceGroup == 'ADULT_SDS' or recommendation.sentenceGroup == 'YOUTH_SDS' %}

@@ -1,5 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import taskListNoRecallController from './taskListNoRecallController'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 describe('get', () => {
   it('present', async () => {
@@ -96,5 +97,79 @@ describe('get', () => {
     await taskListNoRecallController.get(mockReq(), res, next)
 
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type-extended')
+  })
+
+  it('ftr56: present for Adult_SDS SentenceGroup', async () => {
+    const recommendation = {
+      crn: 'X1213',
+      recallType: { selected: { value: 'NO_RECALL' } },
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+    }
+
+    const res = mockRes({
+      locals: {
+        recommendation,
+      },
+    })
+    const next = mockNext()
+    await taskListNoRecallController.get(mockReq(), res, next)
+
+    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type')
+  })
+
+  it('ftr56: present for Youth_SDS SentenceGroup', async () => {
+    const recommendation = {
+      crn: 'X1213',
+      recallType: { selected: { value: 'NO_RECALL' } },
+      sentenceGroup: SentenceGroup.YOUTH_SDS,
+    }
+
+    const res = mockRes({
+      locals: {
+        recommendation,
+      },
+    })
+    const next = mockNext()
+    await taskListNoRecallController.get(mockReq(), res, next)
+
+    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type')
+  })
+
+  it('ftr56: present for Extended SentenceGroup', async () => {
+    const recommendation = {
+      crn: 'X1213',
+      recallType: { selected: { value: 'NO_RECALL' } },
+      sentenceGroup: SentenceGroup.EXTENDED,
+    }
+
+    const res = mockRes({
+      locals: {
+        recommendation,
+        flags: { flagFTR56Enabled: true },
+      },
+    })
+    const next = mockNext()
+    await taskListNoRecallController.get(mockReq(), res, next)
+
+    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type-extended')
+  })
+
+  it('ftr56: present for Indeterminate SentenceGroup', async () => {
+    const recommendation = {
+      crn: 'X1213',
+      recallType: { selected: { value: 'NO_RECALL' } },
+      sentenceGroup: SentenceGroup.INDETERMINATE,
+    }
+
+    const res = mockRes({
+      locals: {
+        recommendation,
+        flags: { flagFTR56Enabled: true },
+      },
+    })
+    const next = mockNext()
+    await taskListNoRecallController.get(mockReq(), res, next)
+
+    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type-indeterminate')
   })
 })

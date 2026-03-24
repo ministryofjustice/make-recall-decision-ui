@@ -8,6 +8,7 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api/models/VictimsInContactScheme'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 jest.mock('../vulnerabilitiesDetails/formValidator')
 
@@ -138,6 +139,7 @@ describe('taskCompleteness', () => {
         practitionerForPartA: true,
         revocationOrderRecipients: true,
         ppcsQueryEmails: true,
+        sentenceGroup: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(true)
@@ -160,6 +162,7 @@ describe('taskCompleteness', () => {
         practitionerForPartA: false,
         revocationOrderRecipients: false,
         ppcsQueryEmails: false,
+        sentenceGroup: false,
       })
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -177,6 +180,7 @@ describe('taskCompleteness', () => {
         ...setAllProperties(noRecallProperties, true),
         previousRecalls: false,
         previousReleases: false,
+        sentenceGroup: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -194,6 +198,7 @@ describe('taskCompleteness', () => {
         previousRecalls: false,
         previousReleases: false,
         indeterminateSentenceType: false,
+        sentenceGroup: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -216,6 +221,7 @@ describe('taskCompleteness', () => {
         recallType: true,
         previousRecalls: false,
         previousReleases: false,
+        sentenceGroup: false,
         indeterminateSentenceType: false,
       })
       expect(areAllComplete).toEqual(false)
@@ -251,6 +257,22 @@ describe('taskCompleteness', () => {
         whyConsideredRecall: {},
       } as RecommendationResponse)
       expect(statuses.reasonsForNoRecall).toEqual(false)
+      expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
+    })
+
+    it('ftr56: sentenceGroup exists', () => {
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
+        {
+          ...emptyNoRecall,
+          nextAppointment: {},
+          whyConsideredRecall: {},
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+        } as RecommendationResponse,
+        { flagFTR56Enabked: true },
+      )
+      expect(statuses.reasonsForNoRecall).toEqual(false)
+      expect(statuses.sentenceGroup).toEqual(true)
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
     })

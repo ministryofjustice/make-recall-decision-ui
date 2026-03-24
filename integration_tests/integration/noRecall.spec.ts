@@ -140,7 +140,7 @@ context('No recall', () => {
   })
 
   describe('Ftr56: Task list', () => {
-    it('To do - Adult_SDS -  Mappa should exist', () => {
+    it('To do - Adult_SDS - Mappa should exist', () => {
       const recommendation = {
         ...recommendationResponse,
         sentenceGroup: SentenceGroup.ADULT_SDS,
@@ -157,6 +157,14 @@ context('No recall', () => {
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
+      cy.getElement('Type of indeterminate sentence').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
+
+      cy.getElement('Why you considered recall To do').should('exist')
+      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
+      cy.getElement('Appointment date and time To do').should('exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('To do - Youth SDS - Mappa should not exist', () => {
@@ -176,6 +184,14 @@ context('No recall', () => {
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
+      cy.getElement('Type of indeterminate sentence').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
+
+      cy.getElement('Why you considered recall To do').should('exist')
+      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
+      cy.getElement('Appointment date and time To do').should('exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('To do - Indeterminate - What type of sentence question should exist', () => {
@@ -197,12 +213,50 @@ context('No recall', () => {
       cy.getElement("Jane Bloggs's sentence information").should('exist')
 
       cy.getElement('What type of sentence is Jane Bloggs on? To do').should('exist')
+
+      cy.getElement('Type of indeterminate sentence').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
+
+      cy.getElement('Why you considered recall To do').should('exist')
+      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
+      cy.getElement('Appointment date and time To do').should('exist')
+      cy.getElement('Create letter').should('not.exist')
+    })
+
+    it('To do - Extended - What type of sentence question should exist', () => {
+      const recommendation = {
+        ...recommendationResponse,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
+      }
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+      cy.getElement('MAPPA information to assess recall type').should('not.exist')
+      cy.getElement('Suitability for standard or fixed term recall To do').should('not.exist')
+      cy.getElement('What you recommend').should('exist')
+      cy.getElement('When did the SPO agree this recall? To do').should('exist')
+
+      cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
+      cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
+      cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
+      cy.getElement("Jane Bloggs's sentence information").should('exist')
+
+      cy.getElement('What type of sentence is Jane Bloggs on? To do').should('exist')
+
+      cy.getElement('Type of indeterminate sentence').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
+
+      cy.getElement('Why you considered recall To do').should('exist')
+      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
+      cy.getElement('Appointment date and time To do').should('exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('Completed', () => {
       const recommendation = {
         ...noRecallResponse,
-        isUnder18: true,
         triggerLeadingToRecall: 'reason',
         sentenceGroup: SentenceGroup.ADULT_SDS,
         personOnProbation: {
@@ -210,6 +264,7 @@ context('No recall', () => {
           mappa: {
             hasBeenReviewed: true,
           },
+          ftr56MappaReviewed: true,
         },
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
@@ -217,7 +272,8 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
 
       cy.getElement('MAPPA information to assess recall type Completed').should('exist')
-      cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
+      // TODO: Fix this once MRD-3097 is merged
+      cy.getElement('Suitability for standard or fixed term recall').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? Completed').should('exist')
 
@@ -225,51 +281,117 @@ context('No recall', () => {
       cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
       cy.getElement("Jane Bloggs's sentence information Completed").should('exist')
+
+      cy.getElement('Type of indeterminate sentence').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
+
+      cy.getElement('Why you considered recall Completed').should('exist')
+      cy.getElement('Why Jane Bloggs should not be recalled Completed').should('exist')
+      cy.getElement('Appointment date and time Completed').should('exist')
+      cy.getElement('Create letter').should('exist')
     })
 
-    it('task list - check links to forms', () => {
+    type LinkCheck = { text: string; href: string }
+
+    function getRecallTypeSlug(recommendation: { sentenceGroup: SentenceGroup }) {
+      switch (recommendation.sentenceGroup) {
+        case SentenceGroup.INDETERMINATE:
+          return 'recall-type-indeterminate'
+        case SentenceGroup.EXTENDED:
+          return 'recall-type-extended'
+        default:
+          return 'recall-type'
+      }
+    }
+
+    function checkTaskListLinks(sentenceGroup: SentenceGroup, extraLinks: LinkCheck[] = []) {
       const recommendation = {
         ...noRecallResponse,
-        isUnder18: true,
         triggerLeadingToRecall: 'reason',
-        sentenceGroup: SentenceGroup.ADULT_SDS,
+        sentenceGroup,
       }
+
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
-      cy.getLinkHref('MAPPA information to assess recall type').should(
-        'contain',
-        '/recommendations/123/check-mappa-information?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
-      )
-      cy.getLinkHref('Suitability for standard or fixed term recall').should(
-        'contain',
-        '/recommendations/123/suitability-for-fixed-term-recall?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
-      )
-      cy.getLinkHref('What you recommend').should(
-        'contain',
-        '/recommendations/123/recall-type-indeterminate?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
-      )
-      cy.getLinkHref('When did the SPO agree this recall').should(
-        'contain',
-        '/recommendations/123/spo-agree-to-recall?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
-      )
 
-      cy.getLinkHref('What has made you consider recalling Jane Bloggs?').should(
-        'contain',
-        '/recommendations/123/trigger-leading-to-recall?fromPageId=task-list-no-recall&fromAnchor=heading-circumstances',
-      )
-      cy.getLinkHref('What licence conditions has Jane Bloggs breached?').should(
-        'contain',
-        '/recommendations/123/licence-conditions?fromPageId=task-list-no-recall&fromAnchor=heading-circumstances',
-      )
-      cy.getLinkHref('What alternatives to recall have been tried already?').should(
-        'contain',
-        '/recommendations/123/alternatives-tried?fromPageId=task-list-no-recall&fromAnchor=heading-alternatives',
-      )
-      cy.getLinkHref("Jane Bloggs's sentence information").should(
-        'contain',
-        '/recommendations/123/sentence-information?fromPageId=task-list-no-recall&fromAnchor=heading-alternatives',
-      )
+      const recallTypeSlug = getRecallTypeSlug(recommendation)
+      // Base links for all sentence groups
+      const baseLinks: LinkCheck[] = [
+        {
+          text: 'What you recommend',
+          href: `/recommendations/123/${recallTypeSlug}?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation`,
+        },
+        {
+          text: 'When did the SPO agree this recall',
+          href: '/recommendations/123/spo-agree-to-recall?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
+        },
+        {
+          text: 'What has made you consider recalling Jane Bloggs?',
+          href: '/recommendations/123/trigger-leading-to-recall?fromPageId=task-list-no-recall&fromAnchor=heading-circumstances',
+        },
+        {
+          text: 'What licence conditions has Jane Bloggs breached?',
+          href: '/recommendations/123/licence-conditions?fromPageId=task-list-no-recall&fromAnchor=heading-circumstances',
+        },
+        {
+          text: 'What alternatives to recall have been tried already?',
+          href: '/recommendations/123/alternatives-tried?fromPageId=task-list-no-recall&fromAnchor=heading-alternatives',
+        },
+        {
+          text: "Jane Bloggs's sentence information",
+          href: '/recommendations/123/sentence-information?fromPageId=task-list-no-recall&fromAnchor=heading-alternatives',
+        },
+        {
+          text: 'Why you considered recall',
+          href: '/recommendations/123/why-considered-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
+        },
+        {
+          text: 'Why Jane Bloggs should not be recalled',
+          href: '/recommendations/123/reasons-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
+        },
+        {
+          text: 'Appointment date and time',
+          href: '/recommendations/123/appointment-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
+        },
+        { text: 'Preview of the letter', href: '/recommendations/123/preview-no-recall' },
+      ]
+
+      const allLinks = [...baseLinks, ...extraLinks]
+
+      allLinks.forEach(link => cy.getLinkHref(link.text).should('contain', link.href))
+    }
+
+    // Tests
+    it('task list - ADULT_SDS - check links to forms', () => {
+      checkTaskListLinks(SentenceGroup.ADULT_SDS, [
+        {
+          text: 'MAPPA information to assess recall type',
+          href: '/recommendations/123/check-mappa-information?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
+        },
+        {
+          text: 'Suitability for standard or fixed term recall',
+          href: '/recommendations/123/suitability-for-fixed-term-recall?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
+        },
+      ])
+    })
+
+    it('task list - Youth SDS - check links to forms', () => {
+      checkTaskListLinks(SentenceGroup.YOUTH_SDS, [
+        {
+          text: 'Suitability for standard or fixed term recall',
+          href: '/recommendations/123/suitability-for-fixed-term-recall?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
+        },
+      ])
+    })
+
+    it('task list - Indeterminate - check links to forms', () => {
+      checkTaskListLinks(SentenceGroup.INDETERMINATE)
+    })
+
+    it('task list - EXTENDED - check links to forms', () => {
+      checkTaskListLinks(SentenceGroup.EXTENDED)
     })
   })
 
