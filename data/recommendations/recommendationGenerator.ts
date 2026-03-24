@@ -4,7 +4,6 @@ import { SelectedWithDetailsGenerator, SelectedWithDetailsOptions } from '../com
 import { RoshEnum } from '../../server/@types/make-recall-decision-api/models/RoshData'
 import { BookRecallToPpudGenerator, BookRecallToPpudOptions } from './bookRecallToPpudGenerator'
 import { AnyNoneOrOption, DataGenerator, NoneOrOption } from '../@generators/dataGenerators'
-import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
 import { IndeterminateSentenceType } from '../../server/@types/make-recall-decision-api/models/IndeterminateSentenceType'
 import { RecommendationResponse } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { VictimsInContactScheme } from '../../server/@types/make-recall-decision-api/models/VictimsInContactScheme'
@@ -17,6 +16,7 @@ import { WhoCompletedPartAGenerator, WhoCompletedPartAOptions } from './whoCompl
 import { VulnerabilitiesGenerator, VulnerabilitiesOptions } from './vulnerabilitiesGenerator'
 import { BookingMementoGenerator, BookingMementoOptions } from './bookingMementoGenerator'
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
+import { CustodyStatusGenerator, CustodyStatusOptions } from './custodyStatusGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -27,7 +27,7 @@ import { SentenceGroup } from '../../server/controllers/recommendations/sentence
 export type RecommendationOptions = {
   crn?: string
   alternativesToRecallTried?: boolean
-  custodyStatus?: boolean
+  custodyStatus?: NoneOrOption<CustodyStatusOptions>
   hasArrestIssues?: NoneOrOption<SelectedWithDetailsOptions>
   fixedTermAdditionalLicenceConditions?: SelectedWithDetailsOptions
   hasContrabandRisk?: SelectedWithDetailsOptions
@@ -94,13 +94,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     custodyStatus:
-      (options?.custodyStatus ?? true)
-        ? {
-            selected: CustodyStatus.selected.YES_POLICE,
-            details: faker.location.streetAddress(),
-            allOptions: [],
-          }
-        : undefined,
+      options?.custodyStatus !== 'none' ? CustodyStatusGenerator.generate(options?.custodyStatus) : undefined,
     dateVloInformed: faker.date.future().toDateString(),
     fixedTermAdditionalLicenceConditions:
       (options?.fixedTermAdditionalLicenceConditions ?? true)

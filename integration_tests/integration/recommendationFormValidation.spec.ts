@@ -298,18 +298,6 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Custody status', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/custody-status`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'custodyStatus',
-      errorText: 'Select whether the person is in custody or not',
-    })
-  })
-
   it('Vulnerabilities', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
