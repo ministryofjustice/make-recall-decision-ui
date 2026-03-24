@@ -114,6 +114,8 @@ context('Custody status', () => {
                   .should('exist')
                   .should('have.attr', 'for', 'custodyStatusDetailsYesPolice')
               }
+
+              cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
             })
           })
         })
