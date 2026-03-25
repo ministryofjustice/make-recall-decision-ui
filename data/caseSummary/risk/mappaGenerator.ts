@@ -15,7 +15,7 @@ export const MappaGenerator: DataGenerator<Mappa, MappaOptions> = {
     level: options?.level ?? faker.number.int({ min: 1, max: 3 }),
     lastUpdatedDate: options?.lastUpdatedDate ?? faker.date.past().toISOString(),
     category: options?.category ?? faker.number.int({ min: 1, max: 4 }),
-    error: options?.error ?? faker.lorem.sentence(),
+    error: options?.error,
     hasBeenReviewed: options?.hasBeenReviewed ?? faker.datatype.boolean(),
   }),
 }
