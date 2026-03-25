@@ -5,13 +5,19 @@ import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateCustodyStatus = async ({
+  requestBody,
+  urlInfo,
+  ftr56Enabled,
+}: FormValidatorArgs & {
+  ftr56Enabled?: boolean
+}): FormValidatorReturn => {
   let errors
 
   const { custodyStatus, custodyStatusDetailsYesPolice } = requestBody
   const invalidStatus = !custodyStatus || !isValueValid(custodyStatus as string, 'custodyStatus')
   const missingPoliceCustodyAddress =
-    custodyStatus === 'YES_POLICE' && isEmptyStringOrWhitespace(custodyStatusDetailsYesPolice)
+    !ftr56Enabled && custodyStatus === 'YES_POLICE' && isEmptyStringOrWhitespace(custodyStatusDetailsYesPolice)
   if (invalidStatus || missingPoliceCustodyAddress) {
     errors = []
     if (invalidStatus) {
@@ -44,7 +50,8 @@ const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs
   const valuesToSave = {
     custodyStatus: {
       selected: custodyStatus,
-      details: custodyStatus === 'YES_POLICE' ? stripHtmlTags(custodyStatusDetailsYesPolice as string) : null,
+      details:
+        !ftr56Enabled && custodyStatus === 'YES_POLICE' ? stripHtmlTags(custodyStatusDetailsYesPolice as string) : null,
       allOptions: formOptions.custodyStatus,
     },
   }

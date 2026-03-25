@@ -3,12 +3,14 @@ import routeUrls from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import setResponsePropertiesToNull from '../support/commands'
 import { RecommendationResponse } from '../../server/@types/make-recall-decision-api'
+import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
 import { RecallTypeSelectedValue } from '../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
 import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
 import strings from '../../server/textStrings/en'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
 import recallTypeValues = RecallTypeSelectedValue.value
+import selected = CustodyStatus.selected
 
 context('Recommendation - task list', () => {
   beforeEach(() => {
@@ -448,7 +450,11 @@ context('Recommendation - task list', () => {
       ;[true, false].forEach(isInCustody => {
         context(`person on probations is ${isInCustody ? '' : ' not '}in custody`, () => {
           const recommendation = RecommendationResponseGenerator.generate({
-            custodyStatus: isInCustody,
+            custodyStatus: {
+              selected: isInCustody ? selected.YES_POLICE : selected.NO,
+              details: faker.location.streetAddress(),
+              allOptions: [],
+            },
           })
           beforeEach(() => {
             setUp(recommendation)
@@ -611,7 +617,11 @@ context('Recommendation - task list', () => {
       ;[true, false].forEach(isInCustody => {
         it(`person on probations is ${isInCustody ? '' : ' not '}in custody`, () => {
           const recommendation = RecommendationResponseGenerator.generate({
-            custodyStatus: isInCustody,
+            custodyStatus: {
+              selected: isInCustody ? selected.YES_POLICE : selected.NO,
+              details: faker.location.streetAddress(),
+              allOptions: [],
+            },
             personOnProbation: {
               name: personName,
             },
