@@ -8,7 +8,6 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api/models/VictimsInContactScheme'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
-import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 jest.mock('../vulnerabilitiesDetails/formValidator')
 
@@ -261,18 +260,17 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(false)
     })
 
-    it('ftr56: sentenceGroup exists', () => {
+    it('sentenceGroup incomplete', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
         {
           ...emptyNoRecall,
           nextAppointment: {},
           whyConsideredRecall: {},
-          sentenceGroup: SentenceGroup.ADULT_SDS,
         } as RecommendationResponse,
-        { flagFTR56Enabked: true },
+        { flagFTR56Enabled: true },
       )
       expect(statuses.reasonsForNoRecall).toEqual(false)
-      expect(statuses.sentenceGroup).toEqual(true)
+      expect(statuses.sentenceGroup).toEqual(false)
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
     })

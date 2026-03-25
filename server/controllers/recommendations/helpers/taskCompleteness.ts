@@ -94,6 +94,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || !!statuses.indeterminateSentenceType
       : !recommendation.isIndeterminateSentence || !!statuses.indeterminateSentenceType
 
+    // TODO: Add Suitability questions once MRD-3097 is merged to main
     return {
       statuses: {
         ...statuses,
@@ -103,9 +104,9 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       },
       isReadyForCounterSignature: false,
       areAllComplete:
+        statuses.decisionDateTime &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
-        statuses.responseToProbation &&
         sentenceValidation &&
         statuses.licenceConditionsBreached &&
         indeterminateValidation &&

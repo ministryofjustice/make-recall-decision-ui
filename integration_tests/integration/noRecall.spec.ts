@@ -150,21 +150,21 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
       cy.getElement('MAPPA information to assess recall type To do').should('exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
-      cy.getElement('What you recommend').should('exist')
+      cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? To do').should('exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
-      cy.getElement('Type of indeterminate sentence').should('not.exist')
+      cy.getElement('What type of sentence is Jane Bloggs on?').should('not.exist')
       cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
       cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
-      cy.getElement('Why you considered recall To do').should('exist')
-      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
-      cy.getElement('Appointment date and time To do').should('exist')
-      cy.getElement('Create letter').should('not.exist')
+      cy.getElement('Explain why you considered recall To do').should('exist')
+      cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
+      cy.getElement('Add the appointment date and time To do').should('exist')
+      cy.getElement('Preview of the letter').should('not.exist')
     })
 
     it('To do - Youth SDS - Mappa should not exist', () => {
@@ -177,21 +177,21 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
-      cy.getElement('What you recommend').should('exist')
+      cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? To do').should('exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
-      cy.getElement('Type of indeterminate sentence').should('not.exist')
+      cy.getElement('What type of sentence is Jane Bloggs on?').should('not.exist')
       cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
       cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
-      cy.getElement('Why you considered recall To do').should('exist')
-      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
-      cy.getElement('Appointment date and time To do').should('exist')
-      cy.getElement('Create letter').should('not.exist')
+      cy.getElement('Explain why you considered recall To do').should('exist')
+      cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
+      cy.getElement('Add the appointment date and time To do').should('exist')
+      cy.getElement('Preview of the letter').should('not.exist')
     })
 
     it('To do - Indeterminate - What type of sentence question should exist', () => {
@@ -204,7 +204,7 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('not.exist')
-      cy.getElement('What you recommend').should('exist')
+      cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? To do').should('exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
@@ -218,23 +218,23 @@ context('No recall', () => {
       cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
       cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
-      cy.getElement('Why you considered recall To do').should('exist')
-      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
-      cy.getElement('Appointment date and time To do').should('exist')
-      cy.getElement('Create letter').should('not.exist')
+      cy.getElement('Explain why you considered recall To do').should('exist')
+      cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
+      cy.getElement('Add the appointment date and time To do').should('exist')
+      cy.getElement('Preview of the letter').should('not.exist')
     })
 
     it('To do - Extended - What type of sentence question should exist', () => {
       const recommendation = {
         ...recommendationResponse,
-        sentenceGroup: SentenceGroup.INDETERMINATE,
+        sentenceGroup: SentenceGroup.EXTENDED,
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('not.exist')
-      cy.getElement('What you recommend').should('exist')
+      cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? To do').should('exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
@@ -242,16 +242,14 @@ context('No recall', () => {
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
 
-      cy.getElement('What type of sentence is Jane Bloggs on? To do').should('exist')
-
       cy.getElement('Type of indeterminate sentence').should('not.exist')
       cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
       cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
-      cy.getElement('Why you considered recall To do').should('exist')
-      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
-      cy.getElement('Appointment date and time To do').should('exist')
-      cy.getElement('Create letter').should('not.exist')
+      cy.getElement('Explain why you considered recall To do').should('exist')
+      cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
+      cy.getElement('Add the appointment date and time To do').should('exist')
+      cy.getElement('Preview of the letter').should('not.exist')
     })
 
     it('Completed', () => {
@@ -261,9 +259,6 @@ context('No recall', () => {
         sentenceGroup: SentenceGroup.ADULT_SDS,
         personOnProbation: {
           name: 'Jane Bloggs',
-          mappa: {
-            hasBeenReviewed: true,
-          },
           ftr56MappaReviewed: true,
         },
       }
@@ -286,9 +281,9 @@ context('No recall', () => {
       cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
       cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
-      cy.getElement('Why you considered recall Completed').should('exist')
-      cy.getElement('Why Jane Bloggs should not be recalled Completed').should('exist')
-      cy.getElement('Appointment date and time Completed').should('exist')
+      cy.getElement('Explain why you considered recall Completed').should('exist')
+      cy.getElement('Explain why Jane Bloggs should not be recalled Completed').should('exist')
+      cy.getElement('Add the appointment date and time Completed').should('exist')
       cy.getElement('Create letter').should('exist')
     })
 
@@ -308,7 +303,6 @@ context('No recall', () => {
     function checkTaskListLinks(sentenceGroup: SentenceGroup, extraLinks: LinkCheck[] = []) {
       const recommendation = {
         ...noRecallResponse,
-        triggerLeadingToRecall: 'reason',
         sentenceGroup,
       }
 
@@ -344,15 +338,15 @@ context('No recall', () => {
           href: '/recommendations/123/sentence-information?fromPageId=task-list-no-recall&fromAnchor=heading-alternatives',
         },
         {
-          text: 'Why you considered recall',
+          text: 'Explain why you considered recall',
           href: '/recommendations/123/why-considered-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
         },
         {
-          text: 'Why Jane Bloggs should not be recalled',
+          text: 'Explain why Jane Bloggs should not be recalled',
           href: '/recommendations/123/reasons-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
         },
         {
-          text: 'Appointment date and time',
+          text: 'Add the appointment date and time',
           href: '/recommendations/123/appointment-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
         },
         { text: 'Preview of the letter', href: '/recommendations/123/preview-no-recall' },
@@ -387,7 +381,12 @@ context('No recall', () => {
     })
 
     it('task list - Indeterminate - check links to forms', () => {
-      checkTaskListLinks(SentenceGroup.INDETERMINATE)
+      checkTaskListLinks(SentenceGroup.INDETERMINATE, [
+        {
+          text: 'What type of sentence is Jane Bloggs on?',
+          href: '/recommendations/123/indeterminate-type?fromPageId=task-list-no-recall&fromAnchor=heading-alternatives',
+        },
+      ])
     })
 
     it('task list - EXTENDED - check links to forms', () => {
