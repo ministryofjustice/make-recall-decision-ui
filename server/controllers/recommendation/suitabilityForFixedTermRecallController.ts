@@ -10,7 +10,6 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
-  isFixedTermRecallMandatoryForValueKeysFTR56,
   isRecommendationDiscretionaryRecall,
 } from '../../utils/fixedTermRecallUtils'
 import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
@@ -160,9 +159,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   }
 
   const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
-  const ftrIsMandatoryUpdated = flags.flagFTR56Enabled
-    ? isFixedTermRecallMandatoryForValueKeysFTR56(recommendation.sentenceGroup, valuesToSave as Record<string, boolean>)
-    : isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
+  const ftrIsMandatoryUpdated = isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
 
   if (!flags.flagFTR56Enabled && ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
     valuesToSave.recallType = {

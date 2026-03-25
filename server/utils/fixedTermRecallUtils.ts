@@ -40,24 +40,6 @@ export const isFixedTermRecallMandatoryForValueKeys = (values: Record<string, bo
     values.hasBeenChargedWithTerroristOrStateThreatOffence,
   )
 
-export const isFixedTermRecallMandatoryForValueKeysFTR56 = (
-  sentenceGroup: SentenceGroup,
-  values: Record<string, boolean>,
-) =>
-  isFixedTermRecallMandatoryFTR56(sentenceGroup, {
-    wasReferredToParoleBoard244ZB: values?.wasReferredToParoleBoard244ZB,
-    wasRepatriatedForMurder: values?.wasRepatriatedForMurder,
-    isServingSOPCSentence: values?.isServingSOPCSentence,
-    isServingDCRSentence: values?.isServingDCRSentence,
-    isChargedWithOffence: values?.isChargedWithOffence,
-    isServingTerroristOrNationalSecurityOffence: values?.isServingTerroristOrNationalSecurityOffence,
-    isAtRiskOfInvolvedInForeignPowerThreat: values?.isAtRiskOfInvolvedInForeignPowerThreat,
-    isYouthSentenceOver12Months: values?.isYouthSentenceOver12Months,
-    isYouthChargedWithSeriousOffence: values?.isYouthChargedWithSeriousOffence,
-    isMappaCategory4: values?.isMappaCategory4,
-    isMappaLevel2Or3: values?.isMappaLevel2Or3,
-  })
-
 export const isFixedTermRecallMandatory = (
   isSentence48MonthsOrOver?: boolean,
   isUnder18?: boolean,

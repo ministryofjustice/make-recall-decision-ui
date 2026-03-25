@@ -5,7 +5,6 @@ import {
   isFixedTermRecallMandatoryForRecommendation,
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatory,
-  isFixedTermRecallMandatoryForValueKeysFTR56,
   isRecommendationDiscretionaryRecall,
 } from './fixedTermRecallUtils'
 
@@ -266,99 +265,6 @@ describe('isFixedTermRecallMandatory', () => {
           ).toBeFalsy()
         })
       })
-  })
-})
-
-describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
-  describe('when sentenceGroup is YOUTH_SDS', () => {
-    it('returns false when no exclusion criteria fields are set', () => {
-      expect(
-        isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.YOUTH_SDS, {
-          isYouthSentenceOver12Months: undefined,
-          isYouthChargedWithSeriousOffence: undefined,
-          isMappaLevel2Or3: undefined,
-        }),
-      ).toBeFalsy()
-    })
-    it('returns true when all exclusion criteria fields are false', () => {
-      expect(
-        isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.YOUTH_SDS, {
-          isYouthSentenceOver12Months: false,
-          isYouthChargedWithSeriousOffence: false,
-          isMappaLevel2Or3: false,
-        }),
-      ).toBeTruthy()
-    })
-
-    describe('returns false when any exclusion criteria fields are true', () => {
-      generateBooleanCombinations(3)
-        .filter(c => c.some(b => b))
-        .forEach(combination => {
-          it(`${combination[0]} - ${combination[1]} - ${combination[2]}`, () => {
-            expect(
-              isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.YOUTH_SDS, {
-                isYouthSentenceOver12Months: combination[0],
-                isYouthChargedWithSeriousOffence: combination[1],
-                isMappaLevel2Or3: combination[2],
-              }),
-            ).toBeFalsy()
-          })
-        })
-    })
-  })
-
-  describe('when sentenceGroup is ADULT_SDS', () => {
-    it('returns false when no exclusion criteria fields are set', () => {
-      expect(
-        isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.ADULT_SDS, {
-          isChargedWithOffence: undefined,
-          isServingTerroristOrNationalSecurityOffence: undefined,
-          isAtRiskOfInvolvedInForeignPowerThreat: undefined,
-          wasReferredToParoleBoard244ZB: undefined,
-          wasRepatriatedForMurder: undefined,
-          isServingSOPCSentence: undefined,
-          isServingDCRSentence: undefined,
-          isMappaLevel2Or3: undefined,
-          isMappaCategory4: undefined,
-        }),
-      ).toBeFalsy()
-    })
-    it('returns true when all exclusion criteria fields are false', () => {
-      expect(
-        isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.ADULT_SDS, {
-          isChargedWithOffence: false,
-          isServingTerroristOrNationalSecurityOffence: false,
-          isAtRiskOfInvolvedInForeignPowerThreat: false,
-          wasReferredToParoleBoard244ZB: false,
-          wasRepatriatedForMurder: false,
-          isServingSOPCSentence: false,
-          isServingDCRSentence: false,
-          isMappaLevel2Or3: false,
-          isMappaCategory4: false,
-        }),
-      ).toBeTruthy()
-    })
-    describe('returns false when any exclusion criteria fields are true', () => {
-      generateBooleanCombinations(9)
-        .filter(c => c.some(b => b))
-        .forEach(combination => {
-          it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}}`, () => {
-            expect(
-              isFixedTermRecallMandatoryForValueKeysFTR56(SentenceGroup.ADULT_SDS, {
-                isChargedWithOffence: combination[0],
-                isServingTerroristOrNationalSecurityOffence: combination[1],
-                isAtRiskOfInvolvedInForeignPowerThreat: combination[2],
-                wasReferredToParoleBoard244ZB: combination[3],
-                wasRepatriatedForMurder: combination[4],
-                isServingSOPCSentence: combination[5],
-                isServingDCRSentence: combination[6],
-                isMappaLevel2Or3: combination[7],
-                isMappaCategory4: combination[8],
-              }),
-            ).toBeFalsy()
-          })
-        })
-    })
   })
 })
 
