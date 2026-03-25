@@ -1,9 +1,8 @@
 import { RiskResponse } from '../../../server/@types/make-recall-decision-api'
 import { DataGenerator } from '../../@generators/dataGenerators'
-import { MappaGenerator } from '../../common/mappaGenerator'
 import { ActiveRecommendationGenerator, ActiveRecommendationOptions } from '../common/activeRecommendationGenerator'
 import { PersonDetailsGenerator, PersonDetailsOptions } from '../common/personDetailsGenerator'
-import { MappaOptions } from './mappaGenerator'
+import { MappaGenerator, MappaOptions } from './mappaGenerator'
 import { RoshHistoryGenerator, RoshHistoryOptions } from './roshHistoryGenerator'
 import { RoshSummaryGenerator, RoshSummaryOptions } from './roshSummaryGenerator'
 

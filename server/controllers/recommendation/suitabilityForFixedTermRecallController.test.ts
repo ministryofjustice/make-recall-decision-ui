@@ -9,7 +9,7 @@ import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/
 import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
-  isFixedTermRecallMandatoryForValueKeysFTR56,
+  isRecommendationDiscretionaryRecall,
 } from '../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
@@ -260,7 +260,8 @@ describe('get', () => {
     })
   })
 
-  it('shows the warning banner when FTR56 is enabled, the sentenceGroup is YOUTH_SDS and the recallType is null', async () => {
+  it('shows the warning banner when FTR56 is enabled, the sentenceGroup is YOUTH_SDS and the recallType is not null', async () => {
+    ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValueOnce(true)
     const res = mockRes({
       locals: {
         recommendation: {
@@ -269,9 +270,6 @@ describe('get', () => {
           },
           sentenceGroup: SentenceGroup.YOUTH_SDS,
           recallType: '123',
-          isYouthSentenceOver12Months: true,
-          isYouthChargedWithSeriousOffence: true,
-          isMappaLevel2Or3: true,
         },
         flags: {
           flagFTR56Enabled: true,
@@ -428,55 +426,98 @@ describe('post', () => {
   })
 
   describe('post with valid data FTR56', () => {
-    const testCases: {
-      name: string
-      previouslyMandatory: boolean
-      updatedMandatory: boolean
-      detailsExpected: boolean
-    }[] = [
+    ;[
       {
-        name: 'previously discretionary - now discretionary - details not updated',
-        previouslyMandatory: false,
-        updatedMandatory: false,
-        detailsExpected: false,
+        recommendationOptions: {
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+          isMappaCategory4: true,
+          isMappaLevel2Or3: true,
+          isYouthSentenceOver12Months: true,
+          isYouthChargedWithSeriousOffence: true,
+        },
+        postBody: {
+          // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
+          // it's still required in the Part A so we're just checking it's being updated in the API
+          isMappaCategory4: 'YES',
+          isMappaLevel2Or3: 'YES',
+          isYouthSentenceOver12Months: 'YES',
+          isYouthChargedWithSeriousOffence: 'YES',
+        },
+        recallTypePreserved: true,
       },
       {
-        name: 'previously discretionary - now mandatory - details not updated',
-        previouslyMandatory: false,
-        updatedMandatory: true,
-        detailsExpected: false,
+        recommendationOptions: {
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+          isMappaCategory4: false,
+          isMappaLevel2Or3: false,
+          isYouthSentenceOver12Months: false,
+          isYouthChargedWithSeriousOffence: false,
+        },
+        postBody: {
+          // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
+          // it's still required in the Part A so we're just checking it's being updated in the API
+          isMappaCategory4: 'YES',
+          isMappaLevel2Or3: 'YES',
+          isYouthSentenceOver12Months: 'YES',
+          isYouthChargedWithSeriousOffence: 'YES',
+        },
+        recallTypePreserved: false,
       },
       {
-        name: 'previously mandatory - now mandatory - details not updated',
-        previouslyMandatory: true,
-        updatedMandatory: true,
-        detailsExpected: false,
+        recommendationOptions: {
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+          isChargedWithOffence: true,
+          isServingTerroristOrNationalSecurityOffence: true,
+          isAtRiskOfInvolvedInForeignPowerThreat: true,
+          wasReferredToParoleBoard244ZB: true,
+          wasRepatriatedForMurder: true,
+          isServingSOPCSentence: true,
+          isServingDCRSentence: true,
+        },
+        postBody: {
+          isChargedWithOffence: 'YES',
+          isServingTerroristOrNationalSecurityOffence: 'YES',
+          isAtRiskOfInvolvedInForeignPowerThreat: 'YES',
+          wasReferredToParoleBoard244ZB: 'YES',
+          wasRepatriatedForMurder: 'YES',
+          isServingSOPCSentence: 'YES',
+          isServingDCRSentence: 'YES',
+        },
+        recallTypePreserved: true,
       },
       {
-        name: 'previously mandatory - now discretionary - details updated to clear value',
-        previouslyMandatory: true,
-        updatedMandatory: false,
-        detailsExpected: true,
+        recommendationOptions: {
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+          isChargedWithOffence: true,
+          isServingTerroristOrNationalSecurityOffence: true,
+          isAtRiskOfInvolvedInForeignPowerThreat: true,
+          wasReferredToParoleBoard244ZB: true,
+          wasRepatriatedForMurder: true,
+          isServingSOPCSentence: true,
+          isServingDCRSentence: true,
+        },
+        postBody: {
+          isChargedWithOffence: 'NO',
+          isServingTerroristOrNationalSecurityOffence: 'NO',
+          isAtRiskOfInvolvedInForeignPowerThreat: 'NO',
+          wasReferredToParoleBoard244ZB: 'NO',
+          wasRepatriatedForMurder: 'NO',
+          isServingSOPCSentence: 'NO',
+          isServingDCRSentence: 'NO',
+        },
+        recallTypePreserved: false,
       },
-    ]
-    testCases.forEach(({ name, previouslyMandatory, updatedMandatory, detailsExpected }) => {
-      it(name, async () => {
-        ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValue(previouslyMandatory)
-        ;(isFixedTermRecallMandatoryForValueKeysFTR56 as jest.Mock).mockReturnValue(updatedMandatory)
+    ].forEach(testCase => {
+      it(`${testCase.recallTypePreserved ? 'does not clear' : 'clears'} the recallType and rationale if the criteria has ${testCase.recallTypePreserved ? 'not ' : ''}changed`, async () => {
         const req = mockReq({
           params: { recommendationId: '123' },
           body: {
-            // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
-            // it's still required in the Part A so we're just checking it's being updated in the API
-            isMappaCategory4: 'YES',
-            isMappaLevel2Or3: 'YES',
-            isYouthSentenceOver12Months: 'YES',
-            isYouthChargedWithSeriousOffence: 'YES',
+            ...testCase.postBody,
           },
         })
         const priorRecommendation = RecommendationResponseGenerator.generate({
           recallType: 'any',
-          sentenceGroup: SentenceGroup.YOUTH_SDS,
+          ...testCase.recommendationOptions,
         })
         const res = mockRes({
           token: 'token1',
@@ -497,29 +538,15 @@ describe('post', () => {
           recommendationId: '123',
           token: 'token1',
           valuesToSave: {
-            isMappaCategory4: true,
-            isMappaLevel2Or3: true,
-            isYouthSentenceOver12Months: true,
-            isYouthChargedWithSeriousOffence: true,
-            ...(detailsExpected
+            ...Object.fromEntries(Object.entries(testCase.postBody).map(([key, value]) => [key, value === 'YES'])),
+            ...(!testCase.recallTypePreserved
               ? {
                   recallType: {
-                    selected: { value: priorRecommendation.recallType.selected.value },
+                    selected: { value: null },
                     allOptions: priorRecommendation.recallType.allOptions,
                   },
                 }
-              : {
-                  ...(!previouslyMandatory && updatedMandatory
-                    ? {
-                        recallType: {
-                          allOptions: [],
-                          selected: {
-                            value: null,
-                          },
-                        },
-                      }
-                    : {}),
-                }),
+              : {}),
           },
           featureFlags: {
             flagFTR56Enabled: true,

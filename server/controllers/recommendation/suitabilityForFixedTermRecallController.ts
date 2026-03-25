@@ -11,6 +11,7 @@ import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
   isFixedTermRecallMandatoryForValueKeysFTR56,
+  isRecommendationDiscretionaryRecall,
 } from '../../utils/fixedTermRecallUtils'
 import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
 import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
@@ -78,7 +79,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       // so the warning is only required when the sentenceGroup is YOUTH_SDS
       recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
       recommendation.recallType !== null &&
-      !isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
+      isRecommendationDiscretionaryRecall(recommendation)
         ? warningPanelDetails
         : undefined
   } else {
@@ -163,7 +164,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     ? isFixedTermRecallMandatoryForValueKeysFTR56(recommendation.sentenceGroup, valuesToSave as Record<string, boolean>)
     : isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
 
-  if (ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
+  if (!flags.flagFTR56Enabled && ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
     valuesToSave.recallType = {
       ...recommendation.recallType,
       selected: {
@@ -172,9 +173,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
     }
   }
 
-  // Fix the logic for FTR56
   if (flags.flagFTR56Enabled) {
-    if (!ftrMandatoryPreviously && ftrIsMandatoryUpdated) {
+    // wipe the recall Type and rationale if the criteria has changed
+    const criteriaChanged = fieldIds.some(
+      fieldId => recommendation[fieldId as keyof typeof recommendation] !== valuesToSave[fieldId],
+    )
+
+    if (criteriaChanged) {
       valuesToSave.recallType = {
         ...recommendation.recallType,
         selected: {

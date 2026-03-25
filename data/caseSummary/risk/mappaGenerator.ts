@@ -10,7 +10,7 @@ export type MappaOptions = {
   hasBeenReviewed?: boolean
 }
 
-export const mappaGenerator: DataGenerator<Mappa, MappaOptions> = {
+export const MappaGenerator: DataGenerator<Mappa, MappaOptions> = {
   generate: options => ({
     level: options?.level ?? faker.number.int({ min: 1, max: 3 }),
     lastUpdatedDate: options?.lastUpdatedDate ?? faker.date.past().toISOString(),

@@ -6,6 +6,7 @@ import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatory,
   isFixedTermRecallMandatoryForValueKeysFTR56,
+  isRecommendationDiscretionaryRecall,
 } from './fixedTermRecallUtils'
 
 describe('isFixedTermRecallMandatoryForRecommendation', () => {
@@ -359,4 +360,34 @@ describe('isFixedTermRecallMandatoryForValueKeysFTR56', () => {
         })
     })
   })
+})
+
+describe('isRecommendationDiscretionaryRecall', () => {
+  ;[
+    {
+      recommendation: {
+        isYouthSentenceOver12Months: false,
+        isYouthChargedWithSeriousOffence: false,
+      },
+      expectedResult: false,
+    },
+    {
+      recommendation: {
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: false,
+      },
+      expectedResult: true,
+    },
+    {
+      recommendation: {
+        isYouthSentenceOver12Months: false,
+        isYouthChargedWithSeriousOffence: true,
+      },
+      expectedResult: true,
+    },
+  ].forEach(testCase =>
+    it(`returns ${testCase.expectedResult} when sentenceOver12Months is ${testCase.recommendation.isYouthSentenceOver12Months} and chargedWithSeriousOffence is ${testCase.recommendation.isYouthChargedWithSeriousOffence}`, () => {
+      expect(isRecommendationDiscretionaryRecall(testCase.recommendation)).toBe(testCase.expectedResult)
+    }),
+  )
 })
