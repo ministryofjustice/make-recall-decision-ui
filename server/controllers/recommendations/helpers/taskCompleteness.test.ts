@@ -8,6 +8,7 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api/models/VictimsInContactScheme'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 jest.mock('../vulnerabilitiesDetails/formValidator')
 
@@ -27,6 +28,18 @@ const sharedProperties: RecommendationResponse = {
   recallType: undefined,
   decisionDateTime: undefined,
   responseToProbation: undefined,
+}
+
+const suitabilityForRecallProperties: RecommendationResponse = {
+  isChargedWithOffence: undefined,
+  isServingTerroristOrNationalSecurityOffence: undefined,
+  isAtRiskOfInvolvedInForeignPowerThreat: undefined,
+  wasReferredToParoleBoard244ZB: undefined,
+  wasRepatriatedForMurder: undefined,
+  isServingSOPCSentence: undefined,
+  isServingDCRSentence: undefined,
+  isYouthSentenceOver12Months: undefined,
+  isYouthChargedWithSeriousOffence: undefined,
 }
 
 const recallProperties: RecommendationResponse & { mappa?: boolean } = {
@@ -133,11 +146,14 @@ describe('taskCompleteness', () => {
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(recallProperties, true),
         ...setAllProperties(indeterminateSentenceProperties, true),
+        ...setAllProperties(suitabilityForRecallProperties, false),
         didProbationPractitionerCompletePartA: true,
         whoCompletedPartA: true,
         practitionerForPartA: true,
         revocationOrderRecipients: true,
         ppcsQueryEmails: true,
+        sentenceGroup: false,
+        triggerLeadingToRecall: true,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(true)
@@ -149,6 +165,7 @@ describe('taskCompleteness', () => {
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(recallProperties, false),
         ...setAllProperties(indeterminateSentenceProperties, false),
+        ...setAllProperties(suitabilityForRecallProperties, false),
         isIndeterminateSentence: true,
         recallType: true,
         fixedTermAdditionalLicenceConditions: true,
@@ -160,6 +177,8 @@ describe('taskCompleteness', () => {
         practitionerForPartA: false,
         revocationOrderRecipients: false,
         ppcsQueryEmails: false,
+        sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -175,8 +194,11 @@ describe('taskCompleteness', () => {
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(indeterminateSentenceProperties, true),
         ...setAllProperties(noRecallProperties, true),
+        ...setAllProperties(suitabilityForRecallProperties, false),
         previousRecalls: false,
         previousReleases: false,
+        sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -191,9 +213,12 @@ describe('taskCompleteness', () => {
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(noRecallProperties, true),
+        ...setAllProperties(suitabilityForRecallProperties, false),
         previousRecalls: false,
         previousReleases: false,
         indeterminateSentenceType: false,
+        sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -213,9 +238,12 @@ describe('taskCompleteness', () => {
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(noRecallProperties, false),
+        ...setAllProperties(suitabilityForRecallProperties, false),
+        triggerLeadingToRecall: false,
         recallType: true,
         previousRecalls: false,
         previousReleases: false,
+        sentenceGroup: false,
         indeterminateSentenceType: false,
       })
       expect(areAllComplete).toEqual(false)
@@ -253,6 +281,82 @@ describe('taskCompleteness', () => {
       expect(statuses.reasonsForNoRecall).toEqual(false)
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
+    })
+
+    it('sentenceGroup incomplete', () => {
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
+        {
+          ...emptyNoRecall,
+          nextAppointment: {},
+          whyConsideredRecall: {},
+        } as RecommendationResponse,
+        { flagFTR56Enabled: true },
+      )
+      expect(statuses.reasonsForNoRecall).toEqual(false)
+      expect(statuses.sentenceGroup).toEqual(false)
+      expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
+    })
+  })
+
+  describe('Suitability for standard or fixed term recall', () => {
+    const allCompleteSentenceGroups = [
+      SentenceGroup.ADULT_SDS,
+      SentenceGroup.YOUTH_SDS,
+      SentenceGroup.EXTENDED,
+      SentenceGroup.INDETERMINATE,
+    ]
+
+    allCompleteSentenceGroups.forEach(group => {
+      it(`all complete for ${group} when ftr56 enabled`, () => {
+        const recommendationData = {
+          ...recommendationResponse,
+          sentenceGroup: group,
+          recallType: { selected: { value: 'NO_RECALL' } },
+          personOnProbation: {
+            ...recommendationResponse.personOnProbation,
+            ftr56MappaReviewed: true,
+          },
+          ...setAllProperties(noRecallProperties, true),
+          ...(group === SentenceGroup.ADULT_SDS || group === SentenceGroup.YOUTH_SDS
+            ? setAllProperties(suitabilityForRecallProperties, true)
+            : {}),
+        } as RecommendationResponse
+
+        const { areAllComplete } = taskCompleteness(recommendationData, { flagFTR56Enabled: true })
+
+        expect(areAllComplete).toEqual(true)
+      })
+
+      it(`all complete for ${group} when ftr56 disbled`, () => {
+        const recommendationData = {
+          ...recommendationResponse,
+          sentenceGroup: group,
+          recallType: { selected: { value: 'NO_RECALL' } },
+          ...setAllProperties(noRecallProperties, true),
+        } as RecommendationResponse
+
+        const { areAllComplete } = taskCompleteness(recommendationData)
+
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+
+    const notCompleteSentenceGroups = [SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS]
+
+    notCompleteSentenceGroups.forEach(group => {
+      it(`not complete - ${group}`, () => {
+        const recommendationData = {
+          ...recommendationResponse,
+          sentenceGroup: group,
+          recallType: { selected: { value: 'NO_RECALL' } },
+          ...setAllProperties(noRecallProperties, true),
+        } as RecommendationResponse
+
+        const { areAllComplete } = taskCompleteness(recommendationData, { flagFTR56Enabled: true })
+
+        expect(areAllComplete).toEqual(false)
+      })
     })
   })
 

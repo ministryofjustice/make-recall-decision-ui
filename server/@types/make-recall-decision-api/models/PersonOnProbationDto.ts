@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
- 
+
 
 import type { Address } from './Address';
 import type { Mappa } from './Mappa';
@@ -22,5 +22,6 @@ export type PersonOnProbationDto = {
     addresses?: Array<Address>;
     primaryLanguage?: string;
     hasBeenReviewed?: boolean;
+    ftr56MappaReviewed?: boolean;
 };
 

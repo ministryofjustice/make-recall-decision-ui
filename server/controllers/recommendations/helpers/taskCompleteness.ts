@@ -4,6 +4,7 @@ import { hasData, hasValue, isEmptyStringOrWhitespace } from '../../../utils/uti
 import type { FeatureFlags } from '../../../@types/featureFlags'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -66,6 +67,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     responseToProbation: hasValue(recommendation.responseToProbation),
     isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
     isExtendedSentence: hasValue(recommendation.isExtendedSentence),
+    sentenceGroup: hasValue(recommendation.sentenceGroup),
+    triggerLeadingToRecall: hasValue(recommendation.triggerLeadingToRecall),
     previousReleases: isPreviousReleasesComplete(recommendation),
     previousRecalls: isPreviousRecallsComplete(recommendation),
     indeterminateSentenceType:
@@ -77,12 +80,70 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
       hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected) ||
       hasData(recommendation.additionalLicenceConditionsText),
+    isChargedWithOffence: hasValue(recommendation.isChargedWithOffence),
+    isServingTerroristOrNationalSecurityOffence: hasValue(recommendation.isServingTerroristOrNationalSecurityOffence),
+    isAtRiskOfInvolvedInForeignPowerThreat: hasValue(recommendation.isAtRiskOfInvolvedInForeignPowerThreat),
+    wasReferredToParoleBoard244ZB: hasValue(recommendation.wasReferredToParoleBoard244ZB),
+    wasRepatriatedForMurder: hasValue(recommendation.wasRepatriatedForMurder),
+    isServingSOPCSentence: hasValue(recommendation.isServingSOPCSentence),
+    isServingDCRSentence: hasValue(recommendation.isServingDCRSentence),
+    isYouthSentenceOver12Months: hasValue(recommendation.isYouthSentenceOver12Months),
+    isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
+  }
+
+  let triggerLeadingToRecall = true
+
+  if (_featureFlags?.flagFTR56Enabled) {
+    triggerLeadingToRecall = statuses.triggerLeadingToRecall
+  }
+
+  const isAdultSDSSuitabilityCriteriaSet =
+    statuses.isChargedWithOffence &&
+    statuses.isServingTerroristOrNationalSecurityOffence &&
+    statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
+    statuses.wasReferredToParoleBoard244ZB &&
+    statuses.wasRepatriatedForMurder &&
+    statuses.isServingSOPCSentence &&
+    statuses.isServingDCRSentence
+
+  const isYouthSDSSuitabilityCriteriaSet =
+    statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence
+
+  let suitabilityForRecallValidation = true
+
+  if (_featureFlags?.flagFTR56Enabled) {
+    if (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
+      suitabilityForRecallValidation = isAdultSDSSuitabilityCriteriaSet
+    } else if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+      suitabilityForRecallValidation = isYouthSDSSuitabilityCriteriaSet
+    }
   }
 
   if (recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL) {
     const whyConsideredRecall = hasValue(recommendation.whyConsideredRecall)
     const reasonsForNoRecall = hasValue(recommendation.reasonsForNoRecall)
     const nextAppointment = hasValue(recommendation.nextAppointment)
+
+    const sentenceValidation = _featureFlags?.flagFTR56Enabled
+      ? statuses.sentenceGroup
+      : statuses.isIndeterminateSentence && statuses.isExtendedSentence
+
+    const indeterminateSentenceValidation = _featureFlags?.flagFTR56Enabled
+      ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE ||
+        hasValue(recommendation.indeterminateSentenceType)
+      : !recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType
+
+    const responseToProbation = _featureFlags?.flagFTR56Enabled ? true : statuses.responseToProbation
+
+    const isSDS =
+      recommendation.sentenceGroup === SentenceGroup.ADULT_SDS ||
+      recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS
+
+    let mappaReviewed = true
+
+    if (_featureFlags?.flagFTR56Enabled && isSDS) {
+      mappaReviewed = recommendation.personOnProbation.ftr56MappaReviewed
+    }
 
     return {
       statuses: {
@@ -93,13 +154,16 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       },
       isReadyForCounterSignature: false,
       areAllComplete:
+        triggerLeadingToRecall &&
+        suitabilityForRecallValidation &&
+        responseToProbation &&
+        mappaReviewed &&
+        statuses.decisionDateTime &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
-        statuses.responseToProbation &&
-        statuses.isIndeterminateSentence &&
-        statuses.isExtendedSentence &&
+        sentenceValidation &&
         statuses.licenceConditionsBreached &&
-        (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
+        indeterminateSentenceValidation &&
         whyConsideredRecall &&
         reasonsForNoRecall &&
         nextAppointment,
