@@ -164,7 +164,7 @@ context('No recall', () => {
       cy.getElement('Explain why you considered recall To do').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Add the appointment date and time To do').should('exist')
-      cy.getElement('Preview of the letter').should('not.exist')
+      cy.getElement('Preview the letter').should('not.exist')
     })
 
     it('To do - Youth SDS - Mappa should not exist', () => {
@@ -191,7 +191,7 @@ context('No recall', () => {
       cy.getElement('Explain why you considered recall To do').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Add the appointment date and time To do').should('exist')
-      cy.getElement('Preview of the letter').should('not.exist')
+      cy.getElement('Preview the letter').should('not.exist')
     })
 
     it('To do - Indeterminate - What type of sentence question should exist', () => {
@@ -221,7 +221,7 @@ context('No recall', () => {
       cy.getElement('Explain why you considered recall To do').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Add the appointment date and time To do').should('exist')
-      cy.getElement('Preview of the letter').should('not.exist')
+      cy.getElement('Preview the letter').should('not.exist')
     })
 
     it('To do - Extended - What type of sentence question should exist', () => {
@@ -242,14 +242,13 @@ context('No recall', () => {
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
 
-      cy.getElement('Type of indeterminate sentence').should('not.exist')
       cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
       cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
       cy.getElement('Explain why you considered recall To do').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Add the appointment date and time To do').should('exist')
-      cy.getElement('Preview of the letter').should('not.exist')
+      cy.getElement('Preview the letter').should('not.exist')
     })
 
     it('Completed', () => {
@@ -284,6 +283,8 @@ context('No recall', () => {
       cy.getElement('Explain why you considered recall Completed').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled Completed').should('exist')
       cy.getElement('Add the appointment date and time Completed').should('exist')
+      cy.getElement('Preview the letter').should('exist')
+
       cy.getElement('Create letter').should('exist')
     })
 
