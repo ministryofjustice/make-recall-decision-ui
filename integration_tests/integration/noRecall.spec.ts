@@ -165,6 +165,7 @@ context('No recall', () => {
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Add the appointment date and time To do').should('exist')
       cy.getElement('Preview the letter').should('not.exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('To do - Youth SDS - Mappa should not exist', () => {
@@ -192,6 +193,7 @@ context('No recall', () => {
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Add the appointment date and time To do').should('exist')
       cy.getElement('Preview the letter').should('not.exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('To do - Indeterminate - What type of sentence question should exist', () => {
@@ -222,6 +224,7 @@ context('No recall', () => {
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Add the appointment date and time To do').should('exist')
       cy.getElement('Preview the letter').should('not.exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('To do - Extended - What type of sentence question should exist', () => {
@@ -249,6 +252,7 @@ context('No recall', () => {
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
       cy.getElement('Add the appointment date and time To do').should('exist')
       cy.getElement('Preview the letter').should('not.exist')
+      cy.getElement('Create letter').should('not.exist')
     })
 
     it('Completed', () => {
