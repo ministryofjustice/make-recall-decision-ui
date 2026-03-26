@@ -3,13 +3,10 @@ import { SentenceGroup } from '../controllers/recommendations/sentenceInformatio
 import generateBooleanCombinations from '../testUtils/booleanUtils'
 import {
   isFixedTermRecallMandatory,
-  isRecommendationDiscretionaryRecall,
   isFixedTermRecallMandatoryForRecommendation,
-  // isFixedTermRecallMandatoryForRecommendationFTR56,
   isFixedTermRecallMandatoryForValueKeys,
-  // isFixedTermRecallMandatoryForValueKeysFTR56,
+  isRecommendationDiscretionaryRecall,
   isStandardRecallMandatoryForRecommendationFTR56,
-  // >>>>>>> Stashed changes
 } from './fixedTermRecallUtils'
 
 describe('isFixedTermRecallMandatoryForRecommendation', () => {

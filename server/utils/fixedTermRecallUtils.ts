@@ -59,7 +59,6 @@ export const isFixedTermRecallMandatory = (
     (hasBeenChargedWithTerroristOrStateThreatOffence ?? true)
   )
 
-// <<<<<<< Updated upstream
 type MandatoryFTRCriteria = {
   wasReferredToParoleBoard244ZB?: boolean
   wasRepatriatedForMurder?: boolean
