@@ -45,7 +45,7 @@ context('Custody status', () => {
             it(testCase.description, () => {
               const recommendation = RecommendationResponseGenerator.generate({
                 custodyStatus: {
-                  selected: testCase.custodyStatus,
+                  selected: testCase.custodyStatus ?? 'none',
                   details: testCase.custodyStatusDetails,
                 },
               })
