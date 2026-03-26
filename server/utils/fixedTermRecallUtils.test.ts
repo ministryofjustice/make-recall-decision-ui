@@ -269,31 +269,27 @@ describe('isFixedTermRecallMandatory', () => {
 })
 
 describe('isRecommendationDiscretionaryRecall', () => {
-  ;[
-    {
-      recommendation: {
-        isYouthSentenceOver12Months: false,
+  it('returns false when all exclusion criteria are false', () => {
+    expect(
+      isRecommendationDiscretionaryRecall({
+        isMappaLevel2Or3: false,
         isYouthChargedWithSeriousOffence: false,
-      },
-      expectedResult: false,
-    },
-    {
-      recommendation: {
-        isYouthSentenceOver12Months: true,
-        isYouthChargedWithSeriousOffence: false,
-      },
-      expectedResult: true,
-    },
-    {
-      recommendation: {
         isYouthSentenceOver12Months: false,
-        isYouthChargedWithSeriousOffence: true,
-      },
-      expectedResult: true,
-    },
-  ].forEach(testCase =>
-    it(`returns ${testCase.expectedResult} when sentenceOver12Months is ${testCase.recommendation.isYouthSentenceOver12Months} and chargedWithSeriousOffence is ${testCase.recommendation.isYouthChargedWithSeriousOffence}`, () => {
-      expect(isRecommendationDiscretionaryRecall(testCase.recommendation)).toBe(testCase.expectedResult)
-    }),
-  )
+      }),
+    ).toBeFalsy()
+  })
+
+  generateBooleanCombinations(3)
+    .filter(c => c.some(b => b))
+    .forEach(combination => {
+      it(`${combination[0]} - ${combination[1]} - ${combination[2]}`, () => {
+        expect(
+          isRecommendationDiscretionaryRecall({
+            isYouthChargedWithSeriousOffence: combination[0],
+            isYouthSentenceOver12Months: combination[1],
+            isMappaLevel2Or3: combination[2],
+          }),
+        ).toBeTruthy()
+      })
+    })
 })

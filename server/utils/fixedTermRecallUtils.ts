@@ -102,4 +102,5 @@ export const isFixedTermRecallMandatoryFTR56 = (sentenceGroup: SentenceGroup, cr
 export const isRecommendationDiscretionaryRecall = ({
   isYouthSentenceOver12Months,
   isYouthChargedWithSeriousOffence,
-}: RecommendationResponse) => (isYouthSentenceOver12Months ? true : isYouthChargedWithSeriousOffence)
+  isMappaLevel2Or3,
+}: RecommendationResponse) => isYouthSentenceOver12Months || isYouthChargedWithSeriousOffence || isMappaLevel2Or3
