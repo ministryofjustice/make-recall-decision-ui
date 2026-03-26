@@ -10,7 +10,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
   const {
     user: { token },
-    flags: featureFlags,
+    flags,
     errors,
     unsavedValues,
   } = res.locals
@@ -18,7 +18,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const recommendation = await updateRecommendation({
     recommendationId,
     token,
-    featureFlags,
+    featureFlags: flags,
     propertyToRefresh: 'previousReleases',
   })
 
@@ -26,24 +26,31 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     recommendation,
     page: {
-      id: 'previousReleases',
+      id: flags.flagFTR56Enabled ? 'releaseDetails' : 'previousReleases',
     },
   }
 
-  if (errors) {
-    res.locals.inputDisplayValues = {
-      releaseUnderECSL: unsavedValues.releaseUnderECSL,
-      dateOfRelease: unsavedValues.dateOfRelease,
-      conditionalReleaseDate: unsavedValues.conditionalReleaseDate,
-    }
-  } else {
-    res.locals.inputDisplayValues = {
-      releaseUnderECSL: booleanToYesNo(recommendation.releaseUnderECSL),
-      dateOfRelease: splitIsoDateToParts(recommendation.dateOfRelease),
-      conditionalReleaseDate: splitIsoDateToParts(recommendation.conditionalReleaseDate),
+  if (!flags.flagFTR56Enabled) {
+    if (errors) {
+      res.locals.inputDisplayValues = {
+        releaseUnderECSL: unsavedValues.releaseUnderECSL,
+        dateOfRelease: unsavedValues.dateOfRelease,
+        conditionalReleaseDate: unsavedValues.conditionalReleaseDate,
+      }
+    } else {
+      res.locals.inputDisplayValues = {
+        releaseUnderECSL: booleanToYesNo(recommendation.releaseUnderECSL),
+        dateOfRelease: splitIsoDateToParts(recommendation.dateOfRelease),
+        conditionalReleaseDate: splitIsoDateToParts(recommendation.conditionalReleaseDate),
+      }
     }
   }
-  res.render(`pages/recommendations/previousReleases`)
+
+  if (flags.flagFTR56Enabled) {
+    res.render('pages/recommendations/releaseDetails')
+  } else {
+    res.render(`pages/recommendations/previousReleases`)
+  }
   next()
 }
 
@@ -55,30 +62,46 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { errors, valuesToSave, unsavedValues } = await validatePreviousReleases({
-    requestBody: req.body,
-    recommendationId,
-    urlInfo,
-    token,
-  })
+  if (!flags.flagFTR56Enabled) {
+    const { errors, valuesToSave, unsavedValues } = await validatePreviousReleases({
+      requestBody: req.body,
+      recommendationId,
+      urlInfo,
+      token,
+    })
 
-  if (errors) {
-    req.session.errors = errors
-    req.session.unsavedValues = unsavedValues
-    return res.redirect(303, req.originalUrl)
+    if (errors) {
+      req.session.errors = errors
+      req.session.unsavedValues = unsavedValues
+      return res.redirect(303, req.originalUrl)
+    }
+
+    await updateRecommendation({
+      recommendationId,
+      valuesToSave,
+      token,
+      featureFlags: flags,
+    })
+  } else {
+    await updateRecommendation({
+      recommendationId,
+      valuesToSave: {
+        previousReleases: {
+          hasBeenReleasedPreviously: req.body.continueButton === '1',
+        },
+      },
+      token,
+      featureFlags: flags,
+    })
   }
 
-  await updateRecommendation({
-    recommendationId,
-    valuesToSave,
-    token,
-    featureFlags: flags,
-  })
-
   let nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`
-  const { deletePreviousReleaseDateIndex } = req.body
-  if (isDefined(deletePreviousReleaseDateIndex)) {
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-releases`
+
+  if (!flags.flagFTR56Enabled) {
+    const { deletePreviousReleaseDateIndex } = req.body
+    if (isDefined(deletePreviousReleaseDateIndex)) {
+      nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-releases`
+    }
   }
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
