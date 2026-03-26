@@ -5,7 +5,8 @@ import { RecommendationDecorated } from '../../@types/api'
 import { AdditionalLicenceConditionOption } from '../../@types/make-recall-decision-api'
 import logger from '../../../logger'
 import { isDefined } from '../../utils/utils'
-import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { SentenceGroup, sentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { indeterminateSentenceTypeFtr56 } from '../recommendations/indeterminateSentenceType/formOptions'
 
 function extractStandardLicenceConditions(recommendation: RecommendationDecorated): Array<string> {
   if (recommendation.licenceConditionsBreached && recommendation.licenceConditionsBreached.standardLicenceConditions) {
@@ -48,7 +49,7 @@ function extractAdditionalLicenceConditions(recommendation: RecommendationDecora
   ) {
     const { selectedOptions, allOptions } = recommendation.licenceConditionsBreached.additionalLicenceConditions
     return selectedOptions
-      .map((s: { mainCatCode: string; subCatCode: string }) => {
+      ?.map((s: { mainCatCode: string; subCatCode: string }) => {
         const option = allOptions.find(o => o.mainCatCode === s.mainCatCode && o.subCatCode === s.subCatCode)
         if (option) {
           return {
@@ -132,18 +133,27 @@ function extractAlternativeTried(recommendation: RecommendationDecorated) {
 }
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendation, flags } = res.locals
 
   const alternativesToRecallTried = extractAlternativeTried(recommendation)
   const standardLicenceConditions = extractStandardLicenceConditions(recommendation)
   const additionalLicenceConditions = extractAdditionalLicenceConditions(recommendation)
   const bespokeLicenceConditions = extractBespokeLicenceConditions(recommendation)
 
+  const isIndeterminateSentence =
+    (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.INDETERMINATE) ||
+    (!res.locals.flags.flagFTR56Enabled && recommendation.isIndeterminateSentence)
+      ? 'Yes'
+      : 'No'
+
   res.locals = {
     ...res.locals,
     page: {
       id: 'reviewPractitionersConcerns',
     },
+    sentenceGroupHumanReadable: flags.flagFTR56Enabled
+      ? sentenceGroup.find(group => group.value === recommendation.sentenceGroup)?.text
+      : null,
     offenderName: recommendation.personOnProbation.name,
     triggerLeadingToRecall: recommendation.triggerLeadingToRecall,
     responseToProbation: recommendation.responseToProbation,
@@ -152,16 +162,18 @@ async function get(req: Request, res: Response, next: NextFunction) {
     bespokeLicenceConditions,
     alternativesToRecallTried,
     additionalLicenceConditionsText: recommendation.additionalLicenceConditionsText,
-    isIndeterminateSentence:
-      (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.INDETERMINATE) ||
-      (!res.locals.flags.flagFTR56Enabled && recommendation.isIndeterminateSentence)
-        ? 'Yes'
-        : 'No',
+    isIndeterminateSentence,
     isExtendedSentence:
       (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.EXTENDED) ||
       (!res.locals.flags.flagFTR56Enabled && recommendation.isExtendedSentence)
         ? 'Yes'
         : 'No',
+    indeterminateSentenceHumanReadable:
+      flags.flagFTR56Enabled && isIndeterminateSentence === 'Yes'
+        ? indeterminateSentenceTypeFtr56.find(
+            sentenceType => sentenceType.value === recommendation.indeterminateSentenceType?.selected,
+          )?.text
+        : undefined,
   }
 
   res.render(`pages/recommendations/reviewPractitionersConcerns`)

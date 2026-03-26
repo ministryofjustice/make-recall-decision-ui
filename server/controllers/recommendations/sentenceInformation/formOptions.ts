@@ -5,7 +5,7 @@ export enum SentenceGroup {
   YOUTH_SDS = 'YOUTH_SDS',
 }
 
-const sentenceGroup = [
+export const sentenceGroup = [
   {
     value: SentenceGroup.ADULT_SDS,
     text: 'Adult determinate sentence',

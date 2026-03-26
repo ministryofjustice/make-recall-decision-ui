@@ -21,7 +21,7 @@ import whyConsideredRecall from '../whyConsideredRecall/formOptions'
 import standardLicenceConditions from './licenceConditions'
 import spoRecallTypeEnum from './spoRecallTypeEnum'
 import yesNo from './yesNo'
-import sentenceGroup from '../sentenceInformation/formOptions'
+import { sentenceGroup } from '../sentenceInformation/formOptions'
 
 export type FormOption = {
   value: string

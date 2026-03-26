@@ -4,7 +4,8 @@ import { RecommendationResponseGenerator } from '../../../../data/recommendation
 import config from '../../../../server/config'
 import testPopSummaryCard from '../../../componentTests/popSummaryCard.tests'
 import { CaseSummaryOverviewResponseGenerator } from '../../../../data/caseSummary/overview/caseSummaryOverviewResponseGenerator'
-import sentenceGroup, {
+import {
+  sentenceGroup,
   SentenceGroup,
 } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
 import testRadioButtons from '../../../componentTests/radioButtons.tests'
