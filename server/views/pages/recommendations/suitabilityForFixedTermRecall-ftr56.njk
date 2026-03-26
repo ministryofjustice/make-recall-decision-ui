@@ -19,7 +19,7 @@
 {% set summaryCardHtml %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
-        {{ heading('Sentence Group', 3, 's', 'govuk-!-margin-bottom-1') }}
+        {{ heading('Sentence group', 3, 's', 'govuk-!-margin-bottom-1') }}
         <p class="govuk-body">Selected in sentence information step</p>
     </div>
     <div class="govuk-grid-column-two-thirds">
@@ -79,9 +79,9 @@
                 {{ heading(pageHeadings[page.id]) }}
 
                 {% if recommendation.sentenceGroup == 'ADULT_SDS' %}
-                    <p class="govuk-body">Answer the following questions to assess what recall type is appropriate for {{ recommendation.personOnProbation.name }}</p>
+                    <p class="govuk-body">Answer the following questions to assess what recall type is appropriate for {{ recommendation.personOnProbation.name }}.</p>
                 {% else %}
-                    <p class="govuk-body">Check the following information to assess what recall type is appropriate for {{ recommendation.personOnProbation.name }}</p>
+                    <p class="govuk-body">Check the following information to assess what recall type is appropriate for {{ recommendation.personOnProbation.name }}.</p>
                 {% endif %}
 
                 {% if recommendation.sentenceGroup == 'YOUTH_SDS' %}
@@ -108,7 +108,7 @@
                     }}
                     {% endset %}
 
-                    {{ appSummaryCard({ 
+                    {{ appSummaryCard({
                         titleText: 'MAPPA Information',
                         classes: 'govuk-!-margin-bottom-6 app-summary-card--medium-title',
                         html: youthMappaHtml

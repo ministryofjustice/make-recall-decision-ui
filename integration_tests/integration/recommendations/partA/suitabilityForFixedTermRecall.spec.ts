@@ -61,11 +61,11 @@ context('Suitability for fixed term recall page', () => {
           `Check ${recommendation.personOnProbation.name}'s suitability for a standard or fixed term recall`,
         ).should('exist')
         cy.getElement(
-          `Answer the following questions to assess what recall type is appropriate for ${recommendation.personOnProbation.name}`,
+          `Answer the following questions to assess what recall type is appropriate for ${recommendation.personOnProbation.name}.`,
         ).should('exist')
         cy.get('.app-summary-card').within(() => {
           cy.get('h2').should('contain.text', 'Fixed term recall exclusion criteria')
-          cy.get('h3').should('contain.text', 'Sentence Group')
+          cy.get('h3').should('contain.text', 'Sentence group')
           cy.get('p.govuk-body').should('contain.text', 'Selected in sentence information step')
           cy.get('.govuk-grid-column-two-thirds').should('contain.text', 'Adult determinate sentence')
         })
@@ -187,7 +187,7 @@ context('Suitability for fixed term recall page', () => {
           `Check ${recommendation.personOnProbation.name}'s suitability for a standard or fixed term recall`,
         ).should('exist')
         cy.getElement(
-          `Check the following information to assess what recall type is appropriate for ${recommendation.personOnProbation.name}`,
+          `Check the following information to assess what recall type is appropriate for ${recommendation.personOnProbation.name}.`,
         ).should('exist')
 
         // MAPPA information card
@@ -215,7 +215,7 @@ context('Suitability for fixed term recall page', () => {
           .eq(1)
           .within(() => {
             cy.get('h2').should('contain.text', 'Fixed term recall exclusion criteria')
-            cy.get('h3').should('contain.text', 'Sentence Group')
+            cy.get('h3').should('contain.text', 'Sentence group')
             cy.get('p.govuk-body').should('contain.text', 'Selected in sentence information step')
             cy.get('.govuk-grid-column-two-thirds').should('contain.text', 'Youth determinate sentence')
             ;[
