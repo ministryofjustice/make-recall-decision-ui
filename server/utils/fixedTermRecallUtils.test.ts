@@ -2,10 +2,14 @@ import { RecommendationResponseGenerator } from '../../data/recommendations/reco
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 import generateBooleanCombinations from '../testUtils/booleanUtils'
 import {
-  isFixedTermRecallMandatoryForRecommendation,
-  isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatory,
   isRecommendationDiscretionaryRecall,
+  isFixedTermRecallMandatoryForRecommendation,
+  // isFixedTermRecallMandatoryForRecommendationFTR56,
+  isFixedTermRecallMandatoryForValueKeys,
+  // isFixedTermRecallMandatoryForValueKeysFTR56,
+  isStandardRecallMandatoryForRecommendationFTR56,
+  // >>>>>>> Stashed changes
 } from './fixedTermRecallUtils'
 
 describe('isFixedTermRecallMandatoryForRecommendation', () => {
@@ -292,4 +296,96 @@ describe('isRecommendationDiscretionaryRecall', () => {
         ).toBeTruthy()
       })
     })
+})
+
+describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
+  it(' Returns false when no exclusion criteria fields are set', () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: 'none',
+          isMappaCategory4: undefined,
+          isMappaLevel2Or3: undefined,
+          wasReferredToParoleBoard244ZB: undefined,
+          wasRepatriatedForMurder: undefined,
+          isServingSOPCSentence: undefined,
+          isServingDCRSentence: undefined,
+          isChargedWithOffence: undefined,
+          isServingTerroristOrNationalSecurityOffence: undefined,
+          isAtRiskOfInvolvedInForeignPowerThreat: undefined,
+          isYouthSentenceOver12Months: undefined,
+          isYouthChargedWithSeriousOffence: undefined,
+        }),
+      ),
+    ).toBeFalsy()
+  })
+  it(` Returns false when is Youth SDS`, () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+        }),
+      ),
+    ).toBeFalsy()
+  })
+  it(` Returns true when is Indeterminate`, () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.INDETERMINATE,
+        }),
+      ),
+    ).toBeTruthy()
+  })
+  it(` Returns true when is Extended`, () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.EXTENDED,
+        }),
+      ),
+    ).toBeTruthy()
+  })
+  it(' Returns false when is Adult SDS and all adult exclusion criteria fields are false', () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+          isMappaCategory4: false,
+          isMappaLevel2Or3: false,
+          wasReferredToParoleBoard244ZB: false,
+          wasRepatriatedForMurder: false,
+          isServingSOPCSentence: false,
+          isServingDCRSentence: false,
+          isChargedWithOffence: false,
+          isServingTerroristOrNationalSecurityOffence: false,
+          isAtRiskOfInvolvedInForeignPowerThreat: false,
+        }),
+      ),
+    ).toBeFalsy()
+  })
+  describe(' Returns true when is Adult SDS and any adult exclusion criteria fields are true', () => {
+    generateBooleanCombinations(9)
+      .filter(c => c.some(b => b))
+      .forEach(combination => {
+        it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
+          expect(
+            isStandardRecallMandatoryForRecommendationFTR56(
+              RecommendationResponseGenerator.generate({
+                sentenceGroup: SentenceGroup.ADULT_SDS,
+                isMappaCategory4: combination[0],
+                isMappaLevel2Or3: combination[1],
+                wasReferredToParoleBoard244ZB: combination[2],
+                wasRepatriatedForMurder: combination[3],
+                isServingSOPCSentence: combination[4],
+                isServingDCRSentence: combination[5],
+                isChargedWithOffence: combination[6],
+                isServingTerroristOrNationalSecurityOffence: combination[7],
+                isAtRiskOfInvolvedInForeignPowerThreat: combination[8],
+              }),
+            ),
+          ).toBeTruthy()
+        })
+      })
+  })
 })

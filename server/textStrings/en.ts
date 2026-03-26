@@ -30,6 +30,7 @@ const strings: Record<string, Record<string, string>> = {
     noRecallTypeSelectedDiscretionary:
       "Select if you're recommending a fixed term recall, standard recall or no recall",
     noRecallTypeSelectedMandatory: "Select if you're recommending a fixed term recall or no recall",
+    noRecallTypeSelected: 'Select a recall recommendation',
     noRecallTypeExtendedSelected: 'Select whether you recommend a recall or not',
     noRecallTypeExtendedSelectedFTR56: 'Select a recall recommendation',
     noRecallTypeIndeterminateSelected: 'Select whether you recommend a recall or not',
@@ -325,6 +326,10 @@ const strings: Record<string, Record<string, string>> = {
   automatedFieldValues: {
     mandatoryFTRRationale:
       '{{ personOnProbationName }} must get an automatic fixed term recall as they do not meet the exemption criteria.',
+    mandatoryFTRRationaleFTR56:
+      '{{ personOnProbationName }} must get a fixed term recall as they do not meet the exclusion criteria.',
+    mandatoryStandardRationaleFTR56:
+      '{{ personOnProbationName }} must get a standard recall as they are excluded from getting a fixed term.',
   },
 }
 

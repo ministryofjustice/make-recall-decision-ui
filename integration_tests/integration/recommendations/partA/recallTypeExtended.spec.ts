@@ -78,7 +78,6 @@ describe('recall type extended', () => {
 
       cy.getElement('What do you recommend?')
 
-      cy.getElement('What do you recommend?')
       cy.get('.moj-ticket-panel').within(() => {
         cy.get('h3').should(
           'contain.text',

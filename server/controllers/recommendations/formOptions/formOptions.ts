@@ -1,5 +1,5 @@
 import custodyStatus from '../custodyStatus/formOptions'
-import recallType from '../recallType/formOptions'
+import { recallType, recallTypeFTR56 } from '../recallType/formOptions'
 
 import { UiListItem } from '../../../@types/pagesForms'
 import { renderTemplateString } from '../../../utils/nunjucks'
@@ -15,8 +15,8 @@ import rationaleCheck from '../rationaleCheck/formOptions'
 import recallTypeExtended from '../recallTypeExtended/formOptions'
 import {
   recallTypeIndeterminate,
-  recallTypeIndeterminateFTR56,
   recallTypeIndeterminateApi,
+  recallTypeIndeterminateFTR56,
 } from '../recallTypeIndeterminate/formOptions'
 import roshLevels from '../rosh/formOptions'
 import hasVictimsInContactScheme from '../victimContactScheme/formOptions'
@@ -41,6 +41,7 @@ type FormOptionsType = {
 export const formOptions: FormOptionsType = {
   sentenceGroup,
   recallType,
+  recallTypeFTR56,
   rationaleCheck,
   spoRecallTypeEnum,
   recallTypeIndeterminate,
