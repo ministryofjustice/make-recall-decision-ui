@@ -9,7 +9,7 @@ import randomEnum from '../../../@types/enum.testFactory'
 import ppPaths from '../../../routes/paths/pp'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
-import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
+import { indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
 
 jest.mock('../../../utils/errors')
 jest.mock('../helpers/urls')
@@ -54,7 +54,7 @@ describe('validateSentenceInformation', () => {
             sentenceGroup: requestBody.sentenceGroup,
             indeterminateSentenceType: {
               selected: IndeterminateSentenceType.selected.NO,
-              allOptions: indeterminateSentenceType,
+              allOptions: indeterminateSentenceTypeFtr56,
             },
           })
         }
@@ -101,7 +101,7 @@ describe('validateSentenceInformation', () => {
               ? undefined
               : {
                   selected: IndeterminateSentenceType.selected.NO,
-                  allOptions: indeterminateSentenceType,
+                  allOptions: indeterminateSentenceTypeFtr56,
                 },
         },
         expectedNextPageId:
@@ -123,7 +123,7 @@ describe('validateSentenceInformation', () => {
             sentenceGroup: newSentenceGroup,
             indeterminateSentenceType: {
               selected: IndeterminateSentenceType.selected.NO,
-              allOptions: indeterminateSentenceType,
+              allOptions: indeterminateSentenceTypeFtr56,
             },
             ...(previousSentenceGroup === SentenceGroup.ADULT_SDS
               ? emptyAdultSuitabilityCriteria
@@ -151,7 +151,7 @@ describe('validateSentenceInformation', () => {
                 ? null
                 : {
                     selected: IndeterminateSentenceType.selected.NO,
-                    allOptions: indeterminateSentenceType,
+                    allOptions: indeterminateSentenceTypeFtr56,
                   },
             isMappaCategory4: null,
             isMappaLevel2Or3: null,
@@ -183,7 +183,7 @@ describe('validateSentenceInformation', () => {
           indeterminateOrExtendedSentenceDetails: null,
           indeterminateSentenceType: {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceType,
+            allOptions: indeterminateSentenceTypeFtr56,
           },
           isThisAnEmergencyRecall: null,
           recallType: null,
@@ -203,7 +203,7 @@ describe('validateSentenceInformation', () => {
             indeterminateOrExtendedSentenceDetails: null,
             indeterminateSentenceType: {
               selected: IndeterminateSentenceType.selected.NO,
-              allOptions: indeterminateSentenceType,
+              allOptions: indeterminateSentenceTypeFtr56,
             },
             isThisAnEmergencyRecall: null,
             recallType: null,
@@ -228,7 +228,7 @@ describe('validateSentenceInformation', () => {
           sentenceGroup: SentenceGroup.EXTENDED,
           indeterminateSentenceType: {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceType,
+            allOptions: indeterminateSentenceTypeFtr56,
           },
           isThisAnEmergencyRecall: null,
           recallType: null,

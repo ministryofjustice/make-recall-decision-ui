@@ -6,7 +6,7 @@ import { SentenceGroup } from './formOptions'
 import ppPaths from '../../../routes/paths/pp'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
-import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
+import { indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
 
 const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { sentenceGroup, previousSentenceGroup } = requestBody
@@ -37,7 +37,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
     if (sentenceGroup !== SentenceGroup.INDETERMINATE) {
       valuesToSave.indeterminateSentenceType = {
         selected: IndeterminateSentenceType.selected.NO,
-        allOptions: indeterminateSentenceType,
+        allOptions: indeterminateSentenceTypeFtr56,
       }
     }
   } else {
@@ -62,7 +62,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         } else {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceType,
+            allOptions: indeterminateSentenceTypeFtr56,
           }
         }
         break
@@ -81,14 +81,14 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         } else {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceType,
+            allOptions: indeterminateSentenceTypeFtr56,
           }
         }
         break
       case SentenceGroup.INDETERMINATE:
         valuesToSave.indeterminateSentenceType = {
           selected: IndeterminateSentenceType.selected.NO,
-          allOptions: indeterminateSentenceType,
+          allOptions: indeterminateSentenceTypeFtr56,
         }
         valuesToSave.isThisAnEmergencyRecall = null
         valuesToSave.recallType = null
@@ -102,7 +102,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         if (sentenceGroup !== SentenceGroup.INDETERMINATE) {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceType,
+            allOptions: indeterminateSentenceTypeFtr56,
           }
           valuesToSave.indeterminateOrExtendedSentenceDetails = null
         } else {
