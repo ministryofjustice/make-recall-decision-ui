@@ -308,8 +308,11 @@ describe('taskCompleteness', () => {
           ...recommendationResponse,
           sentenceGroup: group,
           recallType: { selected: { value: 'NO_RECALL' } },
+          personOnProbation: {
+            ...recommendationResponse.personOnProbation,
+            ftr56MappaReviewed: true,
+          },
           ...setAllProperties(noRecallProperties, true),
-          // Only include suitabilityForRecallProperties for ADULT/YOUTH
           ...(group === SentenceGroup.ADULT_SDS || group === SentenceGroup.YOUTH_SDS
             ? setAllProperties(suitabilityForRecallProperties, true)
             : {}),

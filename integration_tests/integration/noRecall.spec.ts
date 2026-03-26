@@ -325,6 +325,10 @@ context('No recall', () => {
         isServingDCRSentence: true,
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
+        personOnProbation: {
+          ...noRecallResponse.personOnProbation,
+          ftr56MappaReviewed: true,
+        },
       }
 
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })

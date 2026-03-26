@@ -5,6 +5,7 @@ import type { FeatureFlags } from '../../../@types/featureFlags'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
+import logger from '../../../../logger'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -121,6 +122,25 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       ? statuses.sentenceGroup
       : statuses.isIndeterminateSentence && statuses.isExtendedSentence
 
+    const indeterminateSentenceValidation = _featureFlags?.flagFTR56Enabled
+      ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE ||
+        hasValue(recommendation.indeterminateSentenceType)
+      : !recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType
+
+    const responseToProbation = _featureFlags?.flagFTR56Enabled ? true : statuses.responseToProbation
+
+    const isSDS =
+      recommendation.sentenceGroup === SentenceGroup.ADULT_SDS ||
+      recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS
+
+    let mappaReviewed = true
+
+    if (_featureFlags?.flagFTR56Enabled && isSDS) {
+      mappaReviewed = recommendation.personOnProbation.ftr56MappaReviewed
+    }
+
+    logger.info(`statuses.indeterminateSentenceType: ${statuses.indeterminateSentenceType}`)
+
     return {
       statuses: {
         ...statuses,
@@ -131,11 +151,14 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       isReadyForCounterSignature: false,
       areAllComplete:
         suitabilityForRecallValidation &&
+        responseToProbation &&
+        mappaReviewed &&
         statuses.decisionDateTime &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
         sentenceValidation &&
         statuses.licenceConditionsBreached &&
+        indeterminateSentenceValidation &&
         whyConsideredRecall &&
         reasonsForNoRecall &&
         nextAppointment,
