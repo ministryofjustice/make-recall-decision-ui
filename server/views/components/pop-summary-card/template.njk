@@ -25,7 +25,7 @@
                         { key: 'Main offence', value: conviction.mainOffence.description },
                         { key: 'Additional offence(s)', value: additionalOffencesHtml } if conviction.additionalOffences.length else undefined,
                         { key: 'Sentence type', value: conviction.sentence.description if conviction.sentence.description else 'Not available' },
-                        { key: 'Sentence length', value: conviction.sentence.length + " " + conviction.sentence.units if conviction.sentence.length and conviction.sentence.units else 'Not available' }
+                        { key: 'Sentence length', value: conviction.sentence.length + " " + conviction.sentence.lengthUnits if conviction.sentence.length and conviction.sentence.lengthUnits else 'Not available' }
                     ]
                 }) }}
             </div>

@@ -89,13 +89,13 @@ const testHint = (radioHint: Cypress.Chainable<JQuery<HTMLElement>>, expectedHin
 }
 
 const testRadioButtons = (formGroupElement: Cypress.Chainable<JQuery<HTMLElement>>, params: RadioButtons) => {
-  formGroupElement.get('fieldset').as('radioFieldset')
+  formGroupElement.find('fieldset').as('radioFieldset')
 
-  testLegend(cy.get('@radioFieldset').get('legend'), params.legend)
+  testLegend(cy.get('@radioFieldset').find('legend'), params.legend)
 
-  cy.get('@radioFieldset').get('.govuk-radios').should('exist').as('radioGroup')
+  cy.get('@radioFieldset').find('.govuk-radios').should('exist').as('radioGroup')
 
-  cy.get('@radioGroup').get('div.govuk-radios__item').as('radios')
+  cy.get('@radioGroup').find('div.govuk-radios__item').as('radios')
   cy.get('@radios').should('have.length', params.options.length)
   cy.get('@radios').each((radio, index) => {
     const expectedOption = params.options[index]

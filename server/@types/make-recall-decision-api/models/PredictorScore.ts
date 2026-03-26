@@ -8,4 +8,3 @@ export type PredictorScore = {
     date?: string;
     scores?: Scores;
 };
-

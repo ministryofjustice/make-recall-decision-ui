@@ -92,7 +92,7 @@ context('Sentence Information page', () => {
                 sentenceDetails: {
                   description: conviction.sentence.description,
                   length: conviction.sentence.length,
-                  lengthUnits: conviction.sentence.units,
+                  lengthUnits: conviction.sentence.lengthUnits,
                 },
               }
             }),

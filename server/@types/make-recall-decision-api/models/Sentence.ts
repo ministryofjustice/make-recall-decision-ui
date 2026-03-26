@@ -1,11 +1,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
- 
+
 
 export type Sentence = {
     description?: string;
     length?: number;
-    units?: string;
+    lengthUnits?: string;
     sentenceExpiryDate?: string;
     licenceExpiryDate?: string;
     isCustodial?: boolean;

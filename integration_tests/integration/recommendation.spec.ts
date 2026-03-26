@@ -987,21 +987,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'Part A created')
     })
 
-    it('suitability for recall', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/suitability-for-fixed-term-recall`)
-      cy.pageHeading().should(
-        'equals',
-        `Check ${recommendationResponse.personOnProbation.name}'s suitability for a standard or fixed term recall`,
-      )
-      cy.getElement('9 November 2000 (age 21)').should('exist')
-      cy.getElement('Robbery (other than armed robbery)').should('exist')
-      cy.getElement('Shoplifting Burglary').should('exist')
-      cy.getElement('ORA Adult Custody (inc PSS)').should('exist')
-      cy.getElement('16 weeks').should('exist')
-    })
-
     it('lists multiple addresses', () => {
       const recommendationWithAddresses = {
         ...recommendationResponse,

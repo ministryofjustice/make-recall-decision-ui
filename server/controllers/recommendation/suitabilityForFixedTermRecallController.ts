@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
-import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
@@ -11,7 +10,13 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import {
   isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
+  isRecommendationDiscretionaryRecall,
 } from '../../utils/fixedTermRecallUtils'
+import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
+import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
+import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import routeUrls from '../../routes/routeUrls'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -20,6 +25,15 @@ async function get(req: Request, res: Response, next: NextFunction) {
     flags,
     unsavedValues,
   } = res.locals
+
+  // This screen isn't shown for indeterminate or extended sentences in the FTR56 flow
+  if (
+    flags.flagFTR56Enabled &&
+    [SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(recommendation.sentenceGroup)
+  ) {
+    res.redirect(303, `${routeUrls.recommendations}/${recommendation.id}/indeterminate-details`)
+    return next()
+  }
 
   const { caseSummary: caseSummaryOverview } = await getCaseSection(
     'overview',
@@ -42,65 +56,56 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...caseSummaryOverview,
     ...caseSummaryRisk,
   }
-  const popName = recommendation.personOnProbation.name
 
-  const inputDisplayValues = {
-    isSentence48MonthsOrOver: {
-      label: `Is ${popName}'s sentence 48 months or over?`,
-      hint: `Use the total length if ${popName} is serving consecutive sentences.`,
-      value: unsavedValues?.isSentence48MonthsOrOver || booleanToYesNo(recommendation.isSentence48MonthsOrOver),
-    },
-    isUnder18: {
-      label: `Is ${popName} under 18?`,
-      value: unsavedValues?.isUnder18 || booleanToYesNo(recommendation.isUnder18),
-    },
-    isMappaCategory4: {
-      label: `Is ${popName} in MAPPA category 4?`,
-      value: unsavedValues?.isMappaCategory4 || booleanToYesNo(recommendation.isMappaCategory4),
-    },
-    isMappaLevel2Or3: {
-      label: `Is ${popName}'s MAPPA level 2 or 3?`,
-      value: unsavedValues?.isMappaLevel2Or3 || booleanToYesNo(recommendation.isMappaLevel2Or3),
-    },
-    isRecalledOnNewChargedOffence: {
-      label: `Is ${popName} being recalled on a new charged offence?`,
-      value:
-        unsavedValues?.isRecalledOnNewChargedOffence || booleanToYesNo(recommendation.isRecalledOnNewChargedOffence),
-    },
-    isServingFTSentenceForTerroristOffence: {
-      label: `Is ${popName} serving a fixed term sentence for a terrorist offence?`,
-      value:
-        unsavedValues?.isServingFTSentenceForTerroristOffence ||
-        booleanToYesNo(recommendation.isServingFTSentenceForTerroristOffence),
-    },
-    hasBeenChargedWithTerroristOrStateThreatOffence: {
-      label: `Has ${popName} been charged with a terrorist or state threat offence?`,
-      value:
-        unsavedValues?.hasBeenChargedWithTerroristOrStateThreatOffence ||
-        booleanToYesNo(recommendation.hasBeenChargedWithTerroristOrStateThreatOffence),
-    },
+  const formOptions = getFormOptions(
+    flags.flagFTR56Enabled,
+    recommendation.personOnProbation.name,
+    recommendation.sentenceGroup,
+  )
+
+  const inputDisplayValues = suitabilityInputDisplayValues(formOptions, unsavedValues, recommendation)
+
+  const warningPanelDetails = {
+    title: 'Changes could affect your recall recommendation choices',
+    body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
   }
 
-  const warningPanel =
-    recommendation.recallType !== null && !isFixedTermRecallMandatoryForRecommendation(recommendation)
-      ? {
-          title: 'Changes could affect your recall recommendation choices',
-          body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
-        }
-      : undefined
+  let warningPanel = null
+
+  if (flags.flagFTR56Enabled) {
+    warningPanel =
+      // In the FTR56 flow, rationale is exclusively recorded for the YOUTH_SDS flow
+      // so the warning is only required when the sentenceGroup is YOUTH_SDS
+      recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
+      recommendation.recallType !== null &&
+      isRecommendationDiscretionaryRecall(recommendation)
+        ? warningPanelDetails
+        : undefined
+  } else {
+    warningPanel =
+      recommendation.recallType !== null &&
+      !isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
+        ? warningPanelDetails
+        : undefined
+  }
 
   res.locals = {
     ...res.locals,
-    caseSummary,
     page: {
       id: 'suitabilityForFixedTermRecall',
       warningPanel,
     },
+    caseSummary,
     inputDisplayValues,
+    sentenceGroupDetails: getSentenceGroupDetailsFromEnum(recommendation.sentenceGroup),
   }
 
-  res.render(`pages/recommendations/suitabilityForFixedTermRecall`)
-  next()
+  if (flags.flagFTR56Enabled) {
+    res.render('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
+  } else {
+    res.render(`pages/recommendations/suitabilityForFixedTermRecall`)
+  }
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
@@ -121,13 +126,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const valuesToSave: Record<string, unknown> = {}
 
   const fieldIds = [
-    'isSentence48MonthsOrOver',
-    'isUnder18',
-    'isMappaCategory4',
-    'isMappaLevel2Or3',
-    'isRecalledOnNewChargedOffence',
-    'isServingFTSentenceForTerroristOffence',
-    'hasBeenChargedWithTerroristOrStateThreatOffence',
+    ...Object.keys(
+      getFormOptions(flags.flagFTR56Enabled, recommendation.personOnProbation.name, recommendation.sentenceGroup),
+    ),
   ]
 
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
@@ -150,14 +151,38 @@ async function post(req: Request, res: Response, _: NextFunction) {
     }
   })
 
-  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation)
+  // We can't validate these fields as they're set from the NDelius value,
+  // but they're still required so we add them in here
+  if (flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+    valuesToSave.isMappaLevel2Or3 = req.body.isMappaLevel2Or3 === 'YES'
+    valuesToSave.isMappaCategory4 = req.body.isMappaCategory4 === 'YES'
+  }
+
+  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
   const ftrIsMandatoryUpdated = isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
-  if (ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
+
+  if (!flags.flagFTR56Enabled && ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
     valuesToSave.recallType = {
       ...recommendation.recallType,
       selected: {
         value: recommendation.recallType?.selected.value,
       },
+    }
+  }
+
+  if (flags.flagFTR56Enabled) {
+    // wipe the recall Type and rationale if the criteria has changed
+    const criteriaChanged = fieldIds.some(
+      fieldId => recommendation[fieldId as keyof typeof recommendation] !== valuesToSave[fieldId],
+    )
+
+    if (criteriaChanged) {
+      valuesToSave.recallType = {
+        ...recommendation.recallType,
+        selected: {
+          value: null,
+        },
+      }
     }
   }
 

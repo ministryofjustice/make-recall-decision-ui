@@ -5,7 +5,7 @@ import { Sentence } from '../../../server/@types/make-recall-decision-api/models
 export type SentenceOptions = {
   description?: string
   length?: number
-  units?: string
+  lengthUnits?: string
   sentenceExpiryDate?: string
   licenceExpiryDate?: string
   isCustodial?: boolean
@@ -16,7 +16,7 @@ export const SentenceGenerator: DataGenerator<Sentence, SentenceOptions> = {
   generate: options => ({
     description: options?.description ?? faker.lorem.words(),
     length: options?.length ?? faker.number.int({ min: 1, max: 120 }),
-    units: options?.units ?? faker.helpers.arrayElement(['days', 'weeks', 'months', 'years']),
+    lengthUnits: options?.lengthUnits ?? faker.helpers.arrayElement(['days', 'weeks', 'months', 'years']),
     sentenceExpiryDate: options?.sentenceExpiryDate ?? faker.date.future().toISOString(),
     licenceExpiryDate: options?.licenceExpiryDate ?? faker.date.future().toISOString(),
     isCustodial: options?.isCustodial ?? faker.datatype.boolean(),

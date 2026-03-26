@@ -8,6 +8,9 @@ export function availableRecallTypes(isFtrMandatory: boolean): FormOption[] {
     : formOptions.recallType
 }
 
-export function availableRecallTypesForRecommendation(recommendation: RecommendationResponse): FormOption[] {
-  return availableRecallTypes(isFixedTermRecallMandatoryForRecommendation(recommendation))
+export function availableRecallTypesForRecommendation(
+  recommendation: RecommendationResponse,
+  ftr56Enabled: boolean,
+): FormOption[] {
+  return availableRecallTypes(isFixedTermRecallMandatoryForRecommendation(recommendation, ftr56Enabled))
 }
