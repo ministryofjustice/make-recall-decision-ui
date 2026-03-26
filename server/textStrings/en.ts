@@ -254,6 +254,7 @@ const strings: Record<string, Record<string, string>> = {
     lineManagerCounterSignature: 'Line manager countersignature',
     seniorManagerCounterSignature: 'Senior manager countersignature',
     previousReleases: 'Previous releases',
+    releaseDetails: 'Release details',
     previousRecalls: 'Previous recalls',
     addPreviousRelease: 'Add previous release',
     addPreviousRecall: 'Add previous recall',

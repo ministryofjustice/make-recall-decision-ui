@@ -9,6 +9,14 @@
             </span>
             <span id='task-list-status-personOnProbation'>{{ taskStatus({ hasBeenReviewed: recommendation.personOnProbation.hasBeenReviewed == true }) }}</span>
         </li>
+        {% if ftr56Enabled %}
+          <li class="moj-task-list__item">
+              <span class="moj-task-list__task-name">
+                  <a aria-describedby='task-list-status-releaseDetails' href="{{ changeLinkUrl({ pageUrlSlug: 'previous-releases', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.releaseDetails }}</a>
+              </span>
+              <span id='task-list-status-releaseDetails'>{{ taskStatus({ hasData: taskCompleteness.statuses.previousReleases }) }}</span>
+          </li>
+        {% endif %}
         <li class="moj-task-list__item">
             <span class="moj-task-list__task-name">
                 <a aria-describedby='task-list-status-convictionDetail' href="{{ changeLinkUrl({ pageUrlSlug: 'offence-details', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.offenceDetails }}</a>
@@ -21,18 +29,20 @@
             </span>
             <span id='task-list-status-offenceAnalysis'>{{ taskStatus({ hasData: hasData(recommendation.offenceAnalysis) }) }}</span>
         </li>
-        <li class="moj-task-list__item">
-            <span class="moj-task-list__task-name">
-                <a aria-describedby='task-list-status-previousReleases' href="{{ changeLinkUrl({ pageUrlSlug: 'previous-releases', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.previousReleases }}</a>
-            </span>
-            <span id='task-list-status-previousReleases'>{{ taskStatus({ hasData: taskCompleteness.statuses.previousReleases }) }}</span>
-        </li>
-        <li class="moj-task-list__item">
-            <span class="moj-task-list__task-name">
-                <a aria-describedby='task-list-status-previousRecalls' href="{{ changeLinkUrl({ pageUrlSlug: 'previous-recalls', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.previousRecalls }}</a>
-            </span>
-            <span id='task-list-status-previousRecalls'>{{ taskStatus({ hasData: taskCompleteness.statuses.previousRecalls }) }}</span>
-        </li>
+        {% if not ftr56Enabled %}
+          <li class="moj-task-list__item">
+              <span class="moj-task-list__task-name">
+                  <a aria-describedby='task-list-status-previousReleases' href="{{ changeLinkUrl({ pageUrlSlug: 'previous-releases', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.previousReleases }}</a>
+              </span>
+              <span id='task-list-status-previousReleases'>{{ taskStatus({ hasData: taskCompleteness.statuses.previousReleases }) }}</span>
+          </li>
+          <li class="moj-task-list__item">
+              <span class="moj-task-list__task-name">
+                  <a aria-describedby='task-list-status-previousRecalls' href="{{ changeLinkUrl({ pageUrlSlug: 'previous-recalls', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.previousRecalls }}</a>
+              </span>
+              <span id='task-list-status-previousRecalls'>{{ taskStatus({ hasData: taskCompleteness.statuses.previousRecalls }) }}</span>
+          </li>
+        {% endif %}
         {% if recommendation.isInCustody == false %}
             <li class="moj-task-list__item">
                 <span class="moj-task-list__task-name">

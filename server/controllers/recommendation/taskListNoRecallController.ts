@@ -30,6 +30,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     },
     recommendation,
     ftr56Enabled: featureFlags.flagFTR56Enabled,
+    recallType,
   }
 
   const isIndeterminate = featureFlags.flagFTR56Enabled

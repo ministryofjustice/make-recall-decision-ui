@@ -11,7 +11,7 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
     <h2 class="moj-task-list__section" id='heading-circumstances'>
         Provide information about the circumstances
     </h2>
-    {% if ftr56Enabled %}
+    {% if ftr56Enabled and recallType == 'NO_RECALL' %}
        <ul class="moj-task-list__items">
          <li class="moj-task-list__item">
              <span class="moj-task-list__task-name">
@@ -45,6 +45,57 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
                  <span id='task-list-status-indeterminateSentenceType'>{{ taskStatus({ hasData: hasData(recommendation.indeterminateSentenceType.selected) }) }}</span>
             </li>
            {% endif %}
+       </ul>
+    {% elif ftr56Enabled and recallType != 'NO_RECALL' %}
+       <ul class="moj-task-list__items">
+          <li class="moj-task-list__item">
+              <span class="moj-task-list__task-name">
+                  <a aria-describedby='task-list-status-licenceConditions' href="{{ changeLinkUrl({ pageUrlSlug: 'licence-conditions', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.licenceConditions }}</a>
+              </span>
+              <span id='task-list-status-licenceConditions'>{{ taskStatus({ hasData: licenceConditionsBreached }) }}</span>
+          </li>
+          <li class="moj-task-list__item">
+              <span class="moj-task-list__task-name">
+                  <a aria-describedby='task-list-status-alternativesToRecallTried' href="{{ changeLinkUrl({ pageUrlSlug: 'alternatives-tried', urlInfo: urlInfo, fromAnchor: 'heading-alternatives' }) }}">{{ pageHeadings.alternativesToRecallTried }}</a>
+              </span>
+              <span id='task-list-status-alternativesToRecallTried'>{{ taskStatus({ hasData: hasData(recommendation.alternativesToRecallTried.selected) }) }}</span>
+          </li>
+          <li class="moj-task-list__item">
+              <span class="moj-task-list__task-name">
+                  <a aria-describedby='task-list-status-whatLedToRecall' href="{{ urlInfo.basePath }}what-led">{{ pageHeadings.whatLedToRecall }}</a>
+              </span>
+              <span id='task-list-status-whatLedToRecall'>{{ taskStatus({ hasData: hasData(recommendation.whatLedToRecall) }) }}</span>
+          </li>
+          {% if recommendation.sentenceGroup !== 'INDETERMINATE' %}
+              <li class="moj-task-list__item">
+                  <span class="moj-task-list__task-name">
+                      <a aria-describedby='task-list-status-emergencyRecall' href="{{ changeLinkUrl({ pageUrlSlug: 'emergency-recall', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.emergencyRecall }}</a>
+                  </span>
+                  <span id='task-list-status-emergencyRecall'>{{ taskStatus({ hasData: hasData(recommendation.isThisAnEmergencyRecall) }) }}</span>
+              </li>
+          {% endif %}
+          <li class="moj-task-list__item">
+               <span class="moj-task-list__task-name">
+                  <a aria-describedby='task-list-status-sentenceInformation' href="{{ changeLinkUrl({ pageUrlSlug: 'sentence-information', urlInfo: urlInfo, fromAnchor: 'heading-alternatives' }) }}">{{ pageHeadings.sentenceInformation }}</a>
+               </span>
+               <span id='task-list-status-sentenceInformation'>{{ taskStatus({ hasData: hasData(recommendation.sentenceGroup) }) }}</span>
+          </li>
+          {% if (recommendation.sentenceGroup == 'ADULT_SDS' or recommendation.sentenceGroup == 'YOUTH_SDS') == true %}
+              <li class="moj-task-list__item">
+                  <span class="moj-task-list__task-name">
+                      <a aria-describedby='task-list-status-fixedTermAdditionalLicenceConditions' href="{{ changeLinkUrl({ pageUrlSlug: 'fixed-licence', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Add any additional licence conditions - fixed term recall</a>
+                  </span>
+                  <span id='task-list-status-fixedTermAdditionalLicenceConditions'>{{ taskStatus({ hasData: hasData(recommendation.fixedTermAdditionalLicenceConditions) }) }}</span>
+              </li>
+          {% endif %}
+          {% if (recommendation.sentenceGroup == 'INDETERMINATE' or recommendation.sentenceGroup == 'EXTENDED') == true %}
+             <li class="moj-task-list__item">
+                 <span class="moj-task-list__task-name">
+                     <a aria-describedby='task-list-status-indeterminateOrExtendedSentenceDetails' href="{{ changeLinkUrl({ pageUrlSlug: 'indeterminate-details', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Confirm the recall criteria - indeterminate and extended sentences</a>
+                 </span>
+                 <span id='task-list-status-indeterminateOrExtendedSentenceDetails'>{{ taskStatus({ hasData: hasData(recommendation.indeterminateOrExtendedSentenceDetails) }) }}</span>
+             </li>
+          {% endif %}
        </ul>
     {% else %}
        <ul class="moj-task-list__items">
