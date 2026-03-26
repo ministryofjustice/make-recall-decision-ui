@@ -104,3 +104,8 @@ export const isRecommendationDiscretionaryRecall = ({
   isYouthChargedWithSeriousOffence,
   isMappaLevel2Or3,
 }: RecommendationResponse) => isYouthSentenceOver12Months || isYouthChargedWithSeriousOffence || isMappaLevel2Or3
+
+export const isStandardRecallMandatoryForRecommendationFTR56 = (recommendation: RecommendationResponse) =>
+  [SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
+  (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS &&
+    !isFixedTermRecallMandatoryForRecommendation(recommendation, true))

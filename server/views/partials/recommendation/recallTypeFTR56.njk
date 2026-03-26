@@ -1,0 +1,26 @@
+<h1 class="govuk-heading-l">{{ pageTitles[page.id] }}</h1>
+{% if ftrMandatory or standardMandatory %}
+    {% include "../../partials/recommendation/recallTypeFTR56MandatoryPanel.njk" %}
+{% else %}
+    {% set conditionalContent = {
+        STANDARD: standardDetailHtml,
+        FIXED_TERM: fixedTermDetailHtml
+    } %}
+    {% include "../../partials/recommendation/recallTypeFTR56DiscretionaryConditionsPanel.njk" %}
+{% endif %}
+{{ govukRadios({
+    idPrefix: "recallType",
+    name: "recallType",
+    fieldset: {
+        legend: {
+            text: "Select your recommendation",
+            classes: "govuk-fieldset__legend--m"
+        }
+    },
+    items: radioCheckboxItems({
+        items: availableRecallTypes,
+        currentValues: inputDisplayValues.value,
+        conditionalContent: conditionalContent
+    }),
+    errorMessage: errorMessage(errors.recallType)
+}) }}

@@ -1,0 +1,24 @@
+{% set mandatoryPanelTextHtml %}
+    {% if isAdultSentence %}
+        {% if ftrMandatory %}
+            {{ heading(recommendation.personOnProbation.name + ' must be given a fixed term recall, if recalled', 3, 'm') }}
+        {% else %}
+            {{ heading(recommendation.personOnProbation.name + ' must be given a standard recall, if recalled', 3, 'm') }}
+        {% endif %}
+        <p class="govuk-body">
+            This is based on their MAPPA information and the answers you’ve provided in the previous step. If this does not look right, you can go back to amend your answers.
+        </p>
+    {% else %}
+        {{ heading(recommendation.personOnProbation.name + ' must be given a fixed term recall, if recalled', 3, 'm') }}
+        <p class="govuk-body">
+            This is based on their MAPPA information and your answers to the fixed term recall exclusion criteria. If this does not look right, you can go back to amend your answers.
+        </p>
+    {% endif %}
+{% endset %}
+
+{{ mojTicketPanel({
+    items: [{
+        html: mandatoryPanelTextHtml,
+        classes: "moj-ticket-panel__content--blue"
+    }]
+}) }}
