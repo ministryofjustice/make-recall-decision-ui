@@ -3,11 +3,16 @@ import { isDefined } from '../../utils/utils'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { taskCompleteness } from '../recommendations/helpers/taskCompleteness'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, urlInfo, flags: featureFlags } = res.locals
 
   const recallType = recommendation?.recallType?.selected?.value
+
+  if (featureFlags.flagFTR56Enabled && (!isDefined(recallType) || recallType !== 'NO_RECALL')) {
+    return res.redirect(303, nextPageLinkUrl({ nextPageId: ppPaths.taskListConsiderRecall, urlInfo }))
+  }
 
   if (recallType === undefined) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
