@@ -138,30 +138,37 @@ context('Suitability for fixed term recall page', () => {
           {
             href: 'isChargedWithOffence',
             message: `Select whether ${recommendation.personOnProbation.name} is being recalled because of being charged with an offence`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
           {
             href: 'isServingTerroristOrNationalSecurityOffence',
             message: `Select whether ${recommendation.personOnProbation.name} is serving a sentence for a terrorist or national security offence`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
           {
             href: 'isAtRiskOfInvolvedInForeignPowerThreat',
             message: `Select whether ${recommendation.personOnProbation.name} is considered to be a person at risk of being involved in foreign power threat activity`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
           {
             href: 'wasReferredToParoleBoard244ZB',
             message: `Select whether ${recommendation.personOnProbation.name} was referred to the Parole Board under section 244ZB (power to detain) on this sentence`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
           {
             href: 'wasRepatriatedForMurder',
             message: `Select whether ${recommendation.personOnProbation.name} has been repatriated to the UK following a sentence for murder`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
           {
             href: 'isServingSOPCSentence',
             message: `Select whether ${recommendation.personOnProbation.name} is serving a Sentence for offenders of particular concern (SOPC)`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
           {
             href: 'isServingDCRSentence',
             message: `Select whether ${recommendation.personOnProbation.name} is serving a Discretionary conditional release (DCR) sentence`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
         ])
       })
@@ -305,10 +312,12 @@ context('Suitability for fixed term recall page', () => {
           {
             href: 'isYouthSentenceOver12Months',
             message: `Select whether ${recommendation.personOnProbation.name}'s sentence is 12 months or over`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
           {
             href: 'isYouthChargedWithSeriousOffence',
             message: `Select whether ${recommendation.personOnProbation.name} is being recalled because of being charged with a serious offence`,
+            checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
           },
         ])
       })
@@ -418,30 +427,37 @@ context('Suitability for fixed term recall page', () => {
         {
           href: 'isSentence48MonthsOrOver',
           message: `Select whether ${recommendation.personOnProbation.name}'s sentence is 48 months or over`,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
         {
           href: 'isUnder18',
           message: `Select whether ${recommendation.personOnProbation.name} is under 18`,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
         {
           href: 'isMappaCategory4',
           message: `Select whether ${recommendation.personOnProbation.name} is in MAPPA category 4`,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
         {
           href: 'isMappaLevel2Or3',
           message: `Select whether ${recommendation.personOnProbation.name}'s MAPPA level is 2 or 3`,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
         {
           href: 'isRecalledOnNewChargedOffence',
           message: `Select whether ${recommendation.personOnProbation.name} is being recalled on a new charged offence`,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
         {
           href: 'isServingFTSentenceForTerroristOffence',
           message: `Select whether ${recommendation.personOnProbation.name} is serving a fixed term sentence for a terrorist offence`,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
         {
           href: 'hasBeenChargedWithTerroristOrStateThreatOffence',
           message: `Select whether ${recommendation.personOnProbation.name} has been charged with a terrorist or state threat offence`,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
       ])
     })

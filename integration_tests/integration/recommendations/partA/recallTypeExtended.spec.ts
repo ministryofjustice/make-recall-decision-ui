@@ -49,6 +49,7 @@ describe('recall type extended', () => {
         {
           href: 'recallType',
           message: 'Select whether you recommend a recall or not',
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
       ])
     })
@@ -118,6 +119,7 @@ describe('recall type extended', () => {
         {
           href: 'recallType',
           message: 'Select a recall recommendation',
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
         },
       ])
     })

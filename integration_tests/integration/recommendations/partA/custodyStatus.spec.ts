@@ -141,6 +141,7 @@ context('Custody status', () => {
             {
               href: 'custodyStatus',
               message: 'Select whether the person is in custody or not',
+              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
             },
           ])
         })
@@ -165,6 +166,7 @@ context('Custody status', () => {
         {
           href: 'custodyStatusDetailsYesPolice',
           message: 'Enter the custody address',
+          errorStyleClass: 'govuk-textarea--error',
         },
       ])
     })
