@@ -385,7 +385,14 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       cy.get('button').click()
 
       testForErrorPageTitle()
-      testForErrorSummary([{ href: 'indexOffence', message: selectIndexOffenceErrorMessage }])
+      testForErrorSummary([
+        {
+          href: 'indexOffence-1-input',
+          message: selectIndexOffenceErrorMessage,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+          errorComponentId: 'indexOffence-error',
+        },
+      ])
 
       cy.get('div.govuk-form-group')
         .should('exist')

@@ -108,7 +108,13 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
         cy.get('@offenceDescriptionSelectWrapper').find('input').clear()
         cy.get('button').click()
         testForErrorPageTitle()
-        testForErrorSummary([{ href: `${autocompleteId}` }])
+        testForErrorSummary([
+          {
+            href: `${autocompleteId}`,
+            message: 'Select a matching index offence from the list',
+            checkFieldHasErrorStyling: false, // autocomplete doesn't get highlighted with error styling; change this if a way is found to do it
+          },
+        ])
       })
     })
   })

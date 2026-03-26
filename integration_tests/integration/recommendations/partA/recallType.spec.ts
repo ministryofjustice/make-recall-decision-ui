@@ -359,6 +359,7 @@ context('Recall Type Page', () => {
                     message: ftrMandatory
                       ? "Select if you're recommending a fixed term recall or no recall"
                       : "Select if you're recommending a fixed term recall, standard recall or no recall",
+                    checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
                   },
                 ])
               })
@@ -390,6 +391,7 @@ context('Recall Type Page', () => {
             {
               href: 'recallTypeDetailsStandard',
               message: 'Explain why you recommend this recall type',
+              errorStyleClass: 'govuk-textarea--error',
             },
           ])
         })
@@ -565,6 +567,7 @@ context('Recall Type Page', () => {
                 {
                   href: 'recallType',
                   message: 'Select a recall recommendation',
+                  checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
                 },
               ])
             })
@@ -783,6 +786,7 @@ context('Recall Type Page', () => {
                     {
                       href: 'recallType',
                       message: 'Select a recall recommendation',
+                      checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
                     },
                   ])
                 })
@@ -811,6 +815,7 @@ context('Recall Type Page', () => {
               {
                 href: 'recallTypeDetailsStandard',
                 message: 'Explain why you recommend this recall type',
+                errorStyleClass: 'govuk-textarea--error',
               },
             ])
           })

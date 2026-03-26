@@ -107,11 +107,21 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
   })
 
   describe('Error message display', () => {
-    const testInvalidDate = (inputs: Array<number | undefined>, errorSuffix: 'day' | 'month' | 'year') => {
+    const testInvalidDate = (
+      inputs: Array<number | undefined>,
+      errorSuffix: 'day' | 'month' | 'year',
+      errorMessage: string,
+    ) => {
       setDateInput(inputId, ...inputs)
       cy.get('button').click()
       testForErrorPageTitle()
-      testForErrorSummary([{ href: `${inputId}-${errorSuffix}` }])
+      testForErrorSummary([
+        {
+          href: `${inputId}-${errorSuffix}`,
+          message: errorMessage,
+          errorComponentId: 'release-date-error',
+        },
+      ])
       verifyInputs(inputId, ...inputs)
     }
     describe('WHEN an invalid date is provided', () => {
@@ -119,20 +129,38 @@ context('Indeterminate Sentence - Edit Release Date Page', () => {
         cy.signIn()
         cy.visit(testPageUrl)
       })
-      it('- Blank Date: Error links to day', () => testInvalidDate([], 'day'))
-      it('- Blank Day: Error links to day', () => testInvalidDate([undefined, 1, 2000], 'day'))
-      it('- Blank Month: Error links to month', () => testInvalidDate([1, undefined, 2000], 'month'))
-      it('- Blank Year: Error links to year', () => testInvalidDate([1, 1, undefined], 'year'))
-      it('- Blank Day/Month: Error links to day', () => testInvalidDate([undefined, undefined, 2020], 'day'))
-      it('- Blank Day/Year: Error links to day', () => testInvalidDate([undefined, 1, undefined], 'day'))
-      it('- Blank Month/Year: Error links to month', () => testInvalidDate([1, undefined, undefined], 'month'))
-      it('- Year less than the minimum: Error links to year', () => testInvalidDate([1, 1, MIN_VALUE_YEAR - 1], 'year'))
-      it('- Day that does not exist: Error links to day', () => testInvalidDate([99, 1, 2020], 'day'))
-      it('- Month that does not exist: Error links to month', () => testInvalidDate([1, 99, 2020], 'month'))
-      it('- Year that does not exist: Error links to year', () => testInvalidDate([1, 1, 12345], 'year'))
+      it('- Blank Date: Error links to day', () => testInvalidDate([], 'day', 'Enter the release date'))
+      it('- Blank Day: Error links to day', () =>
+        testInvalidDate([undefined, 1, 2000], 'day', 'The release date must include a day'))
+      it('- Blank Month: Error links to month', () =>
+        testInvalidDate([1, undefined, 2000], 'month', 'The release date must include a month'))
+      it('- Blank Year: Error links to year', () =>
+        testInvalidDate([1, 1, undefined], 'year', 'The release date must include a year'))
+      it('- Blank Day/Month: Error links to day', () =>
+        testInvalidDate([undefined, undefined, 2020], 'day', 'The release date must include a day and month'))
+      it('- Blank Day/Year: Error links to day', () =>
+        testInvalidDate([undefined, 1, undefined], 'day', 'The release date must include a day and year'))
+      it('- Blank Month/Year: Error links to month', () =>
+        testInvalidDate([1, undefined, undefined], 'month', 'The release date must include a month and year'))
+      it('- Year less than the minimum: Error links to year', () =>
+        testInvalidDate(
+          [1, 1, MIN_VALUE_YEAR - 1],
+          'year',
+          `The release date must include a year after ${MIN_VALUE_YEAR}`,
+        ))
+      it('- Day that does not exist: Error links to day', () =>
+        testInvalidDate([99, 1, 2020], 'day', 'The release date must have a real day'))
+      it('- Month that does not exist: Error links to month', () =>
+        testInvalidDate([1, 99, 2020], 'month', 'The release date must have a real month'))
+      it('- Year that does not exist: Error links to year', () =>
+        testInvalidDate([1, 1, 12345], 'year', 'The release date must have a real year'))
       const now = new Date(Date.now())
       it('- Date in the future: Error links to day', () =>
-        testInvalidDate([now.getDate(), now.getMonth() + 1, now.getFullYear() + 1], 'day'))
+        testInvalidDate(
+          [now.getDate(), now.getMonth() + 1, now.getFullYear() + 1],
+          'day',
+          'The release date must be today or in the past',
+        ))
     })
   })
 })

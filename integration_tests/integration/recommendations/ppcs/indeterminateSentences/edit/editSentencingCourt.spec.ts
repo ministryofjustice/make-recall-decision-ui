@@ -90,7 +90,13 @@ context('Indeterminate Sentence - Edit Sentencing Court Page', () => {
         cy.get('@sentencingCourtSelectWrapper').find('input').clear()
         cy.get('button').click()
         testForErrorPageTitle()
-        testForErrorSummary([{ href: `${autocompleteId}` }])
+        testForErrorSummary([
+          {
+            href: `${autocompleteId}`,
+            message: 'Select a sentencing court from the list',
+            checkFieldHasErrorStyling: false, // autocomplete doesn't get highlighted with error styling; change this if a way is found to do it
+          },
+        ])
       })
     })
   })

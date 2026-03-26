@@ -17,6 +17,7 @@ import { VulnerabilitiesGenerator, VulnerabilitiesOptions } from './vulnerabilit
 import { BookingMementoGenerator, BookingMementoOptions } from './bookingMementoGenerator'
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { CustodyStatusGenerator, CustodyStatusOptions } from './custodyStatusGenerator'
+import regionEnum from '../../server/controllers/recommendations/formOptions/region'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -265,7 +266,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             name: faker.person.fullName(),
             email: faker.internet.email(),
             telephone: faker.phone.number(),
-            region: faker.location.county(),
+            region: faker.helpers.arrayElement(regionEnum).value,
             localDeliveryUnit: faker.location.city(),
           }
         : undefined,

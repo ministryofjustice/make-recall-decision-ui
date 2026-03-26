@@ -236,6 +236,7 @@ const strings: Record<string, Record<string, string>> = {
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
     practitionerForPartA: 'Practitioner for {{ fullName }}?',
+    practitionerForPartAFTR56: 'Practitioner for {{ fullName }}',
     revocationOrderRecipients: 'Where should the revocation order be sent?',
     ppcsQueryEmails: 'Where should PPCS respond with questions?',
     revocationContact: 'Where should the revocation order be sent?',
