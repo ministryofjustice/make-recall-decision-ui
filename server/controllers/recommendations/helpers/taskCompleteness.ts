@@ -90,7 +90,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
   }
 
-  const isAdultSDS =
+  const isAdultSDSSuitabilityCriteriaSet =
     statuses.isChargedWithOffence &&
     statuses.isServingTerroristOrNationalSecurityOffence &&
     statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
@@ -99,15 +99,16 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     statuses.isServingSOPCSentence &&
     statuses.isServingDCRSentence
 
-  const isYouthSDS = statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence
+  const isYouthSDSSuitabilityCriteriaSet =
+    statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence
 
   let suitabilityForRecallValidation = true
 
   if (_featureFlags?.flagFTR56Enabled) {
     if (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
-      suitabilityForRecallValidation = isAdultSDS
+      suitabilityForRecallValidation = isAdultSDSSuitabilityCriteriaSet
     } else if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
-      suitabilityForRecallValidation = isYouthSDS
+      suitabilityForRecallValidation = isYouthSDSSuitabilityCriteriaSet
     }
   }
 

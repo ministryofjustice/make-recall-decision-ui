@@ -294,34 +294,61 @@ describe('taskCompleteness', () => {
     })
   })
 
-  describe('Suitability for recall', () => {
-    it('all complete', () => {
-      const { areAllComplete } = taskCompleteness(
-        {
+  describe('Suitability for standard or fixed term recall', () => {
+    const allCompleteSentenceGroups = [
+      SentenceGroup.ADULT_SDS,
+      SentenceGroup.YOUTH_SDS,
+      SentenceGroup.EXTENDED,
+      SentenceGroup.INDETERMINATE,
+    ]
+
+    allCompleteSentenceGroups.forEach(group => {
+      it(`all complete for ${group} when ftr56 enabled`, () => {
+        const recommendationData = {
           ...recommendationResponse,
-          sentenceGroup: SentenceGroup.ADULT_SDS,
+          sentenceGroup: group,
           recallType: { selected: { value: 'NO_RECALL' } },
           ...setAllProperties(noRecallProperties, true),
-          ...setAllProperties(suitabilityForRecallProperties, true),
-        } as RecommendationResponse,
-        { flagFTR56Enabled: true },
-      )
+          // Only include suitabilityForRecallProperties for ADULT/YOUTH
+          ...(group === SentenceGroup.ADULT_SDS || group === SentenceGroup.YOUTH_SDS
+            ? setAllProperties(suitabilityForRecallProperties, true)
+            : {}),
+        } as RecommendationResponse
 
-      expect(areAllComplete).toEqual(true)
+        const { areAllComplete } = taskCompleteness(recommendationData, { flagFTR56Enabled: true })
+
+        expect(areAllComplete).toEqual(true)
+      })
+
+      it(`all complete for ${group} when ftr56 disbled`, () => {
+        const recommendationData = {
+          ...recommendationResponse,
+          sentenceGroup: group,
+          recallType: { selected: { value: 'NO_RECALL' } },
+          ...setAllProperties(noRecallProperties, true),
+        } as RecommendationResponse
+
+        const { areAllComplete } = taskCompleteness(recommendationData)
+
+        expect(areAllComplete).toEqual(true)
+      })
     })
 
-    it('not complete', () => {
-      const { areAllComplete } = taskCompleteness(
-        {
-          ...recommendationResponse,
-          recallType: { selected: { value: 'NO_RECALL' } },
-          sentenceGroup: SentenceGroup.ADULT_SDS,
-          ...setAllProperties(noRecallProperties, true),
-        } as RecommendationResponse,
-        { flagFTR56Enabled: true },
-      )
+    const notCompleteSentenceGroups = [SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS]
 
-      expect(areAllComplete).toEqual(false)
+    notCompleteSentenceGroups.forEach(group => {
+      it(`not complete - ${group}`, () => {
+        const recommendationData = {
+          ...recommendationResponse,
+          sentenceGroup: group,
+          recallType: { selected: { value: 'NO_RECALL' } },
+          ...setAllProperties(noRecallProperties, true),
+        } as RecommendationResponse
+
+        const { areAllComplete } = taskCompleteness(recommendationData, { flagFTR56Enabled: true })
+
+        expect(areAllComplete).toEqual(false)
+      })
     })
   })
 

@@ -311,15 +311,15 @@ context('No recall', () => {
       const recommendation = {
         ...noRecallResponse,
         sentenceGroup,
-        isChargedWithOffence: true,
-        isServingTerroristOrNationalSecurityOffence: true,
-        isAtRiskOfInvolvedInForeignPowerThreat: true,
-        wasReferredToParoleBoard244ZB: true,
-        wasRepatriatedForMurder: true,
-        isServingSOPCSentence: true,
-        isServingDCRSentence: true,
-        isYouthSentenceOver12Months: true,
-        isYouthChargedWithSeriousOffence: true,
+        // isChargedWithOffence: true,
+        // isServingTerroristOrNationalSecurityOffence: true,
+        // isAtRiskOfInvolvedInForeignPowerThreat: true,
+        // wasReferredToParoleBoard244ZB: true,
+        // wasRepatriatedForMurder: true,
+        // isServingSOPCSentence: true,
+        // isServingDCRSentence: true,
+        // isYouthSentenceOver12Months: true,
+        // isYouthChargedWithSeriousOffence: true,
       }
 
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
@@ -373,7 +373,6 @@ context('No recall', () => {
       allLinks.forEach(link => cy.getLinkHref(link.text).should('contain', link.href))
     }
 
-    // Tests
     it('task list - ADULT_SDS - check links to forms', () => {
       checkTaskListLinks(SentenceGroup.ADULT_SDS, [
         {
