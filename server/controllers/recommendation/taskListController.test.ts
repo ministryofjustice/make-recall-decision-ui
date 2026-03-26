@@ -91,6 +91,7 @@ describe('get', () => {
       isExtendedSentence: true,
       isIndeterminateSentence: true,
       sentenceGroup: false,
+      triggerLeadingToRecall: false,
       isMainAddressWherePersonCanBeFound: true,
       isThisAnEmergencyRecall: true,
       isUnderIntegratedOffenderManagement: true,

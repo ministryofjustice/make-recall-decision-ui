@@ -68,6 +68,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
     isExtendedSentence: hasValue(recommendation.isExtendedSentence),
     sentenceGroup: hasValue(recommendation.sentenceGroup),
+    triggerLeadingToRecall: hasValue(recommendation.triggerLeadingToRecall),
     previousReleases: isPreviousReleasesComplete(recommendation),
     previousRecalls: isPreviousRecallsComplete(recommendation),
     indeterminateSentenceType:
@@ -88,6 +89,12 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isServingDCRSentence: hasValue(recommendation.isServingDCRSentence),
     isYouthSentenceOver12Months: hasValue(recommendation.isYouthSentenceOver12Months),
     isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
+  }
+
+  let triggerLeadingToRecall = true
+
+  if (_featureFlags?.flagFTR56Enabled) {
+    triggerLeadingToRecall = statuses.triggerLeadingToRecall
   }
 
   const isAdultSDSSuitabilityCriteriaSet =
@@ -147,6 +154,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       },
       isReadyForCounterSignature: false,
       areAllComplete:
+        triggerLeadingToRecall &&
         suitabilityForRecallValidation &&
         responseToProbation &&
         mappaReviewed &&

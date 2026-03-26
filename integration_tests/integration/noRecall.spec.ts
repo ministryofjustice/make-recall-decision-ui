@@ -329,6 +329,7 @@ context('No recall', () => {
           ...noRecallResponse.personOnProbation,
           ftr56MappaReviewed: true,
         },
+        triggerLeadingToRecall: 'reason',
       }
 
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })

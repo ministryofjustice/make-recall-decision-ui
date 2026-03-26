@@ -153,6 +153,7 @@ describe('taskCompleteness', () => {
         revocationOrderRecipients: true,
         ppcsQueryEmails: true,
         sentenceGroup: false,
+        triggerLeadingToRecall: true,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(true)
@@ -177,6 +178,7 @@ describe('taskCompleteness', () => {
         revocationOrderRecipients: false,
         ppcsQueryEmails: false,
         sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -196,6 +198,7 @@ describe('taskCompleteness', () => {
         previousRecalls: false,
         previousReleases: false,
         sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -215,6 +218,7 @@ describe('taskCompleteness', () => {
         previousReleases: false,
         indeterminateSentenceType: false,
         sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -235,6 +239,7 @@ describe('taskCompleteness', () => {
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(noRecallProperties, false),
         ...setAllProperties(suitabilityForRecallProperties, false),
+        triggerLeadingToRecall: false,
         recallType: true,
         previousRecalls: false,
         previousReleases: false,
