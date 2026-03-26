@@ -5,7 +5,6 @@ import type { FeatureFlags } from '../../../@types/featureFlags'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
-import logger from '../../../../logger'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -138,8 +137,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     if (_featureFlags?.flagFTR56Enabled && isSDS) {
       mappaReviewed = recommendation.personOnProbation.ftr56MappaReviewed
     }
-
-    logger.info(`statuses.indeterminateSentenceType: ${statuses.indeterminateSentenceType}`)
 
     return {
       statuses: {
