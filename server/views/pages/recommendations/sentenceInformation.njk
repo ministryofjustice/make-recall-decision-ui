@@ -23,6 +23,7 @@
 
             <form novalidate method="post" class="govuk-!-margin-top-7">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="previousSentenceGroup" value="{{ pageData.inputDisplayValues.value }}" />
 
                 {{
                     govukRadios({
