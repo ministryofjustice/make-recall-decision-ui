@@ -1,80 +1,94 @@
 {% extends "../../partials/layout.njk" %}
 
 {% set pageTitle = makePageTitle({
-    pageHeading: pageTitles[page.id],
-    hasErrors: errors
+  pageHeading: pageTitles[page.id],
+  hasErrors: errors
 }) %}
 
 {% block beforeContent %}
-    {{ backLink() }}
+  {{ backLink() }}
 {% endblock %}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% include '../../partials/error-summary.njk' %}
-            <form novalidate method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      {% include '../../partials/error-summary.njk' %}
+      <form novalidate method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-                {% set hintHtml %}
-                <p class='govuk-body'>Explain why the risk cannot be managed in the community.</p>
-                <p class='govuk-body'>Give details about:</p>
-                <ul class='govuk-list govuk-list--bullet'>
-                    <li>further offending</li>
-                    <li>police investigations / charges</li>
-                    <li>court dates</li>
-                    <li>any other relevant information</li>
-                </ul>
-                {% endset %}
-                {{ govukTextarea({
-                    name: "whatLedToRecall",
-                    id: "whatLedToRecall",
-                    label: {
-                        text: pageHeadings[page.id],
-                        classes: "govuk-label--l",
-                        isPageHeading: true
-                    },
-                    hint: {
-                        html: hintHtml
-                    },
-                    value: inputDisplayValues.value,
-                    errorMessage: errorMessage(errors.whatLedToRecall)
-                }) }}
-                {{ formSubmitButton() }}
-            </form>
-            <div>
-                <div class="govuk-caption-m govuk-!-margin-top-2">Previous related questions:
+        {% set hintHtml %}
+          {% if flags.flagFTR56Enabled %}
+            <p class='govuk-body'>Explain why you think the risk cannot be managed in the community.</p>
+            <p class="govuk-body">Give details about:</p>
+            <ul class="govuk-list govuk-list--bullet">
+              <li>the circumstances or behaviours that have led to the recall</li>
+              <li>any alleged further offending</li>
+              <li>police investigations or charges</li>
+              <li>any other relevant information</li>
+            </ul>
+          {% else %}
+            <p class='govuk-body'>Explain why the risk cannot be managed in the community.</p>
+            <p class='govuk-body'>Give details about:</p>
+            <ul class='govuk-list govuk-list--bullet'>
+              <li>further offending</li>
+              <li>police investigations / charges</li>
+              <li>court dates</li>
+              <li>any other relevant information</li>
+            </ul>
+          {% endif %}
+        {% endset %}
+        {{ govukTextarea({
+              name: "whatLedToRecall",
+              id: "whatLedToRecall",
+              label: {
+                  text: pageHeadings[page.id],
+                  classes: "govuk-label--l",
+                  isPageHeading: true
+              },
+              hint: {
+                  html: hintHtml
+              },
+              value: inputDisplayValues.value,
+              errorMessage: errorMessage(errors.whatLedToRecall)
+          }) }}
+        {{ formSubmitButton() }}
+      </form>
+      <div>
+        <div class="govuk-caption-m govuk-!-margin-top-2">Previous related questions:
             </div>
-            <br>
-                <h2 class='govuk-heading-m'>{{ pageHeadings.triggerLeadingToRecall }}</h2>
-                <div class='govuk-body mid-grey-panel'>
-                    <div class='js-display-block'>
-                        <div class='govuk-!-margin-bottom-6'>
-                            <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Your answer</span><br><br>
-                            <pre class='govuk-body' data-js='copy-to-clipboard-text2' data-qa='triggerLeadingToRecall' data-qa='previous-answer'>{{ recommendation.triggerLeadingToRecall }}</pre>
-                            <button id='copy-to-clipboard-text2' class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0 govuk-!-margin-right-6' data-js='copy-to-clipboard-btn'>Copy this text</button>
-                            <div aria-live='polite' data-js='aria-live-region' class='govuk-visually-hidden' data-qa='aria-live-region'></div>
-                        </div>
-                    </div>
-                </div>
+        <br>
+        <h2 class='govuk-heading-m'>{{ pageHeadings.triggerLeadingToRecall }}</h2>
+        <div class='govuk-body mid-grey-panel'>
+          <div class='js-display-block'>
+            <div class='govuk-!-margin-bottom-6'>
+              <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Your answer</span><br><br>
+              <pre class='govuk-body' data-js='copy-to-clipboard-text2' data-qa='triggerLeadingToRecall' data-qa='previous-answer'>{{ recommendation.triggerLeadingToRecall }}</pre>
+              <button id='copy-to-clipboard-text2' class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0 govuk-!-margin-right-6' data-js='copy-to-clipboard-btn'>Copy this text</button>
+              <div aria-live='polite' data-js='aria-live-region' class='govuk-visually-hidden' data-qa='aria-live-region'></div>
             </div>
-                <h2 class='govuk-heading-m'>{{ pageHeadings.responseToProbation }}</h2>
-                <div class='govuk-body mid-grey-panel'>
-                    <div class='js-display-block'>
-                        <div class='govuk-!-margin-bottom-6'>
-                            <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Your answer</span><br><br>
-                            <pre class='govuk-body' data-js='copy-to-clipboard-text' data-qa='responseToProbation' data-qa='previous-answer'>{{ recommendation.responseToProbation }}</pre>
-                            <button id='copy-to-clipboard-text' class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0 govuk-!-margin-right-6' data-js='copy-to-clipboard-btn'>Copy this text</button>
-                            <div aria-live='polite' data-js='aria-live-region' class='govuk-visually-hidden' data-qa='aria-live-region'></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
+
+      {% if not flags.flagFTR56Enabled %}
+        <h2 class='govuk-heading-m'>{{ pageHeadings.responseToProbation }}</h2>
+        <div class='govuk-body mid-grey-panel'>
+          <div class='js-display-block'>
+            <div class='govuk-!-margin-bottom-6'>
+              <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Your answer</span><br><br>
+              <pre class='govuk-body' data-js='copy-to-clipboard-text' data-qa='responseToProbation' data-qa='previous-answer'>{{ recommendation.responseToProbation }}</pre>
+              <button id='copy-to-clipboard-text' class='govuk-button govuk-button--secondary govuk-!-margin-bottom-0 govuk-!-margin-right-6' data-js='copy-to-clipboard-btn'>Copy this text</button>
+              <div aria-live='polite' data-js='aria-live-region' class='govuk-visually-hidden' data-qa='aria-live-region'></div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
     </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block bodyEnd %}
-    {{ super() }}
-    <script src="/assets/copyToClipboard.js" defer></script>
+{{ super() }}
+<script src="/assets/copyToClipboard.js" defer></script>
 {% endblock %}
