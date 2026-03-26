@@ -5,32 +5,57 @@ import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../uti
 import EVENTS from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import bindPlaceholderValues from '../../../utils/automatedFieldValues/binding'
-import { availableRecallTypes } from './availableRecallTypes'
+import { availableRecallTypes, availableRecallTypesFTR56 } from './availableRecallTypes'
 
-const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
-  const { recallType, recallTypeDetailsStandard, originalRecallType, ftrMandatory, personOnProbationName } = requestBody
+const validateRecallType = async ({
+  requestBody,
+  urlInfo,
+  flagFTR56Enabled,
+}: FormValidatorArgs & {
+  flagFTR56Enabled: boolean
+}): FormValidatorReturn => {
+  const { recallType, originalRecallType, ftrMandatory, standardMandatory, personOnProbationName } = requestBody
   const ftrMandatoryResolved = ftrMandatory === 'true'
+  const standardMandatoryResolved = standardMandatory === 'true'
   const invalidRecallType =
-    !isValueValid(recallType as string, 'recallType') || (ftrMandatoryResolved && recallType === 'STANDARD')
+    !isValueValid(recallType as string, 'recallType') ||
+    (ftrMandatoryResolved && recallType === 'STANDARD') ||
+    (flagFTR56Enabled && standardMandatoryResolved && recallType === 'FIXED_TERM')
+
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
   const isChanged = recallType !== originalRecallType
+
+  const mandatoryFTRRationale = flagFTR56Enabled
+    ? strings.automatedFieldValues.mandatoryFTRRationaleFTR56
+    : strings.automatedFieldValues.mandatoryFTRRationale
   const recallTypeDetailsFixedTerm =
     ftrMandatoryResolved && isFixedTerm
-      ? bindPlaceholderValues(strings.automatedFieldValues.mandatoryFTRRationale, {
+      ? bindPlaceholderValues(mandatoryFTRRationale, { personOnProbationName: personOnProbationName as string })
+      : requestBody.recallTypeDetailsFixedTerm
+
+  const recallTypeDetailsStandard =
+    flagFTR56Enabled && standardMandatoryResolved && isStandard
+      ? bindPlaceholderValues(strings.automatedFieldValues.mandatoryStandardRationaleFTR56, {
           personOnProbationName: personOnProbationName as string,
         })
-      : requestBody.recallTypeDetailsFixedTerm
-  const missingDetailFixedTerm =
-    !ftrMandatoryResolved && isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
-  const missingDetailStandard = !ftrMandatoryResolved && isStandard && !recallTypeDetailsStandard
+      : requestBody.recallTypeDetailsStandard
+
+  const isDiscretionary = !ftrMandatoryResolved && (!flagFTR56Enabled || !standardMandatoryResolved)
+  const missingDetailFixedTerm = isDiscretionary && isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
+  const missingDetailStandard = isDiscretionary && isStandard && isEmptyStringOrWhitespace(recallTypeDetailsStandard)
+
   const isFromTaskList = urlInfo.fromPageId === 'task-list'
   const hasError = !recallType || invalidRecallType || missingDetailFixedTerm || missingDetailStandard
   if (hasError) {
     const errors = []
     let errorId
     if (!recallType || invalidRecallType) {
-      errorId = ftrMandatoryResolved ? 'noRecallTypeSelectedMandatory' : 'noRecallTypeSelectedDiscretionary'
+      if (flagFTR56Enabled) {
+        errorId = 'noRecallTypeSelected'
+      } else {
+        errorId = ftrMandatoryResolved ? 'noRecallTypeSelectedMandatory' : 'noRecallTypeSelectedDiscretionary'
+      }
       errors.push(
         makeErrorObject({
           id: 'recallType',
@@ -71,7 +96,9 @@ const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): 
         value: recallType,
         details: isString(recallTypeDetails) ? stripHtmlTags(recallTypeDetails as string) : undefined,
       },
-      allOptions: availableRecallTypes(ftrMandatory === 'true'),
+      allOptions: flagFTR56Enabled
+        ? availableRecallTypesFTR56(ftrMandatoryResolved, standardMandatoryResolved)
+        : availableRecallTypes(ftrMandatoryResolved),
     },
     isThisAnEmergencyRecall: false,
   }

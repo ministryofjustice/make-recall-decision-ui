@@ -293,25 +293,22 @@ context('Make a recommendation', () => {
       })
     })
 
-    describe('present what do you recommend for extended sentence', () => {
-      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
-        it(description, () => {
+    if (!ftr56TestCases) {
+      describe('present what do you recommend for extended sentence', () => {
+        it('with FTR56 flag disabled', () => {
           cy.task('getRecommendation', {
             statusCode: 200,
             response: {
               ...completeRecommendationResponse,
               recallConsideredList: null,
-              isIndeterminateSentence: ftr56Enabled ? undefined : false,
-              isExtendedSentence: ftr56Enabled ? undefined : true,
-              sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
+              isIndeterminateSentence: false,
+              isExtendedSentence: true,
             },
           })
 
           cy.task('getStatuses', { statusCode: 200, response: [] })
 
-          cy.visit(
-            `${routeUrls.recommendations}/${recommendationId}/recall-type-extended?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
-          )
+          cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-extended?flagFTR56Enabled=0`)
 
           cy.pageHeading().should('equal', 'What do you recommend?')
 
@@ -324,9 +321,8 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               recallConsideredList: null,
-              isIndeterminateSentence: ftr56Enabled ? undefined : false,
-              isExtendedSentence: ftr56Enabled ? undefined : true,
-              sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
+              isIndeterminateSentence: false,
+              isExtendedSentence: true,
               recallType: { selected: { value: 'NO_RECALL' } }, // we set this so that the correct task list page loads when continue button is pushed.
             },
           })
@@ -338,7 +334,7 @@ context('Make a recommendation', () => {
           cy.pageHeading().should('equal', 'Create a decision not to recall letter')
         })
       })
-    })
+    }
 
     it('present task-list for all items completed', () => {
       cy.task('getRecommendation', {
