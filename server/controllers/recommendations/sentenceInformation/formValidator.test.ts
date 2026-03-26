@@ -14,6 +14,12 @@ import { indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/for
 jest.mock('../../../utils/errors')
 jest.mock('../helpers/urls')
 
+// The hint field can't be stored in the DB, so we remove it here
+const apiCompatibleIndeterminateSentenceTypes = indeterminateSentenceTypeFtr56.map(({ value, text }) => ({
+  value,
+  text,
+}))
+
 describe('validateSentenceInformation', () => {
   describe('no previous sentenceGroup value', () => {
     const testCasesForValidValues = [
@@ -54,7 +60,7 @@ describe('validateSentenceInformation', () => {
             sentenceGroup: requestBody.sentenceGroup,
             indeterminateSentenceType: {
               selected: IndeterminateSentenceType.selected.NO,
-              allOptions: indeterminateSentenceTypeFtr56,
+              allOptions: apiCompatibleIndeterminateSentenceTypes,
             },
           })
         }
@@ -101,7 +107,7 @@ describe('validateSentenceInformation', () => {
               ? undefined
               : {
                   selected: IndeterminateSentenceType.selected.NO,
-                  allOptions: indeterminateSentenceTypeFtr56,
+                  allOptions: apiCompatibleIndeterminateSentenceTypes,
                 },
         },
         expectedNextPageId:
@@ -123,7 +129,7 @@ describe('validateSentenceInformation', () => {
             sentenceGroup: newSentenceGroup,
             indeterminateSentenceType: {
               selected: IndeterminateSentenceType.selected.NO,
-              allOptions: indeterminateSentenceTypeFtr56,
+              allOptions: apiCompatibleIndeterminateSentenceTypes,
             },
             ...(previousSentenceGroup === SentenceGroup.ADULT_SDS
               ? emptyAdultSuitabilityCriteria
@@ -151,7 +157,7 @@ describe('validateSentenceInformation', () => {
                 ? null
                 : {
                     selected: IndeterminateSentenceType.selected.NO,
-                    allOptions: indeterminateSentenceTypeFtr56,
+                    allOptions: apiCompatibleIndeterminateSentenceTypes,
                   },
             isMappaCategory4: null,
             isMappaLevel2Or3: null,
@@ -183,7 +189,7 @@ describe('validateSentenceInformation', () => {
           indeterminateOrExtendedSentenceDetails: null,
           indeterminateSentenceType: {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceTypeFtr56,
+            allOptions: apiCompatibleIndeterminateSentenceTypes,
           },
           isThisAnEmergencyRecall: null,
           recallType: null,
@@ -203,7 +209,7 @@ describe('validateSentenceInformation', () => {
             indeterminateOrExtendedSentenceDetails: null,
             indeterminateSentenceType: {
               selected: IndeterminateSentenceType.selected.NO,
-              allOptions: indeterminateSentenceTypeFtr56,
+              allOptions: apiCompatibleIndeterminateSentenceTypes,
             },
             isThisAnEmergencyRecall: null,
             recallType: null,
@@ -228,7 +234,7 @@ describe('validateSentenceInformation', () => {
           sentenceGroup: SentenceGroup.EXTENDED,
           indeterminateSentenceType: {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceTypeFtr56,
+            allOptions: apiCompatibleIndeterminateSentenceTypes,
           },
           isThisAnEmergencyRecall: null,
           recallType: null,

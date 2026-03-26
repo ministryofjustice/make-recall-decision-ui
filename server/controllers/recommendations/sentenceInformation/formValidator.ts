@@ -30,6 +30,12 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
     }
   }
 
+  // The hint field can't be stored in the DB, so we remove it here
+  const apiCompatibleIndeterminateSentenceTypes = indeterminateSentenceTypeFtr56.map(({ value, text }) => ({
+    value,
+    text,
+  }))
+
   const valuesToSave: Partial<RecommendationResponse> = {
     sentenceGroup: sentenceGroup as SentenceGroup,
   }
@@ -37,7 +43,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
     if (sentenceGroup !== SentenceGroup.INDETERMINATE) {
       valuesToSave.indeterminateSentenceType = {
         selected: IndeterminateSentenceType.selected.NO,
-        allOptions: indeterminateSentenceTypeFtr56,
+        allOptions: apiCompatibleIndeterminateSentenceTypes,
       }
     }
   } else {
@@ -62,7 +68,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         } else {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceTypeFtr56,
+            allOptions: apiCompatibleIndeterminateSentenceTypes,
           }
         }
         break
@@ -81,14 +87,14 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         } else {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceTypeFtr56,
+            allOptions: apiCompatibleIndeterminateSentenceTypes,
           }
         }
         break
       case SentenceGroup.INDETERMINATE:
         valuesToSave.indeterminateSentenceType = {
           selected: IndeterminateSentenceType.selected.NO,
-          allOptions: indeterminateSentenceTypeFtr56,
+          allOptions: apiCompatibleIndeterminateSentenceTypes,
         }
         valuesToSave.isThisAnEmergencyRecall = null
         valuesToSave.recallType = null
@@ -102,7 +108,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         if (sentenceGroup !== SentenceGroup.INDETERMINATE) {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceTypeFtr56,
+            allOptions: apiCompatibleIndeterminateSentenceTypes,
           }
           valuesToSave.indeterminateOrExtendedSentenceDetails = null
         } else {
