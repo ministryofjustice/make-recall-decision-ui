@@ -120,10 +120,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       ? statuses.sentenceGroup
       : statuses.isIndeterminateSentence && statuses.isExtendedSentence
 
-    const indeterminateValidation = _featureFlags?.flagFTR56Enabled
-      ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || !!statuses.indeterminateSentenceType
-      : !recommendation.isIndeterminateSentence || !!statuses.indeterminateSentenceType
-
     return {
       statuses: {
         ...statuses,
@@ -139,7 +135,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         statuses.recallType &&
         sentenceValidation &&
         statuses.licenceConditionsBreached &&
-        indeterminateValidation &&
         whyConsideredRecall &&
         reasonsForNoRecall &&
         nextAppointment,
