@@ -260,14 +260,20 @@ context('No recall', () => {
           name: 'Jane Bloggs',
           ftr56MappaReviewed: true,
         },
+        isChargedWithOffence: true,
+        isServingTerroristOrNationalSecurityOffence: true,
+        isAtRiskOfInvolvedInForeignPowerThreat: true,
+        wasReferredToParoleBoard244ZB: true,
+        wasRepatriatedForMurder: true,
+        isServingSOPCSentence: true,
+        isServingDCRSentence: true,
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
 
       cy.getElement('MAPPA information to assess recall type Completed').should('exist')
-      // TODO: Fix this once MRD-3097 is merged
-      cy.getElement('Suitability for standard or fixed term recall').should('exist')
+      cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? Completed').should('exist')
 
@@ -305,6 +311,15 @@ context('No recall', () => {
       const recommendation = {
         ...noRecallResponse,
         sentenceGroup,
+        isChargedWithOffence: true,
+        isServingTerroristOrNationalSecurityOffence: true,
+        isAtRiskOfInvolvedInForeignPowerThreat: true,
+        wasReferredToParoleBoard244ZB: true,
+        wasRepatriatedForMurder: true,
+        isServingSOPCSentence: true,
+        isServingDCRSentence: true,
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
       }
 
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
@@ -350,7 +365,7 @@ context('No recall', () => {
           text: 'Add the appointment date and time',
           href: '/recommendations/123/appointment-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
         },
-        { text: 'Preview of the letter', href: '/recommendations/123/preview-no-recall' },
+        { text: 'Preview the letter', href: '/recommendations/123/preview-no-recall' },
       ]
 
       const allLinks = [...baseLinks, ...extraLinks]

@@ -1,10 +1,39 @@
+{% set suitabilityForFixedTermRecall = true %}
 
-{%
-set suitabilityForFixedTermRecall = hasData(recommendation.isUnder18) or
+{% if ftr56Enabled %}
+
+  {% if recommendation.sentenceGroup == 'ADULT_SDS' %}
+    {% set suitabilityForFixedTermRecall =
+      hasData(recommendation.isChargedWithOffence) and
+      hasData(recommendation.isServingTerroristOrNationalSecurityOffence) and
+      hasData(recommendation.isAtRiskOfInvolvedInForeignPowerThreat) and
+      hasData(recommendation.wasReferredToParoleBoard244ZB) and
+      hasData(recommendation.wasRepatriatedForMurder) and
+      hasData(recommendation.isServingSOPCSentence) and
+      hasData(recommendation.isServingDCRSentence)
+    %}
+
+  {% elif recommendation.sentenceGroup == 'YOUTH_SDS' %}
+    {% set suitabilityForFixedTermRecall =
+      hasData(recommendation.isYouthSentenceOver12Months) and
+      hasData(recommendation.isYouthChargedWithSeriousOffence)
+    %}
+
+  {% else %}
+    {% set suitabilityForFixedTermRecall = true %}
+  {% endif %}
+
+{% else %}
+
+  {# 🔒 existing logic preserved (no regression) #}
+  {% set suitabilityForFixedTermRecall =
+    hasData(recommendation.isUnder18) or
     hasData(recommendation.licenceConditionsBreached.isMappaLevelAbove1) or
     hasData(recommendation.cvlLicenceConditionsBreached.isSentence12MonthsOrOver) or
     hasData(recommendation.cvlLicenceConditionsBreached.hasBeenConvictedOfSeriousOffence)
-%}
+  %}
+
+{% endif %}
 
 <li>
     <h2 class="moj-task-list__section" id='heading-recommendation'>

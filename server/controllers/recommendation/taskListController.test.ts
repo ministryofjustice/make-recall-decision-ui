@@ -114,6 +114,15 @@ describe('get', () => {
       whoCompletedPartA: true,
       ppcsQueryEmails: true,
       revocationOrderRecipients: true,
+      isChargedWithOffence: false,
+      isServingTerroristOrNationalSecurityOffence: false,
+      isAtRiskOfInvolvedInForeignPowerThreat: false,
+      wasReferredToParoleBoard244ZB: false,
+      wasRepatriatedForMurder: false,
+      isServingSOPCSentence: false,
+      isServingDCRSentence: false,
+      isYouthSentenceOver12Months: false,
+      isYouthChargedWithSeriousOffence: false,
     },
   }
 

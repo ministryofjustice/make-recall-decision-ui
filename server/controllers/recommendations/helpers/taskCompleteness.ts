@@ -79,6 +79,36 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
       hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected) ||
       hasData(recommendation.additionalLicenceConditionsText),
+    isChargedWithOffence: hasValue(recommendation.isChargedWithOffence),
+    isServingTerroristOrNationalSecurityOffence: hasValue(recommendation.isServingTerroristOrNationalSecurityOffence),
+    isAtRiskOfInvolvedInForeignPowerThreat: hasValue(recommendation.isAtRiskOfInvolvedInForeignPowerThreat),
+    wasReferredToParoleBoard244ZB: hasValue(recommendation.wasReferredToParoleBoard244ZB),
+    wasRepatriatedForMurder: hasValue(recommendation.wasRepatriatedForMurder),
+    isServingSOPCSentence: hasValue(recommendation.isServingSOPCSentence),
+    isServingDCRSentence: hasValue(recommendation.isServingDCRSentence),
+    isYouthSentenceOver12Months: hasValue(recommendation.isYouthSentenceOver12Months),
+    isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
+  }
+
+  const isAdultSDS =
+    statuses.isChargedWithOffence &&
+    statuses.isServingTerroristOrNationalSecurityOffence &&
+    statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
+    statuses.wasReferredToParoleBoard244ZB &&
+    statuses.wasRepatriatedForMurder &&
+    statuses.isServingSOPCSentence &&
+    statuses.isServingDCRSentence
+
+  const isYouthSDS = statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence
+
+  let suitabilityForRecallValidation = true
+
+  if (_featureFlags?.flagFTR56Enabled) {
+    if (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
+      suitabilityForRecallValidation = isAdultSDS
+    } else if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+      suitabilityForRecallValidation = isYouthSDS
+    }
   }
 
   if (recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL) {
@@ -94,7 +124,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || !!statuses.indeterminateSentenceType
       : !recommendation.isIndeterminateSentence || !!statuses.indeterminateSentenceType
 
-    // TODO: Add Suitability questions once MRD-3097 is merged to main
     return {
       statuses: {
         ...statuses,
@@ -104,6 +133,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       },
       isReadyForCounterSignature: false,
       areAllComplete:
+        suitabilityForRecallValidation &&
         statuses.decisionDateTime &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
