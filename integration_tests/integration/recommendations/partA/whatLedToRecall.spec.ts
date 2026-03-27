@@ -59,6 +59,7 @@ context('What led to recall screen', () => {
         {
           href: 'whatLedToRecall',
           message: 'Enter details of what has led to this recall',
+          errorStyleClass: 'govuk-textarea--error',
         },
       ])
 
