@@ -301,6 +301,123 @@ context('Recommendation - task list', () => {
     })
   })
 
+  describe('Task list — FTR56 ON', () => {
+    describe('recommendations', () => {
+      ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+        it(`does not show MAPPA item for ${sentenceGroup}`, () => {
+          setUp({ ...recommendationResponse, sentenceGroup }, [], ['flagFTR56Enabled'])
+          cy.getElement('MAPPA information to assess recall type').should('not.exist')
+        })
+      })
+      ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+        it(`does not show Suitability item for ${sentenceGroup}`, () => {
+          setUp({ ...recommendationResponse, sentenceGroup }, [], ['flagFTR56Enabled'])
+          cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
+        })
+      })
+    })
+
+    describe('circumstances.njk', () => {
+      describe('NO_RECALL', () => {
+        const noRecallFtr56Base = {
+          ...recommendationResponse,
+          recallType: { selected: { value: 'NO_RECALL' } },
+        } as RecommendationResponse
+
+        ;[SentenceGroup.EXTENDED, SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
+          it(`does not show indeterminateSentenceType for ${sentenceGroup}`, () => {
+            setUp({ ...noRecallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            cy.getElement('Type of indeterminate sentence').should('not.exist')
+          })
+        })
+        ;[
+          ['whatLedToRecall', 'What has led to this recall?'],
+          ['emergencyRecall', 'Is this an emergency recall?'],
+          ['responseToProbation', "Jane Bloggs's response to probation"],
+        ].forEach(([field, elementText]) => {
+          it(`does not show ${field}`, () => {
+            setUp(noRecallFtr56Base, [], ['flagFTR56Enabled'])
+            cy.getElement(elementText).should('not.exist')
+          })
+        })
+      })
+
+      describe('RECALL', () => {
+        const recallFtr56Base = {
+          ...recommendationResponse,
+          recallType: { selected: { value: 'STANDARD' } },
+        } as RecommendationResponse
+
+        ;[
+          ['responseToProbation', "Jane Bloggs's response to probation", SentenceGroup.EXTENDED],
+          ['triggerLeadingToRecall', 'What led to this trigger?', SentenceGroup.EXTENDED],
+          ['emergencyRecall', 'Is this an emergency recall?', SentenceGroup.INDETERMINATE],
+        ].forEach(([field, elementText, sentenceGroup]: [string, string, SentenceGroup]) => {
+          it(`does not show ${field} for ${sentenceGroup}`, () => {
+            setUp({ ...recallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            cy.getElement(elementText).should('not.exist')
+          })
+        })
+        ;[
+          [SentenceGroup.ADULT_SDS, 'STANDARD'],
+          [SentenceGroup.YOUTH_SDS, 'STANDARD'],
+          [SentenceGroup.INDETERMINATE, 'FIXED_TERM'],
+          [SentenceGroup.EXTENDED, 'FIXED_TERM'],
+        ].forEach(([sentenceGroup, recallValue]: [SentenceGroup, RecallTypeSelectedValue.value]) => {
+          it(`does not show fixedTermAdditionalLicenceConditions for ${sentenceGroup} + ${recallValue}`, () => {
+            setUp(
+              {
+                ...recallFtr56Base,
+                sentenceGroup,
+                recallType: { selected: { value: recallValue } },
+              },
+              [],
+              ['flagFTR56Enabled'],
+            )
+            cy.getElement('Add any additional licence conditions - fixed term recall').should('not.exist')
+          })
+        })
+        ;[SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
+          it(`does not show indeterminateOrExtendedSentenceDetails for ${sentenceGroup}`, () => {
+            setUp({ ...recallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
+          })
+        })
+      })
+    })
+
+    describe('personalDetails', () => {
+      ;['Previous releases', 'Previous recalls'].forEach(elementText => {
+        it(`does not show ${elementText}`, () => {
+          setUp(recommendationResponse as RecommendationResponse, [], ['flagFTR56Enabled'])
+          cy.getElement(elementText).should('not.exist')
+        })
+      })
+    })
+
+    describe('custody', () => {
+      it('does not show IOM item', () => {
+        setUp(recommendationResponse as RecommendationResponse, [], ['flagFTR56Enabled'])
+        cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)?').should('not.exist')
+      })
+    })
+
+    describe('createLetter', () => {
+      it('does not show Preview link when tasks are incomplete', () => {
+        setUp(
+          {
+            ...recommendationResponse,
+            recallType: { selected: { value: 'NO_RECALL' } },
+            whyConsideredRecall: null,
+          } as RecommendationResponse,
+          [],
+          ['flagFTR56Enabled'],
+        )
+        cy.getElement('Preview the letter').should('not.exist')
+      })
+    })
+  })
+
   it('task list - Completed - not in custody', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
