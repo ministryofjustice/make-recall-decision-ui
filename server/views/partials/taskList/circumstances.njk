@@ -80,7 +80,7 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
                </span>
                <span id='task-list-status-sentenceInformation'>{{ taskStatus({ hasData: hasData(recommendation.sentenceGroup) }) }}</span>
           </li>
-          {% if (recommendation.sentenceGroup == 'ADULT_SDS' or recommendation.sentenceGroup == 'YOUTH_SDS') == true %}
+          {% if (recommendation.sentenceGroup == 'ADULT_SDS' or recommendation.sentenceGroup == 'YOUTH_SDS') == true and recommendation.recallType.selected.value === 'FIXED_TERM' %}
               <li class="moj-task-list__item">
                   <span class="moj-task-list__task-name">
                       <a aria-describedby='task-list-status-fixedTermAdditionalLicenceConditions' href="{{ changeLinkUrl({ pageUrlSlug: 'fixed-licence', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">Add any additional licence conditions - fixed term recall</a>

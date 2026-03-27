@@ -147,6 +147,11 @@ context('Recommendation - task list', () => {
     it(`Ftr56: task list - To do - ${name}`, () => {
       const response = {
         ...recommendationResponse,
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+          },
+        },
         sentenceGroup,
       }
       setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
@@ -208,6 +213,11 @@ context('Recommendation - task list', () => {
         fixedTermAdditionalLicenceConditions: {
           details: 'test',
           selected: true,
+        },
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+          },
         },
         whoCompletedPartA: {
           isPersonProbationPractitionerForOffender: false,
