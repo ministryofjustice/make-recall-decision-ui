@@ -209,6 +209,9 @@ context('Recommendation - task list', () => {
           details: 'test',
           selected: true,
         },
+        whoCompletedPartA: {
+          isPersonProbationPractitionerForOffender: false,
+        },
         custodyStatus: { selected: 'NO' },
         hasAnyVictims: { selected: 'YES' },
         triggerLeadingToRecall: 'reason',
@@ -281,6 +284,7 @@ context('Recommendation - task list', () => {
       cy.getElement('Who completed this Part A? Completed').should('exist')
       cy.getElement('Where should the revocation order be sent? Completed').should('exist')
       cy.getElement('Where should PPCS respond with questions? Completed').should('exist')
+      cy.getElement('Practitioner for Jane Bloggs? Completed').should('exist')
 
       cy.getElement("Request line manager's countersignature To do").should('exist')
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
