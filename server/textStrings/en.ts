@@ -235,7 +235,7 @@ const strings: Record<string, Record<string, string>> = {
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
-    practitionerForPartA: 'Practitioner for {{ fullName }}?',
+    practitionerForPartA: 'Practitioner for {{ fullName }}',
     practitionerForPartAFTR56: 'Practitioner for {{ fullName }}',
     revocationOrderRecipients: 'Where should the revocation order be sent?',
     ppcsQueryEmails: 'Where should PPCS respond with questions?',

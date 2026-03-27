@@ -1961,7 +1961,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/`)
 
-      cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs?')
+      cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
 
       cy.fillInput('Name', 'Joe Bloggs')
       cy.fillInput('Email', 'bloggs@me.gov.uk')
