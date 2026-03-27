@@ -10,9 +10,15 @@ function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
     urlInfo: { basePath },
+    flags,
   } = res.locals
 
-  const backLinkUrl = res.locals.flags.flagFTR56Enabled ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
+  const { flagFTR56Enabled } = flags
+  let backLinkUrl
+
+  if (flagFTR56Enabled && req.query?.fromPageId !== 'task-list-no-recall') {
+    backLinkUrl = `${basePath}${ppPaths.taskListConsiderRecall}`
+  }
 
   res.locals = {
     ...res.locals,
@@ -24,7 +30,7 @@ function get(req: Request, res: Response, next: NextFunction) {
         errors: res.locals.errors,
         value: res.locals.errors?.triggerLeadingToRecall ? '' : recommendation.triggerLeadingToRecall,
       },
-      flagFTR56Enabled: res.locals.flags.flagFTR56Enabled,
+      flagFTR56Enabled,
       backLinkUrl,
       recommendation,
     },

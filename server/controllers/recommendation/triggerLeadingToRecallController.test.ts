@@ -53,6 +53,29 @@ describe('Trigger Leading to Recall Controller', () => {
         })
       })
     })
+
+    it('returns undefined for the backLinkUrl when the fromPageId is set and FTR56flag is enabled', async () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      const urlInfo = UrlInfoGenerator.generate()
+      const res = mockRes({
+        locals: {
+          recommendation,
+          flags: { flagFTR56Enabled: true },
+          urlInfo,
+        },
+      })
+
+      const fromPageId = 'task-list-no-recall'
+      const req = mockReq({
+        query: {
+          fromPageId,
+        },
+      })
+
+      await triggerLeadingToRecallController.get(req, res, mockNext())
+
+      expect(res.locals.pageData.backLinkUrl).toBe(undefined)
+    })
   })
 
   describe('Conditional logic:', () => {
