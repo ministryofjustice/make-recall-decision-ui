@@ -10,9 +10,16 @@ function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
     urlInfo: { basePath },
+    flags,
   } = res.locals
 
-  const backLinkUrl = res.locals.flags.flagFTR56Enabled ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
+  const { query } = req
+  const { flagFTR56Enabled } = flags
+  let backLinkUrl
+
+  if (flagFTR56Enabled && query?.fromPageId !== 'task-list-no-recall') {
+    backLinkUrl = `${basePath}${ppPaths.taskListConsiderRecall}`
+  }
 
   res.locals = {
     ...res.locals,

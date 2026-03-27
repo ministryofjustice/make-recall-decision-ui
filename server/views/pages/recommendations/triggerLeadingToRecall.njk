@@ -1,7 +1,7 @@
 {% extends "../../partials/layout.njk" %}
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[pageData.page.id], hasErrors: pageData.inputDisplayValues.errors }) %}
 {% block beforeContent %}
-    {% if pageData.flagFTR56Enabled %}
+    {% if pageData.flagFTR56Enabled and pageData.backLinkUrl is not undefined %}
         {{ backLink({ text: 'Back to Consider a recall questions', href: pageData.backLinkUrl, doBrowserBack: false }) }}
     {% else %}
         {{ backLink() }}
