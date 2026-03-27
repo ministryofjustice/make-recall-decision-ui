@@ -89,6 +89,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         previousReleases: {
           hasBeenReleasedPreviously: req.body.continueButton === '1',
         },
+        dateOfRelease: req.body.dateOfRelease,
       },
       token,
       featureFlags: flags,

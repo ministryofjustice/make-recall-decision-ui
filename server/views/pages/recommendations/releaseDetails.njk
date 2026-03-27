@@ -13,16 +13,19 @@
           <input type="hidden" name="previousReleaseDates"
                   value="{% for date in recommendation.previousReleases.previousReleaseDates %}{{ date }}|{% endfor %}" />
         {% endif %}
+        <input type="hidden" name="dateOfRelease" value="{{recommendation.previousReleases.lastReleaseDate}}" />
 
         {{ heading(pageHeadings[page.id]) }}
         {{ deliusDetailsMessage() }}
 
-        {{ summaryList({
+        {{
+          summaryList({
               rows: [
                 { key: 'Releasing prison or custodial establishment', value: recommendation.previousReleases.lastReleasingPrisonOrCustodialEstablishment | defaultValue | safe },
                 { key: 'Date of current release', value: formatDateTimeFromIsoString({isoDate: recommendation.previousReleases.lastReleaseDate, dateOnly: true}) | defaultValue | safe }
               ]
-            })}}
+            })
+        }}
 
         <button
           name='continueButton'
