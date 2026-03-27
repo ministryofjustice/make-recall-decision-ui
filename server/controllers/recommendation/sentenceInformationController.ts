@@ -4,7 +4,7 @@ import validateSentenceInformation from '../recommendations/sentenceInformation/
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import ppPaths from '../../routes/paths/pp'
 import getCaseSection from '../caseSummary/getCaseSection'
-import sentenceGroup from '../recommendations/sentenceInformation/formOptions'
+import { sentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import { renderString } from '../../utils/nunjucks'
 
 async function get(req: Request, res: Response, next: NextFunction) {

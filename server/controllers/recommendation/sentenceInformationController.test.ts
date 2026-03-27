@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import inputDisplayValuesSentenceInformation from '../recommendations/sentenceInformation/inputDisplayValues'
-import sentenceGroup, { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { SentenceGroup, sentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import sentenceInformationController from './sentenceInformationController'

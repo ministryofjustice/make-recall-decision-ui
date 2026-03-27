@@ -99,8 +99,8 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     alternativesToRecallTried:
       (options?.alternativesToRecallTried ?? true)
         ? {
-            selected: [{ value: faker.lorem.word(), details: faker.lorem.sentence() }],
-            allOptions: [{ value: faker.lorem.word(), details: faker.lorem.sentence() }],
+            selected: [{ value: 'WARNINGS_LETTER', details: faker.lorem.sentence() }],
+            allOptions: [{ value: 'WARNINGS_LETTER', text: faker.lorem.sentence() }],
           }
         : undefined,
     custodyStatus:

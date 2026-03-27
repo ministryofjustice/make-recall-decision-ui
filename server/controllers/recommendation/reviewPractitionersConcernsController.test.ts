@@ -2,7 +2,10 @@ import reviewPractitionersConcernsController from './reviewPractitionersConcerns
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import {
+  SentenceGroup,
+  sentenceGroup as sentenceGroupDetails,
+} from '../recommendations/sentenceInformation/formOptions'
 import randomEnum from '../../@types/enum.testFactory'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -213,6 +216,7 @@ describe('get', () => {
               locals: {
                 recommendation: {
                   isIndeterminateSentence: ftr56Enabled ? undefined : isIndeterminateSentence,
+                  indeterminateSentenceType: ftr56Enabled && isIndeterminateSentence ? { selected: 'LIFE' } : undefined,
                   isExtendedSentence: ftr56Enabled ? undefined : isExtendedSentence,
                   sentenceGroup: ftr56Enabled ? sentenceGroup : undefined,
                   triggerLeadingToRecall: 'some reason 1',
@@ -266,10 +270,17 @@ describe('get', () => {
             ])
             expect(res.locals.alternativesToRecallTried).toEqual([])
             if (ftr56Enabled) {
+              expect(res.locals.sentenceGroupHumanReadable).toBe(
+                sentenceGroupDetails.find(group => group.value === sentenceGroup)?.text,
+              )
               expect(res.locals.isIndeterminateSentence).toEqual(
                 sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
               )
               expect(res.locals.isExtendedSentence).toEqual(sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No')
+
+              expect(res.locals.indeterminateSentenceHumanReadable).toBe(
+                sentenceGroup === SentenceGroup.INDETERMINATE ? 'Life sentence' : undefined,
+              )
             } else {
               expect(res.locals.isIndeterminateSentence).toEqual(isIndeterminateSentence ? 'Yes' : 'No')
               expect(res.locals.isExtendedSentence).toEqual(isExtendedSentence ? 'Yes' : 'No')
