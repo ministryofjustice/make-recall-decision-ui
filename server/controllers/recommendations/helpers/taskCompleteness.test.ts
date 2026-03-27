@@ -207,6 +207,7 @@ describe('taskCompleteness', () => {
     it('all complete - sentence type not required if indeterminate is false', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...noRecallResponse,
+        decisionDateTime: null,
         isIndeterminateSentence: false,
         indeterminateSentenceType: undefined,
       } as RecommendationResponse)
@@ -214,6 +215,7 @@ describe('taskCompleteness', () => {
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(noRecallProperties, true),
         ...setAllProperties(suitabilityForRecallProperties, false),
+        decisionDateTime: false,
         previousRecalls: false,
         previousReleases: false,
         indeterminateSentenceType: false,

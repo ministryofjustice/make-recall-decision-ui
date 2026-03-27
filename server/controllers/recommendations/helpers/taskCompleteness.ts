@@ -158,7 +158,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         suitabilityForRecallValidation &&
         responseToProbation &&
         mappaReviewed &&
-        statuses.decisionDateTime &&
+        (!_featureFlags?.flagFTR56Enabled || statuses.decisionDateTime) &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
         sentenceValidation &&
