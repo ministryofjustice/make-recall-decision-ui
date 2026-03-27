@@ -11,6 +11,7 @@ import strings from '../../server/textStrings/en'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
 import recallTypeValues = RecallTypeSelectedValue.value
 import selected = CustodyStatus.selected
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 
 context('Recommendation - task list', () => {
   beforeEach(() => {
@@ -30,7 +31,7 @@ context('Recommendation - task list', () => {
       response: recResponse,
     })
     cy.task('getStatuses', { statusCode: 200, response: statusesResponse ?? [] })
-    const flagPostfix = enabledFlags?.map(flag => `?${flag}=1`).join('&') ?? ''
+    const flagPostfix = enabledFlags?.length ? `?${enabledFlags.map(flag => `${flag}=1`).join('&')}` : ''
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list${flagPostfix}`)
   }
 
@@ -93,6 +94,373 @@ context('Recommendation - task list', () => {
     cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
 
     cy.getElement("Request line manager's countersignature To do").should('exist')
+  })
+
+  const scenarios = [
+    {
+      name: 'Adult SDS',
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+      expect: {
+        mappa: true,
+        suitability: true,
+        indeterminateOrExtendedDetails: false,
+        additionalLicenceConditions: true,
+        emergencyRecall: true,
+      },
+    },
+    {
+      name: 'Youth SDS',
+      sentenceGroup: SentenceGroup.YOUTH_SDS,
+      expect: {
+        mappa: false,
+        suitability: true,
+        indeterminateOrExtendedDetails: false,
+        additionalLicenceConditions: true,
+        emergencyRecall: true,
+      },
+    },
+    {
+      name: 'Indeterminate',
+      sentenceGroup: SentenceGroup.INDETERMINATE,
+      expect: {
+        mappa: false,
+        suitability: false,
+        indeterminateOrExtendedDetails: true,
+        additionalLicenceConditions: false,
+        emergencyRecall: false,
+      },
+    },
+    {
+      name: 'Extended',
+      sentenceGroup: SentenceGroup.EXTENDED,
+      expect: {
+        mappa: false,
+        suitability: false,
+        indeterminateOrExtendedDetails: true,
+        additionalLicenceConditions: false,
+        emergencyRecall: true,
+      },
+    },
+  ]
+
+  scenarios.forEach(({ name, sentenceGroup, expect }) => {
+    it(`Ftr56: task list - To do - ${name}`, () => {
+      const response = {
+        ...recommendationResponse,
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+          },
+        },
+        sentenceGroup,
+      }
+      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
+
+      cy.getElement('MAPPA information to assess recall type To do').should(expect.mappa ? 'exist' : 'not.exist')
+
+      cy.getElement('Suitability for standard or fixed term recall To do').should(
+        expect.suitability ? 'exist' : 'not.exist',
+      )
+
+      // common assertions
+      cy.getElement('What you recommend Completed').should('exist')
+      cy.getElement('When did the SPO agree this recall? To do').should('exist')
+
+      cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
+      cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
+      cy.getElement('What has led to this recall? To do').should('exist')
+      cy.getElement('Is this an emergency recall? To do').should(expect.emergencyRecall ? 'exist' : 'not.exist')
+      cy.getElement("Jane Bloggs's sentence information").should('exist')
+
+      cy.getElement('Add any additional licence conditions - fixed term recall To do')[
+        expect.additionalLicenceConditions ? 'should' : 'should'
+      ](expect.additionalLicenceConditions ? 'exist' : 'not.exist')
+
+      cy.getElement('Confirm the recall criteria - indeterminate and extended sentences To do').should(
+        expect.indeterminateOrExtendedDetails ? 'exist' : 'not.exist',
+      )
+
+      cy.getElement('Personal details To review').should('exist')
+      cy.getElement('Release details To do').should('exist')
+      cy.getElement('Offence details To review').should('exist')
+      cy.getElement('Offence analysis To do').should('exist')
+      cy.getElement('Address To do').should('exist')
+
+      cy.getElement('Consider if recall could affect vulnerabilities or needs To do').should('exist')
+      cy.getElement('Are there any victims in the victim contact scheme? To do').should('exist')
+
+      cy.getElement('Is Jane Bloggs in custody now? To do').should('exist')
+      cy.getElement('Local police contact details To do').should('exist')
+      cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? To do').should('exist')
+      cy.getElement('Do you think Jane Bloggs is using recall to bring contraband into prison? To do').should('exist')
+      cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? To do').should('not.exist')
+
+      cy.getElement('Indicative risk assessment pending OASys review To do').should('exist')
+      cy.getElement('MAPPA for Jane Bloggs To review').should('exist')
+
+      cy.getElement('Who completed this Part A? To do').should('exist')
+      cy.getElement('Where should the revocation order be sent? To do').should('exist')
+      cy.getElement('Where should PPCS respond with questions? To do').should('exist')
+
+      cy.getElement("Request line manager's countersignature Cannot start yet").should('exist')
+      cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+    })
+
+    it(`Ftr56: task list - Completed - ${name}`, () => {
+      const response = {
+        ...completeRecommendationResponse,
+        sentenceGroup,
+        fixedTermAdditionalLicenceConditions: {
+          details: 'test',
+          selected: true,
+        },
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+          },
+        },
+        whoCompletedPartA: {
+          isPersonProbationPractitionerForOffender: false,
+        },
+        custodyStatus: { selected: 'NO' },
+        hasAnyVictims: { selected: 'YES' },
+        triggerLeadingToRecall: 'reason',
+        personOnProbation: {
+          name: 'Jane Bloggs',
+          hasBeenReviewed: true,
+          mappa: {
+            hasBeenReviewed: true,
+          },
+          ftr56MappaReviewed: true,
+        },
+        isChargedWithOffence: true,
+        isServingTerroristOrNationalSecurityOffence: true,
+        isAtRiskOfInvolvedInForeignPowerThreat: true,
+        wasReferredToParoleBoard244ZB: true,
+        wasRepatriatedForMurder: true,
+        isServingSOPCSentence: true,
+        isServingDCRSentence: true,
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
+      }
+      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
+
+      cy.getElement('MAPPA information to assess recall type Completed').should(expect.mappa ? 'exist' : 'not.exist')
+
+      cy.getElement('Suitability for standard or fixed term recall Completed').should(
+        expect.suitability ? 'exist' : 'not.exist',
+      )
+
+      // common assertions
+      cy.getElement('What you recommend Completed').should('exist')
+      cy.getElement('When did the SPO agree this recall? Completed').should('exist')
+
+      cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
+      cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
+      cy.getElement('What has led to this recall? Completed').should('exist')
+      cy.getElement('Is this an emergency recall? Completed').should(expect.emergencyRecall ? 'exist' : 'not.exist')
+      cy.getElement("Jane Bloggs's sentence information").should('exist')
+
+      cy.getElement('Add any additional licence conditions - fixed term recall Completed').should(
+        expect.additionalLicenceConditions ? 'exist' : 'not.exist',
+      )
+
+      cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed').should(
+        expect.indeterminateOrExtendedDetails ? 'exist' : 'not.exist',
+      )
+
+      cy.getElement('Personal details Reviewed').should('exist')
+      cy.getElement('Release details Completed').should('exist')
+      cy.getElement('Offence details Reviewed').should('exist')
+      cy.getElement('Offence analysis Completed').should('exist')
+      cy.getElement('Address Completed').should('exist')
+
+      cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
+      cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
+      cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
+
+      cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
+      cy.getElement('Local police contact details Completed').should('exist')
+      cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? Completed').should(
+        'exist',
+      )
+      cy.getElement('Do you think Jane Bloggs is using recall to bring contraband into prison? Completed').should(
+        'exist',
+      )
+      cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('not.exist')
+
+      cy.getElement('Indicative risk assessment pending OASys review Completed').should('exist')
+      cy.getElement('MAPPA for Jane Bloggs Reviewed').should('exist')
+
+      cy.getElement('Who completed this Part A? Completed').should('exist')
+      cy.getElement('Where should the revocation order be sent? Completed').should('exist')
+      cy.getElement('Where should PPCS respond with questions? Completed').should('exist')
+      cy.getElement('Practitioner for Jane Bloggs? Completed').should('exist')
+
+      cy.getElement("Request line manager's countersignature To do").should('exist')
+      cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+    })
+  })
+
+  describe('Task list — FTR56 ON', () => {
+    describe('recommendations', () => {
+      ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+        it(`does not show MAPPA item for ${sentenceGroup}`, () => {
+          setUp({ ...recommendationResponse, sentenceGroup }, [], ['flagFTR56Enabled'])
+          cy.getElement('MAPPA information to assess recall type').should('not.exist')
+        })
+      })
+      ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+        it(`does not show Suitability item for ${sentenceGroup}`, () => {
+          setUp({ ...recommendationResponse, sentenceGroup }, [], ['flagFTR56Enabled'])
+          cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
+        })
+      })
+    })
+
+    describe('circumstances.njk', () => {
+      describe('NO_RECALL', () => {
+        const noRecallFtr56Base = {
+          ...recommendationResponse,
+          recallType: { selected: { value: 'NO_RECALL' } },
+        } as RecommendationResponse
+
+        ;[SentenceGroup.EXTENDED, SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
+          it(`does not show indeterminateSentenceType for ${sentenceGroup}`, () => {
+            setUp({ ...noRecallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            cy.getElement('Type of indeterminate sentence').should('not.exist')
+          })
+        })
+        ;[
+          ['whatLedToRecall', 'What has led to this recall?'],
+          ['emergencyRecall', 'Is this an emergency recall?'],
+          ['responseToProbation', "Jane Bloggs's response to probation"],
+        ].forEach(([field, elementText]) => {
+          it(`does not show ${field}`, () => {
+            setUp(noRecallFtr56Base, [], ['flagFTR56Enabled'])
+            cy.getElement(elementText).should('not.exist')
+          })
+        })
+      })
+
+      describe('RECALL', () => {
+        const recallFtr56Base = {
+          ...recommendationResponse,
+          recallType: { selected: { value: 'STANDARD' } },
+        } as RecommendationResponse
+
+        ;[
+          ['responseToProbation', "Jane Bloggs's response to probation", SentenceGroup.EXTENDED],
+          ['triggerLeadingToRecall', 'What led to this trigger?', SentenceGroup.EXTENDED],
+          ['emergencyRecall', 'Is this an emergency recall?', SentenceGroup.INDETERMINATE],
+        ].forEach(([field, elementText, sentenceGroup]: [string, string, SentenceGroup]) => {
+          it(`does not show ${field} for ${sentenceGroup}`, () => {
+            setUp({ ...recallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            cy.getElement(elementText).should('not.exist')
+          })
+        })
+        ;[
+          [SentenceGroup.ADULT_SDS, 'STANDARD'],
+          [SentenceGroup.YOUTH_SDS, 'STANDARD'],
+          [SentenceGroup.INDETERMINATE, 'FIXED_TERM'],
+          [SentenceGroup.EXTENDED, 'FIXED_TERM'],
+        ].forEach(([sentenceGroup, recallValue]: [SentenceGroup, RecallTypeSelectedValue.value]) => {
+          it(`does not show fixedTermAdditionalLicenceConditions for ${sentenceGroup} + ${recallValue}`, () => {
+            setUp(
+              {
+                ...recallFtr56Base,
+                sentenceGroup,
+                recallType: { selected: { value: recallValue } },
+              },
+              [],
+              ['flagFTR56Enabled'],
+            )
+            cy.getElement('Add any additional licence conditions - fixed term recall').should('not.exist')
+          })
+        })
+        ;[SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
+          it(`does not show indeterminateOrExtendedSentenceDetails for ${sentenceGroup}`, () => {
+            setUp({ ...recallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
+          })
+        })
+      })
+    })
+
+    describe('personalDetails', () => {
+      ;['Previous releases', 'Previous recalls'].forEach(elementText => {
+        it(`does not show ${elementText}`, () => {
+          setUp(recommendationResponse as RecommendationResponse, [], ['flagFTR56Enabled'])
+          cy.getElement(elementText).should('not.exist')
+        })
+      })
+    })
+
+    describe('custody', () => {
+      it('does not show IOM item', () => {
+        setUp(recommendationResponse as RecommendationResponse, [], ['flagFTR56Enabled'])
+        cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)?').should('not.exist')
+      })
+    })
+
+    describe('createLetter', () => {
+      it('does not show Preview link when tasks are incomplete', () => {
+        setUp(
+          {
+            ...recommendationResponse,
+            recallType: { selected: { value: 'NO_RECALL' } },
+            whyConsideredRecall: null,
+          } as RecommendationResponse,
+          [],
+          ['flagFTR56Enabled'],
+        )
+        cy.getElement('Preview the letter').should('not.exist')
+      })
+    })
+
+    describe('vulnerabilities', () => {
+      it('shows details item as To do when selected vulnerability requires details but details are null', () => {
+        setUp(
+          {
+            ...recommendationResponse,
+            vulnerabilities: {
+              selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE, details: null }],
+            },
+          },
+          [],
+          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+        )
+        cy.getElement('Add more details about vulnerabilities or needs To do').should('exist')
+      })
+
+      it('shows details item as Completed when details are provided', () => {
+        setUp(
+          {
+            ...recommendationResponse,
+            vulnerabilities: {
+              selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE, details: 'some details' }],
+            },
+          },
+          [],
+          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+        )
+        cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
+      })
+
+      it('does not show details item when selected vulnerability does not require details', () => {
+        setUp(
+          {
+            ...recommendationResponse,
+            vulnerabilities: {
+              selected: [{ value: VULNERABILITY.NONE, details: null }],
+            },
+          },
+          [],
+          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+        )
+        cy.getElement('Add more details about vulnerabilities or needs').should('not.exist')
+      })
+    })
   })
 
   it('task list - Completed - not in custody', () => {

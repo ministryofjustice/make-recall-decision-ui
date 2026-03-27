@@ -119,21 +119,20 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     }
   }
 
+  const sentenceValidation = _featureFlags?.flagFTR56Enabled
+    ? statuses.sentenceGroup
+    : statuses.isIndeterminateSentence && statuses.isExtendedSentence
+
+  const indeterminateSentenceValidation = _featureFlags?.flagFTR56Enabled
+    ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
+    : !recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType
+
+  const responseToProbation = _featureFlags?.flagFTR56Enabled ? true : statuses.responseToProbation
+
   if (recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL) {
     const whyConsideredRecall = hasValue(recommendation.whyConsideredRecall)
     const reasonsForNoRecall = hasValue(recommendation.reasonsForNoRecall)
     const nextAppointment = hasValue(recommendation.nextAppointment)
-
-    const sentenceValidation = _featureFlags?.flagFTR56Enabled
-      ? statuses.sentenceGroup
-      : statuses.isIndeterminateSentence && statuses.isExtendedSentence
-
-    const indeterminateSentenceValidation = _featureFlags?.flagFTR56Enabled
-      ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE ||
-        hasValue(recommendation.indeterminateSentenceType)
-      : !recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType
-
-    const responseToProbation = _featureFlags?.flagFTR56Enabled ? true : statuses.responseToProbation
 
     const isSDS =
       recommendation.sentenceGroup === SentenceGroup.ADULT_SDS ||
@@ -204,58 +203,68 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     ppcsQueryEmails: hasValue(recommendation.ppcsQueryEmails) && recommendation.ppcsQueryEmails.length > 0,
   }
 
+  const indeterminateOrExtendedSentenceDetails = _featureFlags?.flagFTR56Enabled
+    ? ![SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
+      statuses.indeterminateOrExtendedSentenceDetails
+    : !recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails
+
+  const isUnderIntegratedOffenderManagement = _featureFlags?.flagFTR56Enabled
+    ? true
+    : statuses.isUnderIntegratedOffenderManagement
+  const previousRecalls = _featureFlags?.flagFTR56Enabled ? true : statuses.previousRecalls
+
   return {
     statuses,
     isReadyForCounterSignature:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
-      statuses.responseToProbation &&
-      statuses.isIndeterminateSentence &&
-      statuses.isExtendedSentence &&
+      responseToProbation &&
+      sentenceValidation &&
+      suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&
       statuses.whatLedToRecall &&
       statuses.isThisAnEmergencyRecall &&
       statuses.vulnerabilities &&
       statuses.hasVictimsInContactScheme &&
-      statuses.isUnderIntegratedOffenderManagement &&
+      isUnderIntegratedOffenderManagement &&
       statuses.hasContrabandRisk &&
       statuses.personOnProbation &&
       statuses.offenceAnalysis &&
       statuses.convictionDetail &&
       statuses.mappa &&
       statuses.previousReleases &&
-      statuses.previousRecalls &&
+      previousRecalls &&
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
       statuses.whoCompletedPartA &&
       (statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
       statuses.isMainAddressWherePersonCanBeFound &&
-      (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
-      (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&
+      indeterminateSentenceValidation &&
+      indeterminateOrExtendedSentenceDetails &&
       statuses.fixedTermAdditionalLicenceConditions,
     areAllComplete:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
       statuses.decisionDateTime &&
-      statuses.responseToProbation &&
-      statuses.isIndeterminateSentence &&
-      statuses.isExtendedSentence &&
+      responseToProbation &&
+      sentenceValidation &&
+      suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&
       statuses.whatLedToRecall &&
       statuses.isThisAnEmergencyRecall &&
       statuses.vulnerabilities &&
       statuses.hasVictimsInContactScheme &&
-      statuses.isUnderIntegratedOffenderManagement &&
+      isUnderIntegratedOffenderManagement &&
       statuses.hasContrabandRisk &&
       statuses.personOnProbation &&
       statuses.offenceAnalysis &&
       statuses.convictionDetail &&
       statuses.mappa &&
       statuses.previousReleases &&
-      statuses.previousRecalls &&
+      previousRecalls &&
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
@@ -264,8 +273,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.revocationOrderRecipients &&
       statuses.ppcsQueryEmails &&
       statuses.isMainAddressWherePersonCanBeFound &&
-      (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
-      (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&
+      indeterminateSentenceValidation &&
+      indeterminateOrExtendedSentenceDetails &&
       statuses.fixedTermAdditionalLicenceConditions,
   }
 }

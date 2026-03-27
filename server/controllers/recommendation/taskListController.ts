@@ -8,6 +8,7 @@ import config from '../../config'
 import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { ValueWithDetails } from '../../@types/make-recall-decision-api'
 import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -82,6 +83,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }
   }
 
+  const recallType = recommendation?.recallType?.selected?.value
+
   recommendation.isInCustody = isInCustody(recommendation.custodyStatus?.selected)
   res.locals = {
     ...res.locals,
@@ -105,11 +108,21 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     shareLink: `${config.domain}/recommendations/${recommendationId}/task-list`,
     countersignSpoExposition: recommendation.countersignSpoExposition,
+    ftr56Enabled: featureFlags.flagFTR56Enabled,
+    recallType,
   }
 
-  if (recommendation.isIndeterminateSentence) {
+  const isIndeterminate = featureFlags.flagFTR56Enabled
+    ? recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
+    : recommendation.isIndeterminateSentence
+
+  const isExtended = featureFlags.flagFTR56Enabled
+    ? recommendation.sentenceGroup === SentenceGroup.EXTENDED
+    : recommendation.isExtendedSentence
+
+  if (isIndeterminate) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-indeterminate'
-  } else if (recommendation.isExtendedSentence) {
+  } else if (isExtended) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-extended'
   } else {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type'
