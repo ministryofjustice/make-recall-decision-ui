@@ -105,7 +105,7 @@ describe('recall type indeterminate', () => {
               id: 'recallType-2',
               value: 'NO_RECALL',
             },
-            label: { text: 'No recall - send a decision not to recall letter' },
+            label: { text: 'No recall - create a decision not to recall letter' },
           },
         ],
       })
