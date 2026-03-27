@@ -1220,12 +1220,26 @@ describe('taskCompleteness', () => {
         expect(areAllComplete).toEqual(false)
       })
 
-      it('does not block areAllComplete when sentenceGroup is EXTENDED and details are missing', () => {
+      it('blocks areAllComplete when sentenceGroup is EXTENDED and details are missing', () => {
         const { areAllComplete } = taskCompleteness(
           {
             ...baseRecall,
             sentenceGroup: SentenceGroup.EXTENDED,
             indeterminateOrExtendedSentenceDetails: undefined,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+
+      it('does not block areAllComplete when sentenceGroup is EXTENDED and details are present', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.EXTENDED,
+            indeterminateOrExtendedSentenceDetails: {
+              selected: [{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'Details' }],
+            },
           } as RecommendationResponse,
           { flagFTR56Enabled: true },
         )

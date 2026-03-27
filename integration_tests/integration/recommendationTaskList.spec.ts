@@ -103,7 +103,7 @@ context('Recommendation - task list', () => {
       expect: {
         mappa: true,
         suitability: true,
-        confirmRecall: false,
+        indeterminateOrExtendedDetails: false,
         additionalLicenceConditions: true,
         emergencyRecall: true,
       },
@@ -114,7 +114,7 @@ context('Recommendation - task list', () => {
       expect: {
         mappa: false,
         suitability: true,
-        confirmRecall: false,
+        indeterminateOrExtendedDetails: false,
         additionalLicenceConditions: true,
         emergencyRecall: true,
       },
@@ -125,7 +125,7 @@ context('Recommendation - task list', () => {
       expect: {
         mappa: false,
         suitability: false,
-        confirmRecall: true,
+        indeterminateOrExtendedDetails: true,
         additionalLicenceConditions: false,
         emergencyRecall: false,
       },
@@ -136,7 +136,7 @@ context('Recommendation - task list', () => {
       expect: {
         mappa: false,
         suitability: false,
-        confirmRecall: true,
+        indeterminateOrExtendedDetails: true,
         additionalLicenceConditions: false,
         emergencyRecall: true,
       },
@@ -151,11 +151,9 @@ context('Recommendation - task list', () => {
       }
       setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
 
-      cy.getElement('MAPPA information to assess recall type To do')[expect.mappa ? 'should' : 'should'](
-        expect.mappa ? 'exist' : 'not.exist',
-      )
+      cy.getElement('MAPPA information to assess recall type To do').should(expect.mappa ? 'exist' : 'not.exist')
 
-      cy.getElement('Suitability for standard or fixed term recall To do')[expect.suitability ? 'should' : 'should'](
+      cy.getElement('Suitability for standard or fixed term recall To do').should(
         expect.suitability ? 'exist' : 'not.exist',
       )
 
@@ -166,18 +164,16 @@ context('Recommendation - task list', () => {
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement('What has led to this recall? To do').should('exist')
-      cy.getElement('Is this an emergency recall? To do')[expect.emergencyRecall ? 'should' : 'should'](
-        expect.emergencyRecall ? 'exist' : 'not.exist',
-      )
+      cy.getElement('Is this an emergency recall? To do').should(expect.emergencyRecall ? 'exist' : 'not.exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
 
       cy.getElement('Add any additional licence conditions - fixed term recall To do')[
         expect.additionalLicenceConditions ? 'should' : 'should'
       ](expect.additionalLicenceConditions ? 'exist' : 'not.exist')
 
-      cy.getElement('Confirm the recall criteria - indeterminate and extended sentences To do')[
-        expect.confirmRecall ? 'should' : 'should'
-      ](expect.confirmRecall ? 'exist' : 'not.exist')
+      cy.getElement('Confirm the recall criteria - indeterminate and extended sentences To do').should(
+        expect.indeterminateOrExtendedDetails ? 'exist' : 'not.exist',
+      )
 
       cy.getElement('Personal details To review').should('exist')
       cy.getElement('Release details To do').should('exist')
@@ -236,17 +232,11 @@ context('Recommendation - task list', () => {
       }
       setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
 
-      cy.getElement('MAPPA information to assess recall type Completed')[expect.mappa ? 'should' : 'should'](
-        expect.mappa ? 'exist' : 'not.exist',
+      cy.getElement('MAPPA information to assess recall type Completed').should(expect.mappa ? 'exist' : 'not.exist')
+
+      cy.getElement('Suitability for standard or fixed term recall Completed').should(
+        expect.suitability ? 'exist' : 'not.exist',
       )
-
-      cy.getElement('Suitability for standard or fixed term recall Completed')[
-        expect.suitability ? 'should' : 'should'
-      ](expect.suitability ? 'exist' : 'not.exist')
-
-      cy.get('body').then($body => {
-        cy.writeFile(`cypress/logs/result.txt`, $body[0].outerHTML)
-      })
 
       // common assertions
       cy.getElement('What you recommend Completed').should('exist')
@@ -255,18 +245,16 @@ context('Recommendation - task list', () => {
       cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
       cy.getElement('What has led to this recall? Completed').should('exist')
-      cy.getElement('Is this an emergency recall? Completed')[expect.emergencyRecall ? 'should' : 'should'](
-        expect.emergencyRecall ? 'exist' : 'not.exist',
-      )
+      cy.getElement('Is this an emergency recall? Completed').should(expect.emergencyRecall ? 'exist' : 'not.exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
 
-      cy.getElement('Add any additional licence conditions - fixed term recall Completed')[
-        expect.additionalLicenceConditions ? 'should' : 'should'
-      ](expect.additionalLicenceConditions ? 'exist' : 'not.exist')
+      cy.getElement('Add any additional licence conditions - fixed term recall Completed').should(
+        expect.additionalLicenceConditions ? 'exist' : 'not.exist',
+      )
 
-      cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed')[
-        expect.confirmRecall ? 'should' : 'should'
-      ](expect.confirmRecall ? 'exist' : 'not.exist')
+      cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed').should(
+        expect.indeterminateOrExtendedDetails ? 'exist' : 'not.exist',
+      )
 
       cy.getElement('Personal details Reviewed').should('exist')
       cy.getElement('Release details Completed').should('exist')

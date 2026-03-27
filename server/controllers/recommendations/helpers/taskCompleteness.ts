@@ -204,7 +204,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
   }
 
   const indeterminateOrExtendedSentenceDetails = _featureFlags?.flagFTR56Enabled
-    ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || statuses.indeterminateOrExtendedSentenceDetails
+    ? ![SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
+      statuses.indeterminateOrExtendedSentenceDetails
     : !recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails
 
   const isUnderIntegratedOffenderManagement = _featureFlags?.flagFTR56Enabled
