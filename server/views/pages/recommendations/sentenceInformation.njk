@@ -4,46 +4,46 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[pageData.page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
+  {% if pageData.backLinkUrl is not undefined %}
     {{ backLink({ text: 'Back to Consider a recall questions', href: pageData.backLinkUrl, doBrowserBack: false }) }}
+  {% else %}
+    {{ backLink() }}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-            {% include '../../partials/error-summary.njk' %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      {% include '../../partials/error-summary.njk' %}
 
-            {{ heading(pageHeadings[pageData.page.id]) }}
+      {{ heading(pageHeadings[pageData.page.id]) }}
 
-            {{
-                popSummaryCard({
-                    title: 'Sentences in NDelius',
-                    caseSummary: pageData.caseSummary
-                })
-            }}
+      {{ popSummaryCard({
+        title: 'Sentences in NDelius',
+        caseSummary: pageData.caseSummary
+      }) }}
 
-            <form novalidate method="post" class="govuk-!-margin-top-7">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                <input type="hidden" name="previousSentenceGroup" value="{{ pageData.inputDisplayValues.value }}" />
+      <form novalidate method="post" class="govuk-!-margin-top-7">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="previousSentenceGroup" value="{{ pageData.inputDisplayValues.value }}" />
 
-                {{
-                    govukRadios({
-                        name: "sentenceGroup",
-                        fieldset: {
-                            legend: {
-                                text: "Which sentence group does " + pageData.fullName + "'s sentence type fall into?",
-                                classes: "govuk-fieldset__legend--m"
-                            }
-                        },
-                        items: radioCheckboxItems({
-                            items: pageData.sentenceGroups,
-                            currentValues: pageData.inputDisplayValues.value
-                        }),
-                        errorMessage: errorMessage(errors.sentenceGroup)
-                    })
-                }}
+        {{ govukRadios({
+          name: "sentenceGroup",
+          fieldset: {
+            legend: {
+              text: "Which sentence group does " + pageData.fullName + "'s sentence type fall into?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          items: radioCheckboxItems({
+            items: pageData.sentenceGroups,
+            currentValues: pageData.inputDisplayValues.value
+          }),
+          errorMessage: errorMessage(errors.sentenceGroup)
+        }) }}
 
-                {{ formSubmitButton({ label: "Continue", marginTop: "7" }) }}
-            </form>
-        </div>
+        {{ formSubmitButton({ label: "Continue", marginTop: "7" }) }}
+      </form>
     </div>
+  </div>
 {% endblock %}

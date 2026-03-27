@@ -15,6 +15,12 @@ async function get(req: Request, res: Response, next: NextFunction) {
     flags,
   } = res.locals
 
+  let backLinkUrl
+
+  if (req.query?.fromPageId !== 'task-list-no-recall') {
+    backLinkUrl = `${basePath}${ppPaths.taskListConsiderRecall}`
+  }
+
   const { caseSummary } = await getCaseSection('overview', recommendation.crn, token, userId, req.query, flags)
 
   const stringRenderParams = {
@@ -44,7 +50,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       sentenceGroups,
       fullName: recommendation.personOnProbation.name,
       inputDisplayValues,
-      backLinkUrl: `${basePath}${ppPaths.taskListConsiderRecall}`,
+      backLinkUrl,
     },
   }
 
