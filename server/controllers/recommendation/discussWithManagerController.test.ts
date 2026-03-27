@@ -64,7 +64,7 @@ describe('get', () => {
           },
         })
         await discussWithManagerController.get(mockReq(), res, mockNext())
-        expect(res.locals.nextPageId).toEqual('recall-type-indeterminate')
+        expect(res.locals.nextPageId).toEqual(ftr56Enabled ? 'indeterminate-details' : 'recall-type-indeterminate')
       })
 
       it('present with extended', async () => {
@@ -79,7 +79,7 @@ describe('get', () => {
           },
         })
         await discussWithManagerController.get(mockReq(), res, mockNext())
-        expect(res.locals.nextPageId).toEqual('recall-type-extended')
+        expect(res.locals.nextPageId).toEqual(ftr56Enabled ? 'indeterminate-details' : 'recall-type-extended')
       })
     })
   })

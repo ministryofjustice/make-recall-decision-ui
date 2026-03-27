@@ -36,6 +36,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const {
+    recommendation,
     flags,
     user: { token, username, region },
     urlInfo,
@@ -70,6 +71,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   if (recallType === 'STANDARD' && isExtendedSentence === 'true') {
     nextPageId = 'indeterminate-details'
+  }
+
+  if (flags.flagFTR56Enabled && recallType === 'STANDARD' && recommendation.sentenceGroup === SentenceGroup.EXTENDED) {
+    nextPageId = 'sensitive-info'
   }
 
   if (valuesToSave.isThisAnEmergencyRecall) {

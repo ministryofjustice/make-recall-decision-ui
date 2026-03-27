@@ -153,7 +153,7 @@ describe('post', () => {
       {},
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/indeterminate-details`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 

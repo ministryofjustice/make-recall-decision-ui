@@ -3,21 +3,24 @@ import ppPaths from '../../routes/paths/pp'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    flags: { flagFTR56Enabled },
+  } = res.locals
 
   let nextPageId = 'suitability-for-fixed-term-recall'
 
   const isIndeterminateSentence =
-    (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.INDETERMINATE) ||
-    (!res.locals.flags.flagFTR56Enabled && recommendation.isIndeterminateSentence)
+    (flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.INDETERMINATE) ||
+    (!flagFTR56Enabled && recommendation.isIndeterminateSentence)
   const isExtendedSentence =
-    (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.EXTENDED) ||
-    (!res.locals.flags.flagFTR56Enabled && recommendation.isExtendedSentence)
+    (flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.EXTENDED) ||
+    (!flagFTR56Enabled && recommendation.isExtendedSentence)
 
   if (isIndeterminateSentence) {
-    nextPageId = 'recall-type-indeterminate'
+    nextPageId = flagFTR56Enabled ? 'indeterminate-details' : 'recall-type-indeterminate'
   } else if (isExtendedSentence) {
-    nextPageId = 'recall-type-extended'
+    nextPageId = flagFTR56Enabled ? 'indeterminate-details' : 'recall-type-extended'
   } else if (recommendation?.sentenceGroup === SentenceGroup.ADULT_SDS) {
     nextPageId = ppPaths.checkMappaInformation
   }
