@@ -102,7 +102,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     )
   }
 
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
+  let nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
+
+  if (flags.flagFTR56Enabled) {
+    nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'
+  }
   return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 

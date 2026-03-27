@@ -94,66 +94,78 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it('post with valid data', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+  ;[true, false].forEach(ftr56Enabled => {
+    it(`post with valid data when FTR56 is ${ftr56Enabled ? 'enabled' : 'disabled'}`, async () => {
+      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const basePath = `/recommendations/123/`
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        crn: 'X098092',
-        recallType: 'STANDARD',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath },
-      },
-    })
-    const next = mockNext()
-
-    await recallTypeExtendedController.post(req, res, next)
-
-    expect(updateStatuses).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
-      activate: [STATUSES.RECALL_DECIDED],
-      deActivate: [STATUSES.NO_RECALL_DECIDED],
-    })
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
-      valuesToSave: {
-        recallType: {
-          selected: { value: 'STANDARD' },
-          allOptions: [
-            { value: 'STANDARD', text: 'Standard recall' },
-            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
-          ],
+      const basePath = `/recommendations/123/`
+      const req = mockReq({
+        params: { recommendationId: '123' },
+        body: {
+          crn: 'X098092',
+          recallType: 'STANDARD',
         },
-      },
-      featureFlags: {},
-    })
+      })
 
-    expect(appInsightsEvent).toHaveBeenCalledWith(
-      'mrdRecallType',
-      'Dave',
-      {
-        crn: 'X098092',
-        recallType: 'STANDARD',
+      const res = mockRes({
+        token: 'token1',
+        locals: {
+          user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
+          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+          urlInfo: { basePath },
+          flags: {
+            flagFTR56Enabled: ftr56Enabled,
+          },
+        },
+      })
+      const next = mockNext()
+
+      await recallTypeExtendedController.post(req, res, next)
+
+      expect(updateStatuses).toHaveBeenCalledWith({
         recommendationId: '123',
-        region: { code: 'N07', name: 'London' },
-      },
-      {},
-    )
+        token: 'token1',
+        activate: [STATUSES.RECALL_DECIDED],
+        deActivate: [STATUSES.NO_RECALL_DECIDED],
+      })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/emergency-recall`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+      expect(updateRecommendation).toHaveBeenCalledWith({
+        recommendationId: '123',
+        token: 'token1',
+        valuesToSave: {
+          recallType: {
+            selected: { value: 'STANDARD' },
+            allOptions: [
+              { value: 'STANDARD', text: 'Standard recall' },
+              { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
+            ],
+          },
+        },
+        featureFlags: {
+          flagFTR56Enabled: ftr56Enabled,
+        },
+      })
+
+      expect(appInsightsEvent).toHaveBeenCalledWith(
+        'mrdRecallType',
+        'Dave',
+        {
+          crn: 'X098092',
+          recallType: 'STANDARD',
+          recommendationId: '123',
+          region: { code: 'N07', name: 'London' },
+        },
+        {
+          flagFTR56Enabled: ftr56Enabled,
+        },
+      )
+
+      expect(res.redirect).toHaveBeenCalledWith(
+        303,
+        ftr56Enabled ? `/recommendations/123/indeterminate-details` : `/recommendations/123/emergency-recall`,
+      )
+      expect(next).not.toHaveBeenCalled() // end of the line for posts.
+    })
   })
 
   it('post with valid data - no recall', async () => {

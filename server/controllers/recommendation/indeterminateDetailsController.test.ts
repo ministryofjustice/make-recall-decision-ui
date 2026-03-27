@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import indeterminateDetailsController from './indeterminateDetailsController'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -260,6 +261,36 @@ describe('post', () => {
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('FTR56: post with valid data and redirects extended sentence correctly', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        indeterminateOrExtendedSentenceDetails: ['BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE'],
+        'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE': 'test',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: SentenceGroup.EXTENDED },
+        urlInfo: { basePath },
+        flags: {
+          flagFTR56Enabled: true,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await indeterminateDetailsController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/emergency-recall`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
