@@ -9,10 +9,6 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
       <form novalidate method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        {% if recommendation.previousReleases.previousReleaseDates.length %}
-          <input type="hidden" name="previousReleaseDates"
-                  value="{% for date in recommendation.previousReleases.previousReleaseDates %}{{ date }}|{% endfor %}" />
-        {% endif %}
         <input type="hidden" name="dateOfRelease" value="{{recommendation.previousReleases.lastReleaseDate}}" />
 
         {{ heading(pageHeadings[page.id]) }}
