@@ -13,6 +13,17 @@ import recallTypeValues = RecallTypeSelectedValue.value
 import selected = CustodyStatus.selected
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 
+const ftr56TestCases = [
+  {
+    description: 'with FTR56 flag enabled',
+    ftr56Enabled: true,
+  },
+  {
+    description: 'with FTR56 flag disabled',
+    ftr56Enabled: false,
+  },
+]
+
 context('Recommendation - task list', () => {
   beforeEach(() => {
     cy.signIn()
@@ -514,21 +525,31 @@ context('Recommendation - task list', () => {
     cy.getElement('Create Part A').should('not.exist')
   })
 
-  it('from task list, link to form then return to task list', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
-    cy.clickLink('How has Jane Bloggs responded to probation so far?')
-    cy.log('============= Back link')
-    cy.clickLink('Back')
-    cy.pageHeading().should('equal', 'Create a Part A form')
-    cy.log('============= Continue button')
-    cy.clickLink('How has Jane Bloggs responded to probation so far?')
-    cy.fillInput('How has Jane Bloggs responded to probation so far?', 'Re-offending has occurred')
-    cy.clickButton('Continue')
-    cy.pageHeading().should('equal', 'Create a Part A form')
-    cy.clickLink('When did the SPO agree this recall?')
+  ftr56TestCases.forEach(testCase => {
+    it(`from task list, link to form then return to task list ${testCase.description}`, () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(
+        `${routeUrls.recommendations}/${recommendationId}/task-list?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+      )
+      cy.clickLink('How has Jane Bloggs responded to probation so far?')
+      cy.log('============= Back link')
+      cy.clickLink('Back')
+      cy.pageHeading().should(
+        'equal',
+        testCase.ftr56Enabled ? `Part A for ${recommendationResponse.personOnProbation.name}` : 'Create a Part A form',
+      )
+      cy.log('============= Continue button')
+      cy.clickLink('How has Jane Bloggs responded to probation so far?')
+      cy.fillInput('How has Jane Bloggs responded to probation so far?', 'Re-offending has occurred')
+      cy.clickButton('Continue')
+      cy.pageHeading().should(
+        'equal',
+        testCase.ftr56Enabled ? `Part A for ${recommendationResponse.personOnProbation.name}` : 'Create a Part A form',
+      )
+      cy.clickLink('When did the SPO agree this recall?')
+    })
   })
 
   context('form links', () => {

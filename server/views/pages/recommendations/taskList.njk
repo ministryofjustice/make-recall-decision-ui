@@ -15,7 +15,11 @@
                   Part A for {{ recommendation.personOnProbation.name }}
                 </h1>
             {% else %}
+             {% if flags.flagFTR56Enabled %}
+                <h1 class="govuk-heading-l">{{ pageHeadings[page.id+'FTR56']}}
+             {% else %}
                 <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+              {% endif %}
                 <p class='govuk-body'>You’re recommending a recall for {{ recommendation.personOnProbation.name }}.
                         Complete the following sections of the Part A form. You can do this in any order.
                 </p>
