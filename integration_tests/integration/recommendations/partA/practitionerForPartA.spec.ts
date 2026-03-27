@@ -120,13 +120,13 @@ context('Practitioner for Part A Page', () => {
 
         cy.visit(testPageUrl)
 
-        cy.title().should('equal', `Practitioner for the person? - ${config.applicationName}`)
+        cy.title().should('equal', `Practitioner for the person - ${config.applicationName}`)
 
         // Back link
         testStandardBackLink()
 
         // Page Heading
-        cy.pageHeading().should('equal', `Practitioner for ${recommendation.personOnProbation.name}?`)
+        cy.pageHeading().should('equal', `Practitioner for ${recommendation.personOnProbation.name}`)
 
         cy.get('.govuk-form-group').should('have.length', 7).as('formGroups')
 
