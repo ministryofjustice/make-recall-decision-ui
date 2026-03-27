@@ -10,7 +10,7 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/> 
+                <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
                 {% set hintHtml %}
                     <p class="govuk-body">
                         This will be recorded as a contact in NDelius called ‘Recall being considered’. You cannot undo this.
@@ -19,8 +19,6 @@
                         <pre class="govuk-body">
                             Reason for considering recall: <br />
                             {{ recommendation.triggerLeadingToRecall }} <br />
-                            Behaviour on probation so far: <br />
-                            {{ recommendation.responseToProbation }} <br />
                         </pre>
                     </div>
                 {% endset %}
