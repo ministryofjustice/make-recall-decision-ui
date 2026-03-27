@@ -12,7 +12,7 @@ import { indeterminateSentenceType, indeterminateSentenceTypeFtr56 } from '../in
 import isUnderIntegratedOffenderManagement from '../integratedOffenderManagement/formOptions'
 import howWillAppointmentHappen from '../nextAppointment/formOptions'
 import rationaleCheck from '../rationaleCheck/formOptions'
-import recallTypeExtended from '../recallTypeExtended/formOptions'
+import { recallTypeExtended, recallTypeExtendedFTR56 } from '../recallTypeExtended/formOptions'
 import {
   recallTypeIndeterminate,
   recallTypeIndeterminateApi,
@@ -47,6 +47,7 @@ export const formOptions: FormOptionsType = {
   recallTypeIndeterminate,
   recallTypeIndeterminateFTR56,
   recallTypeExtended,
+  recallTypeExtendedFTR56,
   recallTypeIndeterminateApi,
   standardLicenceConditions,
   custodyStatus,

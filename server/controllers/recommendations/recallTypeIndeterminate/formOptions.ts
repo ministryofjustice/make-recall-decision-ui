@@ -5,7 +5,7 @@ export const recallTypeIndeterminate = [
 
 export const recallTypeIndeterminateFTR56 = [
   { value: 'EMERGENCY', text: 'Emergency standard recall' },
-  { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
+  { value: 'NO_RECALL', text: 'No recall - create a decision not to recall letter' },
 ]
 
 // valid values to send to MRD API for the recallType property
