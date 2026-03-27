@@ -19,6 +19,10 @@
                         <pre class="govuk-body">
                             Reason for considering recall: <br />
                             {{ recommendation.triggerLeadingToRecall }} <br />
+                            {% if not flags.flagFTR56Enabled %}
+                              Behaviour on probation so far: <br />
+                              {{ recommendation.responseToProbation }} <br />
+                            {% endif %}
                         </pre>
                     </div>
                 {% endset %}
