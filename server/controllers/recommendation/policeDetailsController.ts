@@ -6,13 +6,14 @@ import validateLocalPoliceContactDetails from '../recommendations/localPoliceCon
 import inputDisplayValuesLocalPoliceContactDetails from '../recommendations/localPoliceContactDetails/inputDisplayValues'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendation, flags } = res.locals
 
   res.locals = {
     ...res.locals,
     page: {
       id: 'localPoliceContactDetails',
     },
+    ftr56Enabled: flags.flagFTR56Enabled,
   }
 
   res.locals.inputDisplayValues = inputDisplayValuesLocalPoliceContactDetails({
