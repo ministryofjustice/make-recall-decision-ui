@@ -1,7 +1,7 @@
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { isValueValid } from '../formOptions/formOptions'
 import { makeErrorObject } from '../../../utils/errors'
-import { nextPageLinkUrl } from '../helpers/urls'
+import { nextPageLinkUrl, nextPagePreservingFromPageAndAnchor } from '../helpers/urls'
 import { SentenceGroup } from './formOptions'
 import ppPaths from '../../../routes/paths/pp'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
@@ -121,7 +121,11 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
   }
   const nextPageId =
     sentenceGroup === SentenceGroup.INDETERMINATE ? ppPaths.indeterminateSentenceType : ppPaths.taskListConsiderRecall
-  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
+  // In case of INDETERMINATE, always go to the /indeterminate-type page
+  const nextPagePath =
+    sentenceGroup === SentenceGroup.INDETERMINATE
+      ? nextPagePreservingFromPageAndAnchor({ pageUrlSlug: 'indeterminate-type', urlInfo })
+      : nextPageLinkUrl({ nextPageId, urlInfo })
 
   return {
     valuesToSave,
