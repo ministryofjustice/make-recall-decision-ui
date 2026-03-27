@@ -288,7 +288,11 @@ context('Make a recommendation', () => {
 
           cy.url().should('contain', 'recall-type-extended')
 
-          cy.getElement('No recall - send a decision not to recall letter').should('exist')
+          cy.getElement(
+            ftr56Enabled
+              ? 'No recall - create a decision not to recall letter'
+              : 'No recall - send a decision not to recall letter',
+          ).should('exist')
         })
       })
     })
