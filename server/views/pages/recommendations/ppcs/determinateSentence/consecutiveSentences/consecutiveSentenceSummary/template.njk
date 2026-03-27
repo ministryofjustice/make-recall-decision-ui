@@ -5,9 +5,13 @@
     { key: "Sentence type", value: hyphenForBlank(sentence.sentenceType) },
     { key: "Court", value: hyphenForBlank(sentence.court) },
     { key: "Date of sentence" , value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.dateOfSentence})) },
-    { key: "Start date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.startDate})) },
-    { key: "Sentence expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.sentenceExpiryDate})) }
+    { key: "Start date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.startDate})) }
 ] %}
+{% if id == "indexSentence" %}
+    {% set _ = sentenceRows.push(
+        { key: "Latest sentence expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: sentence.sentenceSequenceExpiryDate})) }
+    ) %}
+{% endif %}
 {% for term in sentence.sentenceLength %}
     {% set sentenceRows = (sentenceRows.push({ key: term.key, value: hyphenForBlank(formatTerm(term.value)) }), sentenceRows) %}
 {% endfor %}

@@ -8,7 +8,7 @@ export type OfferedOffenceOptions = {
   terms?: TermOptions[]
 }
 
-const generateInternal = (options?: OfferedOffenceOptions) => ({
+const generateInternal = (options?: OfferedOffenceOptions): OfferedOffence => ({
   offenderChargeId: options?.offenderChargeId ?? faker.number.int(),
   offenceCode: faker.helpers.replaceSymbols('??#####'),
   offenceStatute: faker.lorem.words(),
@@ -18,6 +18,7 @@ const generateInternal = (options?: OfferedOffenceOptions) => ({
   courtDescription: `${faker.location.city()} Court`,
   sentenceStartDate: faker.date.past().toISOString(),
   sentenceEndDate: faker.date.future().toISOString(),
+  sentenceSequenceExpiryDate: faker.date.future().toISOString(),
   bookingId: faker.number.int(),
   terms: TermGenerator.generateSeries(options?.terms ?? [{ chronos: 'all' }]),
   releaseDate: faker.date.future().toISOString(),

@@ -46,17 +46,31 @@
                         {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceDate }) ) }}
                     </dd>
                 </div>
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Sentence expiry date
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-qa="sentenceEndDate">
-                        {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceEndDate }) ) }}
-                    </dd>
-                    <dd class="govuk-summary-list__actions">
+                {% if offence.sentenceEndDate %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Sentence expiry date
+                        </dt>
+                        <dd class="govuk-summary-list__value" data-qa="sentenceEndDate">
+                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceEndDate }) ) }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
 
-                    </dd>
-                </div>
+                        </dd>
+                    </div>
+                {% else %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Latest sentence expiry date
+                        </dt>
+                        <dd class="govuk-summary-list__value" data-qa="sentenceSequenceExpiryDate">
+                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceSequenceExpiryDate }) ) }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+
+                        </dd>
+                    </div>
+                {% endif %}
             </dl>
 
             <h2 class='govuk-heading-m govuk-!-margin-top-6'>Add your booking to PPUD</h2>
