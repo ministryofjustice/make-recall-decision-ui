@@ -6,7 +6,7 @@ import { SentenceGroup } from './formOptions'
 import ppPaths from '../../../routes/paths/pp'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
-import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
+import { indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
 
 const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { sentenceGroup, previousSentenceGroup } = requestBody
@@ -30,6 +30,12 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
     }
   }
 
+  // The hint field can't be stored in the DB, so we remove it here
+  const apiCompatibleIndeterminateSentenceTypes = indeterminateSentenceTypeFtr56.map(({ value, text }) => ({
+    value,
+    text,
+  }))
+
   const valuesToSave: Partial<RecommendationResponse> = {
     sentenceGroup: sentenceGroup as SentenceGroup,
   }
@@ -37,7 +43,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
     if (sentenceGroup !== SentenceGroup.INDETERMINATE) {
       valuesToSave.indeterminateSentenceType = {
         selected: IndeterminateSentenceType.selected.NO,
-        allOptions: indeterminateSentenceType,
+        allOptions: apiCompatibleIndeterminateSentenceTypes,
       }
     }
   } else {
@@ -62,7 +68,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         } else {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceType,
+            allOptions: apiCompatibleIndeterminateSentenceTypes,
           }
         }
         break
@@ -81,14 +87,14 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         } else {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceType,
+            allOptions: apiCompatibleIndeterminateSentenceTypes,
           }
         }
         break
       case SentenceGroup.INDETERMINATE:
         valuesToSave.indeterminateSentenceType = {
           selected: IndeterminateSentenceType.selected.NO,
-          allOptions: indeterminateSentenceType,
+          allOptions: apiCompatibleIndeterminateSentenceTypes,
         }
         valuesToSave.isThisAnEmergencyRecall = null
         valuesToSave.recallType = null
@@ -102,7 +108,7 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
         if (sentenceGroup !== SentenceGroup.INDETERMINATE) {
           valuesToSave.indeterminateSentenceType = {
             selected: IndeterminateSentenceType.selected.NO,
-            allOptions: indeterminateSentenceType,
+            allOptions: apiCompatibleIndeterminateSentenceTypes,
           }
           valuesToSave.indeterminateOrExtendedSentenceDetails = null
         } else {
