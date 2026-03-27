@@ -276,6 +276,7 @@ context('Recommendation - task list', () => {
       cy.getElement('Address Completed').should('exist')
 
       cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
+      cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
       cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
 
       cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
@@ -414,6 +415,50 @@ context('Recommendation - task list', () => {
           ['flagFTR56Enabled'],
         )
         cy.getElement('Preview the letter').should('not.exist')
+      })
+    })
+
+    describe('vulnerabilities', () => {
+      it('shows details item as To do when selected vulnerability requires details but details are null', () => {
+        setUp(
+          {
+            ...recommendationResponse,
+            vulnerabilities: {
+              selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE, details: null }],
+            },
+          },
+          [],
+          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+        )
+        cy.getElement('Add more details about vulnerabilities or needs To do').should('exist')
+      })
+
+      it('shows details item as Completed when details are provided', () => {
+        setUp(
+          {
+            ...recommendationResponse,
+            vulnerabilities: {
+              selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE, details: 'some details' }],
+            },
+          },
+          [],
+          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+        )
+        cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
+      })
+
+      it('does not show details item when selected vulnerability does not require details', () => {
+        setUp(
+          {
+            ...recommendationResponse,
+            vulnerabilities: {
+              selected: [{ value: VULNERABILITY.NONE, details: null }],
+            },
+          },
+          [],
+          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+        )
+        cy.getElement('Add more details about vulnerabilities or needs').should('not.exist')
       })
     })
   })
