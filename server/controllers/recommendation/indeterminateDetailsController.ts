@@ -7,6 +7,7 @@ import {
   indeterminateOrExtendedSentenceDetails,
   indeterminateOrExtendedSentenceDetailsFtr56,
 } from '../recommendations/indeterminateOrExtendedSentenceDetails/formOptions'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -37,6 +38,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const {
+    recommendation,
     flags,
     user: { token },
     urlInfo,
@@ -62,7 +64,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
+
+  let nextPageId = 'sensitive-info'
+
+  if (flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.EXTENDED) {
+    nextPageId = 'emergency-recall'
+  }
+
+  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
