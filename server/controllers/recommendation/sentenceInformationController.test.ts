@@ -71,6 +71,34 @@ describe('Sentence Information Controller', () => {
     expect(res.locals.pageData.backLinkUrl).toEqual(`${res.locals.urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
   })
 
+  it('returns undefined for the backLinkUrl when the fromPageId is set and FTR56flag is enabled', async () => {
+    const recommendation = RecommendationResponseGenerator.generate()
+    const urlInfo = UrlInfoGenerator.generate()
+    const res = mockRes({
+      locals: {
+        recommendation,
+        flags: { flagFTR56Enabled: true },
+        urlInfo,
+      },
+    })
+
+    ;(getCaseSection as jest.Mock).mockResolvedValue({ caseSummary: CaseSummaryOverviewResponseGenerator.generate() })
+    ;(inputDisplayValuesSentenceInformation as jest.Mock).mockReturnValue({
+      value: faker.helpers.enumValue(SentenceGroup),
+    })
+
+    const fromPageId = 'task-list-no-recall'
+    const req = mockReq({
+      query: {
+        fromPageId,
+      },
+    })
+
+    await sentenceInformationController.get(req, res, mockNext())
+
+    expect(res.locals.pageData.backLinkUrl).toBe(undefined)
+  })
+
   describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
