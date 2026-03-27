@@ -295,7 +295,7 @@ context('Recommendation - task list', () => {
       cy.getElement('Who completed this Part A? Completed').should('exist')
       cy.getElement('Where should the revocation order be sent? Completed').should('exist')
       cy.getElement('Where should PPCS respond with questions? Completed').should('exist')
-      cy.getElement('Practitioner for Jane Bloggs? Completed').should('exist')
+      cy.getElement('Practitioner for Jane Bloggs Completed').should('exist')
 
       cy.getElement("Request line manager's countersignature To do").should('exist')
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
@@ -1035,7 +1035,7 @@ context('Recommendation - task list', () => {
     context('contact information details', () => {
       const personName = faker.person.fullName()
 
-      const practitionerForPartALinkText = `Practitioner for ${personName}?`
+      const practitionerForPartALinkText = `Practitioner for ${personName}`
 
       function checkWhoCompletedPartALink() {
         checkLink('Who completed this Part A?', `/recommendations/${recommendationId}/who-completed-part-a`)
