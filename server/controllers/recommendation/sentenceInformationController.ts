@@ -6,6 +6,8 @@ import ppPaths from '../../routes/paths/pp'
 import getCaseSection from '../caseSummary/getCaseSection'
 import { sentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import { renderString } from '../../utils/nunjucks'
+import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -67,11 +69,17 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
+  // whether an Out of Hours (Approved Premises) worker has recorded a rationale.
+  const isApRationaleRecorded = (res.locals.statuses as RecommendationStatusResponse[]).find(
+    status => status.name === STATUSES.AP_RECORDED_RATIONALE && status.active,
+  )
+
   const { errors, valuesToSave, unsavedValues, nextPagePath } = await validateSentenceInformation({
     requestBody: req.body,
     recommendationId,
     urlInfo,
     token,
+    isApRationaleRecorded: !!isApRationaleRecorded,
   })
 
   if (errors) {

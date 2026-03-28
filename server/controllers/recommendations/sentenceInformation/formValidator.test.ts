@@ -5,7 +5,6 @@ import validateSentenceInformation from './formValidator'
 import { makeErrorObject } from '../../../utils/errors'
 import { nextPageLinkUrl, nextPagePreservingFromPageAndAnchor } from '../helpers/urls'
 import NamedFormErrorGenerator from '../../../../data/common/errorGenerator'
-import randomEnum from '../../../@types/enum.testFactory'
 import ppPaths from '../../../routes/paths/pp'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
@@ -38,58 +37,70 @@ describe('validateSentenceInformation', () => {
   })
 
   describe('no previous sentenceGroup value', () => {
-    const testCasesForValidValues = [
-      {
-        description: 'valid non-indeterminate sentence group',
-        sentenceGroup: randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE]),
-        isIndeterminate: false,
-        expectedNextPageId: ppPaths.taskListConsiderRecall,
-      },
-      {
-        description: 'valid indeterminate sentence group',
-        sentenceGroup: SentenceGroup.INDETERMINATE,
-        isIndeterminate: true,
-        expectedNextPageId: ppPaths.indeterminateSentenceType,
-      },
-    ]
+    ;[true, false].forEach(isApRationaleRecorded => {
+      const testCasesForValidValues = [
+        {
+          description: `valid Adult SDS sentence group ${isApRationaleRecorded ? 'with' : 'without'} AP rationalerecorded`,
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+          expectedNextPageId: isApRationaleRecorded ? ppPaths.checkMappaInformation : ppPaths.taskListConsiderRecall,
+        },
+        {
+          description: `valid uth SDS sentence group ${isApRationaleRecorded ? 'with' : 'without'} AP rationalerecorded`,
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+          expectedNextPageId: isApRationaleRecorded
+            ? 'suitability-for-fixed-term-recall'
+            : ppPaths.taskListConsiderRecall,
+        },
+        {
+          description: `valid Extended sentence group ${isApRationaleRecorded ? 'with' : 'without'} AP rationalerecorded`,
+          sentenceGroup: SentenceGroup.EXTENDED,
+          expectedNextPageId: isApRationaleRecorded ? 'recall-type-extended' : ppPaths.taskListConsiderRecall,
+        },
+        {
+          description: `valid Indeterminate sentence group ${isApRationaleRecorded ? 'with' : 'without'} AP rationalerecorded`,
+          sentenceGroup: SentenceGroup.INDETERMINATE,
+          expectedNextPageId: ppPaths.indeterminateSentenceType,
+        },
+      ]
+      testCasesForValidValues.forEach(testCase => {
+        it(`should return valuesToSave and no errors if ${testCase.description}`, async () => {
+          const requestBody = {
+            sentenceGroup: testCase.sentenceGroup,
+          }
+          const urlInfo = UrlInfoGenerator.generate()
 
-    testCasesForValidValues.forEach(testCase => {
-      it(`should return valuesToSave and no errors if ${testCase.description}`, async () => {
-        const requestBody = { sentenceGroup: testCase.sentenceGroup }
-        const urlInfo = UrlInfoGenerator.generate()
-        const expectedNextPagePath = faker.internet.url()
+          const expectedNextPagePath = faker.internet.url()
+          if (testCase.sentenceGroup === SentenceGroup.INDETERMINATE) {
+            ;(nextPagePreservingFromPageAndAnchor as jest.Mock).mockReturnValue(expectedNextPagePath)
+          } else {
+            ;(nextPageLinkUrl as jest.Mock).mockReturnValue(expectedNextPagePath)
+          }
 
-        if (testCase.isIndeterminate) {
-          ;(nextPagePreservingFromPageAndAnchor as jest.Mock).mockReturnValue(expectedNextPagePath)
-        } else {
-          ;(nextPageLinkUrl as jest.Mock).mockReturnValue(expectedNextPagePath)
-        }
-
-        const { errors, valuesToSave, unsavedValues, nextPagePath } = await validateSentenceInformation({
-          requestBody,
-          urlInfo,
+          const { errors, valuesToSave, unsavedValues, nextPagePath } = await validateSentenceInformation({
+            requestBody,
+            urlInfo,
+            isApRationaleRecorded,
+          })
+          expect(errors).toBeUndefined()
+          expect(unsavedValues).toBeUndefined()
+          if (testCase.sentenceGroup === SentenceGroup.INDETERMINATE) {
+            expect(valuesToSave).toEqual({
+              sentenceGroup: requestBody.sentenceGroup,
+              indeterminateSentenceType: undefined,
+            })
+            expectIndeterminatePath(urlInfo)
+          } else {
+            expect(valuesToSave).toEqual({
+              sentenceGroup: requestBody.sentenceGroup,
+              indeterminateSentenceType: {
+                selected: IndeterminateSentenceType.selected.NO,
+                allOptions: apiCompatibleIndeterminateSentenceTypes,
+              },
+            })
+            expectNonIndeterminatePath(urlInfo, testCase.expectedNextPageId)
+          }
+          expect(nextPagePath).toEqual(expectedNextPagePath)
         })
-
-        expect(errors).toBeUndefined()
-        expect(unsavedValues).toBeUndefined()
-        expect(nextPagePath).toEqual(expectedNextPagePath)
-
-        if (testCase.isIndeterminate) {
-          expect(valuesToSave).toEqual({
-            sentenceGroup: requestBody.sentenceGroup,
-            indeterminateSentenceType: undefined,
-          })
-          expectIndeterminatePath(urlInfo)
-        } else {
-          expect(valuesToSave).toEqual({
-            sentenceGroup: requestBody.sentenceGroup,
-            indeterminateSentenceType: {
-              selected: IndeterminateSentenceType.selected.NO,
-              allOptions: apiCompatibleIndeterminateSentenceTypes,
-            },
-          })
-          expectNonIndeterminatePath(urlInfo, testCase.expectedNextPageId)
-        }
       })
     })
   })
@@ -299,6 +310,7 @@ describe('validateSentenceInformation', () => {
         const { errors, valuesToSave, unsavedValues, nextPagePath } = await validateSentenceInformation({
           requestBody,
           urlInfo,
+          isApRationaleRecorded: false, // not relevant to valuesToSave, the main part of these tests
         })
 
         expect(errors).toBeUndefined()
@@ -323,6 +335,7 @@ describe('validateSentenceInformation', () => {
     const { errors, valuesToSave, unsavedValues, nextPagePath } = await validateSentenceInformation({
       requestBody: {},
       urlInfo,
+      isApRationaleRecorded: faker.datatype.boolean(),
     })
 
     expect(valuesToSave).toBeUndefined()
@@ -345,6 +358,7 @@ describe('validateSentenceInformation', () => {
     const { errors, valuesToSave, unsavedValues, nextPagePath } = await validateSentenceInformation({
       requestBody,
       urlInfo,
+      isApRationaleRecorded: faker.datatype.boolean(),
     })
 
     expect(valuesToSave).toBeUndefined()

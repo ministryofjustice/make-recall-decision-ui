@@ -8,7 +8,13 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
 import { indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
 
-const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateSentenceInformation = async ({
+  requestBody,
+  urlInfo,
+  isApRationaleRecorded,
+}: FormValidatorArgs & {
+  isApRationaleRecorded: boolean
+}): FormValidatorReturn => {
   const { sentenceGroup, previousSentenceGroup } = requestBody
 
   const errors = []
@@ -119,12 +125,29 @@ const validateSentenceInformation = async ({ requestBody, urlInfo }: FormValidat
       // unknown previous group
     }
   }
-  const nextPageId =
-    sentenceGroup === SentenceGroup.INDETERMINATE ? ppPaths.indeterminateSentenceType : ppPaths.taskListConsiderRecall
-  // In case of INDETERMINATE, always go to the /indeterminate-type page
+
+  let nextPageId
+  // eslint-disable-next-line default-case
+  switch (sentenceGroup) {
+    case SentenceGroup.ADULT_SDS:
+      nextPageId = isApRationaleRecorded ? ppPaths.checkMappaInformation : ppPaths.taskListConsiderRecall
+      break
+    case SentenceGroup.YOUTH_SDS:
+      nextPageId = isApRationaleRecorded ? 'suitability-for-fixed-term-recall' : ppPaths.taskListConsiderRecall
+      break
+    case SentenceGroup.EXTENDED:
+      nextPageId = isApRationaleRecorded ? 'recall-type-extended' : ppPaths.taskListConsiderRecall
+      break
+    case SentenceGroup.INDETERMINATE:
+      nextPageId = ppPaths.indeterminateSentenceType
+      break
+  }
   const nextPagePath =
     sentenceGroup === SentenceGroup.INDETERMINATE
-      ? nextPagePreservingFromPageAndAnchor({ pageUrlSlug: 'indeterminate-type', urlInfo })
+      ? nextPagePreservingFromPageAndAnchor({
+          pageUrlSlug: nextPageId,
+          urlInfo,
+        })
       : nextPageLinkUrl({ nextPageId, urlInfo })
 
   return {
