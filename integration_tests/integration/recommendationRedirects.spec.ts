@@ -102,7 +102,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme?flagFTR56Enabled=1`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
