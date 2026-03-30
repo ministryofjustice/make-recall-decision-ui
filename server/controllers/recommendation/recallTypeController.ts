@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import validateRecallType from '../recommendations/recallType/formValidator'
 import inputDisplayValuesRecallType from '../recommendations/recallType/inputDisplayValues'
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
@@ -59,7 +58,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { errors, valuesToSave, unsavedValues, monitoringEvent } = await validateRecallType({
+  const { errors, valuesToSave, nextPagePath, unsavedValues, monitoringEvent } = await validateRecallType({
     requestBody: req.body,
     recommendationId,
     urlInfo,
@@ -111,8 +110,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     )
   }
 
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
-  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(303, nextPagePath)
 }
 
 export default { get, post }

@@ -88,6 +88,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
     )
   }
 
+  if (flags.flagFTR56Enabled) {
+    return res.redirect(
+      303,
+      `${urlInfo.basePath}${recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'}`,
+    )
+  }
+
   const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'
   return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
