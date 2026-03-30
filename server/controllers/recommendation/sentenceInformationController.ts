@@ -12,14 +12,24 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
+    statuses,
     urlInfo: { basePath },
     user: { token, userId },
     flags,
   } = res.locals
 
+  // Need to check if an OOH recall to prevent backlink from sending PO to the first task list
+  // Out of hours recalls should have the AP_ statuses
+  const isOutOfHoursRecall = !!(statuses as RecommendationStatusResponse[])
+    .filter(s => s.active)
+    .find(s => s.name === STATUSES.AP_RECORDED_RATIONALE)
+
   let backLinkUrl
 
-  if ((req.query?.fromPageId ?? ppPaths.taskListConsiderRecall) === ppPaths.taskListConsiderRecall) {
+  if (
+    (req.query?.fromPageId ?? ppPaths.taskListConsiderRecall) === ppPaths.taskListConsiderRecall &&
+    !isOutOfHoursRecall
+  ) {
     backLinkUrl = `${basePath}${ppPaths.taskListConsiderRecall}`
   }
 
