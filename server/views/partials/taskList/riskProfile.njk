@@ -1,6 +1,6 @@
 <li>
     <h2 class="moj-task-list__section" id='heading-risk-profile'>
-        Risk profile
+        {{ 'Risk profile' if not flags.flagFTR56Enabled else 'Review risk profile' }}
     </h2>
     <ul class="moj-task-list__items">
         <li class="moj-task-list__item">

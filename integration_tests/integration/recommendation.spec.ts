@@ -81,34 +81,48 @@ context('Make a recommendation', () => {
       cy.getElement('An error occurred creating a new recommendation').should('exist')
     })
 
-    it('shows a warning page if "Make a recommendation" is submitted while another recommendation exists', () => {
-      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    ftr56TestCases.forEach(testCase => {
+      it(`shows a warning page if "Make a recommendation" is submitted while another recommendation exists ${testCase.description}`, () => {
+        cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
 
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse },
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...recommendationResponse },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+        cy.visit(
+          `${routeUrls.cases}/${crn}/create-recommendation-warning?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+        )
+        cy.clickButton('Continue')
+        cy.pageHeading().should('equal', 'There is already a recommendation for Jane Bloggs')
+        cy.getElement('Mr Anderson started this recommendation on 31 October 2000.').should('exist')
+
+        cy.clickLink('Update recommendation')
+        cy.pageHeading().should(
+          'equal',
+          testCase.ftr56Enabled
+            ? `Part A for ${recommendationResponse.personOnProbation.name}`
+            : 'Create a Part A form',
+        )
       })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'There is already a recommendation for Jane Bloggs')
-      cy.getElement('Mr Anderson started this recommendation on 31 October 2000.').should('exist')
 
-      cy.clickLink('Update recommendation')
-      cy.pageHeading().should('equal', 'Create a Part A form')
-    })
-
-    it('update button links to Part A task list if recall is set', () => {
-      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
+      it(`update button links to Part A task list if recall is set ${testCase.description}`, () => {
+        cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+        cy.visit(`${routeUrls.cases}/${crn}/overview?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`)
+        cy.clickLink('Update recommendation')
+        cy.pageHeading().should(
+          'equal',
+          testCase.ftr56Enabled
+            ? `Part A for ${recommendationResponse.personOnProbation.name}`
+            : 'Create a Part A form',
+        )
       })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.cases}/${crn}/overview`)
-      cy.clickLink('Update recommendation')
-      cy.pageHeading().should('equal', 'Create a Part A form')
     })
 
     it('update button links to no recall task list if no recall is set', () => {
@@ -1053,25 +1067,34 @@ context('Make a recommendation', () => {
       cy.getText('address-2').should('contain', 'No fixed abode')
     })
 
-    it('shows a message if no addresses', () => {
-      const recommendationWithAddresses = {
-        ...recommendationResponse,
-        personOnProbation: {
-          name: 'Jane Bloggs',
-          addresses: [],
-        },
-      }
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
-      cy.fillInput('Where can the police find Jane Bloggs?', '35 Oak Rise, Carshalton, Surrey S12 345')
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.RECALL_DECIDED, active: true }],
+    ftr56TestCases.forEach(testCase => {
+      it(`shows a message if no addresses ${testCase.description}`, () => {
+        const recommendationWithAddresses = {
+          ...recommendationResponse,
+          personOnProbation: {
+            name: 'Jane Bloggs',
+            addresses: [],
+          },
+        }
+        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+        cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+        cy.visit(
+          `${routeUrls.recommendations}/${recommendationId}/address-details?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+        )
+        cy.fillInput('Where can the police find Jane Bloggs?', '35 Oak Rise, Carshalton, Surrey S12 345')
+        cy.task('getStatuses', {
+          statusCode: 200,
+          response: [{ name: RECOMMENDATION_STATUS.RECALL_DECIDED, active: true }],
+        })
+        cy.clickButton('Continue')
+        cy.pageHeading().should(
+          'equal',
+          testCase.ftr56Enabled
+            ? `Part A for ${recommendationResponse.personOnProbation.name}`
+            : 'Create a Part A form',
+        )
       })
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Create a Part A form')
     })
 
     it('lists one address', () => {
@@ -1934,82 +1957,114 @@ context('Make a recommendation', () => {
       cy.signIn()
     })
 
-    it('present Who Completed Part A page', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, whoCompletedPartA: null },
+    ftr56TestCases.forEach(testCase => {
+      it(`present Who Completed Part A page ${testCase.description}`, () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse, recallConsideredList: null, whoCompletedPartA: null },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+
+        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+        cy.visit(
+          `${routeUrls.recommendations}/${recommendationId}/who-completed-part-a/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+        )
+
+        cy.pageHeading().should('contain', 'Who completed this Part A?')
+
+        cy.fillInput('Name', 'Joe Bloggs')
+        cy.fillInput('Email', 'bloggs@me.gov.uk')
+        cy.selectRadio('Is this person the probation practitioner for Jane Bloggs?', 'Yes')
+        cy.clickButton('Continue')
+        cy.pageHeading().should(
+          'equal',
+          testCase.ftr56Enabled
+            ? `Part A for ${recommendationResponse.personOnProbation.name}`
+            : 'Create a Part A form',
+        )
       })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      it(`present Practitioner For Part A page ${testCase.description}`, () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse, recallConsideredList: null, practitionerForPartA: null },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/who-completed-part-a/`)
+        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.pageHeading().should('contain', 'Who completed this Part A?')
+        cy.visit(
+          `${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+        )
 
-      cy.fillInput('Name', 'Joe Bloggs')
-      cy.fillInput('Email', 'bloggs@me.gov.uk')
-      cy.selectRadio('Is this person the probation practitioner for Jane Bloggs?', 'Yes')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Create a Part A form')
+        cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
+
+        cy.fillInput('Name', 'Joe Bloggs')
+        cy.fillInput('Email', 'bloggs@me.gov.uk')
+
+        cy.clickButton('Continue')
+        cy.pageHeading().should(
+          'equal',
+          testCase.ftr56Enabled
+            ? `Part A for ${recommendationResponse.personOnProbation.name}`
+            : 'Create a Part A form',
+        )
+      })
+
+      it(`present Revocation Order Recipients ${testCase.description}`, () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse, recallConsideredList: null, revocationOrderRecipients: null },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+
+        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+        cy.visit(
+          `${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+        )
+
+        cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
+
+        cy.fillInput('Enter email address', 'bloggs@me.com')
+
+        cy.clickButton('Continue')
+        cy.pageHeading().should(
+          'equal',
+          testCase.ftr56Enabled
+            ? `Part A for ${recommendationResponse.personOnProbation.name}`
+            : 'Create a Part A form',
+        )
+      })
+
+      it(`present PPCS Query Emails ${testCase.description}`, () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: { ...completeRecommendationResponse, recallConsideredList: null, ppcsQueryEmails: null },
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+
+        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+        cy.visit(
+          `${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+        )
+
+        cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
+
+        cy.fillInput('Enter email address', 'bloggs@me.com')
+
+        cy.clickButton('Continue')
+        cy.pageHeading().should(
+          'equal',
+          testCase.ftr56Enabled
+            ? `Part A for ${recommendationResponse.personOnProbation.name}`
+            : 'Create a Part A form',
+        )
+      })
     })
 
-    it('present Practitioner For Part A page', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, practitionerForPartA: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/`)
-
-      cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
-
-      cy.fillInput('Name', 'Joe Bloggs')
-      cy.fillInput('Email', 'bloggs@me.gov.uk')
-
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Create a Part A form')
-    })
-
-    it('present Revocation Order Recipients', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, revocationOrderRecipients: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients/`)
-
-      cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
-
-      cy.fillInput('Enter email address', 'bloggs@me.com')
-
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Create a Part A form')
-    })
-    it('present PPCS Query Emails', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, ppcsQueryEmails: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails/`)
-
-      cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
-
-      cy.fillInput('Enter email address', 'bloggs@me.com')
-
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', 'Create a Part A form')
-    })
     it('present Preview Part A page', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

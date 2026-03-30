@@ -231,6 +231,7 @@ const strings: Record<string, Record<string, string>> = {
     vulnerabilitiesRiskToSelf:
       'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     taskList: 'Create a Part A form',
+    taskListFTR56: 'Part A for {{ fullName }}',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
     integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
