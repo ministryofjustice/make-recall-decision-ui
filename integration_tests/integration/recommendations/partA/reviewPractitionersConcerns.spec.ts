@@ -181,6 +181,7 @@ describe("SPO review practitioner's concerns page", () => {
             ...recommendation,
             sentenceGroup: testCase.sentenceGroup,
             ...otherRecommendationProperties,
+            isIndeterminateSentence: testCase.sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
           },
         })
 
@@ -243,6 +244,8 @@ describe("SPO review practitioner's concerns page", () => {
             .should('exist')
             .next()
             .should('contain.text', testCase.sentenceType)
+        } else {
+          cy.getElement(`What type of sentence is ${recommendation.personOnProbation.name} on?`).should('not.exist')
         }
       })
     })
