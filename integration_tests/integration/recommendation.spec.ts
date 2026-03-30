@@ -106,7 +106,8 @@ context('Make a recommendation', () => {
         )
       })
 
-      it(`update button links to Part A task list if recall is set ${testCase.description}`, () => {
+      it(`update button links to Part A task list if recall is
+          set ${testCase.description}`, () => {
         cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
         cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
         cy.task('getRecommendation', {
@@ -3610,7 +3611,22 @@ context('Make a recommendation', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions`)
 
       cy.pageHeading().should('contain', 'What licence conditions has Jane Bloggs breached?')
+
+      testStandardBackLink()
     })
+
+    it('present licence condition breaches page for AP - FTR56 enabled', () => {
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions?flagFTR56Enabled=1`)
+
+      cy.pageHeading().should('contain', 'What licence conditions has Jane Bloggs breached?')
+
+      testBackLink(
+        `/cases/${completeRecommendationResponse.crn}/overview`,
+        `Back to overview for ${completeRecommendationResponse.personOnProbation.name}`,
+        false,
+      )
+    })
+
     it('present AP Recall Rationale page', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

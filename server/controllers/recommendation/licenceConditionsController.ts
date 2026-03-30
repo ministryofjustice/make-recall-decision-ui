@@ -24,8 +24,24 @@ async function get(req: Request, res: Response, next: NextFunction) {
     flags: featureFlags,
   } = res.locals
 
-  const backLinkUrl =
-    res.locals.flags.flagFTR56Enabled && !fromPageId ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
+  let backLinkUrl
+  let backLinkText
+  if (!res.locals.flags.flagFTR56Enabled) {
+    backLinkUrl = undefined
+
+    // We can't rely on checking the user's role for this, as some AP/OOH users also work as POs and might access the
+    // licence conditions page while processing a recommendation as a PO.
+    // We use .includes instead of .endsWith as the URL can contain the query parameter for the FTR56 flag at the end.
+    // Can be replaced with .endsWith once the flag is permanently enabled.
+  } else if (req.originalUrl?.includes('/ap-licence-conditions')) {
+    backLinkUrl = `/cases/${recommendation.crn}/overview`
+    backLinkText = `Back to overview for ${recommendation.personOnProbation.name}`
+  } else if (!fromPageId) {
+    backLinkUrl = `${basePath}${ppPaths.taskListConsiderRecall}`
+    backLinkText = 'Back to Consider a recall questions'
+  } else {
+    backLinkUrl = undefined
+  }
 
   res.locals = {
     ...res.locals,
@@ -38,6 +54,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       apiValues: recommendation,
     }),
     backLinkUrl,
+    backLinkText,
   }
 
   const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(recommendation.crn, 'licence-conditions', token)
@@ -219,6 +236,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
+  // We can't rely on checking the user's role for this, as some AP/OOH users also work as POs and might access the
+  // licence conditions page while processing a recommendation as a PO.
   if (req.originalUrl?.endsWith('/ap-licence-conditions')) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-recall-rationale', urlInfo }))
   }
