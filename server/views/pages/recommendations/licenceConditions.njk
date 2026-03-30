@@ -1,8 +1,8 @@
 {% extends "../../partials/layout.njk" %}
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 {% block beforeContent %}
-    {% if backLinkUrl %}
-        {{ backLink({ text: 'Back to Consider a recall questions', href: backLinkUrl, doBrowserBack: false }) }}
+    {% if backLinkUrl and backLinkText %}
+        {{ backLink({ text: backLinkText, href: backLinkUrl, doBrowserBack: false }) }}
     {% else %}
         {{ backLink() }}
     {% endif %}
