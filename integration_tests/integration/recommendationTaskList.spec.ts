@@ -106,6 +106,7 @@ context('Recommendation - task list', () => {
         indeterminateOrExtendedDetails: false,
         additionalLicenceConditions: true,
         emergencyRecall: true,
+        indeterminateSentenceType: false,
       },
     },
     {
@@ -117,6 +118,7 @@ context('Recommendation - task list', () => {
         indeterminateOrExtendedDetails: false,
         additionalLicenceConditions: true,
         emergencyRecall: true,
+        indeterminateSentenceType: false,
       },
     },
     {
@@ -128,6 +130,7 @@ context('Recommendation - task list', () => {
         indeterminateOrExtendedDetails: true,
         additionalLicenceConditions: false,
         emergencyRecall: false,
+        indeterminateSentenceType: true,
       },
     },
     {
@@ -139,6 +142,7 @@ context('Recommendation - task list', () => {
         indeterminateOrExtendedDetails: true,
         additionalLicenceConditions: false,
         emergencyRecall: true,
+        indeterminateSentenceType: false,
       },
     },
   ]
@@ -171,10 +175,13 @@ context('Recommendation - task list', () => {
       cy.getElement('What has led to this recall? To do').should('exist')
       cy.getElement('Is this an emergency recall? To do').should(expect.emergencyRecall ? 'exist' : 'not.exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
+      cy.getElement('What type of sentence is Jane Bloggs on? To do').should(
+        expect.indeterminateSentenceType ? 'exist' : 'not.exist',
+      )
 
-      cy.getElement('Add any additional licence conditions - fixed term recall To do')[
-        expect.additionalLicenceConditions ? 'should' : 'should'
-      ](expect.additionalLicenceConditions ? 'exist' : 'not.exist')
+      cy.getElement('Add any additional licence conditions - fixed term recall To do').should(
+        expect.additionalLicenceConditions ? 'exist' : 'not.exist',
+      )
 
       cy.getElement('Confirm the recall criteria - indeterminate and extended sentences To do').should(
         expect.indeterminateOrExtendedDetails ? 'exist' : 'not.exist',
@@ -260,6 +267,9 @@ context('Recommendation - task list', () => {
       cy.getElement('What has led to this recall? Completed').should('exist')
       cy.getElement('Is this an emergency recall? Completed').should(expect.emergencyRecall ? 'exist' : 'not.exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
+      cy.getElement('What type of sentence is Jane Bloggs on? Completed').should(
+        expect.indeterminateSentenceType ? 'exist' : 'not.exist',
+      )
 
       cy.getElement('Add any additional licence conditions - fixed term recall Completed').should(
         expect.additionalLicenceConditions ? 'exist' : 'not.exist',
