@@ -17,7 +17,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   let backLinkUrl
 
-  if (req.query?.fromPageId !== 'task-list-no-recall') {
+  if ((req.query?.fromPageId ?? ppPaths.taskListConsiderRecall) === ppPaths.taskListConsiderRecall) {
     backLinkUrl = `${basePath}${ppPaths.taskListConsiderRecall}`
   }
 
