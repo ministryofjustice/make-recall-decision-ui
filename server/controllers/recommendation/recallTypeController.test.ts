@@ -133,7 +133,6 @@ describe('post', () => {
             crn: 'X098092',
             recallType: 'STANDARD',
             recallTypeDetailsStandard: 'some details',
-            personOnProbationName: faker.person.fullName(),
           },
         })
 
@@ -158,6 +157,7 @@ describe('post', () => {
             },
             isThisAnEmergencyRecall: false,
           },
+          nextPagePath: faker.internet.url(),
           monitoringEvent: {
             eventName: EVENTS.MRD_RECALL_TYPE,
             data: {
@@ -203,7 +203,7 @@ describe('post', () => {
           res.locals.flags,
         )
 
-        expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/emergency-recall`)
+        expect(res.redirect).toHaveBeenCalledWith(303, validationResults.nextPagePath)
         expect(next).not.toHaveBeenCalled() // end of the line for posts.
       })
 
@@ -240,6 +240,7 @@ describe('post', () => {
             },
             isThisAnEmergencyRecall: false,
           },
+          nextPagePath: faker.internet.url(),
           monitoringEvent: {
             eventName: EVENTS.MRD_RECALL_TYPE,
             data: {
@@ -285,7 +286,7 @@ describe('post', () => {
           res.locals.flags,
         )
 
-        expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-no-recall`)
+        expect(res.redirect).toHaveBeenCalledWith(303, validationResults.nextPagePath)
         expect(next).not.toHaveBeenCalled() // end of the line for posts.
       })
 
