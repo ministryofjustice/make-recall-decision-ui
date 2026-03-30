@@ -11,13 +11,13 @@
         {# Allow undefined rows, which can make calls to this macro easier to read #}
         {% if row %}
             <div id="{{ params.id }}-{{ row.key.replaceAll(' ', '-').toLowerCase() }}-row" class="govuk-summary-list__row {{ 'border-top' if (params.borderTop and isFirstRow) else '' }}">
-                <dt class="govuk-summary-list__key">
+                <dt class="govuk-summary-list__key {% if params.keyClasses -%}{{ params.keyClasses }}{%- endif -%}">
                     {% if row.error %}
                         {{ errorDisplay(row.error) }}
                     {% endif %}
                     {{ row.key }}
                 </dt>
-                <dd class="govuk-summary-list__value">
+                <dd class="govuk-summary-list__value {% if params.valueClasses -%}{{ params.valueClasses }}{%- endif -%}">
                     {{ row.value | safe }}
                 </dd>
                 {% if row.actions | length %}
