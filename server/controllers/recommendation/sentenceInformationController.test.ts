@@ -100,74 +100,79 @@ describe('Sentence Information Controller', () => {
   })
 
   describe('post', () => {
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        sentenceGroup: faker.helpers.enumValue(SentenceGroup),
-      },
-    })
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        recommendation: RecommendationResponseGenerator.generate(),
-        urlInfo: UrlInfoGenerator.generate(),
-      },
-    })
-    const next = mockNext()
+    ;[true, false].forEach(isApRationaleRecorded => {
+      const req = mockReq({
+        params: { recommendationId: '123' },
+        body: {
+          sentenceGroup: faker.helpers.enumValue(SentenceGroup),
+        },
+      })
+      const res = mockRes({
+        token: 'token1',
+        locals: {
+          recommendation: RecommendationResponseGenerator.generate(),
+          statuses: isApRationaleRecorded ? [{ name: 'AP_RECORDED_RATIONALE', active: true }] : [],
+          urlInfo: UrlInfoGenerator.generate(),
+        },
+      })
+      const next = mockNext()
 
-    it('post with valid data', async () => {
-      const validationResults = {
-        valuesToSave: { sentenceGroup: req.body.sentenceGroup },
-        nextPagePath: faker.internet.url(),
-      }
-      ;(validateSentenceInformation as jest.Mock).mockReturnValue(validationResults)
-      ;(updateRecommendation as jest.Mock).mockReturnValue({})
+      it(`post with valid data - AP rationale ${isApRationaleRecorded ? '' : 'not '}recorded`, async () => {
+        const validationResults = {
+          valuesToSave: { sentenceGroup: req.body.sentenceGroup },
+          nextPagePath: faker.internet.url(),
+        }
+        ;(validateSentenceInformation as jest.Mock).mockReturnValue(validationResults)
+        ;(updateRecommendation as jest.Mock).mockReturnValue({})
 
-      await sentenceInformationController.post(req, res, next)
+        await sentenceInformationController.post(req, res, next)
 
-      expect(validateSentenceInformation).toHaveBeenCalledWith({
-        requestBody: req.body,
-        recommendationId: req.params.recommendationId,
-        urlInfo: res.locals.urlInfo,
-        token: res.locals.user.token,
+        expect(validateSentenceInformation).toHaveBeenCalledWith({
+          requestBody: req.body,
+          recommendationId: req.params.recommendationId,
+          urlInfo: res.locals.urlInfo,
+          token: res.locals.user.token,
+          isApRationaleRecorded,
+        })
+
+        expect(updateRecommendation).toHaveBeenCalledWith({
+          recommendationId: req.params.recommendationId,
+          token: res.locals.user.token,
+          valuesToSave: validationResults.valuesToSave,
+          featureFlags: {},
+        })
+
+        expect(res.redirect).toHaveBeenCalledWith(303, validationResults.nextPagePath)
+        expect(next).not.toHaveBeenCalled() // end of the line for posts.
       })
 
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        recommendationId: req.params.recommendationId,
-        token: res.locals.user.token,
-        valuesToSave: validationResults.valuesToSave,
-        featureFlags: {},
+      it('post with invalid data', async () => {
+        const validationResults = {
+          errors: ErrorGenerator.generate(),
+          unsavedValues: { sentenceGroup: faker.helpers.enumValue(SentenceGroup) },
+        }
+        ;(validateSentenceInformation as jest.Mock).mockReturnValue(validationResults)
+        ;(updateRecommendation as jest.Mock).mockReturnValue({})
+
+        await sentenceInformationController.post(req, res, next)
+
+        expect(validateSentenceInformation).toHaveBeenCalledWith({
+          requestBody: req.body,
+          recommendationId: req.params.recommendationId,
+          urlInfo: res.locals.urlInfo,
+          token: res.locals.user.token,
+          isApRationaleRecorded,
+        })
+
+        expect(updateRecommendation).not.toHaveBeenCalled()
+
+        expect(req.session).toEqual({
+          errors: validationResults.errors,
+          unsavedValues: validationResults.unsavedValues,
+        })
+        expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl)
+        expect(next).not.toHaveBeenCalled() // end of the line for posts.
       })
-
-      expect(res.redirect).toHaveBeenCalledWith(303, validationResults.nextPagePath)
-      expect(next).not.toHaveBeenCalled() // end of the line for posts.
-    })
-
-    it('post with invalid data', async () => {
-      const validationResults = {
-        errors: ErrorGenerator.generate(),
-        unsavedValues: { sentenceGroup: faker.helpers.enumValue(SentenceGroup) },
-      }
-      ;(validateSentenceInformation as jest.Mock).mockReturnValue(validationResults)
-      ;(updateRecommendation as jest.Mock).mockReturnValue({})
-
-      await sentenceInformationController.post(req, res, next)
-
-      expect(validateSentenceInformation).toHaveBeenCalledWith({
-        requestBody: req.body,
-        recommendationId: req.params.recommendationId,
-        urlInfo: res.locals.urlInfo,
-        token: res.locals.user.token,
-      })
-
-      expect(updateRecommendation).not.toHaveBeenCalled()
-
-      expect(req.session).toEqual({
-        errors: validationResults.errors,
-        unsavedValues: validationResults.unsavedValues,
-      })
-      expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl)
-      expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
   })
 })
