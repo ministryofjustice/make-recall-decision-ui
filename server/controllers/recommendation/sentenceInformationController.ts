@@ -63,6 +63,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       fullName: recommendation.personOnProbation.name,
       inputDisplayValues,
       backLinkUrl,
+      isOutOfHoursRecall,
     },
   }
 
