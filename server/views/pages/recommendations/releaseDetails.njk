@@ -16,6 +16,7 @@
 
         {{
           summaryList({
+              keyClasses: 'govuk-!-width-two-thirds',
               rows: [
                 { key: 'Releasing prison or custodial establishment', value: recommendation.previousReleases.lastReleasingPrisonOrCustodialEstablishment | defaultValue | safe },
                 { key: 'Date of current release', value: formatDateTimeFromIsoString({isoDate: recommendation.previousReleases.lastReleaseDate, dateOnly: true}) | defaultValue | safe }
