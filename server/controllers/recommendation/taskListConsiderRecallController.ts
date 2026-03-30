@@ -39,6 +39,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
     ...res.locals,
     flagFTR56Enabled,
+    backLinkUrl: flagFTR56Enabled ? `/cases/${recommendation.crn}/overview` : undefined,
     isIndeterminateSentence: recommendation.sentenceGroup === SentenceGroup.INDETERMINATE,
     triggerLeadingToRecallCompleted,
     responseToProbationCompleted,
