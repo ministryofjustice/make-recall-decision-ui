@@ -1,7 +1,11 @@
 {% extends "../../partials/layout.njk" %}
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 {% block beforeContent %}
+  {% if flagFTR56Enabled %}
+    {{ backLink({ text: 'Back to overview for ' + recommendation.personOnProbation.name, href: backLinkUrl, doBrowserBack: false }) }}
+  {% else %}
     {{ backLink() }}
+  {% endif %}
 {% endblock %}
 {% block content %}
     <div class="govuk-grid-row">

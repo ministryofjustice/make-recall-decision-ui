@@ -2,7 +2,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import routeUrls from '../../../../server/routes/routeUrls'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
-import { testStandardBackLink } from '../../../componentTests/backLink.tests'
+import { testBackLink, testStandardBackLink } from '../../../componentTests/backLink.tests'
 import ppPaths from '../../../../server/routes/paths/pp'
 
 context('Task List Consider a Recall Page', () => {
@@ -159,7 +159,11 @@ context('Task List Consider a Recall Page', () => {
           `${routeUrls.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall?flagFTR56Enabled=1`,
         )
 
-        testStandardBackLink()
+        testBackLink(
+          `/cases/${recommendationWithNoTasksCompleted.crn}/overview`,
+          `Back to overview for ${recommendationWithNoTasksCompleted.personOnProbation.name}`,
+          false,
+        )
 
         cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
 
@@ -209,7 +213,11 @@ context('Task List Consider a Recall Page', () => {
               `${routeUrls.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall?flagFTR56Enabled=1`,
             )
 
-            testStandardBackLink()
+            testBackLink(
+              `/cases/${recommendationWithAllTasksCompleted.crn}/overview`,
+              `Back to overview for ${recommendationWithAllTasksCompleted.personOnProbation.name}`,
+              false,
+            )
 
             cy.get('.moj-task-list__item')
               .should('have.length', sentenceTypeIsIndeterminate ? 5 : 4)
