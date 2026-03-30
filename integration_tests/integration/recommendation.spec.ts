@@ -2056,7 +2056,12 @@ context('Make a recommendation', () => {
         cy.fillInput('Enter email address', 'bloggs@me.com')
 
         cy.clickButton('Continue')
-        cy.pageHeading().should('equal', 'Create a Part A form')
+        cy.pageHeading().should(
+          'equal',
+          testCase.ftr56Enabled
+            ? `Part A for ${recommendationResponse.personOnProbation.name}`
+            : 'Create a Part A form',
+        )
       })
     })
 
