@@ -71,7 +71,7 @@ describe('Sentence Information Controller', () => {
     expect(res.locals.pageData.backLinkUrl).toEqual(`${res.locals.urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
   })
 
-  it('returns undefined for the backLinkUrl when the fromPageId is set and FTR56flag is enabled', async () => {
+  it('returns undefined for the backLinkUrl when the fromPageId is set to anything but task-list-consider-recall and FTR56flag is enabled', async () => {
     const recommendation = RecommendationResponseGenerator.generate()
     const urlInfo = UrlInfoGenerator.generate()
     const res = mockRes({
@@ -87,7 +87,7 @@ describe('Sentence Information Controller', () => {
       value: faker.helpers.enumValue(SentenceGroup),
     })
 
-    const fromPageId = 'task-list-no-recall'
+    const fromPageId = faker.lorem.slug()
     const req = mockReq({
       query: {
         fromPageId,
