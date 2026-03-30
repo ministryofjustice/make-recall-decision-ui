@@ -12,6 +12,7 @@ import ppPaths from '../../routes/paths/pp'
 import { CaseSummaryOverviewResponseGenerator } from '../../../data/caseSummary/overview/caseSummaryOverviewResponseGenerator'
 import getCaseSection from '../caseSummary/getCaseSection'
 import { renderString } from '../../utils/nunjucks'
+import { STATUSES } from '../../middleware/recommendationStatusCheck'
 
 jest.mock('../recommendations/sentenceInformation/inputDisplayValues')
 jest.mock('../recommendations/sentenceInformation/formValidator')
@@ -24,6 +25,7 @@ describe('Sentence Information Controller', () => {
     const res = mockRes({
       locals: {
         recommendation,
+        statuses: [],
       },
     })
     const req = mockReq()
@@ -77,6 +79,7 @@ describe('Sentence Information Controller', () => {
     const res = mockRes({
       locals: {
         recommendation,
+        statuses: [],
         flags: { flagFTR56Enabled: true },
         urlInfo,
       },
@@ -95,6 +98,28 @@ describe('Sentence Information Controller', () => {
     })
 
     await sentenceInformationController.get(req, res, mockNext())
+
+    expect(res.locals.pageData.backLinkUrl).toBe(undefined)
+  })
+
+  it('returns undefined for the backLinkUrl when the FTR56flag is enabled and its an OOH recall', async () => {
+    const recommendation = RecommendationResponseGenerator.generate()
+    const urlInfo = UrlInfoGenerator.generate()
+    const res = mockRes({
+      locals: {
+        recommendation,
+        statuses: [{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }],
+        flags: { flagFTR56Enabled: true },
+        urlInfo,
+      },
+    })
+
+    ;(getCaseSection as jest.Mock).mockResolvedValue({ caseSummary: CaseSummaryOverviewResponseGenerator.generate() })
+    ;(inputDisplayValuesSentenceInformation as jest.Mock).mockReturnValue({
+      value: faker.helpers.enumValue(SentenceGroup),
+    })
+
+    await sentenceInformationController.get(mockReq(), res, mockNext())
 
     expect(res.locals.pageData.backLinkUrl).toBe(undefined)
   })
