@@ -533,17 +533,27 @@ context('Recommendation - task list', () => {
       cy.visit(
         `${routeUrls.recommendations}/${recommendationId}/task-list?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
       )
-      cy.clickLink('How has Jane Bloggs responded to probation so far?')
-      cy.log('============= Back link')
-      cy.clickLink('Back')
-      cy.pageHeading().should(
-        'equal',
-        testCase.ftr56Enabled ? `Part A for ${recommendationResponse.personOnProbation.name}` : 'Create a Part A form',
-      )
-      cy.log('============= Continue button')
-      cy.clickLink('How has Jane Bloggs responded to probation so far?')
-      cy.fillInput('How has Jane Bloggs responded to probation so far?', 'Re-offending has occurred')
-      cy.clickButton('Continue')
+
+      if (testCase.ftr56Enabled) {
+        cy.clickLink('What has led to this recall?')
+        cy.log('============= Back link')
+        cy.clickLink('Back')
+        cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+        cy.log('============= Continue button')
+        cy.clickLink('What has led to this recall?')
+        cy.fillInput('What has led to this recall?', 'Re-offending has occurred')
+        cy.clickButton('Continue')
+      } else {
+        cy.clickLink('How has Jane Bloggs responded to probation so far?')
+        cy.log('============= Back link')
+        cy.clickLink('Back')
+        cy.pageHeading().should('equal', 'Create a Part A form')
+        cy.log('============= Continue button')
+        cy.clickLink('How has Jane Bloggs responded to probation so far?')
+        cy.fillInput('How has Jane Bloggs responded to probation so far?', 'Re-offending has occurred')
+        cy.clickButton('Continue')
+      }
+
       cy.pageHeading().should(
         'equal',
         testCase.ftr56Enabled ? `Part A for ${recommendationResponse.personOnProbation.name}` : 'Create a Part A form',
