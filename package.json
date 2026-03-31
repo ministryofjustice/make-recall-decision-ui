@@ -205,6 +205,7 @@
   },
   "overrides": {
     "json5": "2.2.3",
+    "brace-expansion": "5.0.5",
     "csurf": {
       "cookie": "0.7.2"
     },
@@ -212,7 +213,7 @@
       "minimatch": "10.2.3"
     },
     "mocha": {
-      "serialize-javascript": "7.0.3"
+      "serialize-javascript": "7.0.5"
     },
     "ts-jest": {
       "@babel/core": "^7.26.10"
