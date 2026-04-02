@@ -87,8 +87,7 @@ const strings: Record<string, Record<string, string>> = {
     missingIndeterminateDetailLikelyResultSexualViolent:
       'Enter details about the behaviour likely to result in a sexual or violent offence',
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
-    noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
-    noVulnerabilitiesSelectedRiskToSelf:
+    noVulnerabilitiesSelected:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
     normalAndExclusiveSelected:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
@@ -226,10 +225,8 @@ const strings: Record<string, Record<string, string>> = {
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
-    vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
+    vulnerabilities: 'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
-    vulnerabilitiesRiskToSelf:
-      'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     taskList: 'Create a Part A form',
     taskListFTR56: 'Part A for {{ fullName }}',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
@@ -322,9 +319,8 @@ const strings: Record<string, Record<string, string>> = {
     editSentencingCourt: 'Edit sentencing court',
   },
   taskListLinkTexts: {
-    vulnerabilities: 'Would recall affect vulnerability or additional needs?',
-    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Consider if recall could affect vulnerabilities or needs',
-    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Add more details about vulnerabilities or needs',
+    vulnerabilities: 'Consider if recall could affect vulnerabilities or needs',
+    vulnerabilitiesDetails: 'Add more details about vulnerabilities or needs',
   },
   automatedFieldValues: {
     mandatoryFTRRationale:

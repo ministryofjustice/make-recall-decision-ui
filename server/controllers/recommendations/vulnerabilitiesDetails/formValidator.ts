@@ -16,9 +16,9 @@ const findListItemBySubValue = (items: FormOptionWithOptionalSubValues[], subVal
 export const vulnerabilityRequiresDetails = (id: VULNERABILITY) => {
   const vulnerabilityItem =
     findListItemByValue<UiFormOption>({
-      items: formOptions.vulnerabilitiesRiskToSelf,
+      items: formOptions.vulnerabilities,
       value: id,
-    }) || findListItemBySubValue(formOptions.vulnerabilitiesRiskToSelf, id)
+    }) || findListItemBySubValue(formOptions.vulnerabilities, id)
   return Boolean(vulnerabilityItem?.detailsLabel)
 }
 

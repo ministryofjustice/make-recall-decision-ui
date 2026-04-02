@@ -128,15 +128,13 @@ async function get(req: Request, res: Response, next: NextFunction) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type'
   }
 
-  if (featureFlags.flagRiskToSelfEnabled) {
-    const selectedVulnerabilities =
-      recommendation.vulnerabilities?.selected?.map(
-        (selectedVulnerability: ValueWithDetails) => selectedVulnerability.value,
-      ) || []
-    res.locals.selectedVulnerabilitiesRequireDetails = selectedVulnerabilities.some(
-      (selectedVulnerability: VULNERABILITY) => vulnerabilityRequiresDetails(selectedVulnerability),
-    )
-  }
+  const selectedVulnerabilities =
+    recommendation.vulnerabilities?.selected?.map(
+      (selectedVulnerability: ValueWithDetails) => selectedVulnerability.value,
+    ) || []
+  res.locals.selectedVulnerabilitiesRequireDetails = selectedVulnerabilities.some(
+    (selectedVulnerability: VULNERABILITY) => vulnerabilityRequiresDetails(selectedVulnerability),
+  )
 
   res.render(`pages/recommendations/taskList`)
   return next()
