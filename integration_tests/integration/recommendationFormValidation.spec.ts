@@ -343,7 +343,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Save and continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
-      errorText: 'Enter more detail for risk of suicide or self-harm',
+      errorText: 'Enter more detail for at risk of suicide or self-harm',
     })
   })
 

@@ -84,7 +84,8 @@ context('Recommendation - task list', () => {
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? Completed').should('exist')
+    cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
+    cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
     cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('exist')
@@ -519,7 +520,7 @@ context('Recommendation - task list', () => {
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? To do').should('exist')
+    cy.getElement('Consider if recall could affect vulnerabilities or needs To do').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? To do').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? To do').should('exist')
     cy.getElement('Local police contact details To do').should('exist')
@@ -1232,7 +1233,7 @@ context('Recommendation - task list', () => {
           }),
           [],
         )
-        hasToDoLabel(linkTexts.vulnerabilitiesWith)
+        hasToDoLabel(linkTexts.vulnerabilities)
         checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
       })
 
