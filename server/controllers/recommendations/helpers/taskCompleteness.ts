@@ -134,13 +134,11 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     const reasonsForNoRecall = hasValue(recommendation.reasonsForNoRecall)
     const nextAppointment = hasValue(recommendation.nextAppointment)
 
-    const isSDS =
-      recommendation.sentenceGroup === SentenceGroup.ADULT_SDS ||
-      recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS
+    const isAdultSDS = recommendation.sentenceGroup === SentenceGroup.ADULT_SDS
 
     let mappaReviewed = true
 
-    if (_featureFlags?.flagFTR56Enabled && isSDS) {
+    if (_featureFlags?.flagFTR56Enabled && isAdultSDS) {
       mappaReviewed = recommendation.personOnProbation.ftr56MappaReviewed
     }
 
