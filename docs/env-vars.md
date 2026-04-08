@@ -1,6 +1,6 @@
 # Environment variables used by the app
 
-Environment variables for each env are specified in the files in https://github.com/ministryofjustice/make-recall-decision-ui/tree/main/helm_deploy
+Environment variables for each env are specified in the files in [the helm_deploy folder](../helm_deploy)
 
 ## Adding a secret in Kubernetes
 

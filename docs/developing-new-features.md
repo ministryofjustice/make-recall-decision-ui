@@ -2,7 +2,7 @@
 
 ## Generate Typescript definitions
 Ensure the Typescript definitions for make-recall-decision-api responses are up-to-date.
-[Update typescript definitions](./docs/lint-typescript.md), which are drawn from Swagger.
+[Update typescript definitions](./lint-typescript.md), which are drawn from Swagger.
 
 ## Installing new packages
 Installation of new packages, including new versions of existing packages, should be done using `npm run setup`, and not
@@ -12,22 +12,33 @@ package. See that project's page for more details.
 
 ## E2E tests
 These are used for 'happy path' testing only. To test error validation or detailed interactions, use integration tests.
-The E2E tests start up make-recall-decision-api which stubs upstream services like Delius community API with Wiremock containers. Ensure that new Wiremock fixtures are added if required.
-See also [E2E tests](./docs/e2e-tests.md)
+The E2E tests start up make-recall-decision-api which stubs upstream services like Delius community API with Wiremock
+containers. Ensure that new Wiremock fixtures are added if required.
+See also [E2E tests](./e2e-tests.md)
 
 ## Add a Cypress integration test
 These tend to be written to test behaviour for single page loads, eg error states. For journeys of multiple pages, use E2E tests.
-See also [tests](./docs/tests.md)
+See also [tests](./tests.md)
 
-If a new API endpoint has been added, you'll need to mock it. Add a new mock function to `./integration_tests/mockApis/makeRecallDecisionApi.js`, to get the data (and register the new function in `./integration_tests/cypress.config.ts`).
+If a new API endpoint has been added, you'll need to mock it. Add a new mock function to
+`./integration_tests/mockApis/makeRecallDecisionApi.ts` to mock the data response and register the new function in
+`./integration_tests/cypress.config.ts`.
 
-Add / edit test in `./integration_tests/integration`
-- Temporarily change the test description to `it.only` to run the new test on its own while developing it (only works when running a single spec, not all)
-- if you added a Cypress task to mock a new endpoint, call the task at the start of the new test (if you added a new Wiremock fixture, above, you could return that)
-- Find elements using visible text rather than attributes, if possible. It speeds up test development, has the added benefit of testing accessibility in some cases (eg for input labels), and makes the tests more readable. Use cy.* commands (which can be reused later for E2E tests).
-- Run the [integration tests](./tests.md). While developing tests, `npm run int-test-ui` is better as you can see what's going on in the browser.
+Add/edit your test in `./integration_tests/integration`, under the appropriate sub-folder.
+- Temporarily change the test description to `it.only` to run the new test on its own while developing it (only works
+  when running a single spec, not all)
+- If you added a Cypress task to mock a new endpoint, call the task at the start of the new test (if you added a new
+  Wiremock fixture, above, you could return that)
+- Find elements using visible text rather than attributes, if possible. It speeds up test development, has the added
+  benefit of testing accessibility in some cases (eg for input labels), and makes the tests more readable. Use cy.*
+  commands (which can be reused later for E2E tests).
+- Run the [integration tests](./tests.md). While developing tests, `npm run int-test-ui` may help, as you can see what's
+  going on in the browser.
+- If a test fails, Cypress will take a screenshot of what it sees at the point of failure and will save it in a
+  generated `screenshots` folder within the `integration_tests` one.
 - If you make a change to the Cypress tests or supporting test code, it will refresh automatically
-- You can stop execution in the app using Chrome devtools Node debugger. To stop execution in the test code itself, open devtools in the cypress browser window, and add a `debugger` command to the test code in your code editor, where you want it to break.
+- You can stop execution in the app using Chrome devtools Node debugger. To stop execution in the test code itself, open
+  devtools in the cypress browser window, and add a `debugger` command to the test code in your code editor, where you want it to break.
 
 ## Feature flags
 Wrap the new feature in a [feature flag](./feature-flags.md), defaulted to `false`.
