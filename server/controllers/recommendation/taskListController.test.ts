@@ -150,7 +150,7 @@ describe('get', () => {
     })
     expect(next).toHaveBeenCalled()
 
-    expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+    expect(vulnerabilityRequiresDetails).toHaveBeenCalled()
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
@@ -161,7 +161,7 @@ describe('get', () => {
     expect(res.locals.isSpo).toEqual(false)
     expect(res.locals.shareLink).toEqual(`${config.domain}/recommendations/123/task-list`)
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type`)
-    expect(res.locals.selectedVulnerabilitiesRequireDetails).not.toBeDefined()
+    expect(res.locals.selectedVulnerabilitiesRequireDetails).toBeDefined()
   })
 
   it('present for indeterminate', async () => {
@@ -386,7 +386,8 @@ describe('get', () => {
 
     expect(res.locals.isSpo).toEqual(true)
   })
-  describe('when riskToSelf flag enabled', () => {
+
+  describe('VulnerabilitiesRequireDetails', () => {
     ;[true, false].forEach(expectedSelectedVulnerabilitiesRequireDetails => {
       it(`selectedVulnerabilitiesRequireDetails value set to result of vulnerabilityRequiresDetails call (${expectedSelectedVulnerabilitiesRequireDetails})`, async () => {
         ;(getStatuses as jest.Mock).mockResolvedValue([])
@@ -405,7 +406,6 @@ describe('get', () => {
               },
             },
             user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-            flags: { flagRiskToSelfEnabled: true },
           },
         })
         const next = mockNext()
@@ -440,7 +440,6 @@ describe('get', () => {
             },
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()
@@ -463,7 +462,6 @@ describe('get', () => {
             },
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()
@@ -481,7 +479,6 @@ describe('get', () => {
             vulnerabilities: undefined,
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()

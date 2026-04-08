@@ -40,11 +40,7 @@ const isVulnerabilitiesComplete = (recommendation: RecommendationResponse, _feat
   if (recommendation.vulnerabilities === null || typeof recommendation.vulnerabilities === 'undefined') {
     return false
   }
-  if (!!_featureFlags?.flagRiskToSelfEnabled === true) {
-    return recommendation.vulnerabilities?.selected?.length > 0 && hasAllRequiredVulnerabilityDetails(recommendation)
-  }
-
-  return recommendation.vulnerabilities?.selected?.length > 0
+  return recommendation.vulnerabilities?.selected?.length > 0 && hasAllRequiredVulnerabilityDetails(recommendation)
 }
 
 export const hasAllRequiredVulnerabilityDetails = (recommendation: RecommendationResponse): boolean => {

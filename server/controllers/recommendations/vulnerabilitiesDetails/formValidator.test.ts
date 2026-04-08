@@ -120,7 +120,7 @@ describe('validateVulnerabilitiesDetails', () => {
         href: '#vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
         invalidParts: undefined,
         name: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
-        text: 'Enter more detail for risk of suicide or self-harm',
+        text: 'Enter more detail for at risk of suicide or self-harm',
         values: undefined,
       },
     ])

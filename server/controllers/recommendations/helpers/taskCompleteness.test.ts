@@ -569,89 +569,56 @@ describe('taskCompleteness', () => {
   })
 
   describe('Vulnerabilities', () => {
-    describe('with riskToSelf flag disabled', () => {
-      it('returns false if vulnerabilities field not set', () => {
-        const recall = { ...emptyRecall }
-        delete recall.vulnerabilities
-        const { statuses } = taskCompleteness(recall)
-        expect(statuses.vulnerabilities).toEqual(false)
-      })
-      it('returns false if no vulnerabilities selected', () => {
-        const { statuses } = taskCompleteness(emptyRecall)
-        expect(statuses.vulnerabilities).toEqual(false)
-      })
-      it('returns true if some vulnerabilities selected', () => {
-        const { statuses } = taskCompleteness({
-          ...emptyRecall,
-          vulnerabilities: {
-            selected: [{ value: faker.helpers.enumValue(VULNERABILITY), details: faker.lorem.sentence() }],
-          },
-        })
-        expect(statuses.vulnerabilities).toEqual(true)
-      })
+    it('returns false if vulnerabilities field not set', () => {
+      const recall = { ...emptyRecall }
+      delete recall.vulnerabilities
+      const { statuses } = taskCompleteness(recall)
+      expect(statuses.vulnerabilities).toEqual(false)
+      expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
     })
+    it('returns false if no vulnerabilities selected', () => {
+      const { statuses } = taskCompleteness(emptyRecall)
+      expect(statuses.vulnerabilities).toEqual(false)
+      expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+    })
+    it('returns false if vulnerabilities selected but missing mandatory details', () => {
+      ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(true)
 
-    describe('with riskToSelf flag enabled', () => {
-      it('returns false if vulnerabilities field not set', () => {
-        const recall = { ...emptyRecall }
-        delete recall.vulnerabilities
-        const { statuses } = taskCompleteness(recall, { flagRiskToSelfEnabled: true })
-        expect(statuses.vulnerabilities).toEqual(false)
-        expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+      const vulnerability = faker.helpers.enumValue(VULNERABILITY)
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        vulnerabilities: {
+          selected: [{ value: vulnerability, details: undefined }],
+        },
       })
-      it('returns false if no vulnerabilities selected', () => {
-        const { statuses } = taskCompleteness(emptyRecall, { flagRiskToSelfEnabled: true })
-        expect(statuses.vulnerabilities).toEqual(false)
-        expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
-      })
-      it('returns false if vulnerabilities selected but missing mandatory details', () => {
-        ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(true)
+      expect(statuses.vulnerabilities).toEqual(false)
+      expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+    })
+    it('returns true if vulnerabilities selected with details provided', () => {
+      ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(true)
 
-        const vulnerability = faker.helpers.enumValue(VULNERABILITY)
-        const { statuses } = taskCompleteness(
-          {
-            ...emptyRecall,
-            vulnerabilities: {
-              selected: [{ value: vulnerability, details: undefined }],
-            },
-          },
-          { flagRiskToSelfEnabled: true },
-        )
-        expect(statuses.vulnerabilities).toEqual(false)
-        expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+      const vulnerability = faker.helpers.enumValue(VULNERABILITY)
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        vulnerabilities: {
+          selected: [{ value: vulnerability, details: faker.lorem.sentence() }],
+        },
       })
-      it('returns true if vulnerabilities selected with details provided', () => {
-        ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(true)
+      expect(statuses.vulnerabilities).toEqual(true)
+      expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+    })
+    it("returns true if vulnerabilities selected don't require details", () => {
+      ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(false)
 
-        const vulnerability = faker.helpers.enumValue(VULNERABILITY)
-        const { statuses } = taskCompleteness(
-          {
-            ...emptyRecall,
-            vulnerabilities: {
-              selected: [{ value: vulnerability, details: faker.lorem.sentence() }],
-            },
-          },
-          { flagRiskToSelfEnabled: true },
-        )
-        expect(statuses.vulnerabilities).toEqual(true)
-        expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+      const vulnerability = faker.helpers.enumValue(VULNERABILITY)
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        vulnerabilities: {
+          selected: [{ value: vulnerability, details: undefined }],
+        },
       })
-      it("returns true if vulnerabilities selected don't require details", () => {
-        ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(false)
-
-        const vulnerability = faker.helpers.enumValue(VULNERABILITY)
-        const { statuses } = taskCompleteness(
-          {
-            ...emptyRecall,
-            vulnerabilities: {
-              selected: [{ value: vulnerability, details: undefined }],
-            },
-          },
-          { flagRiskToSelfEnabled: true },
-        )
-        expect(statuses.vulnerabilities).toEqual(true)
-        expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
-      })
+      expect(statuses.vulnerabilities).toEqual(true)
+      expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
     })
   })
 

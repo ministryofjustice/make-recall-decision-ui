@@ -84,7 +84,8 @@ context('Recommendation - task list', () => {
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? Completed').should('exist')
+    cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
+    cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
     cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('exist')
@@ -169,7 +170,7 @@ context('Recommendation - task list', () => {
         },
         sentenceGroup,
       }
-      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
+      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
 
       cy.getElement('MAPPA information to assess recall type To do').should(expect.mappa ? 'exist' : 'not.exist')
 
@@ -261,7 +262,7 @@ context('Recommendation - task list', () => {
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
       }
-      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
+      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
 
       cy.getElement('MAPPA information to assess recall type Completed').should(expect.mappa ? 'exist' : 'not.exist')
 
@@ -449,7 +450,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+          ['flagFTR56Enabled'],
         )
         cy.getElement('Add more details about vulnerabilities or needs To do').should('exist')
       })
@@ -463,7 +464,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+          ['flagFTR56Enabled'],
         )
         cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
       })
@@ -477,7 +478,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+          ['flagFTR56Enabled'],
         )
         cy.getElement('Add more details about vulnerabilities or needs').should('not.exist')
       })
@@ -519,7 +520,7 @@ context('Recommendation - task list', () => {
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
     cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? To do').should('exist')
+    cy.getElement('Consider if recall could affect vulnerabilities or needs To do').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? To do').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? To do').should('exist')
     cy.getElement('Local police contact details To do').should('exist')
@@ -897,86 +898,56 @@ context('Recommendation - task list', () => {
     })
 
     context('vulnerabilities', () => {
-      context('with risk to self flag disabled', () => {
-        beforeEach(() => {
-          setUp(RecommendationResponseGenerator.generate())
-        })
-        it('shows vulnerabilities link', () => {
-          checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
-        })
-        it("doesn't show vulnerabilities details link", () => {
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-        })
+      const vulnerabilitiesNotRequiringDetails = [
+        VULNERABILITY.NONE_OR_NOT_KNOWN,
+        VULNERABILITY.NONE,
+        VULNERABILITY.NOT_KNOWN,
+      ]
+      const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
+        (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
+      )
+
+      it('with no vulnerabilities selected', () => {
+        setUp(
+          RecommendationResponseGenerator.generate({
+            vulnerabilities: {
+              selected: [],
+            },
+          }),
+          [],
+        )
+        checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
+        checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
       })
 
-      context('with risk to self flag enabled', () => {
-        const riskToSelfFlag = 'flagRiskToSelfEnabled'
-
-        const vulnerabilitiesNotRequiringDetails = [
-          VULNERABILITY.NONE_OR_NOT_KNOWN,
-          VULNERABILITY.NONE,
-          VULNERABILITY.NOT_KNOWN,
-        ]
-        const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
-          (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
-        )
-
-        it('with no vulnerabilities selected', () => {
+      vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityRequiringDetails} selected (which requires details)`, () => {
           setUp(
             RecommendationResponseGenerator.generate({
               vulnerabilities: {
-                selected: [],
+                selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
               },
             }),
             [],
-            [riskToSelfFlag],
+            [],
           )
-          checkLink(
-            linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-            `/recommendations/${recommendationId}/vulnerabilities`,
+          checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
+          checkLink(linkTexts.vulnerabilitiesDetails, `/recommendations/${recommendationId}/vulnerabilities-details`)
+        })
+      })
+
+      vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: {
+                selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
+              },
+            }),
+            [],
           )
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-        })
-
-        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityRequiringDetails} selected (which requires details)`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-            checkLink(
-              linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities`,
-            )
-            checkLink(
-              linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities-details`,
-            )
-          })
-        })
-
-        vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-            checkLink(
-              linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities`,
-            )
-            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
+          checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
+          checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
         })
       })
     })
@@ -1244,97 +1215,71 @@ context('Recommendation - task list', () => {
     }
 
     context('vulnerabilities', () => {
-      context('with risk to self flag disabled', () => {
-        it('no vulnerabilities selected', () => {
-          setUp(
-            RecommendationResponseGenerator.generate({
-              vulnerabilities: 'none',
-            }),
-          )
-          hasToDoLabel(linkTexts.vulnerabilities)
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-        })
+      const vulnerabilitiesNotRequiringDetails = [
+        VULNERABILITY.NONE_OR_NOT_KNOWN,
+        VULNERABILITY.NONE,
+        VULNERABILITY.NOT_KNOWN,
+      ]
+      const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
+        (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
+      )
 
-        it('vulnerabilities selected', () => {
-          setUp(RecommendationResponseGenerator.generate())
-          hasCompletedLabel(linkTexts.vulnerabilities)
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-        })
+      it('with no vulnerabilities selected', () => {
+        setUp(
+          RecommendationResponseGenerator.generate({
+            vulnerabilities: {
+              selected: [],
+            },
+          }),
+          [],
+        )
+        hasToDoLabel(linkTexts.vulnerabilities)
+        checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
       })
 
-      context('with risk to self flag enabled', () => {
-        const riskToSelfFlag = 'flagRiskToSelfEnabled'
-
-        const vulnerabilitiesNotRequiringDetails = [
-          VULNERABILITY.NONE_OR_NOT_KNOWN,
-          VULNERABILITY.NONE,
-          VULNERABILITY.NOT_KNOWN,
-        ]
-        const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
-          (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
-        )
-
-        it('with no vulnerabilities selected', () => {
+      vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityRequiringDetails} selected but missing mandatory details`, () => {
           setUp(
             RecommendationResponseGenerator.generate({
               vulnerabilities: {
-                selected: [],
+                selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
               },
             }),
             [],
-            [riskToSelfFlag],
           )
-          hasToDoLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
+
+          hasCompletedLabel(linkTexts.vulnerabilities)
+          hasToDoLabel(linkTexts.vulnerabilitiesDetails)
         })
+      })
 
-        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityRequiringDetails} selected but missing mandatory details`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-
-            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-            hasToDoLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
+      vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityRequiringDetails} selected and details set`, () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: {
+                selected: [{ value: vulnerabilityRequiringDetails, details: faker.lorem.sentence() }],
+              },
+            }),
+            [],
+          )
+          hasCompletedLabel(linkTexts.vulnerabilities)
+          hasCompletedLabel(linkTexts.vulnerabilitiesDetails)
         })
+      })
 
-        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityRequiringDetails} selected and details set`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityRequiringDetails, details: faker.lorem.sentence() }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-            hasCompletedLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
-        })
-
-        vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
+      vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: {
+                selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
+              },
+            }),
+            [],
+          )
+          hasCompletedLabel(linkTexts.vulnerabilities)
+          checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
         })
       })
     })
