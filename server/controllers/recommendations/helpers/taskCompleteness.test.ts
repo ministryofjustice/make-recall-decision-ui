@@ -317,7 +317,7 @@ describe('taskCompleteness', () => {
           recallType: { selected: { value: 'NO_RECALL' } },
           personOnProbation: {
             ...recommendationResponse.personOnProbation,
-            ftr56MappaReviewed: true,
+            ...(group === SentenceGroup.ADULT_SDS ? { ftr56MappaReviewed: true } : { ftr56MappaReviewed: undefined }),
           },
           ...setAllProperties(noRecallProperties, true),
           ...(group === SentenceGroup.ADULT_SDS || group === SentenceGroup.YOUTH_SDS
