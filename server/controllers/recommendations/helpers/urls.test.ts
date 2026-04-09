@@ -12,7 +12,7 @@ describe('nextPageLinkUrl', () => {
       path: '/recommendations/123/recall-type',
     }
     expect(nextPageLinkUrl({ nextPageId: 'manager-review', urlInfo })).toEqual(
-      '/recommendations/123/task-list#heading-recommendation'
+      '/recommendations/123/task-list#heading-recommendation',
     )
   })
 
@@ -100,7 +100,7 @@ describe('nextPagePreservingFromPageAndAnchor', () => {
     }
     const result = nextPagePreservingFromPageAndAnchor({ pageUrlSlug: nextPageTestSlug, urlInfo })
     expect(result).toEqual(
-      `${expectedBasePath}${nextPageTestSlug}?fromPageId=${expectedFromPageId}&fromAnchor=${expectedFromAchorId}`
+      `${expectedBasePath}${nextPageTestSlug}?fromPageId=${expectedFromPageId}&fromAnchor=${expectedFromAchorId}`,
     )
   })
 })

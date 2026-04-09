@@ -1,6 +1,7 @@
 import express, { Response, Router } from 'express'
 import helmet from 'helmet'
 import { randomBytes } from 'crypto'
+import config from '../config'
 
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
@@ -20,7 +21,7 @@ export default function setUpWebSecurity(): Router {
           // Hash allows inline script pulled in from https://github.com/alphagov/govuk-frontend/blob/master/src/govuk/template.njk
           scriptSrc: [
             "'self'",
-            "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
+            "'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw='",
             (req, res) => `'nonce-${(res as Response).locals.cspNonce}'`,
           ],
           connectSrc: [
@@ -29,6 +30,10 @@ export default function setUpWebSecurity(): Router {
             '*.google-analytics.com',
             '*.analytics.google.com',
             '*.applicationinsights.azure.com',
+            // This removes sourcemap errors from the Probation Components API assets
+            // normally handled by the package's CSP settings, but it seems this config
+            // file is overwriting that, so we manually add it back in here
+            config.apis.probationApi.url,
           ],
           imgSrc: ["'self'", 'data:', '*.google-analytics.com', '*.analytics.google.com'],
           styleSrc: ["'self'"],
@@ -41,7 +46,7 @@ export default function setUpWebSecurity(): Router {
           ],
         },
       },
-    })
+    }),
   )
   router.use(helmet.crossOriginEmbedderPolicy({ policy: 'credentialless' }))
   return router

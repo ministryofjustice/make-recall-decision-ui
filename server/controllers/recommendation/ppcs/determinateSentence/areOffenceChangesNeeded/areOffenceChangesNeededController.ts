@@ -8,19 +8,19 @@ import {
 import { RecommendationResponse } from '../../../../../@types/make-recall-decision-api'
 import { isDefined } from '../../../../../utils/utils'
 import { makeErrorObject } from '../../../../../utils/errors'
-import { strings } from '../../../../../textStrings/en'
+import strings from '../../../../../textStrings/en'
 import { getRecommendation, updateRecommendation } from '../../../../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../../../../recommendations/helpers/urls'
 import { isValueValid } from '../../../../recommendations/formOptions/formOptions'
-import { ppcsPaths } from '../../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../../routes/paths/ppcs'
 import { BookRecallToPpud } from '../../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 function resetOffenceInfo(
   bookRecallToPpud: BookRecallToPpud,
-  recommendation: RecommendationResponse
+  recommendation: RecommendationResponse,
 ): BookRecallToPpud {
   const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
-    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
   )
   return {
     ...bookRecallToPpud,
@@ -31,7 +31,7 @@ function resetOffenceInfo(
 
 function buildNewBookRecallToPpud(
   recommendation: RecommendationResponse,
-  changeOffenceOrAddComment: string
+  changeOffenceOrAddComment: string,
 ): BookRecallToPpud {
   const changeOffenceOrAddCommentBoolean = yesNoToBoolean(changeOffenceOrAddComment)
   let bookRecallToPpud: BookRecallToPpud = {
@@ -48,7 +48,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
   const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender.sentences.find(
-    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
   )
 
   res.locals = {
@@ -108,7 +108,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       ? ppcsPaths.matchIndexOffence
       : ppcsPaths.sentenceToCommitExistingOffender
   const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

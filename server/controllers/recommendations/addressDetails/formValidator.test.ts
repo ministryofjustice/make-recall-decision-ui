@@ -1,4 +1,4 @@
-import { validateAddress } from './formValidator'
+import validateAddress from './formValidator'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateAddress', () => {

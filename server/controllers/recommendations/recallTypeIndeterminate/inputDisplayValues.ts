@@ -2,7 +2,7 @@ import { getProperty, isDefined } from '../../../utils/utils'
 import { RecallType, RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesRecallTypeIndeterminate = ({
+const inputDisplayValuesRecallTypeIndeterminate = ({
   errors = {},
   unsavedValues = {},
   apiValues,
@@ -16,7 +16,7 @@ export const inputDisplayValuesRecallTypeIndeterminate = ({
     } else {
       const recallType = getProperty<RecommendationResponse, RecallType>(
         apiValues,
-        'recallType.selected.value'
+        'recallType.selected.value',
       ) as string
       const isEmergencyRecall = apiValues.isThisAnEmergencyRecall
       inputDisplayValues.value = recallType === 'STANDARD' && isEmergencyRecall === true ? 'EMERGENCY' : recallType
@@ -24,3 +24,5 @@ export const inputDisplayValuesRecallTypeIndeterminate = ({
   }
   return inputDisplayValues
 }
+
+export default inputDisplayValuesRecallTypeIndeterminate

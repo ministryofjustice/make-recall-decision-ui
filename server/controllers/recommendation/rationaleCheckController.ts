@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 
 function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -36,7 +36,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   }
   const nextPageId =
     rationaleCheck === 'YES' ? 'spo-task-list-consider-recall?fromPageId=rationale-check' : 'countersigning-telephone'
-  res.redirect(303, `${urlInfo.basePath}${nextPageId}`)
+  return res.redirect(303, `${urlInfo.basePath}${nextPageId}`)
 }
 
 export default { get, post }

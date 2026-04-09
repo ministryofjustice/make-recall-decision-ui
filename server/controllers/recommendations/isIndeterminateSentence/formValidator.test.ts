@@ -1,4 +1,4 @@
-import { validateIsIndeterminateSentence } from './formValidator'
+import validateIsIndeterminateSentence from './formValidator'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateIsIndeterminateSentence', () => {

@@ -43,7 +43,7 @@ export const logMessage = (info: any) => {
 }
 
 export function wait(time: number) {
-  return new Promise<void>(function (resolve) {
+  return new Promise<void>(resolve => {
     setTimeout(() => {
       resolve()
     }, time)
@@ -141,19 +141,19 @@ export function isDateTimeRangeCurrent(startDateTimeStr: string, endDateTimeStr:
   return startDateTime <= dateToday && endDateTime >= dateToday
 }
 
-export function isDateTimeAfterCurrent(afterDateTimeStr: string) {
-  if (!afterDateTimeStr) {
+export function isPastDateTime(dateTimeStr: string) {
+  if (!dateTimeStr) {
     return false
   }
 
   const dateToday = new Date()
-  const afterDateTime = new Date(afterDateTimeStr)
+  const dateTime = new Date(dateTimeStr)
 
-  if (Number.isNaN(afterDateTime)) {
+  if (Number.isNaN(dateTime)) {
     return false
   }
 
-  return dateToday > afterDateTime
+  return dateToday > dateTime
 }
 
 export function isCaseRestrictedOrExcluded(userAccessResponse: UserAccessResponse) {

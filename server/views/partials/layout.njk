@@ -11,6 +11,7 @@
 {% from "govuk/components/textarea/macro.njk"            import govukTextarea %}
 {% from "govuk/components/error-summary/macro.njk"       import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk"               import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "moj/components/search/macro.njk" import mojSearch -%}
@@ -21,9 +22,8 @@
 {% from "components/oasys-card/macro.njk"             import oasysCard %}
 {% from "components/summary-card/macro.njk"             import appSummaryCard %}
 {% from "components/rosh-widget/macro.njk" import roshWidget %}
-{% from "components/predictor-indicator/macro.njk" import predictorIndicator %}
-{% from "components/predictor-score/macro.njk" import predictorScore %}
-{% from "components/predictor-timeline/macro.njk" import predictorTimeline %}
+{% from "components/rosh-widget-arns/macro.njk" import roshWidgetArns %}
+{% from "components/predictor-v2-timeline/macro.njk" import predictorV2Timeline %}
 {% from "components/risk-flag-widget/macro.njk" import riskFlagWidget %}
 {% from "components/mappa-widget/macro.njk" import mappaWidget %}
 {% from "components/select-component/macro.njk" import selectComponent %}
@@ -56,45 +56,35 @@
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  {% for css in feComponents.cssIncludes %}
+    <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet" />
+  {% endfor %}
   <script src="/assets/applicationinsights-web.min.js"></script>
   <script src="/assets/applicationinsights.js"></script>
   <script nonce="{{ cspNonce }}">
     window.applicationInsights.init('{{ applicationInsightsConnectionString }}', '{{ applicationInsightsRoleName }}', '{{ user.username }}');
   </script>
   <script src="/assets/js/jquery.min.js"></script>
-  <script nonce='{{ cspNonce }}'>
-    window.MOJFrontend = window.MOJFrontend || {};
-  </script>
-  <script src='/assets/moj/components/filter-toggle-button/filter-toggle-button.js'></script>
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script src="/assets/js/vStyleDropdownArrow.js"></script>
+  <script type="module" src='/assets/moj/components/filter-toggle-button/filter-toggle-button.bundle.mjs'></script>
   {% block headEnd %}{% endblock %}
 {% endblock %}
 {% block pageTitle %}
   {{ pageTitle | default(applicationName) }}
 {% endblock %}
 {% block header %}
-  {% include "./header.njk" %}
+  {{ feComponents.header | safe }}
   {% include "./phaseBanner.njk" %}
 {% endblock %}
 {% block footer %}
-  {{ govukFooter({
-        meta: {
-          items: [
-            {
-              href: "/accessibility",
-              text: "Accessibility"
-            }
-          ]
-        }
-      }) }}
+  {{ feComponents.footer | safe }}
 {% endblock %}
 {% block bodyEnd %}
   {# Run JavaScript at end of the
       <body>, to avoid blocking the initial render. #}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
-  <script src="/assets/moj/all.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/mojFrontendInit.js"></script>
   <script src="/assets/web-vitals.iife.js" defer></script>
   <script src="/assets/analytics.js" defer></script>
   <script src="/assets/accessibility.js" defer></script>

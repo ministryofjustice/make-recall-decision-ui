@@ -8,7 +8,7 @@ import { PrisonSentence } from '../../../../@types/make-recall-decision-api/mode
 import { RecommendationResponse, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { PrisonSentenceSequence } from '../../../../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
 import { TermGenerator } from '../../../../../data/common/termGenerator'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../routes/paths/ppcs'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 
@@ -77,7 +77,7 @@ describe('Consecutive Sentence Details Controller', () => {
         expect(prisonSentences).toHaveBeenCalledWith('token', defaultGetRecommendation.personOnProbation.nomsNumber))
       it('- Calls render for the expected page', async () =>
         expect(res.render).toHaveBeenCalledWith(
-          `pages/recommendations/ppcs/determinateSentence/consecutiveSentences/consecutiveSentenceDetails`
+          `pages/recommendations/ppcs/determinateSentence/consecutiveSentences/consecutiveSentenceDetails`,
         ))
       it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
 
@@ -126,7 +126,7 @@ describe('Consecutive Sentence Details Controller', () => {
                         })
                       })
                     })
-                  }
+                  },
                 )
               })
             })

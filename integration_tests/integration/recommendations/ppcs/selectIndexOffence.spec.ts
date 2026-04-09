@@ -4,12 +4,12 @@ import { PrisonSentenceSequenceGenerator } from '../../../../data/prisonSentence
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { TermOptions } from '../../../../data/common/termGenerator'
 import { SentenceOffenceOptions } from '../../../../data/prisonSentences/sentenceOffenceGenerator'
-import { RECOMMENDATION_STATUS } from '../../../../server/middleware/recommendationStatus'
-import { defaultUpdateRecommendationResponse } from '../_data'
-import { CUSTODY_GROUP } from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
+import defaultUpdateRecommendationResponse from '../_data'
+import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { PrisonSentence } from '../../../../server/@types/make-recall-decision-api/models/PrisonSentence'
 import { ConvictionDetail } from '../../../../server/@types/make-recall-decision-api'
-import { setUpSessionForPpcs } from './util'
+import setUpSessionForPpcs from './util'
 
 context('Determinate Sentence - Select Index Offence Page', () => {
   const crn = 'X34983'
@@ -158,7 +158,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       const testNOMISSummaryListForTermRows = (
         summaryList: Cypress.Chainable<JQuery<HTMLElement>>,
         termsRows: { key: string; value: string }[],
-        sentence: PrisonSentence
+        sentence: PrisonSentence,
       ) => {
         testSummaryList(summaryList, {
           matchLength: false,
@@ -201,7 +201,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         testNOMISSummaryListForTermRows(
           hintSummaryList,
           [{ key: 'Sentence length', value: expectedTermText }],
-          prisonSentenceSequenceWithSingleTerm.indexSentence
+          prisonSentenceSequenceWithSingleTerm.indexSentence,
         )
       })
       it('Sentence with multiple terms - displays as resolved term based on code', () => {
@@ -238,7 +238,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
             { key: 'Custodial term', value: expectedCustodialTermText },
             { key: 'Extended term', value: expectedExtendedTermText },
           ],
-          prisonSentenceSequenceWithMultipleTerms.indexSentence
+          prisonSentenceSequenceWithMultipleTerms.indexSentence,
         )
       })
 
@@ -250,7 +250,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       const testPartASummaryListForTermRows = (
         summaryList: Cypress.Chainable<JQuery<HTMLElement>>,
         termsRows: { key: string; value: string }[],
-        convictionDetail: ConvictionDetail
+        convictionDetail: ConvictionDetail,
       ) => {
         testSummaryList(summaryList, {
           rows: [
@@ -291,7 +291,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
               value: `${recommendationWithNonExtendedConviction.convictionDetail.lengthOfSentence} ${recommendationWithNonExtendedConviction.convictionDetail.lengthOfSentenceUnits}`,
             },
           ],
-          recommendationWithNonExtendedConviction.convictionDetail
+          recommendationWithNonExtendedConviction.convictionDetail,
         )
       })
       it('Part A is extended - displays as resolved term using conviction terms', () => {
@@ -322,7 +322,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
             { key: 'Custodial term', value: recommendationWithExtendedConviction.convictionDetail.custodialTerm },
             { key: 'Extended term', value: recommendationWithExtendedConviction.convictionDetail.extendedTerm },
           ],
-          recommendationWithExtendedConviction.convictionDetail
+          recommendationWithExtendedConviction.convictionDetail,
         )
       })
     })
@@ -382,7 +382,14 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       cy.get('button').click()
 
       testForErrorPageTitle()
-      testForErrorSummary([{ href: 'indexOffence', message: selectIndexOffenceErrorMessage }])
+      testForErrorSummary([
+        {
+          href: 'indexOffence-1-input',
+          message: selectIndexOffenceErrorMessage,
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+          errorComponentId: 'indexOffence-error',
+        },
+      ])
 
       cy.get('div.govuk-form-group')
         .should('exist')

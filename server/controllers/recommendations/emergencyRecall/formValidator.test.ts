@@ -1,4 +1,4 @@
-import { validateEmergencyRecall } from './formValidator'
+import validateEmergencyRecall from './formValidator'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateEmergencyRecall', () => {

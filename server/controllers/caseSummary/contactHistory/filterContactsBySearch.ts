@@ -15,11 +15,11 @@ const checkIfAllTermsMatch = ({ patterns, contact }: { patterns: RegExp[]; conta
       pattern.test(description) ||
       pattern.test(descriptionType) ||
       pattern.test(outcome) ||
-      pattern.test(enforcementAction)
+      pattern.test(enforcementAction),
   )
 }
 
-export const filterContactsBySearch = ({
+const filterContactsBySearch = ({
   contacts,
   filters,
 }: {
@@ -50,7 +50,7 @@ export const filterContactsBySearch = ({
     } else {
       const patterns = selectedFilters.map(filter => new RegExp(`.*\\b${filter}.*`, 'i'))
       filteredContacts = contacts
-        .map(contact => {
+        .map((contact): DecoratedContact => {
           return {
             ...contact,
             startDate: null,
@@ -79,3 +79,5 @@ export const filterContactsBySearch = ({
     selected,
   }
 }
+
+export default filterContactsBySearch

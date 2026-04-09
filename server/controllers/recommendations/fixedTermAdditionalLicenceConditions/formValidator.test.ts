@@ -1,4 +1,4 @@
-import { validateFixedTermLicenceConditions } from './formValidator'
+import validateFixedTermLicenceConditions from './formValidator'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateFixedTermLicenceConditions', () => {

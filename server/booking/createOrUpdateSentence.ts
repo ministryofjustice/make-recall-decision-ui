@@ -1,14 +1,14 @@
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import { ppudCreateSentence, ppudUpdateSentence, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { PpudUpdateSentenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateSentenceRequest'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 function buildDeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
   const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
 
   const offenceTerm = nomisOffence.terms.find(term => term.code === 'IMP')
@@ -37,7 +37,7 @@ function buildDeterminateSentenceRequest(recommendation: RecommendationResponse)
 
 function buildIndeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
   const selectedPpudSentence = recommendation.ppudOffender.sentences.find(
-    sentence => sentence.id === recommendation.bookRecallToPpud.ppudSentenceId
+    sentence => sentence.id === recommendation.bookRecallToPpud.ppudSentenceId,
   )
   const editedIndeterminateSentenceData = recommendation.bookRecallToPpud.ppudIndeterminateSentenceData
 
@@ -52,7 +52,7 @@ export default async function createOrUpdateSentence(
   bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) {
   const memento = { ...bookingMemento }
 

@@ -1,5 +1,5 @@
-import { getRoute } from './custodyGroupRouter'
-import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import getRoute from './custodyGroupRouter'
+import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 describe('getRoute', () => {
   it('get determinate route', async () => {

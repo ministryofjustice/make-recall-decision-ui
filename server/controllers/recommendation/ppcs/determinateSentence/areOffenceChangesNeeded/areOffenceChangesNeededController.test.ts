@@ -4,9 +4,9 @@ import { RecommendationResponseGenerator } from '../../../../../../data/recommen
 import areOffenceChangesNeededController from './areOffenceChangesNeededController'
 import { yesNoOptions, yesNoToBoolean, YesNoValues } from '../../../../recommendations/formOptions/yesNo'
 import { isDefined } from '../../../../../utils/utils'
-import { ppcsPaths } from '../../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../../routes/paths/ppcs'
 import { getRecommendation, updateRecommendation } from '../../../../../data/makeDecisionApiClient'
-import { strings } from '../../../../../textStrings/en'
+import strings from '../../../../../textStrings/en'
 
 jest.mock('../../../../../data/makeDecisionApiClient')
 jest.mock('../../../../../utils/utils')
@@ -37,7 +37,7 @@ describe('Are Offence Changes Needed Controller', () => {
       })
       it('Calls render for the expected page', () =>
         expect(res.render).toHaveBeenCalledWith(
-          'pages/recommendations/ppcs/determinateSentence/areOffenceChangesNeeded'
+          'pages/recommendations/ppcs/determinateSentence/areOffenceChangesNeeded',
         ))
       it('Executes the next function', () => expect(next).toHaveBeenCalled())
       describe('Res locals:', () => {
@@ -186,7 +186,7 @@ describe('Are Offence Changes Needed Controller', () => {
                 it('redirects to Sentence to Commit Existing page', () =>
                   expect(res.redirect).toHaveBeenCalledWith(
                     303,
-                    `${basePath}${ppcsPaths.sentenceToCommitExistingOffender}`
+                    `${basePath}${ppcsPaths.sentenceToCommitExistingOffender}`,
                   ))
               }
             })

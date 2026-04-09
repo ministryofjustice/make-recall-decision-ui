@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { isMandatoryTextValue, stripHtmlTags } from '../../utils/utils'
@@ -61,7 +61,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'spoRecallType',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   } else if (spoRecallType === 'RECALL') {
     if (!isMandatoryTextValue(spoRecallRationale)) {
@@ -71,7 +71,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'spoRecallRationale',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
 
@@ -82,7 +82,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'odmName',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
   }
@@ -127,7 +127,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     })
   }
 
-  res.redirect(303, nextPageLinkUrl(nextPage))
+  return res.redirect(303, nextPageLinkUrl(nextPage))
 }
 
 export default { get, post }

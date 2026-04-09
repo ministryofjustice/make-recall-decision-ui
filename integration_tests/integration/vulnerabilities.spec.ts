@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import getCaseVulnerabilitiesResponse from '../../api/responses/get-case-vulnerabilities.json'
 
 context('Vulnerabilities page', () => {
@@ -20,7 +20,7 @@ context('Vulnerabilities page', () => {
     cy.pageHeading().should('equal', 'Vulnerabilities for Jane Bloggs')
     cy.getElement({ qaAttr: 'banner-vulnerabilities' }).should(
       'contain',
-      'This information is from OASys. Check the contact history for vulnerability information from NDelius.'
+      'This information is from OASys. Check the contact history for vulnerability information from NDelius.',
     )
     cy.getElement({ qaAttr: 'banner-vulnerabilities-no-data' }).should('not.exist')
 
@@ -65,7 +65,7 @@ context('Vulnerabilities page', () => {
         ...acc,
         [curr]: { current: null, previous: null },
       }),
-      {}
+      {},
     )
     cy.task('getCase', {
       sectionId: 'vulnerabilities',

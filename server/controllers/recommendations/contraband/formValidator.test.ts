@@ -1,4 +1,4 @@
-import { validateContraband } from './formValidator'
+import validateContraband from './formValidator'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateContraband', () => {

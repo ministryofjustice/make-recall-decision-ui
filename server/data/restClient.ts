@@ -1,4 +1,4 @@
-import superagent from 'superagent'
+import superagent, { Response } from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import { Readable } from 'stream'
 
@@ -36,7 +36,7 @@ export default class RestClient {
   constructor(
     private readonly name: string,
     protected readonly config: ApiConfig,
-    private readonly token: string
+    private readonly token: string,
   ) {
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
   }
@@ -158,13 +158,9 @@ export default class RestClient {
     }
   }
 
-  async patch<T>({
-    path = null,
-    headers = {},
-    responseType = '',
-    data = {},
-    raw = false,
-  }: PostRequest = {}): Promise<T> {
+  async patch<T>({ path = null, headers = {}, responseType = '', data = {}, raw = false }: PostRequest = {}): Promise<
+    T | Response
+  > {
     try {
       const result = await superagent
         .patch(`${this.apiUrl()}${path}`)
@@ -199,7 +195,7 @@ export default class RestClient {
             reject(error)
           } else if (response) {
             const s = new Readable()
-            // eslint-disable-next-line no-underscore-dangle,@typescript-eslint/no-empty-function
+            // eslint-disable-next-line no-underscore-dangle
             s._read = () => {}
             s.push(response.body)
             s.push(null)

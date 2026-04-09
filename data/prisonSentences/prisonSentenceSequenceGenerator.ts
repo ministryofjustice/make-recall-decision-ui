@@ -15,9 +15,9 @@ const generateInternal = (options?: PrisonSentenceSequenceOptions): PrisonSenten
         new Map(
           Array.from(
             options.sentencesInSequence,
-            ([id, opt]) => [id, PrisonSentenceGenerator.generateSeries(opt)] as [number, PrisonSentence[]]
-          )
-        )
+            ([id, opt]) => [id, PrisonSentenceGenerator.generateSeries(opt)] as [number, PrisonSentence[]],
+          ),
+        ),
       )
     : null,
 })

@@ -1,4 +1,4 @@
-import { validateIsExtendedSentence } from './formValidator'
+import validateIsExtendedSentence from './formValidator'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateIsExtendedSentence', () => {

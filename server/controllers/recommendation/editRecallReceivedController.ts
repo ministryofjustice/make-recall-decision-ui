@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesRecallReceived } from '../recommendations/recallReceived/inputDisplayValues'
-import { validateRecallReceived } from '../recommendations/recallReceived/formValidator'
+import inputDisplayValuesRecallReceived from '../recommendations/recallReceived/inputDisplayValues'
+import validateRecallReceived from '../recommendations/recallReceived/formValidator'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 
@@ -68,7 +68,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
-  res.redirect(303, nextPagePath)
+  return res.redirect(303, nextPagePath)
 }
 
 export default { get, post }

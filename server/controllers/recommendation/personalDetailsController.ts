@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { updatePageReviewedStatus } from '../recommendations/helpers/updatePageReviewedStatus'
+import updatePageReviewedStatus from '../recommendations/helpers/updatePageReviewedStatus'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params

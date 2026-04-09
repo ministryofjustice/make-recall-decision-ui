@@ -1,5 +1,5 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api/models/ContactSummaryResponse'
-import { filterContactsByDateRange } from './filterContactsByDateRange'
+import filterContactsByDateRange from './filterContactsByDateRange'
 
 describe('filterContactsByDateRange', () => {
   const filters = {

@@ -2,7 +2,7 @@ import { RecommendationResponse, ValueWithDetails } from '../../../@types/make-r
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 import { getProperty, isDefined } from '../../../utils/utils'
 
-export const inputDisplayValuesVulnerabilitiesDetails = ({
+const inputDisplayValuesVulnerabilitiesDetails = ({
   errors,
   unsavedValues = {},
   apiValues,
@@ -12,3 +12,5 @@ export const inputDisplayValuesVulnerabilitiesDetails = ({
   }
   return unsavedValues.vulnerabilities
 }
+
+export default inputDisplayValuesVulnerabilitiesDetails

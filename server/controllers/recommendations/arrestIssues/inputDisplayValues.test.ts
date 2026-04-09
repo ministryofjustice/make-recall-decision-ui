@@ -1,4 +1,4 @@
-import { inputDisplayValuesArrestIssues } from './inputDisplayValues'
+import inputDisplayValuesArrestIssues from './inputDisplayValues'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('inputDisplayValuesArrestIssues', () => {

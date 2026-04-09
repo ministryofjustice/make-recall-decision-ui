@@ -3,7 +3,7 @@ import { ContactSummaryResponse } from '../../../../@types/make-recall-decision-
 import logger from '../../../../../logger'
 
 // filter the list of contacts using the selected contact types
-export const filterContactsBySelected = ({
+const filterContactsBySelected = ({
   allContactTypes,
   filteredContacts,
   selectedContactTypes,
@@ -22,3 +22,5 @@ export const filterContactsBySelected = ({
     logger.error(`contact.code "${contact.code}" not found in contact types`)
     return undefined
   })
+
+export default filterContactsBySelected

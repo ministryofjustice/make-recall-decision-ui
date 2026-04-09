@@ -1,6 +1,6 @@
 import { mockNext, mockReq, mockRes } from './testutils/mockRequestUtils'
 import { hasRole } from './check'
-import { authorisationCheck } from './authorisationCheck'
+import authorisationCheck from './authorisationCheck'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -20,7 +20,7 @@ describe('authorisationCheck', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).not.toHaveBeenCalled()
@@ -42,7 +42,7 @@ describe('authorisationCheck', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).toHaveBeenCalled()

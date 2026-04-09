@@ -1,15 +1,15 @@
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import { ppudUpdateOffence, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
-import { StageEnum } from './StageEnum'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import StageEnum from './StageEnum'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 export default async function updateOffence(
   bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) {
   const memento = { ...bookingMemento }
 
@@ -21,7 +21,7 @@ export default async function updateOffence(
 
   if (custodyGroup === CUSTODY_GROUP.DETERMINATE) {
     const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
-      o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+      o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
     )
 
     await ppudUpdateOffence(token, memento.offenderId, memento.sentenceId, {
@@ -31,7 +31,7 @@ export default async function updateOffence(
     })
   } else if (custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
     const selectedSentence = recommendation.ppudOffender.sentences.find(
-      s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+      s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
     )
     await ppudUpdateOffence(token, memento.offenderId, memento.sentenceId, {
       indexOffence: recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.offenceDescription,

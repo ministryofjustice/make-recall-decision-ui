@@ -1,13 +1,13 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import searchActiveUsersResponse from '../../api/responses/ppudSearchActiveUsers.json'
 import searchMappedUserResponse from '../../api/responses/searchMappedUsers.json'
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
-import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { ppcsPaths } from '../../server/routes/paths/ppcs'
+import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import ppcsPaths from '../../server/routes/paths/ppcs'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
@@ -116,7 +116,13 @@ const spoUrls = [
 ]
 
 const ppcsUrls = [
-  { url: '/ppcs-search', validationError: false, fullRecommendationData: false, statuses: [], bookRecallToPpud: {} },
+  {
+    url: `/${ppcsPaths.ppcsSearch}`,
+    validationError: false,
+    fullRecommendationData: false,
+    statuses: [],
+    bookRecallToPpud: {},
+  },
   {
     url: '/ppcs-search-results?crn=X098092',
     validationError: false,
@@ -190,7 +196,7 @@ function recommendationEndpoint(
   resource: string,
   statuses = [],
   fullRecommendationData: boolean = false,
-  bookRecallToPpud = {}
+  bookRecallToPpud = {},
 ) {
   return {
     url: `${routeUrls.recommendations}/456/${resource}`,
@@ -222,6 +228,13 @@ const TEMPLATE = {
   paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
 }
 
+// Ignore the Probation Components API fallback header as it shouldn't
+// ever be presented to the end user
+const A11Y_ELEMENTS_TO_CHECK = {
+  include: [['body']],
+  exclude: [['.probation-common-fallback-header']],
+}
+
 context('Accessibility (a11y) Checks', () => {
   beforeEach(() => {
     cy.signIn()
@@ -236,10 +249,10 @@ context('Accessibility (a11y) Checks', () => {
         .withActiveConviction(
           standardActiveConvictionTemplate()
             .withDescription('Robbery - 05714')
-            .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+            .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
         )
         .withAllConvictionsReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('updateStatuses', { statusCode: 200, response: [] })
     cy.mockCaseSummaryData()
@@ -261,7 +274,7 @@ context('Accessibility (a11y) Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -299,7 +312,7 @@ context('Accessibility (a11y) SPO Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -338,7 +351,7 @@ context('Accessibility (a11y) AP Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -528,7 +541,7 @@ context('Accessibility (a11y) PPCS Checks', () => {
 
       cy.visit(item.url)
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },

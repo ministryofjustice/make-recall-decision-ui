@@ -42,11 +42,9 @@ export interface SelectedFilterItem {
 }
 
 export interface DecoratedContact extends ContactSummaryResponse {
-  startDate: string
+  startDate?: string
   searchTextMatch?: {
-    notes: boolean
-    description: boolean
-    outcome: boolean
-    enforcementAction: boolean
+    notesMatched: boolean
+    allTermsMatched: boolean
   }
 }

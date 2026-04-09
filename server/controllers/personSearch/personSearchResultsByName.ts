@@ -1,16 +1,16 @@
 import { Request, Response } from 'express'
-import { routeUrls } from '../../routes/routeUrls'
-import { AuditService } from '../../services/auditService'
+import routeUrls from '../../routes/routeUrls'
+import AuditService from '../../services/auditService'
 import { isEmptyStringOrWhitespace, isInvalidName, isPreprodOrProd } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { searchPersons } from '../../data/makeDecisionApiClient'
 
 const auditService = new AuditService()
 
-export const personSearchResultsByName = async (req: Request, res: Response) => {
+const personSearchResultsByName = async (req: Request, res: Response) => {
   const { lastName, firstName, page } = {
     lastName: req.query.lastName as string,
     firstName: req.query.firstName as string,
@@ -26,7 +26,7 @@ export const personSearchResultsByName = async (req: Request, res: Response) => 
         id: 'lastName',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -37,7 +37,7 @@ export const personSearchResultsByName = async (req: Request, res: Response) => 
         id: 'firstName',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -52,11 +52,15 @@ export const personSearchResultsByName = async (req: Request, res: Response) => 
   res.locals.hasPpcsRole = user.hasPpcsRole
 
   res.locals.page = await searchPersons(user.token, Number(page), 20, undefined, firstName, lastName)
-  res.render('pages/paginatedPersonSearchResults')
+
   appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { lastName, firstName, region: user.region }, flags)
   await auditService.personSearch({
     searchTerm: { lastName, firstName },
     username: res.locals.user.username,
     logErrors: isPreprodOrProd(res.locals.env),
   })
+
+  return res.render('pages/paginatedPersonSearchResults')
 }
+
+export default personSearchResultsByName

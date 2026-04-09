@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { isEmailValid } from '../../utils/validate-formats'
 import { isEmptyStringOrWhitespace } from '../../utils/utils'
 
@@ -56,7 +56,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: `email_${i}`,
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
   }
@@ -83,7 +83,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'email',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -104,7 +104,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list', urlInfo }))
 }
 
 export default { get, post }

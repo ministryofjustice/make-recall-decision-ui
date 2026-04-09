@@ -1,28 +1,29 @@
 import { RequestHandler, Router } from 'express'
 import bodyParser from 'body-parser'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import { personSearchByCRN } from '../controllers/personSearch/personSearchByCRN'
-import { personSearchByName } from '../controllers/personSearch/personSearchByName'
-import { personSearchResults } from '../controllers/personSearch/personSearchResults'
+import personSearchByCRN from '../controllers/personSearch/personSearchByCRN'
+import personSearchByName from '../controllers/personSearch/personSearchByName'
+import personSearchResults from '../controllers/personSearch/personSearchResults'
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
-import { getStoredSessionData } from '../middleware/getStoredSessionData'
+import getStoredSessionData from '../middleware/getStoredSessionData'
 import { startPage } from '../controllers/startPage/startPage'
 import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
-import { getFeatureFlags } from '../controllers/featureFlags'
-import { downloadDocument } from '../controllers/downloadDocument'
-import { routeUrls } from './routeUrls'
-import { parseUrl } from '../middleware/parseUrl'
-import { getCreateRecommendationWarning } from '../controllers/recommendations/getCreateRecommendationWarning'
+import getFeatureFlags from '../controllers/featureFlags'
+import downloadDocument from '../controllers/downloadDocument'
+import routeUrls from './routeUrls'
+import parseUrl from '../middleware/parseUrl'
+import getCreateRecommendationWarning from '../controllers/recommendations/getCreateRecommendationWarning'
 import recommendations from './recommendations'
 import { isPreprodOrProd } from '../utils/utils'
 import replaceCurrentRecommendationController from '../controllers/recommendations/replaceCurrentRecommendationController'
-import { personSearchResultsByName } from '../controllers/personSearch/personSearchResultsByName'
+import personSearchResultsByName from '../controllers/personSearch/personSearchResultsByName'
 import ppcsSearch from '../controllers/personSearch/ppcsSearchController'
-import { nothingMore } from './nothing-more'
+import nothingMore from './nothing-more'
 import ppcsSearchResultsController from '../controllers/personSearch/ppcsSearchResultsController'
 import noPpcsSearchResultsController from '../controllers/personSearch/noPpcsSearchResultsController'
 import outOfHoursWarningController from '../controllers/recommendations/outOfHoursWarningController'
 import setUpMaintenance from '../middleware/setUpMaintenance'
+import ppcsPaths from './paths/ppcs'
 
 export default function routes(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler), nothingMore)
@@ -44,8 +45,8 @@ export default function routes(router: Router): Router {
   get(routeUrls.searchByName, personSearchByName)
   get(routeUrls.searchResultsByCRN, personSearchResults)
   get(routeUrls.searchResultsByName, personSearchResultsByName)
-  get('/ppcs-search', ppcsSearch.get)
-  get('/ppcs-search-results', ppcsSearchResultsController.get)
+  get(`/${ppcsPaths.ppcsSearch}`, ppcsSearch.get)
+  get(`/${ppcsPaths.ppcsSearchResults}`, ppcsSearchResultsController.get)
   get('/no-ppcs-search-results', noPpcsSearchResultsController.get)
 
   get(`${routeUrls.cases}/:crn/documents/:documentId`, downloadDocument)

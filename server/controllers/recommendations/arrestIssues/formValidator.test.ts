@@ -1,4 +1,4 @@
-import { validateArrestIssues } from './formValidator'
+import validateArrestIssues from './formValidator'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validateArrestIssues', () => {

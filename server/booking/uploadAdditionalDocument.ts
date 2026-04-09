@@ -1,4 +1,4 @@
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import { ppudUploadAdditionalDocument, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
 
@@ -7,8 +7,8 @@ export default async function uploadAdditionalDocument(
   recommendationId: string,
   id: string,
   token: string,
-  featureFlags: FeatureFlags
-) {
+  featureFlags: FeatureFlags,
+): Promise<BookingMemento> {
   const memento = { uploaded: [] as string[], ...bookingMemento }
 
   if (memento.uploaded && memento.uploaded.includes(id)) {

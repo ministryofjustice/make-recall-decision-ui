@@ -1,4 +1,4 @@
-import { transformVulnerabilities } from './transformVulnerabilities'
+import transformVulnerabilities from './transformVulnerabilities'
 import { VulnerabilitiesResponse } from '../../../@types/make-recall-decision-api'
 
 describe('transformVulnerabilities', () => {

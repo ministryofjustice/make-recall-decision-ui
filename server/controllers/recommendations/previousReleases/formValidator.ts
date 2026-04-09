@@ -1,5 +1,5 @@
-import { routeUrls } from '../../../routes/routeUrls'
-import { strings } from '../../../textStrings/en'
+import routeUrls from '../../../routes/routeUrls'
+import strings from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { getExistingReleaseDates } from '../addPreviousRelease/formValidator'
 import { isDefined, isNumber } from '../../../utils/utils'
@@ -10,10 +10,7 @@ import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } f
 import { ValidationError } from '../../../@types/dates'
 import { YesNoValues } from '../formOptions/yesNo'
 
-export const validatePreviousReleases = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validatePreviousReleases = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -73,7 +70,7 @@ export const validatePreviousReleases = async ({
         id: 'releaseUnderECSL',
         text: strings.errors.noReleaseUnderECSLSelected,
         errorId: 'noReleaseUnderECSLSelected',
-      })
+      }),
     )
   } else if (releaseUnderECSL === 'YES') {
     const dateOfRelease = extractDateFieldsToDateParts('dateOfRelease', requestBody)
@@ -92,7 +89,7 @@ export const validatePreviousReleases = async ({
           text: formatValidationErrorMessage(dateOfReleaseIso, 'date of release'),
           errorId: dateOfReleaseIso.errorId,
           values: dateOfRelease as Record<string, string>,
-        })
+        }),
       )
     }
 
@@ -112,7 +109,7 @@ export const validatePreviousReleases = async ({
           text: formatValidationErrorMessage(conditionalReleaseDateIso, 'conditional release date'),
           errorId: conditionalReleaseDateIso.errorId,
           values: conditionalReleaseDate as Record<string, string>,
-        })
+        }),
       )
     }
 
@@ -144,3 +141,5 @@ export const validatePreviousReleases = async ({
     nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`,
   }
 }
+
+export default validatePreviousReleases

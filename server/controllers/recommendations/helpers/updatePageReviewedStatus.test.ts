@@ -1,4 +1,4 @@
-import { updatePageReviewedStatus } from './updatePageReviewedStatus'
+import updatePageReviewedStatus from './updatePageReviewedStatus'
 import { updateRecommendation } from '../../../data/makeDecisionApiClient'
 
 jest.mock('../../../data/makeDecisionApiClient')

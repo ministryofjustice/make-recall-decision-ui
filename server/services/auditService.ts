@@ -2,7 +2,7 @@ import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs'
 import logger from '../../logger'
 import config from '../config'
 
-export class AuditService {
+class AuditService {
   private sqsClient: SQSClient
 
   constructor(private readonly queueUrl = config.apis.audit.queueUrl) {
@@ -194,7 +194,7 @@ export class AuditService {
         new SendMessageCommand({
           MessageBody: message,
           QueueUrl: this.queueUrl,
-        })
+        }),
       )
 
       logger.info(`SQS message sent (${messageResponse.MessageId})`)
@@ -205,3 +205,5 @@ export class AuditService {
     }
   }
 }
+
+export default AuditService

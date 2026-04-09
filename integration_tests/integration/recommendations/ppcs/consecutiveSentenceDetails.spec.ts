@@ -1,12 +1,12 @@
 import { testSummaryList } from '../../../componentTests/summaryList.tests'
-import { RECOMMENDATION_STATUS } from '../../../../server/middleware/recommendationStatus'
+import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
 import { PrisonSentenceSequenceGenerator } from '../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
-import { defaultUpdateRecommendationResponse } from '../_data'
-import { CUSTODY_GROUP } from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import defaultUpdateRecommendationResponse from '../_data'
+import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { PrisonSentence } from '../../../../server/@types/make-recall-decision-api/models/PrisonSentence'
 import { PrisonSentenceOptions } from '../../../../data/prisonSentences/prisonSentenceGenerator'
-import { setUpSessionForPpcs } from './util'
+import setUpSessionForPpcs from './util'
 
 context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', () => {
   const crn = 'X34983'
@@ -125,7 +125,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
         cy.pageHeading().should('contain', 'View the index offence and its consecutive sentences')
         cy.get('.govuk-body').should(
           'contain.text',
-          'The index offence is the first sentence in the consecutive sequence.'
+          'The index offence is the first sentence in the consecutive sequence.',
         )
         cy.get('h2').should('exist').should('contain', 'Offence sequence')
       })
@@ -149,7 +149,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             'indexSentence',
             defaultExpectedSentenceSequence.indexSentence,
             expectedLabels.indexOffence,
-            [{ key: expectedLabels.sentenceLength, value: expectedSentenceLength }]
+            [{ key: expectedLabels.sentenceLength, value: expectedSentenceLength }],
           )
         })
 
@@ -168,7 +168,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
         it('Consecutive sentence - with single concurrent sentence', () => {
           testConsecutiveGroup(2, 3, 2, ['sentence-seq-2-initial', 'sentence-seq-2-1'])
           const concurrentSentences = new Map(Object.entries(defaultExpectedSentenceSequence.sentencesInSequence)).get(
-            '2'
+            '2',
           )
 
           const firstConcurrentSentence = concurrentSentences.at(0)
@@ -215,7 +215,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             'sentence-seq-4-3',
           ])
           const concurrentSentences = new Map(Object.entries(defaultExpectedSentenceSequence.sentencesInSequence)).get(
-            '5'
+            '5',
           )
 
           const firstConcurrentSentence = concurrentSentences.at(0)
@@ -257,7 +257,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     id: string,
     expectedSentence: PrisonSentence,
     expectedOffenceLabel: string,
-    expectedTerms: { key: string; value: string }[]
+    expectedTerms: { key: string; value: string }[],
   ) => {
     cy.get(`dl#${id}`).should('exist').as('sentenceSummary')
     testSummaryList(cy.get('@sentenceSummary'), {
@@ -278,7 +278,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     index: number,
     titleSequenceLine: number,
     consecutiveTo: 'index' | number,
-    expectedSummaryListIds: string[]
+    expectedSummaryListIds: string[],
   ) => {
     cy.get(`#consecutive-group-${index}`)
       .should('exist')
@@ -317,7 +317,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
       .should('have.class', 'govuk-heading-s')
       .should(
         'contain.text',
-        `${expectedConcurrentSentenceCount} concurrent sentence${expectedConcurrentSentenceCount > 1 ? 's' : ''}`
+        `${expectedConcurrentSentenceCount} concurrent sentence${expectedConcurrentSentenceCount > 1 ? 's' : ''}`,
       )
 
     cy.get('@details').find('div.govuk-details__text').should('exist').as('content')

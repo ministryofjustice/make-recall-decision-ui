@@ -1,7 +1,7 @@
 import { flagIsActive, hasRole, ppcsCustodyGroup, statusIsActive } from './check'
 import { STATUSES } from './recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from './authorisationMiddleware'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../data/makeDecisionApiClient')
 

@@ -1,10 +1,10 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { YesNoValues } from '../formOptions/yesNo'
 
-export const validateIsExtendedSentence = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
+const validateIsExtendedSentence = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   const { isExtendedSentence, currentSavedValue } = requestBody
 
   const isNo = isExtendedSentence === YesNoValues.NO
@@ -41,3 +41,5 @@ export const validateIsExtendedSentence = async ({ requestBody }: FormValidatorA
   }
   return { valuesToSave }
 }
+
+export default validateIsExtendedSentence

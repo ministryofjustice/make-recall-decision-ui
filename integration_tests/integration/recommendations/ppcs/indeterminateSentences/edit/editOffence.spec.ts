@@ -1,9 +1,9 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
-import { setUpSessionForPpcs } from '../../util'
+import setUpSessionForPpcs from '../../util'
 
 context('Indeterminate Sentence - Edit Offence Page', () => {
   const recommendationId = '123'
@@ -54,7 +54,7 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
           textAreaId,
           ppudOffenceDescription,
           updatedPpudOffenceDescription,
-          updatedPpudOffenceDescriptionComment
+          updatedPpudOffenceDescriptionComment,
         )
       })
     })
@@ -89,7 +89,7 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
           textAreaId,
           ppudOffenceDescription,
           updatedPpudOffenceDescription,
-          updatedPpudOffenceDescriptionComment
+          updatedPpudOffenceDescriptionComment,
         )
       })
     })
@@ -103,7 +103,13 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
         cy.get('@offenceDescriptionSelectWrapper').find('input').clear()
         cy.get('button').click()
         testForErrorPageTitle()
-        testForErrorSummary([{ href: `${autocompleteId}` }])
+        testForErrorSummary([
+          {
+            href: `${autocompleteId}`,
+            message: 'Select a matching index offence from the list',
+            checkFieldHasErrorStyling: false, // autocomplete doesn't get highlighted with error styling; change this if a way is found to do it
+          },
+        ])
       })
     })
   })
@@ -128,7 +134,7 @@ function testPageContent(
   textAreaId: string,
   ppudOffenceDescription: string,
   updatedPpudOffenceDescription: string,
-  updatedPpudOffenceDescriptionComment: string
+  updatedPpudOffenceDescriptionComment: string,
 ) {
   // Page Headings and body content
   cy.pageHeading().should('contain', 'Edit offence')

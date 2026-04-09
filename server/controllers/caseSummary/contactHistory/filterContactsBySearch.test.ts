@@ -1,4 +1,4 @@
-import { filterContactsBySearch } from './filterContactsBySearch'
+import filterContactsBySearch from './filterContactsBySearch'
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 
 describe('filterContactsBySearch', () => {

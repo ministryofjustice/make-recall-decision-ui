@@ -1,4 +1,4 @@
-import { inputDisplayValuesContraband } from './inputDisplayValues'
+import inputDisplayValuesContraband from './inputDisplayValues'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('inputDisplayValuesContraband', () => {

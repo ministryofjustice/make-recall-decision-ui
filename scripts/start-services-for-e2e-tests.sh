@@ -55,7 +55,7 @@ if [[ "${BUILD_HMPPS_AUTH}" == "true" ]]; then
   printf "\n\nBuilding hmpps-auth\n\n"
   pushd "${AUTH_DIR}"
   git pull origin main
-  docker build . --tag quay.io/hmpps/hmpps-auth:latest
+  docker build . --tag ghcr.io/ministryofjustice/hmpps-auth:latest
   popd
 fi
 

@@ -3,10 +3,10 @@ import { randomUUID } from 'node:crypto'
 import { faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import editCustodyGroupController from './editCustodyGroupController'
-import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { randomEnum } from '../../../../@types/enum.testFactory'
+import CUSTODY_GROUP from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import randomEnum from '../../../../@types/enum.testFactory'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
-import { featureFlags } from '../../../../@types/featureFlags.testFactory'
+import featureFlags from '../../../../@types/featureFlags.testFactory'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import {
   bookRecallToPpud,
@@ -15,7 +15,7 @@ import {
 import { BookRecallToPpud } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { calculatePartACustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { determineErrorId, reloadPageWithError } from '../validation/fieldValidation'
-import { randomErrorId } from '../../../../textStrings/en.testFactory'
+import randomErrorId from '../../../../textStrings/en.testFactory'
 import { BookRecallToPpudGenerator } from '../../../../../data/recommendations/bookRecallToPpudGenerator'
 
 jest.mock('../../../../data/makeDecisionApiClient')
@@ -36,6 +36,7 @@ describe('get', () => {
         recommendation: {
           bookRecallToPpud: initialBookRecallToPpud,
         },
+        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const next = mockNext()
@@ -55,7 +56,10 @@ describe('get', () => {
         partACustodyGroup,
       },
     })
-    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(res.locals.recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(
+      res.locals.recommendation,
+      res.locals.flags.flagFTR56Enabled,
+    )
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/editCustodyGroup')
     expect(next).toHaveBeenCalled()
   })
@@ -68,6 +72,7 @@ describe('get', () => {
         recommendation: {
           bookRecallToPpud: bookRecallToPpud(),
         },
+        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const next = mockNext()
@@ -88,7 +93,10 @@ describe('get', () => {
         partACustodyGroup,
       },
     })
-    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(res.locals.recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(
+      res.locals.recommendation,
+      res.locals.flags.flagFTR56Enabled,
+    )
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/editCustodyGroup')
     expect(next).toHaveBeenCalled()
   })

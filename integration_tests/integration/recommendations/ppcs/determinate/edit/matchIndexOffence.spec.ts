@@ -1,16 +1,16 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { ppcsPaths } from '../../../../../../server/routes/paths/ppcs'
-import { routes } from '../../../../../../api/routes'
-import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import ppcsPaths from '../../../../../../server/routes/paths/ppcs'
+import routes from '../../../../../../api/routes'
+import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { formatDateTimeFromIsoString } from '../../../../../../server/utils/dates/formatting'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 import {
   OfferedOffence,
   PpudSentence,
 } from '../../../../../../server/@types/make-recall-decision-api/models/RecommendationResponse'
-import { setUpSessionForPpcs } from '../../util'
+import setUpSessionForPpcs from '../../util'
 
 context('Determinate sentence - match index offence page', () => {
   const recommendationId = faker.number.int({ min: 1 })
@@ -46,7 +46,7 @@ context('Determinate sentence - match index offence page', () => {
         },
       })
       const selectedNomisOffence = recommendationWithNoMatchingDone.nomisIndexOffence.allOptions.find(
-        o => o.offenderChargeId === recommendationWithNoMatchingDone.nomisIndexOffence.selected
+        o => o.offenderChargeId === recommendationWithNoMatchingDone.nomisIndexOffence.selected,
       )
       beforeEach(() => {
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoMatchingDone })
@@ -73,7 +73,7 @@ context('Determinate sentence - match index offence page', () => {
           },
         })
         const selectedNomisOffence = recommendationWithMatchingDone.nomisIndexOffence.allOptions.find(
-          o => o.offenderChargeId === recommendationWithMatchingDone.nomisIndexOffence.selected
+          o => o.offenderChargeId === recommendationWithMatchingDone.nomisIndexOffence.selected,
         )
         beforeEach(() => {
           cy.task('getRecommendation', { statusCode: 200, response: recommendationWithMatchingDone })
@@ -88,7 +88,7 @@ context('Determinate sentence - match index offence page', () => {
             selectedNomisOffence,
             null,
             updatedPpudOffenceDescription,
-            updatedPpudOffenceDescriptionComment
+            updatedPpudOffenceDescriptionComment,
           )
         })
       })
@@ -104,7 +104,7 @@ context('Determinate sentence - match index offence page', () => {
           },
         })
         const selectedNomisOffence = recommendationWithMatchingDone.nomisIndexOffence.allOptions.find(
-          o => o.offenderChargeId === recommendationWithMatchingDone.nomisIndexOffence.selected
+          o => o.offenderChargeId === recommendationWithMatchingDone.nomisIndexOffence.selected,
         )
         const selectedPpudOffence = faker.helpers.arrayElement(recommendationWithMatchingDone.ppudOffender.sentences)
         recommendationWithMatchingDone.bookRecallToPpud.ppudSentenceId = selectedPpudOffence.id
@@ -122,7 +122,7 @@ context('Determinate sentence - match index offence page', () => {
             selectedNomisOffence,
             selectedPpudOffence,
             updatedPpudOffenceDescription,
-            updatedPpudOffenceDescriptionComment
+            updatedPpudOffenceDescriptionComment,
           )
         })
       })
@@ -169,20 +169,20 @@ function testPageContent(
   selectedNomisOffence: OfferedOffence,
   selectedPpudSentence?: PpudSentence,
   updatedPpudOffenceDescription?: string,
-  updatedPpudOffenceDescriptionComment?: string
+  updatedPpudOffenceDescriptionComment?: string,
 ) {
   const isNewSentence = !selectedPpudSentence
 
   // Page Headings and body content
   cy.pageHeading().should(
     'contain',
-    isNewSentence ? 'Select a matching index offence in PPUD' : 'Change index offence or add a comment'
+    isNewSentence ? 'Select a matching index offence in PPUD' : 'Change index offence or add a comment',
   )
 
   if (isNewSentence) {
     cy.get('.govuk-body').should(
       'contain.text',
-      'You need to select an offence because the offences listed in PPUD and NOMIS do not match.'
+      'You need to select an offence because the offences listed in PPUD and NOMIS do not match.',
     )
 
     cy.get('.govuk-inset-text')
@@ -195,7 +195,7 @@ function testPageContent(
         formatDateTimeFromIsoString({
           isoDate: selectedNomisOffence.sentenceStartDate,
           dateOnly: true,
-        })
+        }),
       )
       .should('contain.text', 'Sentence expiry date')
       .should(
@@ -203,7 +203,7 @@ function testPageContent(
         formatDateTimeFromIsoString({
           isoDate: selectedNomisOffence.sentenceEndDate,
           dateOnly: true,
-        })
+        }),
       )
   } else {
     setTextListAliases()
@@ -232,7 +232,7 @@ function testPageContent(
       'contain.text',
       isNewSentence
         ? 'Now select the nearest matching offence from the list in PPUD'
-        : 'Select the nearest matching offence from the list in PPUD'
+        : 'Select the nearest matching offence from the list in PPUD',
     )
 
   cy.get('@offenceDescriptionSelectWrapper').find('input').should('have.id', autocompleteId)

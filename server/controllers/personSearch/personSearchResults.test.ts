@@ -1,8 +1,8 @@
 import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { personSearchResults } from './personSearchResults'
+import personSearchResults from './personSearchResults'
 import { searchPersons, getPersonsByCrn } from '../../data/makeDecisionApiClient'
-import { AuditService } from '../../services/auditService'
+import AuditService from '../../services/auditService'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -98,7 +98,7 @@ describe('personSearchResults', () => {
       {
         crn: 'A123',
       },
-      {}
+      {},
     )
 
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({

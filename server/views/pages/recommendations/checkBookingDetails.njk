@@ -140,6 +140,20 @@
             {% endif %}
         {% endset %}
 
+        {% set determinateOrIndeterminateRow = {
+            key: "Determinate or indeterminate",
+            value: recommendation.bookRecallToPpud.custodyGroup
+        } %}
+        {# If there's an existing PPUD record, allow the user to edit the custody group.
+           Otherwise, don't show the edit link as new PPUD records can only be determinate.#}
+        {% if recommendation.ppudOffender %}
+            {% set determinateOrIndeterminateRow = determinateOrIndeterminateRow | merge({
+                    value: '<span id="custodyGroup"></span>' + blankSafe(recommendation.bookRecallToPpud.custodyGroup, true, 'You must enter determinate or indeterminate'),
+                    actions: [{ id: editIdPrefix+'custodygroup', text: editText, href: 'edit-custody-group', visuallyHidden: 'custody group' }],
+                    error: errors.custodyGroup
+                })
+            %}
+        {% endif %}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 {{
@@ -147,7 +161,7 @@
                         id: "check-booking-custody-details-list",
                         rows: [
                             { key: "Custody status", value: custodyStatusBlock },
-                            { key: 'Determinate or indeterminate', value: '<span id="custodyGroup"></span>' + blankSafe(recommendation.bookRecallToPpud.custodyGroup, true, 'You must enter determinate or indeterminate'), actions: [{ id: editIdPrefix+'custodygroup', text: editText, href: 'edit-custody-group', visuallyHidden: 'custody group' }], error: errors.custodyGroup },
+                            determinateOrIndeterminateRow,
                             { key: 'Current establishment', value: '<span id="currentEstablishment"></span>' + blankSafe(recommendation.bookRecallToPpud.currentEstablishment, true, 'Enter an establishment'), actions: [{ id: editIdPrefix+'currentestablishment', text: editText, href: 'edit-current-establishment', visuallyHidden: 'current establishment' }], error: errors.currentEstablishment }
                         ]
                     })

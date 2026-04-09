@@ -1,4 +1,4 @@
-import { inputDisplayValuesAddPreviousRelease } from './inputDisplayValues'
+import inputDisplayValuesAddPreviousRelease from './inputDisplayValues'
 
 describe('inputDisplayValuesAddPreviousRelease', () => {
   it("should use empty strings for value if there's an error for value", () => {

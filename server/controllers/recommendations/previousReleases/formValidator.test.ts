@@ -1,4 +1,4 @@
-import { validatePreviousReleases } from './formValidator'
+import validatePreviousReleases from './formValidator'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('validatePreviousReleases', () => {

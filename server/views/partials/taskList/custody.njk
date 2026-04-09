@@ -16,12 +16,14 @@
             </span>
             <span id='task-list-status-localPoliceContact'>{{ taskStatus({ hasData: hasData(recommendation.localPoliceContact.contactName) }) }}</span>
         </li>
-        <li class="moj-task-list__item">
-            <span class="moj-task-list__task-name">
-                <a aria-describedby='task-list-status-isUnderIntegratedOffenderManagement' href="{{ urlInfo.basePath }}iom">{{ pageHeadings.integratedOffenderManagement }}</a>
-            </span>
-            <span id='task-list-status-isUnderIntegratedOffenderManagement'>{{ taskStatus({ hasData: hasData(recommendation.isUnderIntegratedOffenderManagement.selected) }) }}</span>
-        </li>
+        {% if not ftr56Enabled %}
+          <li class="moj-task-list__item">
+              <span class="moj-task-list__task-name">
+                  <a aria-describedby='task-list-status-isUnderIntegratedOffenderManagement' href="{{ urlInfo.basePath }}iom">{{ pageHeadings.integratedOffenderManagement }}</a>
+              </span>
+              <span id='task-list-status-isUnderIntegratedOffenderManagement'>{{ taskStatus({ hasData: hasData(recommendation.isUnderIntegratedOffenderManagement.selected) }) }}</span>
+          </li>
+        {% endif %}
         {% if recommendation.isInCustody == false %}
             <li class="moj-task-list__item">
                 <span class="moj-task-list__task-name">

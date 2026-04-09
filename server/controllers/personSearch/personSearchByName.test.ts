@@ -1,5 +1,5 @@
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { personSearchByName } from './personSearchByName'
+import personSearchByName from './personSearchByName'
 
 describe('personSearchByName', () => {
   it('normal operation', async () => {

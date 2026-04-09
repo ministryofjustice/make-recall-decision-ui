@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { routeUrls } from '../../routes/routeUrls'
-import { inputDisplayValuesAddPreviousRecall } from '../recommendations/addPreviousRecall/inputDisplayValues'
+import routeUrls from '../../routes/routeUrls'
+import inputDisplayValuesAddPreviousRecall from '../recommendations/addPreviousRecall/inputDisplayValues'
 import { validateAddPreviousRecall } from '../recommendations/addPreviousRecall/formValidator'
 
 function get(req: Request, res: Response, next: NextFunction) {
@@ -54,7 +54,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-recalls`
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

@@ -1,24 +1,24 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateAlternativesTried = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
+const validateAlternativesTried = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   const { alternativesToRecallTried } = requestBody
   const alternativesList = Array.isArray(alternativesToRecallTried)
     ? alternativesToRecallTried
     : [alternativesToRecallTried]
   const invalidAlternative = alternativesList.some(
-    alternativeId => !isValueValid(alternativeId, 'alternativesToRecallTried')
+    alternativeId => !isValueValid(alternativeId, 'alternativesToRecallTried'),
   )
   const missingDetails = alternativesList.filter(alternativeId => {
     const optionShouldHaveDetails = Boolean(
       findListItemByValue<UiFormOption>({
         items: formOptions.alternativesToRecallTried,
         value: alternativeId,
-      })?.detailsLabel
+      })?.detailsLabel,
     )
     const detail = requestBody[`alternativesToRecallTriedDetail-${alternativeId}`]
     const sanitizedDetail = isString(detail) ? stripHtmlTags(detail as string) : ''
@@ -38,7 +38,7 @@ export const validateAlternativesTried = async ({ requestBody }: FormValidatorAr
           id: 'alternativesToRecallTried',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingDetails.length) {
@@ -52,7 +52,7 @@ export const validateAlternativesTried = async ({ requestBody }: FormValidatorAr
             id: `alternativesToRecallTriedDetail-${alternativeId}`,
             text: `${strings.errors.missingDetail} for ${lowerCased}`,
             errorId,
-          })
+          }),
         )
       })
     }
@@ -84,3 +84,5 @@ export const validateAlternativesTried = async ({ requestBody }: FormValidatorAr
 
   return { valuesToSave }
 }
+
+export default validateAlternativesTried

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { getStatuses, ppudUpdateRelease, updateRecommendation } from '../data/makeDecisionApiClient'
 import updateRelease from './updateRelease'
@@ -14,7 +14,7 @@ import {
 } from '../@types/make-recall-decision-api/models/PpudUpdateReleaseRequest'
 import { RecommendationStatusResponseGenerator } from '../../data/recommendationStatus/recommendationStatusResponseGenerator'
 import { PpudUpdateReleaseResponseGenerator } from '../../data/ppud/updateRelease/ppudUpdateReleaseResponseGenerator'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import {
   PractitionerForPartA,
   WhoCompletedPartA,
@@ -29,7 +29,7 @@ function buildExpectedUpdateReleaseRequest(
   recommendation: RecommendationResponse,
   dateOfRelease: string,
   assistantChiefOfficer: PpudContact,
-  offenderManager: PpudContactWithTelephone
+  offenderManager: PpudContactWithTelephone,
 ): PpudUpdateReleaseRequest {
   return {
     dateOfRelease,
@@ -50,7 +50,7 @@ function buildExpectedUpdateReleaseRequest(
 function testSuccessfulReleaseUpdate(
   recommendation: RecommendationResponse,
   offenderManager: PpudContactWithTelephone,
-  dateOfRelease: string
+  dateOfRelease: string,
 ) {
   const bookingMemento = BookingMementoGenerator.generate({
     stage: StageEnum.OFFENCE_BOOKED,
@@ -84,7 +84,7 @@ function testSuccessfulReleaseUpdate(
     recommendation,
     dateOfRelease,
     assistantChiefOfficer,
-    offenderManager
+    offenderManager,
   )
 
   let returnedMemento: BookingMemento
@@ -106,7 +106,7 @@ function testSuccessfulReleaseUpdate(
       token,
       bookingMemento.offenderId,
       bookingMemento.sentenceId,
-      expectedUpdateReleaseRequest
+      expectedUpdateReleaseRequest,
     )
   })
   it('updates the recommendation', () => {
@@ -126,7 +126,7 @@ function testSuccessfulReleaseUpdate(
 
 function testSuccessfulReleaseUpdateAlternatives(
   custodyGroup: CUSTODY_GROUP,
-  calculateExpectedDateOfRelease: (recommendation: RecommendationResponse) => string
+  calculateExpectedDateOfRelease: (recommendation: RecommendationResponse) => string,
 ) {
   ;[true, false].forEach(isPersonProbationPractitionerForOffender => {
     describe(`probation practitioner ${isPersonProbationPractitionerForOffender ? 'completed' : 'did not complete'} the part A`, () => {
@@ -154,7 +154,7 @@ describe('update release', () => {
   describe('not in expected stage', () => {
     const bookingMemento = BookingMementoGenerator.generate({
       stage: faker.helpers.arrayElement(
-        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENCE_BOOKED)
+        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENCE_BOOKED),
       ),
     })
     let returnedMemento: BookingMemento

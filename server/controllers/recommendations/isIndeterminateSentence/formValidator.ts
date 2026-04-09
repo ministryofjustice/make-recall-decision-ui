@@ -1,10 +1,10 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { YesNoValues } from '../formOptions/yesNo'
 
-export const validateIsIndeterminateSentence = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
+const validateIsIndeterminateSentence = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
 
@@ -51,3 +51,5 @@ export const validateIsIndeterminateSentence = async ({ requestBody }: FormValid
     valuesToSave,
   }
 }
+
+export default validateIsIndeterminateSentence

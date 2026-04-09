@@ -1,9 +1,12 @@
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
-import { generateBooleanCombinations } from '../testUtils/booleanUtils'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
+import generateBooleanCombinations from '../testUtils/booleanUtils'
 import {
+  isFixedTermRecallMandatory,
   isFixedTermRecallMandatoryForRecommendation,
   isFixedTermRecallMandatoryForValueKeys,
-  isFixedTermRecallMandatory,
+  isRecommendationDiscretionaryRecall,
+  isStandardRecallMandatoryForRecommendationFTR56,
 } from './fixedTermRecallUtils'
 
 describe('isFixedTermRecallMandatoryForRecommendation', () => {
@@ -18,8 +21,9 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
           isRecalledOnNewChargedOffence: undefined,
           isServingFTSentenceForTerroristOffence: undefined,
           hasBeenChargedWithTerroristOrStateThreatOffence: undefined,
-        })
-      )
+        }),
+        false,
+      ),
     ).toBeFalsy()
   })
   it(' Returns true when all exclusion criteria fields are false', () => {
@@ -33,28 +37,14 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
           isRecalledOnNewChargedOffence: false,
           isServingFTSentenceForTerroristOffence: false,
           hasBeenChargedWithTerroristOrStateThreatOffence: false,
-        })
-      )
+        }),
+        false,
+      ),
     ).toBeTruthy()
-  })
-  it(' Returns false when all exclusion criteria fields are true', () => {
-    expect(
-      isFixedTermRecallMandatoryForRecommendation(
-        RecommendationResponseGenerator.generate({
-          isSentence48MonthsOrOver: true,
-          isUnder18: true,
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-          isRecalledOnNewChargedOffence: true,
-          isServingFTSentenceForTerroristOffence: true,
-          hasBeenChargedWithTerroristOrStateThreatOffence: true,
-        })
-      )
-    ).toBeFalsy()
   })
   describe(' Returns false when any exclusion criteria fields are true', () => {
     generateBooleanCombinations(7)
-      .filter(c => !c.every(b => !b))
+      .filter(c => c.some(b => b))
       .forEach(combination => {
         it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
           expect(
@@ -67,11 +57,132 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
                 isRecalledOnNewChargedOffence: combination[4],
                 isServingFTSentenceForTerroristOffence: combination[5],
                 hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
-              })
-            )
+              }),
+              false,
+            ),
           ).toBeFalsy()
         })
       })
+  })
+})
+
+describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', () => {
+  describe('when sentence Group is YOUTH_SDS', () => {
+    it('returns false when no exclusion criteria fields are set', () => {
+      expect(
+        isFixedTermRecallMandatoryForRecommendation(
+          RecommendationResponseGenerator.generate({
+            sentenceGroup: SentenceGroup.YOUTH_SDS,
+            isYouthSentenceOver12Months: undefined,
+            isYouthChargedWithSeriousOffence: undefined,
+            isMappaLevel2Or3: undefined,
+          }),
+          true,
+        ),
+      ).toBeFalsy()
+    })
+
+    it('returns true when all exclusion criteria fields are false', () => {
+      expect(
+        isFixedTermRecallMandatoryForRecommendation(
+          RecommendationResponseGenerator.generate({
+            sentenceGroup: SentenceGroup.YOUTH_SDS,
+            isYouthSentenceOver12Months: false,
+            isYouthChargedWithSeriousOffence: false,
+            isMappaLevel2Or3: false,
+          }),
+          true,
+        ),
+      ).toBeTruthy()
+    })
+
+    describe(' Returns false when any exclusion criteria fields are true', () => {
+      generateBooleanCombinations(3)
+        .filter(c => c.some(b => b))
+        .forEach(combination => {
+          it(`${combination[0]} - ${combination[1]} - ${combination[2]}`, () => {
+            expect(
+              isFixedTermRecallMandatoryForRecommendation(
+                RecommendationResponseGenerator.generate({
+                  sentenceGroup: SentenceGroup.YOUTH_SDS,
+                  isYouthSentenceOver12Months: combination[0],
+                  isYouthChargedWithSeriousOffence: combination[1],
+                  isMappaLevel2Or3: combination[2],
+                }),
+                true,
+              ),
+            ).toBeFalsy()
+          })
+        })
+    })
+  })
+
+  describe('when sentence Group is ADULT_SDS', () => {
+    it('returns false when no exclusion criteria fields are set', () => {
+      expect(
+        isFixedTermRecallMandatoryForRecommendation(
+          RecommendationResponseGenerator.generate({
+            sentenceGroup: SentenceGroup.ADULT_SDS,
+            isChargedWithOffence: undefined,
+            isServingTerroristOrNationalSecurityOffence: undefined,
+            isAtRiskOfInvolvedInForeignPowerThreat: undefined,
+            wasReferredToParoleBoard244ZB: undefined,
+            wasRepatriatedForMurder: undefined,
+            isServingSOPCSentence: undefined,
+            isServingDCRSentence: undefined,
+            isMappaCategory4: undefined,
+            isMappaLevel2Or3: undefined,
+          }),
+          true,
+        ),
+      ).toBeFalsy()
+    })
+
+    it('returns true when all exclusion criteria fields are false', () => {
+      expect(
+        isFixedTermRecallMandatoryForRecommendation(
+          RecommendationResponseGenerator.generate({
+            sentenceGroup: SentenceGroup.ADULT_SDS,
+            wasReferredToParoleBoard244ZB: false,
+            wasRepatriatedForMurder: false,
+            isServingSOPCSentence: false,
+            isServingDCRSentence: false,
+            isChargedWithOffence: false,
+            isServingTerroristOrNationalSecurityOffence: false,
+            isAtRiskOfInvolvedInForeignPowerThreat: false,
+            isMappaCategory4: false,
+            isMappaLevel2Or3: false,
+          }),
+          true,
+        ),
+      ).toBeTruthy()
+    })
+
+    describe(' Returns false when any exclusion criteria fields are true', () => {
+      generateBooleanCombinations(9)
+        .filter(c => c.some(b => b))
+        .forEach(combination => {
+          it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
+            expect(
+              isFixedTermRecallMandatoryForRecommendation(
+                RecommendationResponseGenerator.generate({
+                  sentenceGroup: SentenceGroup.ADULT_SDS,
+                  isChargedWithOffence: combination[0],
+                  isServingTerroristOrNationalSecurityOffence: combination[1],
+                  isAtRiskOfInvolvedInForeignPowerThreat: combination[2],
+                  wasReferredToParoleBoard244ZB: combination[3],
+                  wasRepatriatedForMurder: combination[4],
+                  isServingSOPCSentence: combination[5],
+                  isServingDCRSentence: combination[6],
+                  isMappaCategory4: combination[7],
+                  isMappaLevel2Or3: combination[8],
+                }),
+                true,
+              ),
+            ).toBeFalsy()
+          })
+        })
+    })
   })
 })
 
@@ -86,7 +197,7 @@ describe('isFixedTermMandatoryForValueKeys', () => {
         isRecalledOnNewChargedOffence: undefined,
         isServingFTSentenceForTerroristOffence: undefined,
         hasBeenChargedWithTerroristOrStateThreatOffence: undefined,
-      })
+      }),
     ).toBeFalsy()
   })
   it(' Returns true when all exclusion criteria fields are false', () => {
@@ -99,37 +210,28 @@ describe('isFixedTermMandatoryForValueKeys', () => {
         isRecalledOnNewChargedOffence: false,
         isServingFTSentenceForTerroristOffence: false,
         hasBeenChargedWithTerroristOrStateThreatOffence: false,
-      })
+      }),
     ).toBeTruthy()
   })
-  it(' Returns false when all exclusion criteria fields are true', () => {
-    expect(
-      isFixedTermRecallMandatoryForRecommendation({
-        isSentence48MonthsOrOver: true,
-        isUnder18: true,
-        isMappaCategory4: true,
-        isMappaLevel2Or3: true,
-        isRecalledOnNewChargedOffence: true,
-        isServingFTSentenceForTerroristOffence: true,
-        hasBeenChargedWithTerroristOrStateThreatOffence: true,
-      })
-    ).toBeFalsy()
-  })
+
   describe(' Returns false when any exclusion criteria fields are true', () => {
     generateBooleanCombinations(7)
-      .filter(c => !c.every(b => !b))
+      .filter(c => c.some(b => b))
       .forEach(combination => {
         it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
           expect(
-            isFixedTermRecallMandatoryForRecommendation({
-              isSentence48MonthsOrOver: combination[0],
-              isUnder18: combination[1],
-              isMappaCategory4: combination[2],
-              isMappaLevel2Or3: combination[3],
-              isRecalledOnNewChargedOffence: combination[4],
-              isServingFTSentenceForTerroristOffence: combination[5],
-              hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
-            })
+            isFixedTermRecallMandatoryForRecommendation(
+              {
+                isSentence48MonthsOrOver: combination[0],
+                isUnder18: combination[1],
+                isMappaCategory4: combination[2],
+                isMappaLevel2Or3: combination[3],
+                isRecalledOnNewChargedOffence: combination[4],
+                isServingFTSentenceForTerroristOffence: combination[5],
+                hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
+              },
+              false,
+            ),
           ).toBeFalsy()
         })
       })
@@ -139,18 +241,16 @@ describe('isFixedTermMandatoryForValueKeys', () => {
 describe('isFixedTermRecallMandatory', () => {
   it(' Returns false when no exclusion criteria fields are set', () => {
     expect(
-      isFixedTermRecallMandatory(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+      isFixedTermRecallMandatory(undefined, undefined, undefined, undefined, undefined, undefined, undefined),
     ).toBeFalsy()
   })
   it(' Returns true when all exclusion criteria fields are false', () => {
     expect(isFixedTermRecallMandatory(false, false, false, false, false, false, false)).toBeTruthy()
   })
-  it(' Returns false when all exclusion criteria fields are true', () => {
-    expect(isFixedTermRecallMandatory(true, true, true, true, true, true, true)).toBeFalsy()
-  })
+
   describe(' Returns false when any exclusion criteria fields are true', () => {
     generateBooleanCombinations(7)
-      .filter(c => !c.every(b => !b))
+      .filter(c => c.some(b => b))
       .forEach(combination => {
         it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
           expect(
@@ -161,9 +261,127 @@ describe('isFixedTermRecallMandatory', () => {
               combination[3],
               combination[4],
               combination[5],
-              combination[6]
-            )
+              combination[6],
+            ),
           ).toBeFalsy()
+        })
+      })
+  })
+})
+
+describe('isRecommendationDiscretionaryRecall', () => {
+  it('returns false when all exclusion criteria are false', () => {
+    expect(
+      isRecommendationDiscretionaryRecall({
+        isMappaLevel2Or3: false,
+        isYouthChargedWithSeriousOffence: false,
+        isYouthSentenceOver12Months: false,
+      }),
+    ).toBeFalsy()
+  })
+
+  generateBooleanCombinations(3)
+    .filter(c => c.some(b => b))
+    .forEach(combination => {
+      it(`${combination[0]} - ${combination[1]} - ${combination[2]}`, () => {
+        expect(
+          isRecommendationDiscretionaryRecall({
+            isYouthChargedWithSeriousOffence: combination[0],
+            isYouthSentenceOver12Months: combination[1],
+            isMappaLevel2Or3: combination[2],
+          }),
+        ).toBeTruthy()
+      })
+    })
+})
+
+describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
+  it(' Returns false when no exclusion criteria fields are set', () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: 'none',
+          isMappaCategory4: undefined,
+          isMappaLevel2Or3: undefined,
+          wasReferredToParoleBoard244ZB: undefined,
+          wasRepatriatedForMurder: undefined,
+          isServingSOPCSentence: undefined,
+          isServingDCRSentence: undefined,
+          isChargedWithOffence: undefined,
+          isServingTerroristOrNationalSecurityOffence: undefined,
+          isAtRiskOfInvolvedInForeignPowerThreat: undefined,
+          isYouthSentenceOver12Months: undefined,
+          isYouthChargedWithSeriousOffence: undefined,
+        }),
+      ),
+    ).toBeFalsy()
+  })
+  it(` Returns false when is Youth SDS`, () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+        }),
+      ),
+    ).toBeFalsy()
+  })
+  it(` Returns true when is Indeterminate`, () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.INDETERMINATE,
+        }),
+      ),
+    ).toBeTruthy()
+  })
+  it(` Returns true when is Extended`, () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.EXTENDED,
+        }),
+      ),
+    ).toBeTruthy()
+  })
+  it(' Returns false when is Adult SDS and all adult exclusion criteria fields are false', () => {
+    expect(
+      isStandardRecallMandatoryForRecommendationFTR56(
+        RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+          isMappaCategory4: false,
+          isMappaLevel2Or3: false,
+          wasReferredToParoleBoard244ZB: false,
+          wasRepatriatedForMurder: false,
+          isServingSOPCSentence: false,
+          isServingDCRSentence: false,
+          isChargedWithOffence: false,
+          isServingTerroristOrNationalSecurityOffence: false,
+          isAtRiskOfInvolvedInForeignPowerThreat: false,
+        }),
+      ),
+    ).toBeFalsy()
+  })
+  describe(' Returns true when is Adult SDS and any adult exclusion criteria fields are true', () => {
+    generateBooleanCombinations(9)
+      .filter(c => c.some(b => b))
+      .forEach(combination => {
+        it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
+          expect(
+            isStandardRecallMandatoryForRecommendationFTR56(
+              RecommendationResponseGenerator.generate({
+                sentenceGroup: SentenceGroup.ADULT_SDS,
+                isMappaCategory4: combination[0],
+                isMappaLevel2Or3: combination[1],
+                wasReferredToParoleBoard244ZB: combination[2],
+                wasRepatriatedForMurder: combination[3],
+                isServingSOPCSentence: combination[4],
+                isServingDCRSentence: combination[5],
+                isChargedWithOffence: combination[6],
+                isServingTerroristOrNationalSecurityOffence: combination[7],
+                isAtRiskOfInvolvedInForeignPowerThreat: combination[8],
+              }),
+            ),
+          ).toBeTruthy()
         })
       })
   })

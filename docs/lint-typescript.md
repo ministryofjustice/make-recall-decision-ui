@@ -1,7 +1,7 @@
 # Linting and Typescript
 
 ## Pre-commit hooks
-After `npm install`, files will be created under both .git/hooks and .husky, that will automatically lint (and fix) any staged files in your commits, plus run a type check.
+After `npm run setup`, files will be created under both .git/hooks and .husky, that will automatically lint (and fix) any staged files in your commits, plus run a type check.
 
 ## Typescript definitions for make-recall-decision-api
 Generated from manage-recalls-api [Swagger](https://make-recall-decision-api-dev.hmpps.service.justice.gov.uk/swagger-ui/index.html).

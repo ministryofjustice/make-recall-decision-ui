@@ -1,10 +1,10 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { ppudCreateSentence, ppudUpdateSentence, updateRecommendation } from '../data/makeDecisionApiClient'
 import createOrUpdateSentence from './createOrUpdateSentence'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { BookingMementoGenerator } from '../../data/bookingMemento/bookingMementoGenerator'
 import BookingMemento from './BookingMemento'
 import { PpudCreateSentenceResponseGenerator } from '../../data/ppud/createSentenceResponse/ppudCreateSentenceResponseGenerator'
@@ -29,7 +29,7 @@ const featureFlags = { xyz: true }
 function expectedDeterminateSentenceRequest(
   bookRecallToPpud: BookRecallToPpud,
   nomisOffence: OfferedOffence,
-  sentenceLength: SentenceLength
+  sentenceLength: SentenceLength,
 ): PpudUpdateSentenceRequest {
   return {
     custodyType: bookRecallToPpud?.custodyType,
@@ -46,7 +46,7 @@ function expectedDeterminateSentenceRequest(
 
 function expectedIndeterminateSentenceRequest(
   selectedPpudSentence: PpudSentence,
-  editedIndeterminateSentenceData: PpudSentenceData
+  editedIndeterminateSentenceData: PpudSentenceData,
 ): PpudUpdateSentenceRequest {
   return {
     custodyType: selectedPpudSentence.custodyType,
@@ -58,7 +58,7 @@ function expectedIndeterminateSentenceRequest(
 function testSentenceCreation(
   recommendation: RecommendationResponse,
   bookingMemento: BookingMemento,
-  expectedSentenceRequest: PpudUpdateSentenceRequest
+  expectedSentenceRequest: PpudUpdateSentenceRequest,
 ) {
   const recommendationForCreation = {
     ...recommendation,
@@ -109,7 +109,7 @@ function testSentenceCreation(
 function testSentenceUpdate(
   recommendation: RecommendationResponse,
   bookingMemento: BookingMemento,
-  expectedSentenceRequest: PpudUpdateSentenceRequest
+  expectedSentenceRequest: PpudUpdateSentenceRequest,
 ) {
   describe('- updating existing PPUD sentence', () => {
     const expectedMemento: BookingMemento = {
@@ -131,7 +131,7 @@ function testSentenceUpdate(
         token,
         bookingMemento.offenderId,
         bookingMemento.sentenceId,
-        expectedSentenceRequest
+        expectedSentenceRequest,
       )
     })
     it('updates the recommendation', () => {
@@ -154,7 +154,7 @@ describe('update sentence', () => {
   describe('not in expected stage', () => {
     const bookingMemento = BookingMementoGenerator.generate({
       stage: faker.helpers.arrayElement(
-        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENDER_BOOKED)
+        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENDER_BOOKED),
       ),
     })
     let returnedMemento: BookingMemento
@@ -187,7 +187,7 @@ describe('update sentence', () => {
         const expectedSentenceRequest = expectedDeterminateSentenceRequest(
           recommendationWithoutCustodialTerm.bookRecallToPpud,
           recommendationWithoutCustodialTerm.nomisIndexOffence.allOptions[0],
-          null
+          null,
         )
 
         testSentenceCreation(recommendationWithoutCustodialTerm, bookingMemento, expectedSentenceRequest)
@@ -222,7 +222,7 @@ describe('update sentence', () => {
         const expectedSentenceRequest = expectedDeterminateSentenceRequest(
           recommendationWithCustodialTerm.bookRecallToPpud,
           recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0],
-          expectedSentenceLength
+          expectedSentenceLength,
         )
 
         testSentenceCreation(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
@@ -242,7 +242,7 @@ describe('update sentence', () => {
       recommendation.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
       const expectedSentenceRequest = expectedIndeterminateSentenceRequest(
         selectedPpudSentence,
-        recommendation.bookRecallToPpud.ppudIndeterminateSentenceData
+        recommendation.bookRecallToPpud.ppudIndeterminateSentenceData,
       )
 
       testSentenceUpdate(recommendation, bookingMemento, expectedSentenceRequest)

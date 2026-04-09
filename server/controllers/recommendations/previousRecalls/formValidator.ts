@@ -1,13 +1,10 @@
-import { routeUrls } from '../../../routes/routeUrls'
-import { strings } from '../../../textStrings/en'
+import routeUrls from '../../../routes/routeUrls'
+import strings from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { getExistingRecallDates } from '../addPreviousRecall/formValidator'
 import { isDefined, isNumber } from '../../../utils/utils'
 
-export const validatePreviousRecalls = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validatePreviousRecalls = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -59,3 +56,5 @@ export const validatePreviousRecalls = async ({
     nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`,
   }
 }
+
+export default validatePreviousRecalls

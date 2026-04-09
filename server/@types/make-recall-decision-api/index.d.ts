@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+ 
 
 export { ActiveRecommendation } from './models/ActiveRecommendation';
 export type { AdditionalLicenceConditionOption } from './models/AdditionalLicenceConditionOption';

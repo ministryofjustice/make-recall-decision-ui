@@ -5,9 +5,9 @@ import checkBookingDetailsController from './checkBookingDetailsController'
 import recommendationApiResponse from '../../../../api/responses/get-recommendation.json'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
-import { randomEnum } from '../../../@types/enum.testFactory'
-import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { getRoute } from './custodyGroupRouter'
+import randomEnum from '../../../@types/enum.testFactory'
+import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import getRoute from './custodyGroupRouter'
 
 jest.mock('../../../data/makeDecisionApiClient')
 jest.mock('../../../utils/dates/formatting')
@@ -99,6 +99,11 @@ const SENT_TO_PPCS_STATUS_TEMPLATE = {
   active: true,
   created: '2023-11-13T09:49:31.371Z',
 }
+const AP_RECORDED_RATIONALE = {
+  name: 'AP_RECORDED_RATIONALE',
+  active: true,
+  created: '2023-11-13T09:49:31.371Z',
+}
 const STATUSES_TEMPLATE = [
   SPO_SIGNED_STATUS_TEMPLATE,
   ACO_SIGNED_STATUS_TEMPLATE,
@@ -148,8 +153,8 @@ describe('get', () => {
 
     const res = mockRes({
       locals: {
-        recommendation: RECOMMENDATION_TEMPLATE,
-        statuses: STATUSES_TEMPLATE,
+        recommendation: { ...RECOMMENDATION_TEMPLATE },
+        statuses: [...STATUSES_TEMPLATE],
         flags: {
           xyz: 1,
         },
@@ -164,9 +169,18 @@ describe('get', () => {
     expect(determinePpudEstablishment).toHaveBeenCalledWith(
       {
         ...RECOMMENDATION_TEMPLATE,
+        bookRecallToPpud: {
+          cro: '1234/2345',
+          currentEstablishment: 'HMP Brixton in PPUD',
+          dateOfBirth: '1970-03-15',
+          firstNames: 'Jane C',
+          lastName: 'Doe',
+          prisonNumber: '1234',
+          receivedDateTime: '2023-11-13T09:49:31.371Z',
+        },
         prisonOffender: expectedPrisonOffender,
       },
-      'token'
+      'token',
     )
 
     expect(updateRecommendation).toHaveBeenCalledWith({
@@ -304,7 +318,31 @@ describe('get', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(res.locals.edited).toStrictEqual({})
   })
+  it('default to determinate custody type if ppud record not found', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
 
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          bookRecallToPpud: {},
+          prisonOffender: {},
+          ppudOffender: null,
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {
+          xyz: 1,
+        },
+      },
+    })
+    const next = mockNext()
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    // PPUD offender should be unchanged
+    expect(res.locals.recommendation.ppudOffender).toEqual(null)
+    // Custody group should default to Determinate as we can only create new PPUD records for determinate sentences
+    expect(res.locals.recommendation.bookRecallToPpud?.custodyGroup).toEqual(CUSTODY_GROUP.DETERMINATE)
+  })
   it('load present blanks and banner for no nomis record found.', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(undefined)
 
@@ -394,6 +432,35 @@ describe('get', () => {
 
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
     expect(next).toHaveBeenCalled()
+  })
+
+  it('uses recall decision date and time as recall received date and time when loading an out of hours recall', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          decisionDateTime: '2026-01-01T08:00:00',
+        },
+        statuses: [...STATUSES_TEMPLATE, AP_RECORDED_RATIONALE],
+        flags: {
+          xyz: 1,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        valuesToSave: expect.objectContaining({
+          bookRecallToPpud: expect.objectContaining({
+            receivedDateTime: '2026-01-01T08:00:00',
+          }),
+        }),
+      }),
+    )
   })
 })
 

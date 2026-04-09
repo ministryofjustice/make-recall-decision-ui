@@ -3,7 +3,7 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { InputDisplayValuesArgs, ValueWithDetails } from '../../../@types/pagesForms'
 import { booleanToYesNo } from '../formOptions/yesNo'
 
-export const inputDisplayValuesFixedTermLicenceConditions = ({
+const inputDisplayValuesFixedTermLicenceConditions = ({
   errors = {},
   unsavedValues = {},
   apiValues,
@@ -15,16 +15,18 @@ export const inputDisplayValuesFixedTermLicenceConditions = ({
   if (!isDefined(errors.hasFixedTermLicenceConditions)) {
     const apiValue = getProperty<RecommendationResponse, boolean>(
       apiValues,
-      'fixedTermAdditionalLicenceConditions.selected'
+      'fixedTermAdditionalLicenceConditions.selected',
     )
     inputDisplayValues.value = (unsavedValues.hasFixedTermLicenceConditions as string) || booleanToYesNo(apiValue)
 
     if (!isDefined(errors.hasFixedTermLicenceConditionsDetails)) {
       inputDisplayValues.details = getProperty<RecommendationResponse, string>(
         apiValues,
-        'fixedTermAdditionalLicenceConditions.details'
+        'fixedTermAdditionalLicenceConditions.details',
       ) as string
     }
   }
   return inputDisplayValues
 }
+
+export default inputDisplayValuesFixedTermLicenceConditions

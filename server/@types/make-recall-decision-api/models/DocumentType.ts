@@ -1,5 +1,7 @@
-export enum DOCUMENT_TYPE {
+enum DOCUMENT_TYPE {
   PART_A = "PART_A",
   NO_RECALL_LETTER = "NO_RECALL_LETTER",
   PREVIEW_PART_A = "PREVIEW_PART_A",
 }
+
+export default DOCUMENT_TYPE

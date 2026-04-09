@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { FeatureFlagDefault } from '../@types/featureFlags'
-import { isDateTimeAfterCurrent, isPreprodOrProd } from '../utils/utils'
+import { isPastDateTime, isPreprodOrProd } from '../utils/utils'
 
 export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagRecommendationsPage: {
@@ -16,16 +16,16 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
       'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
     default: false,
   },
-  flagRiskToSelfEnabled: {
-    label: 'Content updates for Risk to Self',
-    description: 'Content updates to vulnerabilities page',
+  flagFTR56Enabled: {
+    label: 'FTR56/ISR changes',
+    description: 'Enables the behaviour required for the FTR56/ISR policy',
     default: false,
   },
 }
 
 export const determineEnvFeatureOverride = (key: string) => {
   const envFeatureFlag = process.env[`FEATURE_${key.toUpperCase()}`]
-  return isDateTimeAfterCurrent(envFeatureFlag)
+  return isPastDateTime(envFeatureFlag)
 }
 
 /**
@@ -46,10 +46,10 @@ export const readFeatureFlags =
     Object.keys(flags).forEach(key => {
       const flag = req.query[key] || req.cookies[key]
       const featureOverride = determineEnvFeatureOverride(key)
-      const featureFlagEnabledDefaultvalue = !isPreprodOrProd(process.env.ENVIRONMENT)
+      const featureFlagEnabledDefaultValue = !isPreprodOrProd(process.env.ENVIRONMENT)
       const userFeatureFlagSettingAllowed =
         typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
-          ? featureFlagEnabledDefaultvalue
+          ? featureFlagEnabledDefaultValue
           : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
       const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
       if (featureOverride) {

@@ -2,44 +2,49 @@
 
 {% set pageTitle = makePageTitle({ pageHeading: "Search results"}) %}
 
+{% set continuationPath = '/book-to-ppud' if bookingOnStarted else '/search-ppud' %}
+
 {% block beforeContent %}
     {{ backLink() }}
 {% endblock %}
 
 {% block content %}
-    <h1 class="govuk-heading-l">Search results</h1>
+    {{ heading('Search results') }}
 
-    <p class="govuk-body">
-        <p class="govuk-body govuk-!-margin-bottom-3">
-            <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Case reference number (CRN):</span>
-             <span>{{ crn }}</span>
-        </p>
-        <a href="/ppcs-search" class="govuk-body govuk-link">Start a new search</a>
+    <p class="govuk-body-l">
+        <span class='govuk-!-font-weight-bold'>Case reference number (CRN):</span>
+        <span>{{ crn }}</span>
     </p>
 
-    <table class="govuk-table">
-        <caption class="govuk-table__caption govuk-visually-hidden">Persons found</caption>
-        <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Name</th>
-            <th scope="col" class="govuk-table__header">CRN</th>
-            <th scope="col" class="govuk-table__header">Date of birth</th>
-        </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-        <tr class="govuk-table__row" data-qa='row-{{ person.crn }}'>
-            <td class="govuk-table__cell">
-                {{ result.name }}
-            </td>
-            <td class="govuk-table__cell">{{ result.crn }}</td>
-            <td class="govuk-table__cell">{{ formatDateTimeFromIsoString({isoDate: result.dateOfBirth}) }}</td>
-        </tr>
-        </tbody>
-    </table>
-    {% if bookingOnStarted %}
-        <a href="/recommendations/{{result.recommendationId}}/book-to-ppud" class="govuk-body-l govuk-button">Continue</a>
-    {% else %}
-        <a href="/recommendations/{{result.recommendationId}}/search-ppud" class="govuk-body-l govuk-button">Continue</a>
-    {% endif %}
+    {{ govukTable(        {
+        classes: 'govuk-!-margin-bottom-7',
+        caption: 'Persons found',
+        captionClasses: 'govuk-visually-hidden',
+        head: [
+            { text: 'Name' },
+            { text: 'CRN' },
+            { text: 'Date of birth' }
+        ],
+        rows: [
+            [
+                { text: result.name },
+                { text: result.crn },
+                { text: formatDateTimeFromIsoString({isoDate: result.dateOfBirth}) }
+            ]
+        ]
+    }
+    ) }}
+
+    {{ govukButton({
+        text: 'Continue',
+        classes: 'govuk-body-l govuk-!-margin-right-6',
+        href: '/recommendations/' + result.recommendationId + continuationPath
+    }) }}
+
+    {{ govukButton({
+        text: 'Search for another CRN',
+        classes: 'govuk-button--secondary',
+        href: '/ppcs-search'
+    }) }}
 
 {% endblock %}

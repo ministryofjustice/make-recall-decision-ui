@@ -3,7 +3,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import selectPpudSentenceController from './selectPpudSentenceController'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import { ppcsPaths } from '../../routes/paths/ppcs'
+import ppcsPaths from '../../routes/paths/ppcs'
 
 jest.mock('../../data/makeDecisionApiClient')
 

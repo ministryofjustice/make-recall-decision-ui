@@ -1,0 +1,69 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+  {{ backLink() }}
+{% endblock %}
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      {% include '../../partials/error-summary.njk' %}
+
+      <form novalidate method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {% call govukFieldset({
+          legend: {
+            text: pageHeadings[page.id],
+            classes: "govuk-fieldset__legend--l",
+            isPageHeading: true
+          }
+        }) %}
+
+          {{ govukInput({
+            label: {
+              text: "Name",
+              classes: "govuk-label--m"
+            },
+            id: "name",
+            name: "name",
+            classes: "govuk-input--width-20",
+            value: inputDisplayValues.name,
+            errorMessage: errorMessage(errors.name)
+          }) }}
+          {{ govukInput({
+            label: {
+              text: "Email",
+              classes: "govuk-label--m"
+            },
+            id: "email",
+            name: "email",
+            type: 'email',
+            classes: "govuk-input--width-20",
+            value: inputDisplayValues.email,
+            errorMessage: errorMessage(errors.email)
+          }) }}
+          {{ govukInput({
+            label: {
+              text: "Telephone",
+              classes: "govuk-label--m"
+            },
+            hint: {
+              text: 'PPCS may use this number to ask queries'
+            },
+            id: "telephone",
+            name: "telephone",
+            type: 'tel',
+            classes: "govuk-input--width-20",
+            value: inputDisplayValues.telephone,
+            errorMessage: errorMessage(errors.telephone)
+          }) }}
+        {% endcall %}
+        {{ formSubmitButton() }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

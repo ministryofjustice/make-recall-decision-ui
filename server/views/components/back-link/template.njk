@@ -1,3 +1,7 @@
+{# The default filter uses the default value only if the input value is undefined #}
+{% set doBrowserBack = params.doBrowserBack | default(true) %}
+
 <nav>
-    <a href="/" data-js='backlink-btn' class="govuk-back-link">Back</a>
+    <a href={{ params.href | default("/") }} {% if doBrowserBack %} data-js='backlink-btn' {% endif %}
+       class="govuk-back-link">{{ params.text | default("Back") }}</a>
 </nav>

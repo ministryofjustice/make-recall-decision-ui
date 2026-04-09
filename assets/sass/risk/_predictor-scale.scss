@@ -1,0 +1,357 @@
+$very-high-score-colour: #942514;
+$very-high-score-colour--light: #ffac9f;
+$very-high-score-colour__text: #711a0d;
+$high-score-colour: #d4351c;
+$high-score-colour--light: #f6d7d2;
+$high-score-colour__text: #942514;
+$medium-score-colour: #f47738;
+$medium-score-colour--light: #f9e8bd;
+$medium-score-colour__text: #a34e00;
+$low-score-colour: #85994b;
+$low-score-colour--light: #dee9bd;
+$low-score-colour__text: #485b10;
+$boarder-colour: #B1B4B6;
+
+@mixin scale-marker-card-colour($primary-colour, $secondary-colour, $text-colour) {
+  & .scale-marker__card {
+    border: 2px solid $primary-colour;
+
+    & .scale-marker__card-top {
+      & h3,
+      & p {
+        color: $text-colour;
+      }
+    }
+
+    & .scale-marker__card-bottom {
+      background-color: $secondary-colour;
+    }
+
+    & .scale-marker__card-pointer {
+      border-top: 16px solid $primary-colour;
+    }
+
+    & .scale-marker__card-pointer::after {
+      border-top: 14px solid $secondary-colour;
+    }
+  }
+}
+
+@mixin scale-bar-label {
+  position: relative;
+  text-align: center;
+  display: block;
+  color: govuk-colour("black");
+}
+
+@mixin scale-bar-base {
+  width: 100%;
+
+  &::after {
+    content: "" "";
+    display: block;
+    visibility: hidden;
+    clear: both;
+  }
+
+  & > div > span {
+    height: 15px;
+    display: block;
+  }
+}
+
+.predictor-scale-header-wrapper{
+  display: flex;
+  justify-content: space-between;
+}
+
+.predictor-scale {
+  width: 100%;
+  padding: 30px 40px 10px;
+  box-sizing: border-box;
+  border: 1px solid $boarder-colour;
+}
+
+.scale-marker__card-pointer {
+  width: 0;
+  height: 0;
+  border-right: 16px solid transparent;
+  border-left: 16px solid transparent;
+  border-top: 16px solid govuk-colour("black");
+  position: relative;
+  top: 0;
+  left: 23px;
+  float: left;
+}
+
+.scale-marker__card-pointer--white::after {
+  border-top: 14px solid govuk-colour("white") !important;
+}
+
+.scale-marker__card-pointer::after {
+  width: 0;
+  height: 0;
+  border-right: 14px solid transparent;
+  border-left: 14px solid transparent;
+  border-top: 14px solid govuk-colour("white");
+  position: absolute;
+  top: -17px;
+  left: -14px;
+  content: "";
+}
+
+.scale-marker {
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.scale-marker-wrapper--position-one-of-three,
+.scale-marker-wrapper--position-two-of-three,
+.scale-marker-wrapper--position-three-of-three {
+  width: 33%;
+}
+
+.scale-marker-wrapper--position-one-of-three {
+  margin-left: 0;
+}
+
+.scale-marker-wrapper--position-two-of-three {
+  margin-left: 34%;
+}
+
+.scale-marker-wrapper--position-three-of-three {
+  margin-left: 67%;
+}
+
+.scale-marker-wrapper--position-one-of-four,
+.scale-marker-wrapper--position-two-of-four,
+.scale-marker-wrapper--position-three-of-four,
+.scale-marker-wrapper--position-four-of-four {
+  width: 25%;
+}
+
+.scale-marker-wrapper--position-one-of-four {
+  margin-left: 0;
+}
+
+.scale-marker-wrapper--position-two-of-four {
+  margin-left: 25%;
+}
+
+.scale-marker-wrapper--position-three-of-four {
+  margin-left: 50%;
+}
+
+.scale-marker-wrapper--position-four-of-four {
+  margin-left: 75%;
+}
+
+.scale-marker-wrapper--very-high {
+  @include scale-marker-card-colour(
+                  $very-high-score-colour,
+                  $very-high-score-colour--light,
+                  $very-high-score-colour__text
+  );
+}
+
+.scale-marker-wrapper--high {
+  @include scale-marker-card-colour($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+}
+
+.scale-marker-wrapper--medium {
+  @include scale-marker-card-colour($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+}
+
+.scale-marker-wrapper--low {
+  @include scale-marker-card-colour($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+}
+
+.scale-marker__card {
+  width: 78px;
+  bottom: 30px;
+  margin: 0 auto;
+  background-color: govuk-colour("white");
+  border: 2px solid govuk-colour("black");
+}
+
+.scale-marker__card-top {
+  width: 100%;
+
+  & h3,
+  & p {
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  & h3 {
+    @include govuk-font(14, "bold");
+  }
+
+  & p {
+    @include govuk-font(14, "regular");
+  }
+}
+
+.scale-marker__card-bottom p {
+  @include govuk-font(14, "bold");
+
+  margin: 0;
+}
+
+.scale-marker__card-top,
+.scale-marker__card-bottom {
+  padding: 3px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.scale-bar--small {
+  @include scale-bar-base;
+
+  margin-bottom: 15px;
+
+  & > div {
+    width: 33%;
+    display: inline;
+    float: left;
+    border-right: 1px solid transparent;
+    box-sizing: border-box;
+  }
+
+  & > div:nth-child(4n + 1) > span:first-child {
+    &::after{
+      @include govuk-font(16);
+      @include scale-bar-label;
+
+      content:"LOW";
+      bottom: -15px;
+      color: $govuk-secondary-text-colour;
+    }
+    background-color: $low-score-colour;
+  }
+
+  & > div:nth-child(4n + 2) > span:first-child {
+    &::after{
+      @include govuk-font(16);
+      @include scale-bar-label;
+
+      content:"MEDIUM";
+      bottom: -15px;
+      color: $govuk-secondary-text-colour;
+    }
+    background-color: $medium-score-colour;
+  }
+
+  & > div:nth-child(4n + 3) > span:first-child {
+    &::after{
+      @include govuk-font(16);
+      @include scale-bar-label;
+
+      content:"HIGH";
+      bottom: -15px;
+      color: $govuk-secondary-text-colour;
+    }
+    background-color: $high-score-colour;
+  }
+}
+
+.scale-bar--small-fourths {
+  & > div {
+    width: 25%;
+    padding-bottom: 20px;
+  }
+
+  & > div:nth-child(4n + 4) > span:first-child {
+    &::after{
+      @include govuk-font(16);
+      @include scale-bar-label;
+
+      content:"VERY HIGH";
+      bottom: -15px;
+      color: $govuk-secondary-text-colour;
+    }
+    background-color: $very-high-score-colour;
+  }
+}
+
+.scale-bar {
+  @include scale-bar-base;
+  margin-bottom: 50px;
+  display: block;
+  clear: both;
+
+  & > div {
+    width: 33.33%;
+    height: 30px;
+    float: left;
+    border-right: 1px solid govuk-colour("black");
+    box-sizing: border-box;
+    position: relative;
+
+    &:first-child {
+      border-left: 1px solid govuk-colour("black");
+    }
+
+    & > span:first-child {
+      display: block;
+      width: 100%;
+      position: relative;
+
+      &::after {
+        @include govuk-font(16);
+        @include scale-bar-label;
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        color: $govuk-secondary-text-colour;
+      }
+    }
+
+    &::after {
+      @include govuk-font(16);
+      @include scale-bar-label;
+      content: attr(data-band-persentage);
+      position: absolute;
+      bottom: -25px;
+      right: 0;
+      transform: translateX(50%);
+      white-space: nowrap;
+    }
+
+    &:first-child::before {
+      @include govuk-font(16);
+      @include scale-bar-label;
+      content: attr(data-band-persentage-start);
+      position: absolute;
+      bottom: -25px;
+      left: 0;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+  }
+
+  & > div:nth-child(1) {
+    & > span:first-child { background-color: $low-score-colour; &::after { content: "LOW"; } }
+  }
+  & > div:nth-child(2) {
+    & > span:first-child { background-color: $medium-score-colour; &::after { content: "MEDIUM"; } }
+  }
+  & > div:nth-child(3) {
+    & > span:first-child { background-color: $high-score-colour; &::after { content: "HIGH"; } }
+  }
+}
+
+.scale-bar--fourths {
+  & > div {
+    width: 25% !important;
+  }
+  & > div:nth-child(4) {
+    & > span:first-child {
+      background-color: $very-high-score-colour;
+      &::after { content: "VERY HIGH"; }
+    }
+  }
+}

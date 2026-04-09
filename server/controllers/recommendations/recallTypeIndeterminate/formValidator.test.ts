@@ -1,6 +1,6 @@
-import { validateRecallTypeIndeterminate } from './formValidator'
+import validateRecallTypeIndeterminate from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
-import { EVENTS } from '../../../utils/constants'
+import EVENTS from '../../../utils/constants'
 
 describe('validateRecallTypeIndeterminate', () => {
   const recommendationId = '456'

@@ -56,6 +56,7 @@
                     label: {
                         text: ('S' if selectedPpudSentence else 'Now s') + 'elect the nearest matching offence from the list in PPUD'
                     },
+                    class: 'govuk-!-margin-bottom-4 govuk-input--width-30',
                     errorMessage: errorMessage(errors.indexOffence),
                     list: indexOffences,
                     value: recommendation.bookRecallToPpud.indexOffence,

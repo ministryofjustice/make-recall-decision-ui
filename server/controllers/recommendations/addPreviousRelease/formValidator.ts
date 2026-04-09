@@ -1,5 +1,5 @@
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
+import routeUrls from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
@@ -39,7 +39,7 @@ export const validateAddPreviousRelease = async ({
         text: formatValidationErrorMessage(previousReleaseDateIso as ValidationError, 'previous release date'),
         errorId: (previousReleaseDateIso as ValidationError).errorId,
         values: previousReleaseDateParts as Record<string, string>,
-      })
+      }),
     )
     const unsavedValues = {
       previousReleaseDateParts,
@@ -63,5 +63,9 @@ export const validateAddPreviousRelease = async ({
       valuesToSave,
       nextPagePath,
     }
+  }
+
+  return {
+    errors,
   }
 }

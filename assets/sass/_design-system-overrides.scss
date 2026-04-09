@@ -74,3 +74,21 @@
 .moj-scrollable-pane {
   position: relative;
 }
+
+.moj-summary-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.moj-question {
+  color: #505a5f; /* govuk-secondary-text */
+}
+
+.moj-last-updated {
+  font-size: 16px;
+  color: #505a5f;
+  white-space: nowrap;
+}
+

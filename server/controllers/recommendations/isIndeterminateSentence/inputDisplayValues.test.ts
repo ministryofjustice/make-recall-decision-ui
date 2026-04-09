@@ -1,4 +1,4 @@
-import { inputDisplayValuesIsIndeterminateSentence } from './inputDisplayValues'
+import inputDisplayValuesIsIndeterminateSentence from './inputDisplayValues'
 import { YesNoValues } from '../formOptions/yesNo'
 
 describe('inputDisplayValuesIsIndeterminateSentence', () => {

@@ -1,18 +1,18 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import recommendationStatusCheck from '../middleware/recommendationStatusCheck'
-import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
+import parseRecommendationUrl from '../middleware/parseRecommendationUrl'
 import retrieveRecommendation from '../controllers/retrieveRecommendation'
-import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
+import guardAgainstModifyingClosedRecommendation from '../middleware/guardAgainstModifyingClosedRecommendation'
 import customizeMessages from '../controllers/customizeMessages'
 import audit from '../controllers/audit'
 import retrieveStatuses from '../controllers/retrieveStatuses'
-import { authorisationCheck } from '../middleware/authorisationCheck'
+import authorisationCheck from '../middleware/authorisationCheck'
 import { Check } from '../middleware/check'
-import { nothingMore } from './nothing-more'
+import nothingMore from './nothing-more'
 
 type RouterCallback = (req: Request, res: Response, next: NextFunction) => void
 
-export class RouteBuilder {
+class RouteBuilder {
   private readonly router: Router
 
   private readonly rolesCheck?: Check
@@ -48,7 +48,7 @@ export class RouteBuilder {
       (error: Error, req: Request, res: Response, next: NextFunction): void => {
         next(error) // forward errors to root router
       },
-      nothingMore
+      nothingMore,
     )
   }
 
@@ -64,7 +64,7 @@ export class RouteBuilder {
       (error: Error, req: Request, res: Response, next: NextFunction): void => {
         next(error) // forward errors to root router
       },
-      nothingMore
+      nothingMore,
     )
   }
 
@@ -76,9 +76,11 @@ export class RouteBuilder {
 function feedErrorsToExpress(routerCallback: RouterCallback) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await routerCallback(req, res, next)
+      return await routerCallback(req, res, next)
     } catch (err) {
       return next(err)
     }
   }
 }
+
+export default RouteBuilder

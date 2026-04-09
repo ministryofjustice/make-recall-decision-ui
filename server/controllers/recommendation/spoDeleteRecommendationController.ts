@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { getStatuses, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { isMandatoryTextValue, stripHtmlTags } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
@@ -89,7 +89,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'spoDeleteRecommendationRationale',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
   if (errors.length > 0) {
@@ -112,7 +112,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'record-delete-rationale', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'record-delete-rationale', urlInfo }))
 }
 
 export default { get, post }

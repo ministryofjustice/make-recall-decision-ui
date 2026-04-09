@@ -1,13 +1,13 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { routes } from '../../../../../api/routes'
-import { ppcsPaths } from '../../../../../server/routes/paths/ppcs'
-import { setUpSessionForPpcs } from '../util'
-import { RECOMMENDATION_STATUS } from '../../../../../server/middleware/recommendationStatus'
+import routes from '../../../../../api/routes'
+import ppcsPaths from '../../../../../server/routes/paths/ppcs'
+import setUpSessionForPpcs from '../util'
+import RECOMMENDATION_STATUS from '../../../../../server/middleware/recommendationStatus'
 import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { testSummaryList } from '../../../../componentTests/summaryList.tests'
 import { indeterminateCustodyTypes } from '../../../../../server/helpers/ppudSentence/custodyTypes'
-import { formatPpudSentenceLength } from '../../../../../server/utils/dates/ppudSentenceLength/formatting'
+import formatPpudSentenceLength from '../../../../../server/utils/dates/ppudSentenceLength/formatting'
 import { formatDateTimeFromIsoString } from '../../../../../server/utils/dates/formatting'
 
 context('Indeterminate Sentence - Sentence to Commit Page', () => {
@@ -49,7 +49,7 @@ context('Indeterminate Sentence - Sentence to Commit Page', () => {
         cy.pageHeading().should('contain', `Your recall booking for ${recommendation.personOnProbation.name}`)
         cy.get('.govuk-body').should(
           'contain.text',
-          "This is the sentence you've selected from PPUD. You can edit anything that's wrong. This will update what's in PPUD."
+          "This is the sentence you've selected from PPUD. You can edit anything that's wrong. This will update what's in PPUD.",
         )
 
         cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Your recall booking')
@@ -102,7 +102,7 @@ context('Indeterminate Sentence - Sentence to Commit Page', () => {
         // We check the offence row separately because the testSummaryList function doesn't
         // match on regex, which we need to do to verify both the offence and comment are shown
         const offenceAndCommentRegex = new RegExp(
-          `\\s+${ppudIndeterminateData.offenceDescription}\\s+${ppudIndeterminateData.offenceDescriptionComment}\\s+`
+          `\\s+${ppudIndeterminateData.offenceDescription}\\s+${ppudIndeterminateData.offenceDescriptionComment}\\s+`,
         )
         cy.get('@summaryList')
           .find('div.govuk-summary-list__row')

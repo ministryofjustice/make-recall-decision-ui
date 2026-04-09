@@ -1,4 +1,4 @@
-import { routes } from '../../api/routes'
+import routes from '../../api/routes'
 import { stubFor } from './wiremock'
 import { CaseSectionId } from '../../server/@types/pagesForms'
 
@@ -160,7 +160,7 @@ export const downloadSupportingDocument = ({ statusCode = 200, response }: { sta
 
 export const getRecommendation = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockGet({
-    urlPathPattern: `${routes.recommendations}/(.*)`,
+    urlPathPattern: `${routes.recommendations}/([^/]+)`,
     statusCode,
     response,
   })

@@ -18,9 +18,12 @@ import {
   formatDateFilterQueryString,
   isObjectInArray,
   countLabelSuffix,
+  merge,
+  renderString,
+  isBeforeDate,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
-import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
+import getDisplayValueForOption from '../controllers/recommendations/helpers/getDisplayValueForOption'
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
 import { recommendationsListStatusLabel } from '../controllers/recommendations/helpers/recommendationStatus'
 import { defaultName } from '../monitoring/azureAppInsights'
@@ -52,15 +55,15 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   const njkEnv = nunjucks.configure(
     [
       path.join(__dirname, '../../server/views'),
-      'node_modules/govuk-frontend/',
-      'node_modules/govuk-frontend/components/',
+      'node_modules/govuk-frontend/dist',
       'node_modules/@ministryofjustice/frontend/',
       'node_modules/@ministryofjustice/frontend/moj/components/',
+      'node_modules/@ministryofjustice/hmpps-probation-frontend-components/dist/assets/',
     ],
     {
       autoescape: true,
       express: app,
-    }
+    },
   )
 
   njkEnv.addFilter('initialiseName', (fullName: string) => {
@@ -72,6 +75,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     return `${array[0][0]}. ${array.reverse()[0]}`
   })
   njkEnv.addFilter('defaultValue', defaultValue)
+  njkEnv.addFilter('merge', merge)
 
   // globals
   njkEnv.addGlobal('formatDateTimeFromIsoString', formatDateTimeFromIsoString)
@@ -103,4 +107,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('hasRequiredVulnerabilitiesDetails', hasAllRequiredVulnerabilityDetails)
   njkEnv.addGlobal('formatJSDate', formatJSDate)
   njkEnv.addGlobal('formatSentenceLength', formatSentenceLength)
+  njkEnv.addGlobal('renderString', renderString)
+  njkEnv.addFilter('isBefore', isBeforeDate)
 }

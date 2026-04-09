@@ -2,7 +2,7 @@ import { getProperty, isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesResponseToProbation = ({ errors = {}, apiValues }: InputDisplayValuesArgs) => {
+const inputDisplayValuesResponseToProbation = ({ errors = {}, apiValues }: InputDisplayValuesArgs) => {
   const inputDisplayValues = {
     value: '',
   }
@@ -11,3 +11,5 @@ export const inputDisplayValuesResponseToProbation = ({ errors = {}, apiValues }
   }
   return inputDisplayValues
 }
+
+export default inputDisplayValuesResponseToProbation

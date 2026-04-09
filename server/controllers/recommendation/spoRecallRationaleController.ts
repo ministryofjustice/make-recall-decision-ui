@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
@@ -56,7 +56,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'spoRecallType',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   } else if (spoRecallType === 'RECALL' && !isMandatoryTextValue(spoRecallRationale)) {
     const errorId = 'missingSpoRecallRationale'
@@ -65,7 +65,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'spoRecallRationale',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -96,10 +96,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   if (spoRecallType === 'RECALL') {
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-task-list-consider-recall', urlInfo }))
-  } else {
-    res.redirect(303, `${urlInfo.basePath}spo-why-no-recall`)
+    return res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-task-list-consider-recall', urlInfo }))
   }
+
+  return res.redirect(303, `${urlInfo.basePath}spo-why-no-recall`)
 }
 
 export default { get, post }

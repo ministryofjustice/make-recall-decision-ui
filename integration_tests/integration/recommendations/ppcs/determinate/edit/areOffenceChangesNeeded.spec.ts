@@ -1,19 +1,19 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { routes } from '../../../../../../api/routes'
-import { ppcsPaths } from '../../../../../../server/routes/paths/ppcs'
-import { setUpSessionForPpcs } from '../../util'
+import routes from '../../../../../../api/routes'
+import ppcsPaths from '../../../../../../server/routes/paths/ppcs'
+import setUpSessionForPpcs from '../../util'
 import {
   booleanToYesNo,
   yesNoOptions,
   YesNoValues,
 } from '../../../../../../server/controllers/recommendations/formOptions/yesNo'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
-import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
+import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { formatDateTimeFromIsoString } from '../../../../../../server/utils/dates/formatting'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 import { PpudSentence } from '../../../../../../server/@types/make-recall-decision-api/models/RecommendationResponse'
-import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { strings } from '../../../../../../server/textStrings/en'
+import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import strings from '../../../../../../server/textStrings/en'
 
 context('Determinate Sentence - Are Offence Changes Needed Page', () => {
   const recommendationId = '123'
@@ -35,7 +35,7 @@ context('Determinate Sentence - Are Offence Changes Needed Page', () => {
           },
         })
         const selectedPpudSentence = faker.helpers.arrayElement(
-          recommendationWithNoOptionSelected.ppudOffender.sentences
+          recommendationWithNoOptionSelected.ppudOffender.sentences,
         )
         recommendationWithNoOptionSelected.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
 
@@ -57,7 +57,7 @@ context('Determinate Sentence - Are Offence Changes Needed Page', () => {
         const selectedPpudSentence = faker.helpers.arrayElement(recommendationWithOptionSelected.ppudOffender.sentences)
         recommendationWithOptionSelected.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
         const selectedOption = booleanToYesNo(
-          recommendationWithOptionSelected.bookRecallToPpud.changeOffenceOrAddComment
+          recommendationWithOptionSelected.bookRecallToPpud.changeOffenceOrAddComment,
         )
 
         beforeEach(() => {
@@ -121,7 +121,7 @@ function testPageContent(recommendationId: string, selectedPpudSentence: PpudSen
       formatDateTimeFromIsoString({
         isoDate: selectedPpudSentence.dateOfSentence,
         dateOnly: true,
-      })
+      }),
     )
     .should('contain.text', 'Sentence expiry date')
     .should(
@@ -129,7 +129,7 @@ function testPageContent(recommendationId: string, selectedPpudSentence: PpudSen
       formatDateTimeFromIsoString({
         isoDate: selectedPpudSentence.sentenceExpiryDate,
         dateOnly: true,
-      })
+      }),
     )
 
   // Radios

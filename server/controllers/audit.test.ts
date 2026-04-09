@@ -1,8 +1,8 @@
 import audit from './audit'
 import { appInsightsEvent } from '../monitoring/azureAppInsights'
 import { mockReq, mockRes } from '../middleware/testutils/mockRequestUtils'
-import { EVENTS } from '../utils/constants'
-import { AuditService } from '../services/auditService'
+import EVENTS from '../utils/constants'
+import AuditService from '../services/auditService'
 
 jest.mock('../monitoring/azureAppInsights')
 jest.spyOn(AuditService.prototype, 'recommendationView')
@@ -24,7 +24,7 @@ describe('audit', () => {
           recommendation: { crn: 'abc' },
         },
       }),
-      next
+      next,
     )
 
     expect(appInsightsEvent).toHaveBeenCalledWith(
@@ -36,7 +36,7 @@ describe('audit', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
 
     expect(AuditService.prototype.recommendationView).toHaveBeenCalledWith({
@@ -66,7 +66,7 @@ describe('audit', () => {
           recommendation: { crn: 'abc' },
         },
       }),
-      next
+      next,
     )
 
     expect(appInsightsEvent).toHaveBeenCalledWith(
@@ -77,7 +77,7 @@ describe('audit', () => {
         pageUrlSlug: '<root>',
         recommendationId: '123',
       },
-      {}
+      {},
     )
   })
 })

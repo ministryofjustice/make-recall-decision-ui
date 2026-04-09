@@ -1,5 +1,5 @@
 // addressChecker.test.ts
-import { checkIfAddressesAreEmpty } from './addressChecker'
+import checkIfAddressesAreEmpty from './addressChecker'
 
 describe('checkAddresses', () => {
   test('returns true when all addresses are empty', () => {

@@ -14,7 +14,7 @@ export const extractPpudEstablishment = (recommendation: RecommendationResponse)
 
 export const extractCurrentEstablishment = (
   recommendation: RecommendationResponse,
-  validEstablishments: string[]
+  validEstablishments: string[],
 ): string => {
   let currentEstablishment = recommendation.bookRecallToPpud?.currentEstablishment
   if (!currentEstablishment || !validEstablishments.includes(currentEstablishment)) {

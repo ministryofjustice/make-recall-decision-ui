@@ -4,7 +4,7 @@ import { getRecommendation, ppudReferenceList, updateRecommendation } from '../.
 import matchIndexOffenceController from './matchIndexOffenceController'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
-import { ppcsPaths } from '../../routes/paths/ppcs'
+import ppcsPaths from '../../routes/paths/ppcs'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../utils/utils')
@@ -54,7 +54,7 @@ describe('Match Index Offence Controller', () => {
           it('Is correct', async () => {
             const selectedNomisOffenceId = recommendation.nomisIndexOffence.selected
             const expectedOffence = recommendation.nomisIndexOffence.allOptions.find(
-              o => o.offenderChargeId === selectedNomisOffenceId
+              o => o.offenderChargeId === selectedNomisOffenceId,
             )
             expect(res.locals.nomisIndexOffence).toEqual(expectedOffence)
           })

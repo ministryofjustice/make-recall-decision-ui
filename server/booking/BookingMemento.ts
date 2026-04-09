@@ -1,4 +1,4 @@
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 
 export default interface BookingMemento {
   stage: StageEnum

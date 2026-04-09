@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { routeUrls } from '../../routes/routeUrls'
+import routeUrls from '../../routes/routeUrls'
 import { isPreprodOrProd, validateCrn } from '../../utils/utils'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { AppError } from '../../AppError'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
-import { AuditService } from '../../services/auditService'
+import EVENTS from '../../utils/constants'
+import AuditService from '../../services/auditService'
 
 const auditService = new AuditService()
 
@@ -25,7 +25,8 @@ const getRedirectPath = (status: string, crn: string, recommendationId: string) 
       return `${routeUrls.cases}/${crn}/overview`
   }
 }
-export const updateRecommendationStatus = async (req: Request, res: Response): Promise<void> => {
+
+const updateRecommendationStatus = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId } = req.params
   const { status, crn } = req.body
   const {
@@ -48,7 +49,7 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
   if (status === 'DELETED') {
@@ -60,3 +61,5 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
     })
   }
 }
+
+export default updateRecommendationStatus

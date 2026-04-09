@@ -33,6 +33,8 @@ export function currentHighestRosh(rosh?: Rosh | null) {
     if (val === RoshEnum.NOT_APPLICABLE) {
       return 5
     }
+
+    return null
   }
 
   function mapFromNumber(val: number) {
@@ -54,6 +56,8 @@ export function currentHighestRosh(rosh?: Rosh | null) {
         break
       default:
     }
+
+    return null
   }
 
   values.push(mapToNumber(rosh.riskToChildren))

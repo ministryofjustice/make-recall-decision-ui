@@ -3,7 +3,7 @@ import { prisonSentences } from '../../../../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { PrisonSentence } from '../../../../@types/make-recall-decision-api/models/PrisonSentence'
 import { Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../routes/paths/ppcs'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 
 async function get(_: Request, res: Response, next: NextFunction) {
@@ -27,7 +27,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       (seq.sentencesInSequence != null &&
         Array.from(new Map(Object.entries(seq.sentencesInSequence)).values())
           .flatMap(x => x)
-          .some(s => s.offences.some(o => o.offenderChargeId === recommendation.nomisIndexOffence.selected)))
+          .some(s => s.offences.some(o => o.offenderChargeId === recommendation.nomisIndexOffence.selected))),
   )
 
   const resolveTerm = (term: Term) => {
@@ -62,7 +62,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
               Array.from(new Map(Object.entries(sentenceForSelectedOffence.sentencesInSequence)), ([k, v]) => [
                 k,
                 v.map(s => prisonSentenceToInfo(s)),
-              ])
+              ]),
             )
           : null,
       }

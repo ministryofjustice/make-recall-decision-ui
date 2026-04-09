@@ -1,8 +1,8 @@
-import { CUSTODY_GROUP } from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { RECOMMENDATION_STATUS } from '../../../../../server/middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import RECOMMENDATION_STATUS from '../../../../../server/middleware/recommendationStatus'
 import completeRecommendationResponse from '../../../../../api/responses/get-recommendation.json'
 import { testSummaryList } from '../../../../componentTests/summaryList.tests'
-import { setUpSessionForPpcs } from '../util'
+import setUpSessionForPpcs from '../util'
 
 context('Determinate Ppud Sentences', () => {
   describe('Standard page load', () => {
@@ -15,7 +15,6 @@ context('Determinate Ppud Sentences', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
-          isIndeterminateSentence: true,
           bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
           ppudOffender: {
             id: '1',
@@ -96,7 +95,7 @@ context('Determinate Ppud Sentences', () => {
       cy.pageHeading().should('equals', 'Determinate sentences in PPUD')
       cy.get('p.govuk-body').should(
         'contain.text',
-        'Jane Bloggs has indeterminate and determinate sentences in PPUD. View the determinate sentences and then return to the indeterminate sentences to continue your booking.'
+        'Jane Bloggs has indeterminate and determinate sentences in PPUD. View the determinate sentences and then return to the indeterminate sentences to continue your booking.',
       )
 
       // verify court case header and date of sentence for Court case: Glasgow
@@ -219,7 +218,6 @@ context('Determinate Ppud Sentences', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
-          isIndeterminateSentence: true,
           bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
           ppudOffender: {
             id: '1',

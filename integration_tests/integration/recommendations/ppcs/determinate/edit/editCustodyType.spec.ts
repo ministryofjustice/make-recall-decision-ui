@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { RECOMMENDATION_STATUS } from '../../../../../../server/middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { determinateCustodyTypes } from '../../../../../../server/helpers/ppudSentence/custodyTypes'
-import { determinateCustodyTypeLabels } from '../../../../../../server/controllers/recommendations/custody-type/formOptions'
+import determinateCustodyTypeLabels from '../../../../../../server/controllers/recommendations/custody-type/formOptions'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
-import { setUpSessionForPpcs } from '../../util'
+import setUpSessionForPpcs from '../../util'
 
 context('Determinate sentence - edit custody type page', () => {
   const recommendationId = '123'
@@ -80,7 +80,13 @@ context('Determinate sentence - edit custody type page', () => {
       cy.get('button').click()
 
       testForErrorPageTitle()
-      testForErrorSummary([{ href: 'custodyType', message: 'Enter custody type' }])
+      testForErrorSummary([
+        {
+          href: 'custodyType',
+          message: 'Enter custody type',
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+        },
+      ])
     })
   })
 })

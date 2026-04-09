@@ -3,11 +3,7 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { InputDisplayValuesArgs, ValueWithDetails } from '../../../@types/pagesForms'
 import { booleanToYesNo } from '../formOptions/yesNo'
 
-export const inputDisplayValuesContraband = ({
-  errors = {},
-  unsavedValues = {},
-  apiValues,
-}: InputDisplayValuesArgs) => {
+const inputDisplayValuesContraband = ({ errors = {}, unsavedValues = {}, apiValues }: InputDisplayValuesArgs) => {
   const inputDisplayValues = {
     value: undefined,
     details: '',
@@ -19,9 +15,11 @@ export const inputDisplayValuesContraband = ({
     if (!isDefined(errors.hasContrabandRiskDetailsYes)) {
       inputDisplayValues.details = getProperty<RecommendationResponse, string>(
         apiValues,
-        'hasContrabandRisk.details'
+        'hasContrabandRisk.details',
       ) as string
     }
   }
   return inputDisplayValues
 }
+
+export default inputDisplayValuesContraband
