@@ -48,7 +48,7 @@ context('Task List Consider a Recall Page', () => {
 
         testStandardBackLink()
 
-        cy.get('.moj-task-list__item').should('have.length', 6).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 5).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -57,25 +57,25 @@ context('Task List Consider a Recall Page', () => {
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.triggerLeadingToRecall),
         )
         checkTaskListItem(
-          2,
+          1,
           `What licence conditions has ${popName} breached?`,
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.licenceConditions),
         )
         checkTaskListItem(
-          3,
+          2,
           'What alternatives to recall have been tried already?',
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.alternativesTried),
         )
         checkTaskListItem(
-          4,
+          3,
           `Is ${popName} on an indeterminate sentence?`,
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.isIndeterminate),
         )
         checkTaskListItem(
-          5,
+          4,
           `Is ${popName} on an extended sentence?`,
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.isExtended),
@@ -93,7 +93,7 @@ context('Task List Consider a Recall Page', () => {
 
         testStandardBackLink()
 
-        cy.get('.moj-task-list__item').should('have.length', 6).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 5).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -102,25 +102,25 @@ context('Task List Consider a Recall Page', () => {
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.triggerLeadingToRecall),
         )
         checkTaskListItem(
-          2,
+          1,
           `What licence conditions has ${popName} breached?`,
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.licenceConditions),
         )
         checkTaskListItem(
-          3,
+          2,
           'What alternatives to recall have been tried already?',
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.alternativesTried),
         )
         checkTaskListItem(
-          4,
+          3,
           `Is ${popName} on an indeterminate sentence?`,
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.isIndeterminate),
         )
         checkTaskListItem(
-          5,
+          4,
           `Is ${popName} on an extended sentence?`,
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.isExtended),
