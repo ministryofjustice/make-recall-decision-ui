@@ -28,22 +28,6 @@
                             </details>
 
                         </li>
-                        {% if not flags.flagFTR56Enabled %}
-                          <li class="moj-task-list__item">
-
-                              <p>How has {{ offenderName }} responded to probation so far?</p>
-                              <details class="govuk-details" data-module="govuk-details">
-                                <summary class="govuk-details__summary">
-                                  <span class="govuk-details__summary-text"> View Answer </span>
-                                </summary>
-                                <div class="govuk-details__text">
-                                  <pre>
-                                    {{ responseToProbation }}
-                                  </pre>
-                                </div>
-                              </details>
-                          </li>
-                        {% endif %}
                         <li class="moj-task-list__item">
                             <p>What licence conditions has {{ offenderName }} breached?</p>
                             <details class="govuk-details" data-module="govuk-details">

@@ -58,7 +58,6 @@ export type PageId =
   | 'managerRecordDecisionDelius'
   | 'managerDecisionConfirmation'
   | 'createRecommendationWarning'
-  | 'responseToProbation'
   | 'licenceConditions'
   | 'alternativesToRecallTried'
   | 'indeterminateOrExtendedSentenceDetails'

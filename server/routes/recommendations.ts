@@ -7,7 +7,6 @@ import updateRecommendationStatus from '../controllers/recommendations/updateRec
 import RouteBuilder from './RouteBuilder'
 import { STATUSES } from '../middleware/recommendationStatusCheck'
 import taskListConsiderRecallController from '../controllers/recommendation/taskListConsiderRecallController'
-import responseToProbationController from '../controllers/recommendation/responseToProbationController'
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
 import alternativesToRecallTriedController from '../controllers/recommendation/alternativesToRecallTriedController'
 import triggerLeadingToRecallController from '../controllers/recommendation/triggerLeadingToRecallController'
@@ -166,9 +165,6 @@ ppRouteBuilder.post('task-list-consider-recall', taskListConsiderRecallControlle
 
 ppRouteBuilder.get('trigger-leading-to-recall', triggerLeadingToRecallController.get)
 ppRouteBuilder.post('trigger-leading-to-recall', triggerLeadingToRecallController.post)
-
-ppRouteBuilder.get('response-to-probation', responseToProbationController.get)
-ppRouteBuilder.post('response-to-probation', responseToProbationController.post)
 
 ppRouteBuilder.get('licence-conditions', licenceConditionsController.get)
 ppRouteBuilder.post('licence-conditions', licenceConditionsController.post)

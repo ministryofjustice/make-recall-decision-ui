@@ -27,7 +27,6 @@ const sharedProperties: RecommendationResponse = {
   licenceConditionsBreached: undefined,
   recallType: undefined,
   decisionDateTime: undefined,
-  responseToProbation: undefined,
 }
 
 const suitabilityForRecallProperties: RecommendationResponse = {

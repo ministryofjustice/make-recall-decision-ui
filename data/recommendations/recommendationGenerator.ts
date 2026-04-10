@@ -50,7 +50,6 @@ export type RecommendationOptions = {
   previousRecalls?: boolean
   recallType?: AnyNoneOrOption<RecallTypeOptions>
   decisionDateTime?: boolean
-  responseToProbation?: boolean
   vulnerabilities?: AnyNoneOrOption<VulnerabilitiesOptions>
   triggerLeadingToRecall?: boolean
   whatLedToRecall?: boolean
@@ -201,7 +200,6 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
         : undefined,
     recallType: RecallTypeGenerator.generate(options?.recallType ?? 'none'),
     decisionDateTime: (options?.decisionDateTime ?? true) ? faker.date.past().toISOString() : undefined,
-    responseToProbation: (options?.responseToProbation ?? true) ? faker.lorem.sentence() : undefined,
     vulnerabilities: VulnerabilitiesGenerator.generate(options?.vulnerabilities ?? 'any'),
     triggerLeadingToRecall: (options?.triggerLeadingToRecall ?? true) ? faker.lorem.word() : undefined,
     whatLedToRecall: (options?.whatLedToRecall ?? true) ? faker.lorem.sentence() : undefined,

@@ -36,7 +36,6 @@ context('Task List Consider a Recall Page', () => {
       it('no tasks completed', () => {
         const recommendationWithNoTasksCompleted = RecommendationResponseGenerator.generate({
           triggerLeadingToRecall: false,
-          responseToProbation: false,
           licenceConditionsBreached: false,
           alternativesToRecallTried: false,
           isIndeterminateSentence: 'none',
@@ -56,12 +55,6 @@ context('Task List Consider a Recall Page', () => {
           `What has made you consider recalling ${popName}?`,
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.triggerLeadingToRecall),
-        )
-        checkTaskListItem(
-          1,
-          `How has ${popName} responded to probation so far?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.responseToProbation),
         )
         checkTaskListItem(
           2,
@@ -107,12 +100,6 @@ context('Task List Consider a Recall Page', () => {
           `What has made you consider recalling ${popName}?`,
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.triggerLeadingToRecall),
-        )
-        checkTaskListItem(
-          1,
-          `How has ${popName} responded to probation so far?`,
-          'Completed',
-          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.responseToProbation),
         )
         checkTaskListItem(
           2,

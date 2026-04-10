@@ -60,7 +60,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     alternativesToRecallTried: hasData(recommendation.alternativesToRecallTried?.selected),
     recallType: hasValue(recommendation.recallType?.selected),
     decisionDateTime: hasValue(recommendation.decisionDateTime),
-    responseToProbation: hasValue(recommendation.responseToProbation),
     isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
     isExtendedSentence: hasValue(recommendation.isExtendedSentence),
     sentenceGroup: hasValue(recommendation.sentenceGroup),
@@ -123,8 +122,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
     : !recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType
 
-  const responseToProbation = _featureFlags?.flagFTR56Enabled ? true : statuses.responseToProbation
-
   if (recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL) {
     const whyConsideredRecall = hasValue(recommendation.whyConsideredRecall)
     const reasonsForNoRecall = hasValue(recommendation.reasonsForNoRecall)
@@ -149,7 +146,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       areAllComplete:
         triggerLeadingToRecall &&
         suitabilityForRecallValidation &&
-        responseToProbation &&
         mappaReviewed &&
         (!_featureFlags?.flagFTR56Enabled || statuses.decisionDateTime) &&
         statuses.alternativesToRecallTried &&
@@ -212,7 +208,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isReadyForCounterSignature:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
-      responseToProbation &&
       sentenceValidation &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
@@ -242,7 +237,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
       statuses.decisionDateTime &&
-      responseToProbation &&
       sentenceValidation &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&

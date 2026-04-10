@@ -356,7 +356,6 @@ context('Recommendation - task list', () => {
         ;[
           ['whatLedToRecall', 'What has led to this recall?'],
           ['emergencyRecall', 'Is this an emergency recall?'],
-          ['responseToProbation', "Jane Bloggs's response to probation"],
         ].forEach(([field, elementText]) => {
           it(`does not show ${field}`, () => {
             setUp(noRecallFtr56Base, [], ['flagFTR56Enabled'])
@@ -372,7 +371,6 @@ context('Recommendation - task list', () => {
         } as RecommendationResponse
 
         ;[
-          ['responseToProbation', "Jane Bloggs's response to probation", SentenceGroup.EXTENDED],
           ['triggerLeadingToRecall', 'What led to this trigger?', SentenceGroup.EXTENDED],
           ['emergencyRecall', 'Is this an emergency recall?', SentenceGroup.INDETERMINATE],
         ].forEach(([field, elementText, sentenceGroup]: [string, string, SentenceGroup]) => {
@@ -655,13 +653,6 @@ context('Recommendation - task list', () => {
       const indeterminateOrExtendedDetailsLinkText =
         'Confirm the recall criteria - indeterminate and extended sentences'
 
-      function checkResponseToProbationLink(personOnProbationName: string) {
-        checkLink(
-          `How has ${personOnProbationName} responded to probation so far?`,
-          `/recommendations/${recommendationId}/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances`,
-        )
-      }
-
       function checkLicenceConditionsLink(personOnProbationName: string) {
         checkLink(
           `What licence conditions has ${personOnProbationName} breached?`,
@@ -740,9 +731,6 @@ context('Recommendation - task list', () => {
                 })
                 beforeEach(() => {
                   setUp(recommendation)
-                })
-                it('shows response to probation link', () => {
-                  checkResponseToProbationLink(recommendation.personOnProbation.name)
                 })
                 it('shows licence conditions link', () => {
                   checkLicenceConditionsLink(recommendation.personOnProbation.name)

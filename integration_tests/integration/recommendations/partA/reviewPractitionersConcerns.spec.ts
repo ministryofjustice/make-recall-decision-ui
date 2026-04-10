@@ -35,14 +35,6 @@ describe("SPO review practitioner's concerns page", () => {
           cy.get('.govuk-details__text').should('contain.text', completeRecommendationResponse.triggerLeadingToRecall)
         })
 
-      cy.getElement('How has Jane Bloggs responded to probation so far?').should('exist')
-      cy.get('.govuk-details')
-        .eq(1)
-        .within(() => {
-          cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
-          cy.get('.govuk-details__text').should('contain.text', completeRecommendationResponse.responseToProbation)
-        })
-
       cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
       cy.get('.govuk-details')
         .eq(2)
