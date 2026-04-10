@@ -5,8 +5,7 @@ connecting to the relevant services in dev. Both approaches have some setup in c
 
 ## Setup
 
-Use the version of Node specified in the package.json 'engines' property of the UI repo.
-Install dependencies using `npm run setup`.
+Use the version of Node specified in [the .nvmrc file](../.nvmrc). Install dependencies using `npm run setup`.
 
 Take a copy of the .env.dev.sample file in the root of this repo.
 Name the copy as .env, then set API_CLIENT_ID to your client ID and API_CLIENT_SECRET to your client secret (or ask a
