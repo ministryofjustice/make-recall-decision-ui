@@ -66,7 +66,6 @@ const urls = [
   recommendationEndpoint('appointment-no-recall'),
   recommendationEndpoint('contraband'),
   recommendationEndpoint('address-details'),
-  recommendationEndpoint('iom'),
   recommendationEndpoint('police-details'),
   recommendationEndpoint('victim-contact-scheme'),
   recommendationEndpoint('victim-liaison-officer'),

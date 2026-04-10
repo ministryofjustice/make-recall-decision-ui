@@ -47,7 +47,6 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   hasVictimsInContactScheme: undefined,
   isThisAnEmergencyRecall: undefined,
   indeterminateOrExtendedSentenceDetails: undefined,
-  isUnderIntegratedOffenderManagement: undefined,
   personOnProbation: undefined,
   whatLedToRecall: undefined,
   vulnerabilities: undefined,
@@ -1227,34 +1226,6 @@ describe('taskCompleteness', () => {
           { flagFTR56Enabled: false },
         )
         expect(areAllComplete).toEqual(true)
-      })
-    })
-  })
-
-  describe('isUnderIntegratedOffenderManagement', () => {
-    describe('flagFTR56Enabled: true', () => {
-      it('does not block areAllComplete or isReadyForCounterSignature when field is undefined', () => {
-        const { areAllComplete, isReadyForCounterSignature } = taskCompleteness(
-          {
-            ...baseRecall,
-            sentenceGroup: SentenceGroup.EXTENDED,
-            isUnderIntegratedOffenderManagement: undefined,
-          } as RecommendationResponse,
-          { flagFTR56Enabled: true },
-        )
-        expect(areAllComplete).toEqual(true)
-        expect(isReadyForCounterSignature).toEqual(true)
-      })
-    })
-
-    describe('flagFTR56Enabled: false', () => {
-      it('blocks areAllComplete and isReadyForCounterSignature when field is undefined', () => {
-        const { areAllComplete, isReadyForCounterSignature } = taskCompleteness(
-          { ...baseRecall, isUnderIntegratedOffenderManagement: undefined },
-          { flagFTR56Enabled: false },
-        )
-        expect(areAllComplete).toEqual(false)
-        expect(isReadyForCounterSignature).toEqual(false)
       })
     })
   })

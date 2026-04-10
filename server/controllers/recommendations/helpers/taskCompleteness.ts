@@ -155,7 +155,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isThisAnEmergencyRecall: hasValue(recommendation.isThisAnEmergencyRecall),
     vulnerabilities: isVulnerabilitiesComplete(recommendation, _featureFlags),
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
-    isUnderIntegratedOffenderManagement: hasValue(recommendation.isUnderIntegratedOffenderManagement?.selected),
     hasContrabandRisk: hasValue(recommendation.hasContrabandRisk),
     personOnProbation: recommendation.personOnProbation?.hasBeenReviewed === true,
     offenceAnalysis: hasValue(recommendation.offenceAnalysis),
@@ -187,10 +186,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.indeterminateOrExtendedSentenceDetails
     : !recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails
 
-  const isUnderIntegratedOffenderManagement = _featureFlags?.flagFTR56Enabled
-    ? true
-    : statuses.isUnderIntegratedOffenderManagement
-
   return {
     statuses,
     isReadyForCounterSignature:
@@ -204,7 +199,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.isThisAnEmergencyRecall &&
       statuses.vulnerabilities &&
       statuses.hasVictimsInContactScheme &&
-      isUnderIntegratedOffenderManagement &&
       statuses.hasContrabandRisk &&
       statuses.personOnProbation &&
       statuses.offenceAnalysis &&
@@ -232,7 +226,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.isThisAnEmergencyRecall &&
       statuses.vulnerabilities &&
       statuses.hasVictimsInContactScheme &&
-      isUnderIntegratedOffenderManagement &&
       statuses.hasContrabandRisk &&
       statuses.personOnProbation &&
       statuses.offenceAnalysis &&

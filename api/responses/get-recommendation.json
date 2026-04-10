@@ -159,23 +159,6 @@
     "details": "123 Oak Avenue, Birmingham, B23 456"
   },
   "isThisAnEmergencyRecall": false,
-  "isUnderIntegratedOffenderManagement": {
-    "selected": "YES",
-    "allOptions": [
-      {
-        "value": "YES",
-        "text": "Yes"
-      },
-      {
-        "value": "NO",
-        "text": "No"
-      },
-      {
-        "value": "NOT_APPLICABLE",
-        "text": "Not applicable"
-      }
-    ]
-  },
   "licenceConditionsBreached": {
     "standardLicenceConditions": {
       "selected": ["GOOD_BEHAVIOUR", "NO_OFFENCE"],

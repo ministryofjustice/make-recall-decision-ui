@@ -39,7 +39,6 @@ export type RecommendationOptions = {
   isIndeterminateSentence?: NoneOrOption<boolean> // remove once FTR56 is live? or default to 'none'?
   isMainAddressWherePersonCanBeFound?: SelectedWithDetailsOptions
   isThisAnEmergencyRecall?: boolean
-  isUnderIntegratedOffenderManagement?: boolean
   licenceConditionsBreached?: boolean
   localPoliceContact?: boolean
   personOnProbation?: AnyNoneOrOption<PersonOnProbationOptions>
@@ -146,13 +145,6 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
         ? SelectedWithDetailsGenerator.generate(options?.isMainAddressWherePersonCanBeFound)
         : undefined,
     isThisAnEmergencyRecall: options?.isThisAnEmergencyRecall ?? faker.datatype.boolean(),
-    isUnderIntegratedOffenderManagement:
-      (options?.isUnderIntegratedOffenderManagement ?? true)
-        ? {
-            selected: 'YES',
-            allOptions: [],
-          }
-        : undefined,
     licenceConditionsBreached:
       (options?.licenceConditionsBreached ?? true)
         ? {

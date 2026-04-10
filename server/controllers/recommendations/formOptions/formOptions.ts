@@ -9,7 +9,6 @@ import {
   indeterminateOrExtendedSentenceDetailsFtr56,
 } from '../indeterminateOrExtendedSentenceDetails/formOptions'
 import { indeterminateSentenceType, indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
-import isUnderIntegratedOffenderManagement from '../integratedOffenderManagement/formOptions'
 import howWillAppointmentHappen from '../nextAppointment/formOptions'
 import rationaleCheck from '../rationaleCheck/formOptions'
 import { recallTypeExtended, recallTypeExtendedFTR56 } from '../recallTypeExtended/formOptions'
@@ -61,7 +60,6 @@ export const formOptions: FormOptionsType = {
   howWillAppointmentHappen,
   yesNo,
   hasVictimsInContactScheme,
-  isUnderIntegratedOffenderManagement,
   roshLevels,
 }
 
