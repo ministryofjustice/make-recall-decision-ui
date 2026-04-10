@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import excludedResponse from '../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../api/responses/get-case-restricted.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
@@ -55,18 +55,24 @@ context('Excluded and restricted cases', () => {
       cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
-    it('licence conditions page', () => {
-      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse },
+    describe('licence conditions page', () => {
+      ;[true, false].forEach(ftr56Enabled => {
+        it(`FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
+          cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: { ...completeRecommendationResponse },
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: excludedResponse })
+          const crn = 'X34983'
+          cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`)
+          cy.pageHeading().should('equal', 'Excluded case')
+          cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should(
+            'exist',
+          )
+        })
       })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: excludedResponse })
-      const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
-      cy.pageHeading().should('equal', 'Excluded case')
-      cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('contact history page', () => {
@@ -127,18 +133,24 @@ context('Excluded and restricted cases', () => {
       cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
-    it('licence conditions page', () => {
-      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse },
+    describe('licence conditions page', () => {
+      ;[true, false].forEach(ftr56Enabled => {
+        it(`FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
+          cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: { ...completeRecommendationResponse },
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: restrictedResponse })
+          const crn = 'X34983'
+          cy.visit(`${routeUrls.cases}/${crn}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`)
+          cy.pageHeading().should('equal', 'Restricted case')
+          cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should(
+            'exist',
+          )
+        })
       })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: restrictedResponse })
-      const crn = 'X34983'
-      cy.visit(`${routeUrls.cases}/${crn}/licence-conditions`)
-      cy.pageHeading().should('equal', 'Restricted case')
-      cy.contains('You are restricted from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('contact history page', () => {
@@ -177,7 +189,7 @@ context('Excluded and restricted cases', () => {
       cy.visit(`${routeUrls.cases}/${crn}/overview`)
       cy.pageHeading().should('equal', 'User not found')
       cy.contains(
-        'There is a problem with your NDelius account. Contact support on the HMPPS Technology Portal for help.'
+        'There is a problem with your NDelius account. Contact support on the HMPPS Technology Portal for help.',
       ).should('exist')
     })
   })

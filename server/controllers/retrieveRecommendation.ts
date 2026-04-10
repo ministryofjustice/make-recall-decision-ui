@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getRecommendation } from '../data/makeDecisionApiClient'
 import { RecommendationDecorated } from '../@types/api'
 import { isCaseRestrictedOrExcluded } from '../utils/utils'
-import { routeUrls } from '../routes/routeUrls'
+import routeUrls from '../routes/routeUrls'
 
 export default async function retrieveRecommendation(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -23,5 +23,5 @@ export default async function retrieveRecommendation(req: Request, res: Response
   }
 
   res.locals.recommendation = recommendation
-  next()
+  return next()
 }

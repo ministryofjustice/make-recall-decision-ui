@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import { formatDateTimeFromIsoString } from '../../server/utils/dates/formatting'
 import getCasePersonalDetailsResponse from '../../api/responses/get-case-personal-details.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
@@ -26,12 +26,12 @@ context('Personal details', () => {
     cy.getText('personalDetailsOverview-crn').should('equal', personalDetailsOverview.crn)
     cy.getText('personalDetailsOverview-dateOfBirth').should(
       'equal',
-      formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.dateOfBirth })
+      formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.dateOfBirth }),
     )
     cy.getText('personalDetailsOverview-age').should('equal', personalDetailsOverview.age.toString())
     cy.getText('personalDetailsOverview-gender').should(
       'equal',
-      formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.gender })
+      formatDateTimeFromIsoString({ isoDate: personalDetailsOverview.gender }),
     )
     // personal details
     cy.getDefinitionListValue('Main addresses').should('contain', '5 Anderton Road')

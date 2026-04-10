@@ -26,7 +26,7 @@ describe('get', () => {
     expect(res.locals.ppudSentence).toEqual(selectedPpudSentence)
     expect(res.locals.errorMessage).toBeUndefined()
     expect(res.render).toHaveBeenCalledWith(
-      `pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitExistingOffender`
+      `pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitExistingOffender`,
     )
     expect(next).toHaveBeenCalled()
   })

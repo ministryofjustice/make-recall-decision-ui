@@ -1,5 +1,5 @@
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
+import routeUrls from '../../../routes/routeUrls'
 import { dateHasError } from '../../../utils/dates'
 import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
@@ -39,7 +39,7 @@ export const validateAddPreviousRecall = async ({
         text: formatValidationErrorMessage(previousRecallDateIso as ValidationError, 'previous recall date'),
         errorId: (previousRecallDateIso as ValidationError).errorId,
         values: previousRecallDateParts as Record<string, string>,
-      })
+      }),
     )
     const unsavedValues = {
       previousRecallDateParts,
@@ -64,4 +64,6 @@ export const validateAddPreviousRecall = async ({
       nextPagePath,
     }
   }
+
+  return { errors }
 }

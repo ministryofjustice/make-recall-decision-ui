@@ -37,7 +37,7 @@ export const groupListByValue = <T>({ list, groupByKey }: { list: T[]; groupByKe
       group.items.push(current)
       return prev
     },
-    { groupedByKey: groupByKey, items: [] }
+    { groupedByKey: groupByKey, items: [] },
   )
 }
 
@@ -51,6 +51,17 @@ export const dedupeList = <T>(list: T[]) => {
   return unique
 }
 
+/**
+ * Adds checked and conditional properties to a list of items for radio and checkbox components
+ *
+ * @param items - the list of items to add properties to
+ * @param currentValues - the current value or values to determine which items should be checked
+ * @param conditionalContent - a record of conditional content to add to items, where the key is
+ *                             the item value and the value is the HTML string of the conditional
+ *                             content. This HTML will be shown whenever the relevant item is
+ *                             checked.
+ * @returns a new list of items with checked and conditional properties added
+ */
 export const radioCheckboxItems = ({
   items,
   currentValues,
@@ -62,13 +73,30 @@ export const radioCheckboxItems = ({
 }) => {
   const valuesToMatch = isDefined(currentValues) && !Array.isArray(currentValues) ? [currentValues] : currentValues
   return items.map(item => {
+    const hintText = getHintText(item.hint)
     return {
       ...item,
       checked: valuesToMatch ? valuesToMatch.includes(item.value) : false,
+      ...(hintText && { hint: { text: hintText } }),
       conditional:
         conditionalContent && conditionalContent[item.value] ? { html: conditionalContent[item.value] } : undefined,
     }
   })
+}
+
+interface HintObject {
+  text: string
+}
+
+export function getHintText(hint?: string | HintObject): string | undefined {
+  if (!hint) return undefined
+
+  if (typeof hint === 'string') return hint.trim()
+
+  // hint is an object
+  if ('text' in hint && typeof hint.text === 'string') return hint.text.trim()
+
+  return undefined
 }
 
 export interface ItemWithValue {

@@ -1,4 +1,4 @@
-export const ppcsPaths = {
+const ppcsPaths = {
   ppcsSearch: 'ppcs-search',
   ppcsSearchResults: 'ppcs-search-results',
   searchPpud: 'search-ppud',
@@ -25,3 +25,5 @@ export const ppcsPaths = {
     sentencingCourt: 'edit-sentencing-court',
   },
 }
+
+export default ppcsPaths

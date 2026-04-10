@@ -13,14 +13,14 @@ import { convertToTitleCase, hasValue, isDefined } from '../../../utils/utils'
 import { PrisonOffenderSearchResponse } from '../../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
 import { makeErrorObject } from '../../../utils/errors'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 
-import { checkIfAddressesAreEmpty } from '../../../utils/addressChecker'
+import checkIfAddressesAreEmpty from '../../../utils/addressChecker'
 import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
-import { getRoute } from './custodyGroupRouter'
-import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import getRoute from './custodyGroupRouter'
+import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -54,7 +54,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     if (hasValue(recommendation.personOnProbation.nomsNumber)) {
       const nomisPrisonOffender = (await searchForPrisonOffender(
         token,
-        recommendation.personOnProbation.nomsNumber
+        recommendation.personOnProbation.nomsNumber,
       )) as PrisonOffenderSearchResponse
 
       if (!isDefined(nomisPrisonOffender)) {
@@ -249,7 +249,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
       bookRecallToPpud,
       'legislationReleasedUnder',
       'missingLegislationReleasedUnder',
-      errors
+      errors,
     )
   }
 
@@ -268,7 +268,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
-  next()
+  return next()
 
   function validateBookRecallToPpudField(
     // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -276,7 +276,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     fieldName: keyof BookRecallToPpud,
     errorId: string,
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    errors: NamedFormError[]
+    errors: NamedFormError[],
   ) {
     if (
       !hasValue(bookRecallToPpud[fieldName]) ||
@@ -287,7 +287,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
           id: fieldName,
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
   }

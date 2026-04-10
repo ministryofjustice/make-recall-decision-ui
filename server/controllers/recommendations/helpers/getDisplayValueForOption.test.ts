@@ -1,4 +1,4 @@
-import { getDisplayValueForOption } from './getDisplayValueForOption'
+import getDisplayValueForOption from './getDisplayValueForOption'
 import { formOptions } from '../formOptions/formOptions'
 
 describe('getDisplayValueForOption', () => {

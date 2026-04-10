@@ -1,4 +1,4 @@
-import { RiskResponse } from '../../../@types/make-recall-decision-api'
+import { RiskResponse, RiskTo, RoshSummary } from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
 import { StaticOrDynamicPredictor } from '../../../@types/make-recall-decision-api/models/Scores'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
@@ -37,18 +37,28 @@ const mapLevel = (level?: string | null): string => {
     case 'HIGH':
     case 'VERY_HIGH':
       return level
+    case 'NOT_APPLICABLE':
+      return level
     default:
-      return 'NOT_APPLICABLE'
+      return 'UNKNOWN'
   }
 }
 
-const buildV1Predictor = (
-  label: string,
-  level?: string,
-  score?: string,
-  lastUpdated?: string,
-  bandPercentages: string[] = []
-): PredictorScaleViewModel => {
+const buildV1Predictor = ({
+  label,
+  level,
+  score,
+  staticOrDynamic,
+  lastUpdated,
+  bandPercentages = [],
+}: {
+  label: string
+  level: string
+  score: string
+  staticOrDynamic?: string
+  lastUpdated: string
+  bandPercentages?: string[]
+}): PredictorScaleViewModel => {
   if (!level) {
     return { type: label, level: 'NOT_APPLICABLE', bandPercentages }
   }
@@ -57,6 +67,7 @@ const buildV1Predictor = (
     type: label,
     level: mapLevel(level),
     score,
+    staticOrDynamic,
     lastUpdated,
     bandPercentages,
   }
@@ -66,7 +77,7 @@ const buildV2StaticOrDynamicPredictor = (
   label: string,
   predictor?: StaticOrDynamicPredictor,
   lastUpdated?: string,
-  bandPercentages: string[] = []
+  bandPercentages: string[] = [],
 ): PredictorScaleViewModel => {
   if (!predictor?.band) {
     return { type: label, level: 'NOT_APPLICABLE', bandPercentages }
@@ -75,7 +86,7 @@ const buildV2StaticOrDynamicPredictor = (
   return {
     type: label,
     level: mapLevel(predictor.band),
-    score: predictor.score.toString(),
+    score: predictor.score?.toString(),
     staticOrDynamic: predictor.staticOrDynamic,
     lastUpdated,
     bandPercentages,
@@ -87,7 +98,7 @@ const buildV2Predictor = (
   band?: string,
   score?: string,
   lastUpdated?: string,
-  bandPercentages: string[] = []
+  bandPercentages: string[] = [],
 ): PredictorScaleViewModel => {
   if (!band) {
     return { type: label, level: 'NOT_APPLICABLE', bandPercentages }
@@ -114,12 +125,6 @@ export type TimelineItem = {
   scores: Record<string, TimelinePredictor>
 }
 
-const V1_PREDICTOR_LABELS: Record<string, string> = {
-  OGRS: 'OGRS3',
-  OSPDC: 'OSP-DC',
-  OSPIIC: 'OSP-IIC',
-}
-
 const V2_PREDICTOR_LABELS: Record<string, string> = {
   allReoffendingPredictor: 'All Reoffending Predictor',
   violentReoffendingPredictor: 'Violent Reoffending Predictor',
@@ -141,13 +146,15 @@ export const normaliseTimelineScores = (scores: Record<string, unknown>): Record
         level: string
         type: string
         score?: string | number
+        staticOrDynamic?: string
         twoYears?: string | number
       }
 
       normalised[key] = {
         level: v1.level,
-        type: V1_PREDICTOR_LABELS[key] ?? v1.type,
+        type: v1.type,
         score: key === 'OGRS' || key === 'OGP' || key === 'OVP' ? v1.twoYears?.toString() : v1.score?.toString(),
+        staticOrDynamic: v1.staticOrDynamic,
       }
 
       return
@@ -156,13 +163,13 @@ export const normaliseTimelineScores = (scores: Record<string, unknown>): Record
     // V2 predictors
     if (key in V2_PREDICTOR_LABELS) {
       const v2 = value as {
-        band: string
+        band: string | null
         score?: number
         staticOrDynamic?: string
       }
 
       normalised[key] = {
-        level: v2.band,
+        level: v2.band ?? undefined,
         type: V2_PREDICTOR_LABELS[key],
         score: v2.score?.toString(),
         staticOrDynamic: v2.staticOrDynamic,
@@ -171,6 +178,71 @@ export const normaliseTimelineScores = (scores: Record<string, unknown>): Record
   })
 
   return normalised
+}
+
+export type RoshRiskRow = {
+  riskTo?: string
+  community?: string
+  custody?: string
+}
+
+export type RoshSummaryView = {
+  hasBeenCompleted?: boolean
+  overallRisk?: string
+  risks?: RoshRiskRow[]
+  lastUpdated?: string
+}
+
+const normalise = (value?: string): string => {
+  if (!value || value.trim() === '') return 'N/A'
+  return value
+}
+
+export const buildRoshSummary = (roshSummary?: RoshSummary): RoshSummaryView | undefined => {
+  if (!roshSummary || roshSummary.error) return undefined
+
+  const risk = roshSummary.riskOfSeriousHarm
+
+  const community: RiskTo | undefined = risk?.riskInCommunity
+  const custody: RiskTo | undefined = risk?.riskInCustody
+
+  const risks: RoshRiskRow[] = [
+    {
+      riskTo: 'Children',
+      community: normalise(community?.riskToChildren),
+      custody: normalise(custody?.riskToChildren),
+    },
+    {
+      riskTo: 'Public',
+      community: normalise(community?.riskToPublic),
+      custody: normalise(custody?.riskToPublic),
+    },
+    {
+      riskTo: 'Known Adult',
+      community: normalise(community?.riskToKnownAdult),
+      custody: normalise(custody?.riskToKnownAdult),
+    },
+    {
+      riskTo: 'Staff',
+      community: normalise(community?.riskToStaff),
+      custody: normalise(custody?.riskToStaff),
+    },
+    {
+      riskTo: 'Prisoners',
+      community: normalise(community?.riskToPrisoners),
+      custody: normalise(custody?.riskToPrisoners),
+    },
+  ]
+
+  return {
+    hasBeenCompleted: true,
+    overallRisk: normalise(risk?.overallRisk),
+    risks,
+    lastUpdated: formatDateTimeFromIsoString({
+      isoDate: roshSummary.lastUpdatedDate,
+      dateOnly: true,
+    }),
+  }
 }
 
 export const transformRisk = (caseSummary: RiskResponse) => {
@@ -232,7 +304,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
               'Violent Reoffending Predictor',
               scores.violentReoffendingPredictor,
               lastUpdated,
-              ['0%', '30%', '60%', '80%', '100%']
+              ['0%', '30%', '60%', '80%', '100%'],
             )
           : undefined,
 
@@ -240,8 +312,8 @@ export const transformRisk = (caseSummary: RiskResponse) => {
           ? buildV2Predictor(
               'Direct Contact - Sexual Reoffending Predictor',
               scores.directContactSexualReoffendingPredictor.band,
-              scores.directContactSexualReoffendingPredictor.score.toString(),
-              lastUpdated
+              scores.directContactSexualReoffendingPredictor.score?.toString(),
+              lastUpdated,
             )
           : undefined,
 
@@ -249,8 +321,8 @@ export const transformRisk = (caseSummary: RiskResponse) => {
           ? buildV2Predictor(
               'Images and Indirect Contact - Sexual Reoffending Predictor',
               scores.indirectImageContactSexualReoffendingPredictor.band,
-              scores.indirectImageContactSexualReoffendingPredictor.score.toString(),
-              lastUpdated
+              scores.indirectImageContactSexualReoffendingPredictor.score?.toString(),
+              lastUpdated,
             )
           : undefined,
 
@@ -259,7 +331,7 @@ export const transformRisk = (caseSummary: RiskResponse) => {
               'Serious Violent Reoffending Predictor',
               scores.seriousViolentReoffendingPredictor,
               lastUpdated,
-              ['0%', '0.99%', '2.99%', '6.89%', '99%']
+              ['0%', '0.99%', '2.99%', '6.89%', '99%'],
             )
           : undefined,
 
@@ -268,61 +340,95 @@ export const transformRisk = (caseSummary: RiskResponse) => {
               'Combined Serious Reoffending Predictor',
               scores.combinedSeriousReoffendingPredictor,
               lastUpdated,
-              ['0%', '1%', '3%', '6.9%', '25%']
+              ['0%', '1%', '3%', '6.9%', '25%'],
             )
           : undefined,
 
         // V1 (legacy) scores
         rsr: scores.RSR
-          ? buildV1Predictor('RSR', scores.RSR.level, scores.RSR.score, lastUpdated, ['0%', '3%', '6.9%', '25%'])
+          ? buildV1Predictor({
+              label: scores.RSR.type,
+              level: scores.RSR.level,
+              score: scores.RSR.score,
+              staticOrDynamic: scores.RSR.staticOrDynamic,
+              lastUpdated,
+              bandPercentages: ['0%', '3%', '6.9%', '25%'],
+            })
           : undefined,
 
-        ospc: scores.OSPC ? buildV1Predictor('OSPC', scores.OSPC.level, scores.OSPC.score, lastUpdated) : undefined,
+        ospc: scores.OSPC
+          ? buildV1Predictor({
+              label: scores.OSPC.type,
+              level: scores.OSPC.level,
+              score: scores.OSPC.score,
+              lastUpdated,
+            })
+          : undefined,
 
-        ospi: scores.OSPI ? buildV1Predictor('OSPI', scores.OSPI.level, scores.OSPI.score, lastUpdated) : undefined,
+        ospi: scores.OSPI
+          ? buildV1Predictor({
+              label: scores.OSPI.type,
+              level: scores.OSPI.level,
+              score: scores.OSPI.score,
+              lastUpdated,
+            })
+          : undefined,
 
         ospdc: scores.OSPDC
-          ? buildV1Predictor('OSP/DC', scores.OSPDC.level, scores.OSPDC.score, lastUpdated)
+          ? buildV1Predictor({
+              label: scores.OSPDC.type,
+              level: scores.OSPDC.level,
+              score: scores.OSPDC.score,
+              lastUpdated,
+            })
           : undefined,
 
         ospiic: scores.OSPIIC
-          ? buildV1Predictor('OSP/IIC', scores.OSPIIC.level, scores.OSPIIC.score, lastUpdated)
+          ? buildV1Predictor({
+              label: scores.OSPIIC.type,
+              level: scores.OSPIIC.level,
+              score: scores.OSPIIC.score,
+              lastUpdated,
+            })
           : undefined,
 
         ogrs: scores.OGRS
-          ? buildV1Predictor('OGRS3', scores.OGRS.level, scores.OGRS.twoYears, lastUpdated, [
-              '0%',
-              '50%',
-              '75%',
-              '90%',
-              '100%',
-            ])
+          ? buildV1Predictor({
+              label: scores.OGRS.type,
+              level: scores.OGRS.level,
+              score: scores.OGRS.twoYears,
+              lastUpdated,
+              bandPercentages: ['0%', '50%', '75%', '90%', '100%'],
+            })
           : undefined,
 
         ogp: scores.OGP
-          ? buildV1Predictor('OGP', scores.OGP.level, scores.OGP.twoYears, lastUpdated, [
-              '0%',
-              '34%',
-              '67%',
-              '85%',
-              '100%',
-            ])
+          ? buildV1Predictor({
+              label: scores.OGP.type,
+              level: scores.OGP.level,
+              score: scores.OGP.twoYears,
+              lastUpdated,
+              bandPercentages: ['0%', '34%', '67%', '85%', '100%'],
+            })
           : undefined,
 
         ovp: scores.OVP
-          ? buildV1Predictor('OVP', scores.OVP.level, scores.OVP.twoYears, lastUpdated, [
-              '0%',
-              '30%',
-              '60%',
-              '80%',
-              '100%',
-            ])
+          ? buildV1Predictor({
+              label: scores.OVP.type,
+              level: scores.OVP.level,
+              score: scores.OVP.twoYears,
+              lastUpdated,
+              bandPercentages: ['0%', '30%', '60%', '80%', '100%'],
+            })
           : undefined,
       }
     : undefined
 
+  const roshWidgetSummary = buildRoshSummary(caseSummary.roshSummary)
+
   return {
     ...caseSummary,
+    roshWidgetSummary,
     timeline,
     predictorScales,
   }

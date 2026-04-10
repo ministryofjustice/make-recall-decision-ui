@@ -9,14 +9,14 @@ import {
 } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
-import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { ppudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/ppud/PpudDetailsResponse.testFactory'
-import { randomEnum } from '../../../../@types/enum.testFactory'
+import randomEnum from '../../../../@types/enum.testFactory'
 import selectIndeterminatePpudSentenceController from './selectIndeterminatePpudSentenceController'
 import { makeErrorObject } from '../../../../utils/errors'
 import { NamedFormError } from '../../../../@types/pagesForms'
-import { strings } from '../../../../textStrings/en'
-import { featureFlags } from '../../../../@types/featureFlags.testFactory'
+import strings from '../../../../textStrings/en'
+import featureFlags from '../../../../@types/featureFlags.testFactory'
 import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
 
 jest.mock('../../../../data/makeDecisionApiClient')
@@ -39,6 +39,7 @@ describe('get', () => {
           token: randomUUID(),
         },
         recommendation,
+        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const req = mockReq({
@@ -78,9 +79,9 @@ describe('get', () => {
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
     expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation, res.locals.flags.flagFTR56Enabled)
     expect(res.render).toHaveBeenCalledWith(
-      'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence'
+      'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence',
     )
     expect(next).toHaveBeenCalled()
   })
@@ -93,6 +94,7 @@ describe('get', () => {
           token: randomUUID(),
         },
         recommendation,
+        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const req = mockReq({
@@ -133,9 +135,9 @@ describe('get', () => {
 
     expect(getIndeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
     expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation)
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(recommendation, res.locals.flags.flagFTR56Enabled)
     expect(res.render).toHaveBeenCalledWith(
-      'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence'
+      'pages/recommendations/ppcs/indeterminateSentence/selectIndeterminatePpudSentence',
     )
     expect(next).toHaveBeenCalled()
   })

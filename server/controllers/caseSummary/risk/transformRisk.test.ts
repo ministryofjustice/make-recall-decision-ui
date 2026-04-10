@@ -1,5 +1,5 @@
-import { normaliseTimelineScores, transformRisk } from './transformRisk'
-import { RiskResponse } from '../../../@types/make-recall-decision-api'
+import { buildRoshSummary, normaliseTimelineScores, transformRisk } from './transformRisk'
+import { RiskResponse, RoshSummary } from '../../../@types/make-recall-decision-api'
 import {
   FourBandRiskScoreBand,
   StaticOrDynamic,
@@ -125,10 +125,10 @@ describe('transformRisk predictorScales', () => {
         current: {
           date: baseDate,
           scores: {
-            RSR: { level: 'HIGH', type: 'RSR', score: '5' },
-            OSPC: { level: 'MEDIUM', type: 'OSPC', score: '3' },
-            OSPI: { level: 'LOW', type: 'OSPI', score: '1' },
-            OGRS: { level: 'VERY_HIGH', type: 'OGRS', oneYear: '2.0', twoYears: '4.0' },
+            RSR: { level: 'HIGH', type: 'RSR', score: '5', staticOrDynamic: StaticOrDynamic.DYNAMIC },
+            OSPC: { level: 'MEDIUM', type: 'OSP-C', score: '3' },
+            OSPI: { level: 'LOW', type: 'OSP-I', score: '1' },
+            OGRS: { level: 'VERY_HIGH', type: 'OGRS3', oneYear: '2.0', twoYears: '4.0' },
             OGP: { level: 'MEDIUM', type: 'OGP', oneYear: '1.0', twoYears: '2.0' },
             OVP: { level: 'LOW', type: 'OVP', oneYear: '0.5', twoYears: '1.0' },
           },
@@ -145,12 +145,13 @@ describe('transformRisk predictorScales', () => {
       type: 'RSR',
       level: 'HIGH',
       score: '5',
+      staticOrDynamic: StaticOrDynamic.DYNAMIC,
       lastUpdated: '1 January 2026',
       bandPercentages: ['0%', '3%', '6.9%', '25%'],
     })
 
     expect(predictorScales?.ospc).toEqual({
-      type: 'OSPC',
+      type: 'OSP-C',
       level: 'MEDIUM',
       score: '3',
       lastUpdated: '1 January 2026',
@@ -158,7 +159,7 @@ describe('transformRisk predictorScales', () => {
     })
 
     expect(predictorScales?.ospi).toEqual({
-      type: 'OSPI',
+      type: 'OSP-I',
       level: 'LOW',
       score: '1',
       lastUpdated: '1 January 2026',
@@ -200,10 +201,10 @@ describe('transformRisk predictorScales', () => {
         current: {
           date: '2026-01-01',
           scores: {
-            RSR: { level: 'HIGH', score: '5', type: 'RSR' },
-            OSPDC: { level: 'MEDIUM', score: '4', type: 'OSP/DC' },
-            OSPIIC: { level: 'HIGH', score: '6', type: 'OSP/IIC' },
-            OGRS: { level: 'VERY_HIGH', twoYears: '4.0', type: 'OGRS' },
+            RSR: { level: 'HIGH', score: '5', type: 'RSR', staticOrDynamic: StaticOrDynamic.STATIC },
+            OSPDC: { level: 'MEDIUM', score: '4', type: 'OSP-DC' },
+            OSPIIC: { level: 'HIGH', score: '6', type: 'OSP-IIC' },
+            OGRS: { level: 'VERY_HIGH', twoYears: '4.0', type: 'OGRS3' },
             OGP: { level: 'MEDIUM', twoYears: '2.0', type: 'OGP' },
             OVP: { level: 'LOW', twoYears: '1.0', type: 'OVP' },
           },
@@ -220,6 +221,7 @@ describe('transformRisk predictorScales', () => {
       type: 'RSR',
       level: 'HIGH',
       score: '5',
+      staticOrDynamic: StaticOrDynamic.STATIC,
       lastUpdated: '1 January 2026',
       bandPercentages: ['0%', '3%', '6.9%', '25%'],
     })
@@ -228,7 +230,7 @@ describe('transformRisk predictorScales', () => {
     expect(predictorScales?.ospi).toBeUndefined()
 
     expect(predictorScales?.ospdc).toEqual({
-      type: 'OSP/DC',
+      type: 'OSP-DC',
       level: 'MEDIUM',
       score: '4',
       lastUpdated: '1 January 2026',
@@ -236,7 +238,7 @@ describe('transformRisk predictorScales', () => {
     })
 
     expect(predictorScales?.ospiic).toEqual({
-      type: 'OSP/IIC',
+      type: 'OSP-IIC',
       level: 'HIGH',
       score: '6',
       lastUpdated: '1 January 2026',
@@ -423,7 +425,7 @@ describe('transformRisk predictorScales', () => {
         current: {
           date: baseDate,
           scores: {
-            RSR: { level: null, type: 'RSR', score: null },
+            RSR: { level: null, type: 'RSR', score: null, staticOrDynamic: null },
             allReoffendingPredictor: { band: null, score: null, staticOrDynamic: null } as StaticOrDynamicPredictor,
           },
         },
@@ -443,9 +445,9 @@ describe('transformRisk predictorScales', () => {
 describe('normaliseTimelineScores', () => {
   it('normalises V1 predictors and uses correct score fields', () => {
     const input = {
-      OGRS: { level: 'HIGH', type: 'OGRS', twoYears: 4.5 },
-      OSPDC: { level: 'MEDIUM', type: 'OSP/DC', score: 3 },
-      RSR: { level: 'LOW', type: 'RSR', score: 1 },
+      OGRS: { level: 'HIGH', type: 'OGRS3', twoYears: 4.5 },
+      OSPDC: { level: 'MEDIUM', type: 'OSP-DC', score: 3 },
+      RSR: { level: 'LOW', type: 'RSR', score: 1, staticOrDynamic: StaticOrDynamic.STATIC },
     }
 
     const result = normaliseTimelineScores(input)
@@ -465,6 +467,7 @@ describe('normaliseTimelineScores', () => {
         level: 'LOW',
         type: 'RSR',
         score: '1',
+        staticOrDynamic: StaticOrDynamic.STATIC,
       },
     })
   })
@@ -527,7 +530,7 @@ describe('normaliseTimelineScores', () => {
 
   it('handles missing scores safely', () => {
     const input = {
-      OGRS: { level: 'HIGH', type: 'OGRS' }, // no twoYears
+      OGRS: { level: 'HIGH', type: 'OGRS3' }, // no twoYears
       allReoffendingPredictor: { band: 'LOW' }, // no score
     }
 
@@ -546,5 +549,92 @@ describe('normaliseTimelineScores', () => {
         staticOrDynamic: undefined,
       },
     })
+  })
+})
+
+describe('buildRoshSummaryView', () => {
+  it('returns undefined when roshSummary is undefined', () => {
+    const result = buildRoshSummary(undefined)
+    expect(result).toBeUndefined()
+  })
+
+  it('returns undefined when roshSummary contains an error', () => {
+    const input: RoshSummary = {
+      error: 'Service unavailable',
+    }
+
+    const result = buildRoshSummary(input)
+    expect(result).toBeUndefined()
+  })
+
+  it('builds a completed ROSH summary correctly', () => {
+    const input: RoshSummary = {
+      lastUpdatedDate: '2021-10-10T10:00:00Z',
+      riskOfSeriousHarm: {
+        overallRisk: 'HIGH',
+        riskInCommunity: {
+          riskToChildren: 'HIGH',
+          riskToPublic: 'HIGH',
+          riskToKnownAdult: 'MEDIUM',
+          riskToStaff: 'LOW',
+          riskToPrisoners: 'LOW',
+        },
+        riskInCustody: {
+          riskToChildren: 'LOW',
+          riskToPublic: 'LOW',
+          riskToKnownAdult: 'HIGH',
+          riskToStaff: 'VERY_HIGH',
+          riskToPrisoners: 'VERY_HIGH',
+        },
+      },
+    }
+
+    const result = buildRoshSummary(input)
+
+    expect(result).toEqual({
+      hasBeenCompleted: true,
+      overallRisk: 'HIGH',
+      risks: [
+        { riskTo: 'Children', community: 'HIGH', custody: 'LOW' },
+        { riskTo: 'Public', community: 'HIGH', custody: 'LOW' },
+        { riskTo: 'Known Adult', community: 'MEDIUM', custody: 'HIGH' },
+        { riskTo: 'Staff', community: 'LOW', custody: 'VERY_HIGH' },
+        { riskTo: 'Prisoners', community: 'LOW', custody: 'VERY_HIGH' },
+      ],
+      lastUpdated: '10 October 2021',
+    })
+  })
+
+  it('normalises missing values to N/A', () => {
+    const input: RoshSummary = {
+      riskOfSeriousHarm: {
+        overallRisk: 'MEDIUM',
+        riskInCommunity: {},
+        riskInCustody: {},
+      },
+    }
+
+    const result = buildRoshSummary(input)
+
+    expect(result?.risks).toEqual([
+      { riskTo: 'Children', community: 'N/A', custody: 'N/A' },
+      { riskTo: 'Public', community: 'N/A', custody: 'N/A' },
+      { riskTo: 'Known Adult', community: 'N/A', custody: 'N/A' },
+      { riskTo: 'Staff', community: 'N/A', custody: 'N/A' },
+      { riskTo: 'Prisoners', community: 'N/A', custody: 'N/A' },
+    ])
+  })
+
+  it('normalises blank overallRisk to N/A', () => {
+    const input: RoshSummary = {
+      riskOfSeriousHarm: {
+        overallRisk: '',
+      },
+    }
+
+    const result = buildRoshSummary(input)
+
+    expect(result?.hasBeenCompleted).toBe(true)
+    expect(result?.overallRisk).toBe('N/A')
   })
 })

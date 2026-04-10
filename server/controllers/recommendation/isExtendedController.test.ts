@@ -1,8 +1,10 @@
+import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import isExtendedSentenceController from './isExtendedController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import ppPaths from '../../routes/paths/pp'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -82,6 +84,24 @@ describe('get', () => {
         },
       ],
     })
+  })
+
+  it('load with FTR56 enabled redirects to Sentence Information page', async () => {
+    const basePath = faker.internet.url()
+    const res = mockRes({
+      locals: {
+        recommendation: {},
+        token: 'token1',
+        flags: { flagFTR56Enabled: true },
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+    isExtendedSentenceController.get(mockReq(), res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppPaths.sentenceInformation}`)
+    expect(res.render).not.toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
   })
 })
 

@@ -1,4 +1,4 @@
-import { inputDisplayValuesEmergencyRecall } from './inputDisplayValues'
+import inputDisplayValuesEmergencyRecall from './inputDisplayValues'
 
 describe('inputDisplayValuesEmergencyRecall', () => {
   const apiValues = {

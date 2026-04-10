@@ -1,5 +1,5 @@
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
-import { routeUrls } from '../../server/routes/routeUrls'
+import routeUrls from '../../server/routes/routeUrls'
 import getCaseRiskNoDataResponse from '../../api/responses/get-case-risk-no-data.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
@@ -21,7 +21,15 @@ context('Risk page', () => {
     cy.task('getStatuses', { statusCode: 200, response: [] })
   })
 
-  it('shows RoSH, MAPPA and predictor scores', () => {
+  it('shows a RoSH summary', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+      },
+    })
+
     cy.visit(`${routeUrls.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Jane Bloggs')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
@@ -29,29 +37,83 @@ context('Risk page', () => {
     // Content panels
     const { whoIsAtRisk, natureOfRisk, riskIncreaseFactors, riskImminence, riskMitigationFactors } =
       getCaseRiskResponse.roshSummary
-    cy.viewDetails('View more detail on Who is at risk').should('contain', whoIsAtRisk)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="whoIsAtRisk"]' }).should('exist')
-    cy.viewDetails('View more detail on Details of the risk').should('contain', natureOfRisk)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="natureOfRisk"]' }).should('exist')
-    cy.viewDetails('View more detail on When the risk will be highest').should('contain', riskImminence)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskImminence"]' }).should('exist')
-    cy.viewDetails('View more detail on Circumstances that will increase the risk').should(
-      'contain',
-      riskIncreaseFactors
-    )
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskIncreaseFactors"]' }).should('exist')
-    cy.viewDetails('View more detail on Factors that will reduce the risk').should('contain', riskMitigationFactors)
-    cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="riskMitigationFactors"]' }).should('exist')
 
-    // predictor scores
+    cy.getElement('ROSH Summary').should('exist')
+
+    const summaries = [
+      {
+        title: 'Who is at risk?',
+        subtitle: 'OASys R10.1 Who is at risk?',
+        qrAttr: 'whoIsAtRisk',
+        body: whoIsAtRisk,
+      },
+      {
+        title: 'Details of the risk',
+        subtitle: 'OASys R10.2 What is the nature of the risk?',
+        qrAttr: 'natureOfRisk',
+        body: natureOfRisk,
+      },
+      {
+        title: 'When the risk will be highest',
+        subtitle: 'OASys R10.3 When is the risk likely to be greatest?',
+        qrAttr: 'riskImminence',
+        body: riskImminence,
+      },
+      {
+        title: 'Circumstances that will increase the risk',
+        subtitle: 'OASys R10.4 What circumstances are likely to increase the risk?',
+        qrAttr: 'riskIncreaseFactors',
+        body: riskIncreaseFactors,
+      },
+      {
+        title: 'Factors that will reduce the risk',
+        subtitle: 'OASys R10.5 What factors are likely to reduce the risk?',
+        qrAttr: 'riskMitigationFactors',
+        body: riskMitigationFactors,
+      },
+    ]
+
+    summaries.forEach(({ qrAttr, title, subtitle, body }) => {
+      const parent = `[data-qa="${qrAttr}"]`
+
+      cy.get(parent).should('exist').contains(title)
+      cy.get(parent).contains(subtitle)
+      cy.get(parent).contains('Last updated: 9 Oct 2021')
+      cy.get(parent).contains(body)
+    })
+  })
+
+  it('shows RoSH, MAPPA and v1 predictor scores', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+      },
+    })
+
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+
+    // v1 predictor scores
     const v1Predictors = [OGRS3_EXPECTED, RSR_EXPECTED, OGP_EXPECTED, OVP_EXPECTED, OSP_IIC_EXPECTED, OSP_DC_EXPECTED]
 
     v1Predictors.forEach(predictor => {
       assertPredictorScale(predictor)
     })
 
-    cy.contains('.predictor-scale', 'OSPI').should('not.exist')
-    cy.contains('.predictor-scale', 'OSPC').should('not.exist')
+    // v2 predictor scores don't exist in the mocked response
+    const v2Predictors = [
+      ALL_REOFFENDING_EXPECTED,
+      VIOLENT_REOFFENDING_EXPECTED,
+      SERIOUS_VIOLENT_REOFFENDING_EXPECTED,
+      DIRECT_CONTACT_SEXUAL_REOFFENDING_EXPECTED,
+      INDIRECT_IMAGE_CONTACT_SEXUAL_REOFFENDING_EXPECTED,
+      COMBINED_SERIOUS_REOFFENDING_EXPECTED,
+    ]
+
+    v2Predictors.forEach(predictor => {
+      cy.contains('.predictor-scale', predictor.name).should('not.exist')
+    })
 
     // RoSH table
     cy.getElement('Last updated: 9 October 2021', { parent: '[data-qa="roshTable"]' }).should('exist')
@@ -145,11 +207,11 @@ context('Risk page', () => {
       scores: {
         OSPC: {
           level: 'LOW',
-          type: 'OSP/C',
+          type: 'OSP-C',
         },
         OSPI: {
           level: 'MEDIUM',
-          type: 'OSP/I',
+          type: 'OSP-I',
         },
       },
     }
@@ -169,8 +231,43 @@ context('Risk page', () => {
 
     assertPredictorScale(OSPC_EXPECTED)
     assertPredictorScale(OSPI_EXPECTED)
-    cy.contains('.predictor-scale', 'OSP/IIC').should('not.exist')
-    cy.contains('.predictor-scale', 'OSP/DC').should('not.exist')
+    cy.contains('.predictor-scale', 'OSP-IIC').should('not.exist')
+    cy.contains('.predictor-scale', 'OSP-DC').should('not.exist')
+  })
+
+  it('shows predictor scores with new OSP values', () => {
+    const currentScore = {
+      date: '2021-10-24',
+      scores: {
+        OSPDC: {
+          level: 'LOW',
+          type: 'OSP-DC',
+        },
+        OSPIIC: {
+          level: 'MEDIUM',
+          type: 'OSP-IIC',
+        },
+      },
+    }
+    const predictorScores = {
+      current: currentScore,
+      historical: [currentScore],
+    }
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: {
+        ...getCaseRiskResponse,
+        predictorScores,
+      },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+
+    assertPredictorScale(OSP_IIC_EXPECTED)
+    assertPredictorScale(OSP_DC_EXPECTED)
+    cy.contains('.predictor-scale', 'OSP-C').should('not.exist')
+    // using regex: /^OSP-I$/ rather than 'OSP-I' to avoid false positives from the string containing 'OSP-I' due to OSP-IIC is present
+    cy.contains('.predictor-scale', /^OSP-I$/).should('not.exist')
   })
 
   it('shows messages if RoSH / MAPPA / predictor score data is not found', () => {
@@ -201,14 +298,14 @@ context('Risk page', () => {
         .getElement('This information cannot be retrieved from OASys. Double-check as it may be out of date.', {
           parent: `[data-qa="${id}"]`,
         })
-        .should('exist')
+        .should('exist'),
     )
 
-    cy.getElement('This information cannot be retrieved from OASys. Double-check as it may be out of date.', {
+    cy.getElement('Something went wrong. We are unable to show ROSH information at this time. Try again later.', {
       parent: `[data-qa="roshTable"]`,
     }).should('exist')
 
-    cy.getElement('Unknown RoSH').should('exist')
+    cy.getElement('UNKNOWN LEVEL ROSH').should('exist')
     cy.getElement('Unknown MAPPA').should('exist')
     cy.getElement('No MAPPA data found in NDelius.', {
       parent: '[data-qa="mappa"]',
@@ -247,9 +344,9 @@ context('Risk page', () => {
         .getElement('This information cannot be retrieved from OASys.', {
           parent: `[data-qa="${id}"]`,
         })
-        .should('exist')
+        .should('exist'),
     )
-    cy.getElement('Unknown RoSH').should('exist')
+    cy.getElement('UNKNOWN LEVEL ROSH').should('exist')
     cy.getElement('This information cannot be retrieved from OASys.').should('exist')
     cy.getElement('Unknown MAPPA').should('exist')
     cy.getElement('No MAPPA data found in NDelius.', {
@@ -289,11 +386,23 @@ context('Risk page', () => {
         .getElement('The latest complete OASys assessment does not have full RoSH information.', {
           parent: `[data-qa="${id}"]`,
         })
-        .should('exist')
+        .should('exist'),
     )
-    cy.getElement('The latest complete OASys assessment does not have full RoSH information.', {
+    cy.getElement('Something went wrong. We are unable to show ROSH information at this time. Try again later.', {
       parent: '[data-qa="roshTable"]',
     }).should('exist')
+  })
+
+  it('shows a message if the assessment is incomplete', () => {
+    cy.task('getCase', {
+      sectionId: 'risk',
+      statusCode: 200,
+      response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
+    })
+    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.getText('banner-latest-complete-assessment')
+      .should('include', 'This information is from the latest complete OASys assessment.')
+      .should('include', 'Check OASys for new information. There is a more recent assessment that’s not complete.')
   })
 
   describe('Timeline', () => {
@@ -311,14 +420,14 @@ context('Risk page', () => {
       cy.get('[data-qa="timeline-item-1"]').should('contain', 'RoSH VERY HIGH')
       cy.getLinkHref({ qaAttr: 'view-contacts' }, { parent: '[data-qa="timeline-item-1"]' }).should(
         'contain',
-        '/cases/X34983/contact-history?dateFrom-day=17&dateFrom-month=10&dateFrom-year=2022&dateTo-day=17&dateTo-month=10&dateTo-year=2022&includeSystemGenerated=YES'
+        '/cases/X34983/contact-history?dateFrom-day=17&dateFrom-month=10&dateFrom-year=2022&dateTo-day=17&dateTo-month=10&dateTo-year=2022&includeSystemGenerated=YES',
       )
 
       cy.get('[data-qa="timeline-item-3"]').should('contain', '23 June 2021')
       cy.get('[data-qa="timeline-item-3"]').should('contain', 'RoSH HIGH')
       cy.viewDetails('View notes on RoSH history on 23 June 2021').should(
         'contain',
-        'Registering Staff ID re-assigned in TR Migration'
+        'Registering Staff ID re-assigned in TR Migration',
       )
       //  Step 0: Open all hidden sections
       cy.get('#predictor-timeline__toggle-all').click()
@@ -384,10 +493,10 @@ context('Risk page', () => {
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'MEDIUM').should('be.visible')
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '12%').should('be.visible')
 
-      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP/C').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP-C').should('be.visible')
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'MEDIUM').should('be.visible')
 
-      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP/I').should('be.visible')
+      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OSP-I').should('be.visible')
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'LOW').should('be.visible')
 
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OGRS3').should('be.visible')
@@ -401,8 +510,10 @@ context('Risk page', () => {
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '85%').should('be.visible')
 
       cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__type_and_level', 'OVP').should('be.visible')
-      cy.get(opts.parent).contains('span.legacy-predictor-timeline-item__score', '91%').should('be.visible')
-
+      cy.get(opts.parent)
+        .find('span.legacy-predictor-timeline-item__type_and_level strong')
+        .contains('UNKNOWN')
+        .should('be.visible')
       cy.get('.predictor-timeline__item')
         .contains('.predictor-timeline__byline', '23 February 2026 at 09:00')
         .parents('.predictor-timeline__item')
@@ -434,7 +545,7 @@ context('Risk page', () => {
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       cy.getText('timeline-missing').should(
         'equal',
-        'RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.'
+        'RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.',
       )
     })
 
@@ -452,7 +563,7 @@ context('Risk page', () => {
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       cy.getText('score-history-missing').should(
         'equal',
-        'Predictor scores cannot be retrieved from OASys. Double-check OASys.'
+        'Predictor scores cannot be retrieved from OASys. Double-check OASys.',
       )
       cy.get('[data-qa="timeline-item-1"]').should('contain', 'RoSH VERY HIGH')
       cy.get('[data-qa="timeline-item-2"]').should('contain', 'RoSH HIGH')
@@ -472,7 +583,7 @@ context('Risk page', () => {
       cy.visit(`${routeUrls.cases}/${crn}/risk`)
       cy.getText('rosh-history-missing').should(
         'equal',
-        'Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.'
+        'Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.',
       )
       cy.get('[data-qa="timeline-item-1"]').should('contain', '13 July 2021')
       cy.get('[data-qa="timeline-item-2"]').should('contain', '4 May 2019')
@@ -493,7 +604,7 @@ context('Risk page', () => {
                   OSPC: {
                     level: 'LOW',
                     score: 6.8,
-                    type: 'OSP/C',
+                    type: 'OSP-C',
                   },
                 },
               },
@@ -505,21 +616,8 @@ context('Risk page', () => {
       const opts = { parent: '[data-qa="timeline-item-2"]' }
       cy.get('#predictor-timeline__toggle-all').click()
       cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')
-      cy.getElement('OSP/C LOW', opts).should('be.visible')
+      cy.getElement('OSP-C LOW', opts).should('be.visible')
     })
-  })
-
-  it('shows a message if the assessment is incomplete', () => {
-    cy.task('getCase', {
-      sectionId: 'risk',
-      statusCode: 200,
-      response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
-    })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
-    cy.getText('banner-latest-complete-assessment').should(
-      'equal',
-      'This information is from the latest complete OASys assessment. Check OASys for new information. There’s a more recent assessment that’s not complete.'
-    )
   })
 })
 
@@ -608,6 +706,7 @@ const RSR_EXPECTED: PredictorScaleExpectation = {
   lastUpdated: '24 October 2021',
   positionClass: 'scale-marker-wrapper--position-three-of-four',
   bandPercentages: ['3%', '6.9%', '25%', ''],
+  staticOrDynamic: 'Dynamic',
 }
 
 const OGP_EXPECTED: PredictorScaleExpectation = {
@@ -629,7 +728,7 @@ const OVP_EXPECTED: PredictorScaleExpectation = {
 }
 
 const OSP_IIC_EXPECTED: PredictorScaleExpectation = {
-  name: 'OSP/IIC',
+  name: 'OSP-IIC',
   level: 'MEDIUM',
   score: '',
   lastUpdated: '24 October 2021',
@@ -638,7 +737,7 @@ const OSP_IIC_EXPECTED: PredictorScaleExpectation = {
 }
 
 const OSP_DC_EXPECTED: PredictorScaleExpectation = {
-  name: 'OSP/DC',
+  name: 'OSP-DC',
   level: 'LOW',
   score: '',
   lastUpdated: '24 October 2021',
@@ -647,7 +746,7 @@ const OSP_DC_EXPECTED: PredictorScaleExpectation = {
 }
 
 const OSPC_EXPECTED: PredictorScaleExpectation = {
-  name: 'OSPC',
+  name: 'OSP-C',
   level: 'LOW',
   score: '',
   lastUpdated: '24 October 2021',
@@ -656,7 +755,7 @@ const OSPC_EXPECTED: PredictorScaleExpectation = {
 }
 
 const OSPI_EXPECTED: PredictorScaleExpectation = {
-  name: 'OSPI',
+  name: 'OSP-I',
   level: 'MEDIUM',
   score: '',
   lastUpdated: '24 October 2021',

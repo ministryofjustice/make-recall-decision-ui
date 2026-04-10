@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 import { hasValue, isDefined } from '../../utils/utils'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import ppPaths from '../../routes/paths/pp'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -9,6 +11,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation,
     urlInfo: { basePath },
     user: { token, roles },
+    flags: { flagFTR56Enabled },
   } = res.locals
 
   const statuses = (
@@ -43,17 +46,21 @@ async function get(req: Request, res: Response, next: NextFunction) {
   } else if (isAPRationalRecorded) {
     // in the case of the OOH people raising a recall, when the PP enters, he should skip the trigger stuff as the decision has already been met.
 
-    if (!hasValue(recommendation.isIndeterminateSentence)) {
+    if (!flagFTR56Enabled && !hasValue(recommendation.isIndeterminateSentence)) {
       nextPageId = 'is-indeterminate'
-    } else if (!hasValue(recommendation.isExtendedSentence)) {
+    } else if (!flagFTR56Enabled && !hasValue(recommendation.isExtendedSentence)) {
       nextPageId = 'is-extended'
+    } else if (flagFTR56Enabled && !hasValue(recommendation.sentenceGroup)) {
+      nextPageId = 'sentence-information'
     } else if (!hasValue(recallType)) {
-      if (recommendation?.isIndeterminateSentence) {
+      if (recommendation?.isIndeterminateSentence || recommendation?.sentenceGroup === SentenceGroup.INDETERMINATE) {
         nextPageId = 'recall-type-indeterminate'
-      } else if (recommendation?.isExtendedSentence) {
+      } else if (recommendation?.isExtendedSentence || recommendation?.sentenceGroup === SentenceGroup.EXTENDED) {
         nextPageId = 'recall-type-extended'
-      } else {
+      } else if (!flagFTR56Enabled || recommendation?.sentenceGroup === SentenceGroup.YOUTH_SDS) {
         nextPageId = 'suitability-for-fixed-term-recall'
+      } else {
+        nextPageId = ppPaths.checkMappaInformation
       }
     } else if (recallType === 'NO_RECALL') {
       nextPageId = 'task-list-no-recall'
@@ -62,12 +69,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }
   } else if (!isDefined(recallType)) {
     if (isSpoRecordedRationale) {
-      if (recommendation?.isIndeterminateSentence) {
+      if (recommendation?.isIndeterminateSentence || recommendation?.sentenceGroup === SentenceGroup.INDETERMINATE) {
         nextPageId = 'recall-type-indeterminate'
-      } else if (recommendation?.isExtendedSentence) {
+      } else if (recommendation?.isExtendedSentence || recommendation?.sentenceGroup === SentenceGroup.EXTENDED) {
         nextPageId = 'recall-type-extended'
-      } else {
+      } else if (!flagFTR56Enabled || recommendation?.sentenceGroup === SentenceGroup.YOUTH_SDS) {
         nextPageId = 'suitability-for-fixed-term-recall'
+      } else {
+        nextPageId = ppPaths.checkMappaInformation
       }
     } else {
       nextPageId = 'task-list-consider-recall'

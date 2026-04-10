@@ -10,7 +10,7 @@ describe('vulnerabilityRequiresDetails', () => {
     VULNERABILITY.NOT_KNOWN,
   ]
   const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
-    (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability)
+    (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
   ) as VULNERABILITY[]
 
   vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
@@ -120,7 +120,7 @@ describe('validateVulnerabilitiesDetails', () => {
         href: '#vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
         invalidParts: undefined,
         name: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
-        text: 'Enter more detail for risk of suicide or self-harm',
+        text: 'Enter more detail for at risk of suicide or self-harm',
         values: undefined,
       },
     ])

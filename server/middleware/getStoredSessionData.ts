@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { transformErrorMessages } from '../utils/errors'
 
-export const getStoredSessionData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getStoredSessionData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { errors, unsavedValues, confirmationMessage } = req.session
   if (errors) {
     res.locals.errors = transformErrorMessages(errors)
@@ -17,3 +17,5 @@ export const getStoredSessionData = async (req: Request, res: Response, next: Ne
   }
   next()
 }
+
+export default getStoredSessionData

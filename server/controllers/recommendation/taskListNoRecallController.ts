@@ -2,11 +2,17 @@ import { NextFunction, Request, Response } from 'express'
 import { isDefined } from '../../utils/utils'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { taskCompleteness } from '../recommendations/helpers/taskCompleteness'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, urlInfo, flags: featureFlags } = res.locals
 
   const recallType = recommendation?.recallType?.selected?.value
+
+  if (featureFlags.flagFTR56Enabled && (!isDefined(recallType) || recallType !== 'NO_RECALL')) {
+    return res.redirect(303, nextPageLinkUrl({ nextPageId: ppPaths.taskListConsiderRecall, urlInfo }))
+  }
 
   if (recallType === undefined) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
@@ -19,7 +25,7 @@ function get(req: Request, res: Response, next: NextFunction) {
   const recallTypeNotSet = !isDefined(recommendation?.recallType?.selected?.value)
   if (recallTypeNotSet) {
     res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
-    return
+    return null
   }
 
   res.locals = {
@@ -28,10 +34,21 @@ function get(req: Request, res: Response, next: NextFunction) {
       id: 'taskListNoRecall',
     },
     recommendation,
+    ftr56Enabled: featureFlags.flagFTR56Enabled,
+    recallType,
   }
-  if (recommendation.isIndeterminateSentence) {
+
+  const isIndeterminate = featureFlags.flagFTR56Enabled
+    ? recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
+    : recommendation.isIndeterminateSentence
+
+  const isExtended = featureFlags.flagFTR56Enabled
+    ? recommendation.sentenceGroup === SentenceGroup.EXTENDED
+    : recommendation.isExtendedSentence
+
+  if (isIndeterminate) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-indeterminate'
-  } else if (recommendation.isExtendedSentence) {
+  } else if (isExtended) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-extended'
   } else {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type'
@@ -40,7 +57,7 @@ function get(req: Request, res: Response, next: NextFunction) {
   res.locals.taskCompleteness = taskCompleteness(recommendation, featureFlags)
 
   res.render(`pages/recommendations/taskListNoRecall`)
-  next()
+  return next()
 }
 
 export default { get }

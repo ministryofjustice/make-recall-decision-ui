@@ -1,8 +1,13 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { riskOfSeriousHarmLevel } from './rosh'
+import { SentenceGroup } from '../sentenceInformation/formOptions'
 
-export const generateRecallMinuteText = (recommendationResponse: RecommendationResponse) => {
-  const extended = recommendationResponse.isExtendedSentence ? 'YES' : 'NO'
+const generateRecallMinuteText = (recommendationResponse: RecommendationResponse, ftr56Enabled: boolean) => {
+  const extended =
+    (ftr56Enabled && recommendationResponse.sentenceGroup === SentenceGroup.EXTENDED) ||
+    (!ftr56Enabled && recommendationResponse.isExtendedSentence)
+      ? 'YES'
+      : 'NO'
   const custody = recommendationResponse.prisonOffender?.status === 'ACTIVE IN' ? 'YES at HMP' : 'NO'
   const rosh = riskOfSeriousHarmLevel(recommendationResponse.currentRoshForPartA)?.toUpperCase()
   const docMinute = recommendationResponse.bookRecallToPpud?.minute
@@ -16,3 +21,5 @@ export const generateRecallMinuteText = (recommendationResponse: RecommendationR
     `In custody: ${custody}${docMinute}`
   )
 }
+
+export default generateRecallMinuteText

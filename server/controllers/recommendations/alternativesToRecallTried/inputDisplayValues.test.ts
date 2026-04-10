@@ -1,4 +1,4 @@
-import { inputDisplayValuesAlternativesToRecallTried } from './inputDisplayValues'
+import inputDisplayValuesAlternativesToRecallTried from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
 import { ValueWithDetails } from '../../../@types/make-recall-decision-api'
 

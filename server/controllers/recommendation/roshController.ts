@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { routeUrls } from '../../routes/routeUrls'
-import { inputDisplayValuesRosh } from '../recommendations/rosh/inputDisplayValues'
-import { validateRosh } from '../recommendations/rosh/formValidator'
+import routeUrls from '../../routes/routeUrls'
+import inputDisplayValuesRosh from '../recommendations/rosh/inputDisplayValues'
+import validateRosh from '../recommendations/rosh/formValidator'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -66,7 +66,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-risk-profile`
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

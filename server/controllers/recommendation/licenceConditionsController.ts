@@ -1,17 +1,18 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesLicenceConditions } from '../recommendations/licenceConditions/inputDisplayValues'
+import inputDisplayValuesLicenceConditions from '../recommendations/licenceConditions/inputDisplayValues'
 import { CaseSummaryOverviewResponseV2 } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponseV2'
 import { formOptions, isValueValid } from '../recommendations/formOptions/formOptions'
 import { isCaseRestrictedOrExcluded, isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import { transformLicenceConditions } from '../caseSummary/licenceConditions/transformLicenceConditions'
 import { cleanseUiList } from '../../utils/lists'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
+import ppPaths from '../../routes/paths/pp'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 
@@ -19,8 +20,28 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
     user: { username, region, token },
+    urlInfo: { basePath, fromPageId },
     flags: featureFlags,
   } = res.locals
+
+  let backLinkUrl
+  let backLinkText
+  if (!res.locals.flags.flagFTR56Enabled) {
+    backLinkUrl = undefined
+
+    // We can't rely on checking the user's role for this, as some AP/OOH users also work as POs and might access the
+    // licence conditions page while processing a recommendation as a PO.
+    // We use .includes instead of .endsWith as the URL can contain the query parameter for the FTR56 flag at the end.
+    // Can be replaced with .endsWith once the flag is permanently enabled.
+  } else if (req.originalUrl?.includes('/ap-licence-conditions')) {
+    backLinkUrl = `/cases/${recommendation.crn}/overview`
+    backLinkText = `Back to overview for ${recommendation.personOnProbation.name}`
+  } else if (!fromPageId) {
+    backLinkUrl = `${basePath}${ppPaths.taskListConsiderRecall}`
+    backLinkText = 'Back to Consider a recall questions'
+  } else {
+    backLinkUrl = undefined
+  }
 
   res.locals = {
     ...res.locals,
@@ -32,6 +53,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
+    backLinkUrl,
+    backLinkText,
   }
 
   const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(recommendation.crn, 'licence-conditions', token)
@@ -40,7 +63,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...json,
     licenceConvictions: {
       activeCustodial: json.activeConvictions.filter(
-        conviction => conviction.sentence && conviction.sentence.isCustodial
+        conviction => conviction.sentence && conviction.sentence.isCustodial,
       ),
       hasMultipleActiveCustodial:
         json.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
@@ -56,7 +79,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       region,
     },
     recommendation.crn,
-    featureFlags
+    featureFlags,
   )
 
   res.render(`pages/recommendations/licenceConditions`)
@@ -154,7 +177,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       })
 
     const invalidStandardCondition = selectedStandardConditions.some(
-      id => !isValueValid(id, 'standardLicenceConditions')
+      id => !isValueValid(id, 'standardLicenceConditions'),
     )
 
     if (
@@ -213,11 +236,19 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
+  // We can't rely on checking the user's role for this, as some AP/OOH users also work as POs and might access the
+  // licence conditions page while processing a recommendation as a PO.
   if (req.originalUrl?.endsWith('/ap-licence-conditions')) {
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-recall-rationale', urlInfo }))
-  } else {
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
+    return res.redirect(303, nextPageLinkUrl({ nextPageId: 'ap-recall-rationale', urlInfo }))
   }
+
+  return res.redirect(
+    303,
+    nextPageLinkUrl({
+      nextPageId: flags.flagFTR56Enabled ? ppPaths.alternativesTried : ppPaths.taskListConsiderRecall,
+      urlInfo,
+    }),
+  )
 }
 
 function error(errorId: string) {

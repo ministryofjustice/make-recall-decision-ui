@@ -1,4 +1,4 @@
-import { parseUrl } from './parseUrl'
+import parseUrl from './parseUrl'
 import { mockReq, mockRes } from './testutils/mockRequestUtils'
 
 describe('parseUrl', () => {

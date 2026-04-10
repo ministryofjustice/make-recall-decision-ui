@@ -1,4 +1,4 @@
-import { inputDisplayValuesVulnerabilities } from './inputDisplayValues'
+import inputDisplayValuesVulnerabilities from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
 import { VULNERABILITY } from './formOptions'
 

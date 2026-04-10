@@ -1,11 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
+import routeUrls from '../../../routes/routeUrls'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateContraband = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+const validateContraband = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { hasContrabandRisk, hasContrabandRiskDetailsYes } = requestBody
   const invalidContraband = !isValueValid(hasContrabandRisk as string, 'yesNo')
   const missingYesDetail =
@@ -21,7 +21,7 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
           id: 'hasContrabandRisk',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingYesDetail) {
@@ -31,7 +31,7 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
           id: 'hasContrabandRiskDetailsYes',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -55,3 +55,5 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
     nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-custody`,
   }
 }
+
+export default validateContraband

@@ -4,12 +4,22 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    flags,
+    urlInfo: { basePath },
+  } = res.locals
+
+  if (flags.flagFTR56Enabled) {
+    res.redirect(303, `${basePath}${ppPaths.sentenceInformation}`)
+    return
+  }
 
   res.locals = {
     ...res.locals,
@@ -51,7 +61,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   // if the Out of Hours (Approved Premises) people have recorded a rationale.
   const isApRationalRecorded = (res.locals.statuses as RecommendationStatusResponse[]).find(
-    status => status.name === STATUSES.AP_RECORDED_RATIONALE && status.active
+    status => status.name === STATUSES.AP_RECORDED_RATIONALE && status.active,
   )
 
   const isIndeterminateSentence = req.body.isIndeterminateSentence === '1'
@@ -96,7 +106,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageId = 'task-list-consider-recall'
   }
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

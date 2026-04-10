@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, getSupportingDocuments, updateStatuses } from '../../data/makeDecisionApiClient'
 import bookToPpudController from './bookToPpudController'
@@ -7,12 +8,12 @@ import updateOffence from '../../booking/updateOffence'
 import updateRelease from '../../booking/updateRelease'
 import updateRecall from '../../booking/updateRecall'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { StageEnum } from '../../booking/StageEnum'
+import StageEnum from '../../booking/StageEnum'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
-import { generateRecallMinuteText } from '../recommendations/helpers/ppudMinutes'
-import { RECOMMENDATION_STATUS } from '../../middleware/recommendationStatus'
+import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
+import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -104,7 +105,7 @@ describe('post', () => {
       { stage: StageEnum.OFFENDER_BOOKED },
       recommendation,
       'token',
-      flags
+      flags,
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
@@ -128,7 +129,7 @@ describe('post', () => {
       },
       {
         xyz: true,
-      }
+      },
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
@@ -175,7 +176,7 @@ describe('post', () => {
       { stage: StageEnum.OFFENDER_BOOKED },
       recommendation,
       'token',
-      flags
+      flags,
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
@@ -196,7 +197,7 @@ describe('post', () => {
     const recommendation = {
       id: '12345',
     }
-    const flags = {}
+    const flags = { flagFTR56Enabled: faker.datatype.boolean() }
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -324,7 +325,7 @@ describe('post', () => {
       { stage: StageEnum.OFFENDER_BOOKED },
       recommendation,
       'token',
-      flags
+      flags,
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
@@ -336,7 +337,7 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
       'PPUDPartA',
       'token',
-      flags
+      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1'] },
@@ -344,7 +345,7 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dff',
       'PPUDLicenceDocument',
       'token',
-      flags
+      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2'] },
@@ -352,7 +353,7 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
       'PPUDProbationEmail',
       'token',
-      flags
+      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2', '3'] },
@@ -360,7 +361,7 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
       'PPUDOASys',
       'token',
-      flags
+      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2', '3', '4'] },
@@ -368,7 +369,7 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dbb',
       'PPUDPrecons',
       'token',
-      flags
+      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2', '3', '4', '5'] },
@@ -376,7 +377,7 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dcc',
       'PPUDPSR',
       'token',
-      flags
+      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2', '3', '4', '5', '6'] },
@@ -384,7 +385,7 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491ddd',
       'PPUDChargeSheet',
       'token',
-      flags
+      flags,
     )
     expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
       1,
@@ -392,7 +393,7 @@ describe('post', () => {
       '1',
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d11',
       'token',
-      flags
+      flags,
     )
     expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
       2,
@@ -400,7 +401,7 @@ describe('post', () => {
       '1',
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d22',
       'token',
-      flags
+      flags,
     )
 
     expect(createMinute).toHaveBeenCalledWith(
@@ -409,10 +410,10 @@ describe('post', () => {
       'BACKGROUND INFO...',
       'a minute',
       'token',
-      flags
+      flags,
     )
 
-    expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation)
+    expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation, flags.flagFTR56Enabled)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
@@ -464,7 +465,7 @@ describe('post', () => {
       },
       recommendation,
       'token',
-      flags
+      flags,
     )
     expect(createOrUpdateSentence).not.toHaveBeenCalled()
     expect(updateOffence).not.toHaveBeenCalled()
@@ -481,7 +482,7 @@ describe('post', () => {
       },
       {
         xyz: true,
-      }
+      },
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)

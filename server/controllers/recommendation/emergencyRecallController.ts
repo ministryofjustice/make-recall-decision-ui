@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesEmergencyRecall } from '../recommendations/emergencyRecall/inputDisplayValues'
-import { validateEmergencyRecall } from '../recommendations/emergencyRecall/formValidator'
+import inputDisplayValuesEmergencyRecall from '../recommendations/emergencyRecall/inputDisplayValues'
+import validateEmergencyRecall from '../recommendations/emergencyRecall/formValidator'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -21,6 +22,12 @@ function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues: res.locals.unsavedValues,
     apiValues: recommendation,
   })
+
+  if (res.locals.flags.flagFTR56Enabled) {
+    res.locals.isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED
+  } else {
+    res.locals.isExtendedSentence = recommendation.isExtendedSentence
+  }
 
   res.render(`pages/recommendations/emergencyRecall`)
   next()
@@ -61,13 +68,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageId = 'fixed-licence'
   }
 
-  if (recallType === 'STANDARD' && isExtendedSentence === 'true') {
+  if (!flags.flagFTR56Enabled && recallType === 'STANDARD' && isExtendedSentence === 'true') {
     nextPageId = 'indeterminate-details'
   }
-
-  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
-
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   if (valuesToSave.isThisAnEmergencyRecall) {
     appInsightsEvent(
@@ -79,9 +82,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
+
+  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

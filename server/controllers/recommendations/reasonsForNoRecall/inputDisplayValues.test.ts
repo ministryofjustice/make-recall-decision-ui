@@ -1,4 +1,4 @@
-import { inputDisplayValuesReasonsForNoRecall } from './inputDisplayValues'
+import inputDisplayValuesReasonsForNoRecall from './inputDisplayValues'
 
 describe('inputDisplayValuesReasonsForNoRecall', () => {
   const apiValues = {

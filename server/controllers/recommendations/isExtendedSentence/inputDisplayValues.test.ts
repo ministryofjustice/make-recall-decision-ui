@@ -1,4 +1,4 @@
-import { inputDisplayValuesIsExtendedSentence } from './inputDisplayValues'
+import inputDisplayValuesIsExtendedSentence from './inputDisplayValues'
 
 describe('inputDisplayValuesIsExtendedSentence', () => {
   const apiValues = {

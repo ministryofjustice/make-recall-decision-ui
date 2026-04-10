@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { appInsightsEvent } from '../monitoring/azureAppInsights'
-import { EVENTS } from '../utils/constants'
+import EVENTS from '../utils/constants'
 import { isPreprodOrProd } from '../utils/utils'
-import { AuditService } from '../services/auditService'
+import AuditService from '../services/auditService'
 
 const auditService = new AuditService()
 
@@ -22,7 +22,7 @@ export default function audit(req: Request, res: Response, _: NextFunction) {
       region,
       pageUrlSlug: pageUrlSlug.trim().length === 0 ? '<root>' : pageUrlSlug,
     },
-    featureFlags
+    featureFlags,
   )
   auditService.recommendationView({
     crn: res.locals.recommendation.crn,

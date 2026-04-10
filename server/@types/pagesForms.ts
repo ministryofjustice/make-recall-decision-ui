@@ -1,4 +1,4 @@
-import { EVENTS } from '../utils/constants'
+import EVENTS from '../utils/constants'
 import { RecommendationResponse } from './make-recall-decision-api'
 
 export interface FormError {
@@ -63,8 +63,8 @@ export type PageId =
   | 'alternativesToRecallTried'
   | 'indeterminateOrExtendedSentenceDetails'
   | 'managerReview'
-  | 'isIndeterminateSentence'
-  | 'isExtendedSentence'
+  | 'isIndeterminateSentence' // remove once FTR56 is live? Or remove entirely with PageMetaData if unused (PR #877?)?
+  | 'isExtendedSentence' // remove once FTR56 is live? Or remove entirely with PageMetaData if unused (PR #877?)?
   | 'indeterminateSentenceType'
   | 'recallType'
   | 'recallTypeIndeterminate'
@@ -140,6 +140,7 @@ export type InputDisplayValues = (args: InputDisplayValuesArgs) => unknown
 export interface UiListItem {
   value: string
   text: string
+  hint?: string
   active?: boolean
   selected?: boolean
 }

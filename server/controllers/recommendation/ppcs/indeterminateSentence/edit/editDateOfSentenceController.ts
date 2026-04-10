@@ -3,7 +3,7 @@ import { convertGmtDatePartsToUtc, dateHasError } from '../../../../../utils/dat
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../../../utils/errors'
 import { ValidationError } from '../../../../../@types/dates'
 import { nextPageLinkUrl } from '../../../../recommendations/helpers/urls'
-import { ppcsPaths } from '../../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../../routes/paths/ppcs'
 import { RecommendationResponse } from '../../../../../@types/make-recall-decision-api'
 import { updateRecommendation } from '../../../../../data/makeDecisionApiClient'
 import { parseDatePartsAsNumbers } from '../../../../../utils/dates'
@@ -12,7 +12,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, unsavedValues } = res.locals
   const recommendationResponse = recommendation as RecommendationResponse
   const ppudSentence = recommendationResponse.ppudOffender.sentences.find(
-    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
   )
   const dateOfSentence = new Date(recommendationResponse.bookRecallToPpud.ppudIndeterminateSentenceData.dateOfSentence)
 
@@ -57,7 +57,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         errorId: validationError.errorId,
         invalidParts: validationError.invalidParts,
         values: dateOfSentenceParts,
-      })
+      }),
     )
   }
 
@@ -85,7 +85,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({ nextPageId: ppcsPaths.sentenceToCommitIndeterminate, urlInfo })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

@@ -1,11 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
+import routeUrls from '../../../routes/routeUrls'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateAddress = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+const validateAddress = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { isMainAddressWherePersonCanBeFound, isMainAddressWherePersonCanBeFoundDetailsNo, addressCount } = requestBody
   const noMainAddresses = addressCount === '0'
   const invalidSelection = !isValueValid(isMainAddressWherePersonCanBeFound as string, 'yesNo')
@@ -26,7 +26,7 @@ export const validateAddress = async ({ requestBody, recommendationId }: FormVal
           id: 'isMainAddressWherePersonCanBeFound',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingNoDetail) {
@@ -36,7 +36,7 @@ export const validateAddress = async ({ requestBody, recommendationId }: FormVal
           id: 'isMainAddressWherePersonCanBeFoundDetailsNo',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -60,3 +60,5 @@ export const validateAddress = async ({ requestBody, recommendationId }: FormVal
     nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`,
   }
 }
+
+export default validateAddress

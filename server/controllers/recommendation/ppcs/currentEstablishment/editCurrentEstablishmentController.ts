@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import { isDefined } from '../../../../utils/utils'
 import { makeErrorObject } from '../../../../utils/errors'
-import { strings } from '../../../../textStrings/en'
+import strings from '../../../../textStrings/en'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import {
   extractCurrentEstablishment,
@@ -83,7 +83,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

@@ -1,4 +1,4 @@
-import { inputDisplayValuesDecisionDateTime } from './inputDisplayValues'
+import inputDisplayValuesDecisionDateTime from './inputDisplayValues'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesDecisionDateTime', () => {

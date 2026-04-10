@@ -23,7 +23,7 @@ import {
   isBeforeDate,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
-import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
+import getDisplayValueForOption from '../controllers/recommendations/helpers/getDisplayValueForOption'
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
 import { recommendationsListStatusLabel } from '../controllers/recommendations/helpers/recommendationStatus'
 import { defaultName } from '../monitoring/azureAppInsights'
@@ -58,11 +58,12 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       'node_modules/govuk-frontend/dist',
       'node_modules/@ministryofjustice/frontend/',
       'node_modules/@ministryofjustice/frontend/moj/components/',
+      'node_modules/@ministryofjustice/hmpps-probation-frontend-components/dist/assets/',
     ],
     {
       autoescape: true,
       express: app,
-    }
+    },
   )
 
   njkEnv.addFilter('initialiseName', (fullName: string) => {

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitIndeterminateController from './sentenceToCommitIndeterminateController'
-import { formatPpudSentenceLength } from '../../../../utils/dates/ppudSentenceLength/formatting'
+import formatPpudSentenceLength from '../../../../utils/dates/ppudSentenceLength/formatting'
 
 jest.mock('../../../../utils/dates/ppudSentenceLength/formatting')
 
@@ -76,7 +76,7 @@ describe('Sentence to Commit Indeterminate Controller', () => {
       })
 
       expect(formatPpudSentenceLength).toHaveBeenCalledWith(
-        res.locals.recommendation.ppudOffender.sentences[0].sentenceLength
+        res.locals.recommendation.ppudOffender.sentences[0].sentenceLength,
       )
     })
     it('Does not set any error message', async () => expect(res.locals.errorMessage).toBeUndefined())

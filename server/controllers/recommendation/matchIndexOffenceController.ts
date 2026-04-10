@@ -3,9 +3,9 @@ import { getRecommendation, ppudReferenceList, updateRecommendation } from '../.
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { ppcsPaths } from '../../routes/paths/ppcs'
+import ppcsPaths from '../../routes/paths/ppcs'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -14,7 +14,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   } = res.locals
 
   const offence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
 
   const list = await ppudReferenceList(token, 'index-offences')
@@ -84,7 +84,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageId: offenderExistsAndHasSentences ? ppcsPaths.selectPpudSentence : ppcsPaths.editCustodyType,
     urlInfo,
   })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

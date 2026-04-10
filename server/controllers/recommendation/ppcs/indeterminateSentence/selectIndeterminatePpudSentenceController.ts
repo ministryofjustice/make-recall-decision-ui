@@ -6,14 +6,14 @@ import {
   getIndeterminateSentences,
 } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
 import { makeErrorObject } from '../../../../utils/errors'
-import { strings } from '../../../../textStrings/en'
+import strings from '../../../../textStrings/en'
 import { PpudDetailsSentence } from '../../../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  const custodyGroup = calculatePartACustodyGroup(recommendation)
+  const custodyGroup = calculatePartACustodyGroup(recommendation, res.locals.flags.flagFTR56Enabled)
   const indeterminateSentences = getIndeterminateSentences(recommendation.ppudOffender?.sentences)
   const determinateSentences = getDeterminateSentences(recommendation.ppudOffender?.sentences)
 
@@ -90,7 +90,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const { urlInfo } = res.locals
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'sentence-to-commit-indeterminate', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'sentence-to-commit-indeterminate', urlInfo }))
 }
 
 export default { get, post }

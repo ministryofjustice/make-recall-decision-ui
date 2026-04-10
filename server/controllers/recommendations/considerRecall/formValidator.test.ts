@@ -1,4 +1,4 @@
-import { validateConsiderRecall } from './formValidator'
+import validateConsiderRecall from './formValidator'
 
 describe('validateConsiderRecall', () => {
   it('returns valuesToSave and no errors if valid (create recommendation)', async () => {

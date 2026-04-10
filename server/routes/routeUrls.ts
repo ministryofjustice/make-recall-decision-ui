@@ -1,6 +1,6 @@
 import { isPreprodOrProd } from '../utils/utils'
 
-export const routeUrls = isPreprodOrProd(process.env.ENVIRONMENT)
+const routeUrls = isPreprodOrProd(process.env.ENVIRONMENT)
   ? {
       start: '/',
       searchByCRN: '/search-by-crn',
@@ -23,3 +23,5 @@ export const routeUrls = isPreprodOrProd(process.env.ENVIRONMENT)
       recommendations: '/recommendations',
       accessibility: '/accessibility',
     }
+
+export default routeUrls

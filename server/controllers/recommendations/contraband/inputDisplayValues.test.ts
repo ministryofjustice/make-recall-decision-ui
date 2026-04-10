@@ -1,4 +1,4 @@
-import { inputDisplayValuesContraband } from './inputDisplayValues'
+import inputDisplayValuesContraband from './inputDisplayValues'
 
 describe('inputDisplayValuesContraband', () => {
   const apiValues = {

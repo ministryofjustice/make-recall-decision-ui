@@ -4,7 +4,7 @@ import { ContactTypeCode, ContactTypeDecorated } from '../../../../@types/contac
 import { countLabelSuffix } from '../../../../utils/nunjucks'
 
 // add data for each group and its contacts, for display as filter checkboxes
-export const decorateGroups = ({
+const decorateGroups = ({
   allContactTypes,
   contactTypeGroups,
   selectedContactTypes,
@@ -25,7 +25,7 @@ export const decorateGroups = ({
             value: contactTypeCode,
             description,
             html: `${description} <span class='text-secondary'>(<span data-qa='contact-count'>${count}<span class='govuk-visually-hidden'> ${countLabelSuffix(
-              { count, label: 'contact' }
+              { count, label: 'contact' },
             )}</span></span>)</span>`,
             count,
             systemGenerated,
@@ -53,3 +53,5 @@ export const decorateGroups = ({
     .filter(group => group.isGroupOpen || group.contactCountInGroup > 0)
   return sortList(groups, 'label')
 }
+
+export default decorateGroups

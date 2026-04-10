@@ -1,4 +1,4 @@
-import { validateAddress } from './formValidator'
+import validateAddress from './formValidator'
 
 describe('validateAddress', () => {
   const recommendationId = '456'

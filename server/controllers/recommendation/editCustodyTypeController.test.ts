@@ -2,7 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getRecommendation, ppudReferenceList, updateRecommendation } from '../../data/makeDecisionApiClient'
 import editCustodyTypeController from './editCustodyTypeController'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
-import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../../data/makeDecisionApiClient')
 

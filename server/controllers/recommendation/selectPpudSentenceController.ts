@@ -4,14 +4,14 @@ import { getRecommendation, updateRecommendation } from '../../data/makeDecision
 import { NamedFormError } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { ppcsPaths } from '../../routes/paths/ppcs'
+import strings from '../../textStrings/en'
+import ppcsPaths from '../../routes/paths/ppcs'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
   const offence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
 
   res.locals = {
@@ -45,7 +45,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
         id: 'ppudSentenceId',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -76,7 +76,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
-  next()
+  return next()
 }
 
 export default { get, post }

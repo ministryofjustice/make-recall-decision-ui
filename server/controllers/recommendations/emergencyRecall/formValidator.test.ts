@@ -1,4 +1,4 @@
-import { validateEmergencyRecall } from './formValidator'
+import validateEmergencyRecall from './formValidator'
 
 describe('validateEmergencyRecall', () => {
   const recommendationId = '34'

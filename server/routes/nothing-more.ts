@@ -1,1 +1,3 @@
-export const nothingMore = () => {}
+const nothingMore = () => {}
+
+export default nothingMore

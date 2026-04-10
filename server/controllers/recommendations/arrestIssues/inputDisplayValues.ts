@@ -2,11 +2,7 @@ import { booleanToYesNo, getProperty, isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { InputDisplayValuesArgs, ValueWithDetails } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesArrestIssues = ({
-  errors = {},
-  unsavedValues = {},
-  apiValues,
-}: InputDisplayValuesArgs) => {
+const inputDisplayValuesArrestIssues = ({ errors = {}, unsavedValues = {}, apiValues }: InputDisplayValuesArgs) => {
   const inputDisplayValues = {
     value: undefined,
     details: '',
@@ -18,9 +14,11 @@ export const inputDisplayValuesArrestIssues = ({
     if (!isDefined(errors.hasArrestIssuesDetailsYes)) {
       inputDisplayValues.details = getProperty<RecommendationResponse, string>(
         apiValues,
-        'hasArrestIssues.details'
+        'hasArrestIssues.details',
       ) as string
     }
   }
   return inputDisplayValues
 }
+
+export default inputDisplayValuesArrestIssues

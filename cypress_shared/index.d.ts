@@ -1,4 +1,4 @@
-import { UserType } from './commands'
+import UserType from '../server/@types/usertypes'
 
 export {}
 
@@ -54,7 +54,7 @@ declare global {
 
       enterDateTime(
         parts: { day: string; month: string; year: string; hour?: string; minute?: string },
-        opts?: CommandOpts
+        opts?: CommandOpts,
       ): Chainable<void>
 
       clickButton(label: string, opts?: CommandOpts): Chainable<Element>
@@ -74,7 +74,7 @@ declare global {
       getDataFromTable(
         tableCaption: string,
         readHrefInsteadOfTextWhereAvailable?: boolean,
-        opts?: CommandOpts
+        opts?: CommandOpts,
       ): Chainable<Record<string, string>[]>
 
       getDefinitionListValue(label: string, opts?: CommandOpts): Chainable<string>

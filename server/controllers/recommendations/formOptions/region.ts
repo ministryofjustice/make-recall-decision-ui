@@ -1,4 +1,4 @@
-export const regionEnum = [
+const regionEnum = [
   {
     value: '',
     text: 'Select your region',
@@ -60,3 +60,5 @@ export const regionEnum = [
     text: 'Yorkshire and the Humber',
   },
 ]
+
+export default regionEnum

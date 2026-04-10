@@ -1,15 +1,15 @@
 import { Request, Response } from 'express'
 import { createDocument, getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 import { isPreprodOrProd, validateCrn } from '../../utils/utils'
-import { AuditService } from '../../services/auditService'
+import AuditService from '../../services/auditService'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { DOCUMENT_TYPE } from '../../@types/make-recall-decision-api/models/DocumentType'
+import DOCUMENT_TYPE from '../../@types/make-recall-decision-api/models/DocumentType'
 
 const auditService = new AuditService()
 
-export const createAndDownloadDocument =
+const createAndDownloadDocument =
   (documentType: DOCUMENT_TYPE) =>
   async (req: Request, res: Response): Promise<Response | void> => {
     const { recommendationId } = req.params
@@ -36,7 +36,7 @@ export const createAndDownloadDocument =
       requestBody,
       user.token,
       flags,
-      preview
+      preview,
     )
     res.contentType('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     res.header('Content-Disposition', `attachment; filename="${fileName}"`)
@@ -91,7 +91,7 @@ export const createAndDownloadDocument =
         EVENTS.PART_A_DOCUMENT_DOWNLOADED,
         user.username,
         { crn: normalizedCrn, recommendationId, region: user.region },
-        flags
+        flags,
       )
     } else if (documentType === DOCUMENT_TYPE.NO_RECALL_LETTER) {
       await auditService.createNoRecallLetter(auditData)
@@ -103,7 +103,9 @@ export const createAndDownloadDocument =
           recommendationId,
           region: user.region,
         },
-        flags
+        flags,
       )
     }
   }
+
+export default createAndDownloadDocument

@@ -49,6 +49,6 @@ export default function recommendationStatusCheck(statusCheck?: Check): RequestH
       }
       return res.redirect('/inappropriate-error')
     }
-    next()
+    return next()
   }
 }

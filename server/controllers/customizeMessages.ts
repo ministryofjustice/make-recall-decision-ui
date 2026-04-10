@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { renderStrings } from './recommendations/helpers/renderStrings'
-import { strings } from '../textStrings/en'
+import renderStrings from './recommendations/helpers/renderStrings'
+import strings from '../textStrings/en'
 import { renderErrorMessages } from '../utils/errors'
 import { renderFormOptions } from './recommendations/formOptions/formOptions'
 

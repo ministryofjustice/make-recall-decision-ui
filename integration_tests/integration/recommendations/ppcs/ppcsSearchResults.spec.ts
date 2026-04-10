@@ -1,8 +1,8 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { ppcsPaths } from '../../../../server/routes/paths/ppcs'
+import ppcsPaths from '../../../../server/routes/paths/ppcs'
 import { testTable } from '../../../componentTests/table.tests'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
-import { RECOMMENDATION_STATUS } from '../../../../server/middleware/recommendationStatus'
+import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
 import searchMappedUserResponse from '../../../../api/responses/searchMappedUsers.json'
 import searchActiveUsersResponse from '../../../../api/responses/ppudSearchActiveUsers.json'
 

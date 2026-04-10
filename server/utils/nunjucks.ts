@@ -45,7 +45,7 @@ export const selectedFilterItems = ({ items, urlInfo }: { items: SelectedFilterI
 export const removeUndefinedListItems = (items: unknown[]) => items.filter(Boolean)
 
 export const renderTemplateString = (str: string, data: Record<string, unknown>): string => {
-  const env = nunjucks.configure({ autoescape: false })
+  const env = new nunjucks.Environment(null, { autoescape: false })
   return env.renderString(str, data)
 }
 export const isDatePartInvalid = (datePart: string, errors: FormError) =>

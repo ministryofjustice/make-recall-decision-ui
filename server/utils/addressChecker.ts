@@ -8,7 +8,7 @@ type Address = {
 }
 
 // Check if all addresses are effectively empty
-export function checkIfAddressesAreEmpty(addresses: Address[] = []): boolean {
+function checkIfAddressesAreEmpty(addresses: Address[] = []): boolean {
   // Returns true if all addresses are empty, false otherwise
   return addresses.every(
     (address: Address) =>
@@ -16,6 +16,8 @@ export function checkIfAddressesAreEmpty(addresses: Address[] = []): boolean {
       address.line2 === '' &&
       address.town === '' &&
       address.postcode === '' &&
-      !address.noFixedAbode
+      !address.noFixedAbode,
   )
 }
+
+export default checkIfAddressesAreEmpty

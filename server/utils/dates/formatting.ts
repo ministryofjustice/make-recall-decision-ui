@@ -61,7 +61,7 @@ export const formatDateTimeFromIsoString = ({
 
 export const formatDateRange = ({ dateFromIso, dateToIso }: { dateFromIso: string; dateToIso: string }) =>
   `${DateTime.fromISO(dateFromIso).setZone(europeLondon).toFormat(dateFormatShortMonth)} to ${DateTime.fromISO(
-    dateToIso
+    dateToIso,
   )
     .setZone(europeLondon)
     .toFormat(dateFormatShortMonth)}`

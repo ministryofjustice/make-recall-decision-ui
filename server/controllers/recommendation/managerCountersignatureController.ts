@@ -4,9 +4,9 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { isMandatoryTextValue } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, user } = res.locals
@@ -65,7 +65,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'managerCountersignatureExposition',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -103,10 +103,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
     isSpoMode() ? EVENTS.SPO_COUNTERSIGNATURE : EVENTS.SENIOR_MANAGER_COUNTERSIGNATURE,
     username,
     { crn, recommendationId, region },
-    flags
+    flags,
   )
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'countersign-confirmation', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'countersign-confirmation', urlInfo }))
 }
 
 export default { get, post }

@@ -29,14 +29,6 @@ Cypress.Commands.add('mockCaseSummaryData', () => {
   cy.task('getCase', { sectionId: 'recommendations', statusCode: 200, response: getRecommendationsResponse })
 })
 
-export const setResponsePropertiesToNull = recommendation => {
-  const copy = { ...recommendation }
-  Object.keys(recommendation).forEach(key => {
-    copy[key] = null
-  })
-  return copy
-}
-
 Cypress.Commands.add('mockRecommendationData', () => {
   cy.task('getRecommendation', {
     statusCode: 200,
@@ -81,3 +73,13 @@ Cypress.Commands.add('injectAxe', () => {
     })
   })
 })
+
+const setResponsePropertiesToNull = recommendation => {
+  const copy = { ...recommendation }
+  Object.keys(recommendation).forEach(key => {
+    copy[key] = null
+  })
+  return copy
+}
+
+export default setResponsePropertiesToNull

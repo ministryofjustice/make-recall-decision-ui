@@ -1,14 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
+import routeUrls from '../../../routes/routeUrls'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateArrestIssues = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validateArrestIssues = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { hasArrestIssues, hasArrestIssuesDetailsYes } = requestBody
   const invalidArrestIssues = !isValueValid(hasArrestIssues as string, 'yesNo')
   const missingYesDetail = hasArrestIssues === 'YES' && isEmptyStringOrWhitespace(hasArrestIssuesDetailsYes)
@@ -23,7 +20,7 @@ export const validateArrestIssues = async ({
           id: 'hasArrestIssues',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingYesDetail) {
@@ -33,7 +30,7 @@ export const validateArrestIssues = async ({
           id: 'hasArrestIssuesDetailsYes',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -57,3 +54,5 @@ export const validateArrestIssues = async ({
     nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-custody`,
   }
 }
+
+export default validateArrestIssues

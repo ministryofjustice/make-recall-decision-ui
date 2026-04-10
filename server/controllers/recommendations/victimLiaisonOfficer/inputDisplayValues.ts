@@ -2,7 +2,7 @@ import { isDefined } from '../../../utils/utils'
 import { splitIsoDateToParts } from '../../../utils/dates/conversion'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesVictimLiaisonOfficer = ({ errors = {}, apiValues }: InputDisplayValuesArgs) => {
+const inputDisplayValuesVictimLiaisonOfficer = ({ errors = {}, apiValues }: InputDisplayValuesArgs) => {
   if (isDefined(errors.dateVloInformed)) {
     return {
       value: errors.dateVloInformed.values,
@@ -12,3 +12,5 @@ export const inputDisplayValuesVictimLiaisonOfficer = ({ errors = {}, apiValues 
     value: splitIsoDateToParts(apiValues.dateVloInformed),
   }
 }
+
+export default inputDisplayValuesVictimLiaisonOfficer

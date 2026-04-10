@@ -4,12 +4,12 @@ import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import { isPhoneValid } from '../../../utils/validate-formats'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateNextAppointment = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateNextAppointment = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
 
   const { howWillAppointmentHappen, probationPhoneNumber, createLetterTasksComplete } = requestBody
@@ -46,7 +46,7 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
           id: 'howWillAppointmentHappen',
           text: strings.errors.noAppointmentTypeSelected,
           errorId: 'noAppointmentTypeSelected',
-        })
+        }),
       )
     }
     if (dateHasError(dateTimeOfAppointmentIso)) {
@@ -56,12 +56,12 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
           id: invalidDateInputPart(dateTimeOfAppointmentIso as ValidationError, 'dateTimeOfAppointment'),
           text: formatValidationErrorMessage(
             dateTimeOfAppointmentIso as ValidationError,
-            'date and time of the appointment'
+            'date and time of the appointment',
           ),
           errorId: (dateTimeOfAppointmentIso as ValidationError).errorId,
           invalidParts: (dateTimeOfAppointmentIso as ValidationError).invalidParts,
           values: dateTimeOfAppointmentParts as Record<string, string>,
-        })
+        }),
       )
     }
     if (missingPhone) {
@@ -70,7 +70,7 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
           id: 'probationPhoneNumber',
           text: strings.errors.missingProbationPhoneNumber,
           errorId: 'missingProbationPhoneNumber',
-        })
+        }),
       )
     }
 
@@ -80,7 +80,7 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
           id: 'probationPhoneNumber',
           text: strings.errors.invalidPhoneNumber,
           errorId: 'invalidPhoneNumber',
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -114,4 +114,8 @@ export const validateNextAppointment = async ({ requestBody, urlInfo }: FormVali
       nextPagePath,
     }
   }
+
+  return { errors }
 }
+
+export default validateNextAppointment

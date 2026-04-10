@@ -27,7 +27,8 @@ import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendat
 import type { WhyConsideredRecall } from './WhyConsideredRecall'
 import { CvlLicenceConditionsBreached } from './CvlLicenceConditionsBreached'
 import BookingMemento from '../../../booking/BookingMemento'
-import { CUSTODY_GROUP } from './ppud/CustodyGroup'
+import CUSTODY_GROUP from './ppud/CustodyGroup'
+import { SentenceGroup } from '../../../controllers/recommendations/sentenceInformation/formOptions'
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
@@ -44,7 +45,9 @@ export type RecommendationResponse = {
   recallType?: RecallType;
   decisionDateTime?: string;
   responseToProbation?: string;
+  triggerLeadingToRecall?: string;
   whatLedToRecall?: string;
+  sentenceGroup?: SentenceGroup;
   isThisAnEmergencyRecall?: boolean;
   isIndeterminateSentence?: boolean;
   isExtendedSentence?: boolean;
@@ -106,6 +109,15 @@ export type RecommendationResponse = {
   isRecalledOnNewChargedOffence?: boolean,
   isServingFTSentenceForTerroristOffence?: boolean,
   hasBeenChargedWithTerroristOrStateThreatOffence?: boolean,
+  wasReferredToParoleBoard244ZB?: boolean,
+  wasRepatriatedForMurder?: boolean,
+  isServingSOPCSentence?: boolean,
+  isServingDCRSentence?: boolean,
+  isChargedWithOffence?: boolean,
+  isServingTerroristOrNationalSecurityOffence?: boolean,
+  isAtRiskOfInvolvedInForeignPowerThreat?: boolean,
+  isYouthSentenceOver12Months?: boolean,
+  isYouthChargedWithSeriousOffence?: boolean,
 };
 
 export namespace RecommendationResponse {

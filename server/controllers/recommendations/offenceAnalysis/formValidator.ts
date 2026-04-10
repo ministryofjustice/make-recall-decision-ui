@@ -1,13 +1,10 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
-import { strings } from '../../../textStrings/en'
+import routeUrls from '../../../routes/routeUrls'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateOffenceAnalysis = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validateOffenceAnalysis = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -35,3 +32,5 @@ export const validateOffenceAnalysis = async ({
     nextPagePath,
   }
 }
+
+export default validateOffenceAnalysis

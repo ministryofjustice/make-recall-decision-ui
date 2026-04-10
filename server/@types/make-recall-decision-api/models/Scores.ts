@@ -4,10 +4,11 @@
 
 import type { LevelWithScore } from './LevelWithScore';
 import type { LevelWithTwoYearScores } from './LevelWithTwoYearScores';
+import { LevelWithStaticOrDynamicScore } from './LevelWithStaticOrDynamicScore'
 
 export type Scores = {
   // V1 assessment scores
-    RSR?: LevelWithScore;
+    RSR?: LevelWithStaticOrDynamicScore;
     OSPC?: LevelWithScore;
     OSPI?: LevelWithScore;
     OSPDC?: LevelWithScore;
@@ -58,11 +59,13 @@ export enum FourBandRiskScoreBand {
   MEDIUM = "MEDIUM",
   HIGH = "HIGH",
   VERY_HIGH = "VERY_HIGH",
+  NOT_APPLICABLE = "NOT_APPLICABLE",
 }
 
 export enum ThreeBandRiskScoreBand {
   LOW = "LOW",
   MEDIUM = "MEDIUM",
   HIGH = "HIGH",
+  NOT_APPLICABLE = "NOT_APPLICABLE"
 }
 

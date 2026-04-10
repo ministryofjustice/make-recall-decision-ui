@@ -1,0 +1,32 @@
+{% set discretionaryPanelTextHtml %}
+    {% set panelHeadingText = [recommendation.personOnProbation.name, " can have either a fixed term or standard recall"] | join %}
+    {{ heading(panelHeadingText, 2, "m") }}
+
+    {{ bodyParagraph("This is based on their MAPPA information and your answers to the fixed term recall (FTR) exclusion criteria. If this does not look right, you can go back to amend your answers.") }}
+
+    {% set detailsPanelHtml %}
+        {{ bodyParagraph(["When deciding if ", recommendation.personOnProbation.name, " is suitable for an FTR, you must consider:"] | join) }}
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>if their index offence was sexual or violent</li>
+            <li>their previous offending</li>
+            <li>their current behaviours and attitudes</li>
+            <li>if their risk level is manageable in the community when re-released</li>
+            <li>any identified risk factors</li>
+            <li>their risk assessment</li>
+        </ul>
+        {{ bodyParagraph("If you believe they may pose too high a risk in the community at the end of a fixed term, recommend a standard recall instead.") }}
+    {% endset %}
+
+    {{ govukDetails({
+        summaryText: 'Deciding between fixed term and standard recalls',
+        html: detailsPanelHtml
+    })}}
+{% endset %}
+
+{{ mojTicketPanel({
+    items: [{
+        html: discretionaryPanelTextHtml,
+        classes: "moj-ticket-panel__content--blue"
+    }]
+}) }}

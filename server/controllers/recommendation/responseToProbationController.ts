@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
@@ -42,7 +42,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'responseToProbation',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -58,7 +58,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list-consider-recall', urlInfo }))
 }
 
 export default { get, post }

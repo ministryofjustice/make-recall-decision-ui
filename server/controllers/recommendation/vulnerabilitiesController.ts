@@ -1,26 +1,18 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesVulnerabilities } from '../recommendations/vulnerabilities/inputDisplayValues'
-import {
-  validateVulnerabilities,
-  validateVulnerabilitiesRiskToSelf,
-} from '../recommendations/vulnerabilities/formValidator'
-import {
-  vulnerabilities,
-  vulnerabilitiesRiskToSelf,
-  VULNERABILITY,
-} from '../recommendations/vulnerabilities/formOptions'
+import inputDisplayValuesVulnerabilities from '../recommendations/vulnerabilities/inputDisplayValues'
+import validateVulnerabilities from '../recommendations/vulnerabilities/formValidator'
+import { vulnerabilities, VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { ValueWithDetails, VulnerabilitiesRecommendation } from '../../@types/make-recall-decision-api'
-import { ppPaths } from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
-  const pageId = res.locals.flags.flagRiskToSelfEnabled ? 'vulnerabilitiesRiskToSelf' : 'vulnerabilities'
   res.locals = {
     ...res.locals,
     page: {
-      id: pageId,
+      id: 'vulnerabilities',
     },
   }
 
@@ -31,9 +23,8 @@ function get(req: Request, res: Response, next: NextFunction) {
   })
   res.locals.inputDisplayValues = inputDisplayValues
 
-  const vulnerabilitiesToUse = res.locals.flags.flagRiskToSelfEnabled ? vulnerabilitiesRiskToSelf : vulnerabilities
-  res.locals.exclusive = vulnerabilitiesToUse.find(v => v.behaviour === 'exclusive')
-  res.locals.nonExclusive = vulnerabilitiesToUse.filter(item => item.behaviour !== 'exclusive')
+  res.locals.exclusive = vulnerabilities.find(v => v.behaviour === 'exclusive')
+  res.locals.nonExclusive = vulnerabilities.filter(item => item.behaviour !== 'exclusive')
   res.locals.exclusiveSelected = Array.isArray(inputDisplayValues)
     ? inputDisplayValues.filter(vuln => vuln.value === 'NOT_KNOWN' || vuln.value === 'NONE').length > 0
     : false
@@ -54,22 +45,19 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const { vulnerabilities: existingVulnerabilities } = recommendation
-  const validationToUse = flags.flagRiskToSelfEnabled ? validateVulnerabilitiesRiskToSelf : validateVulnerabilities
 
   let requestBody = req.body
 
-  if (flags.flagRiskToSelfEnabled) {
-    requestBody = {
-      ...req.body,
-      ...(existingVulnerabilities &&
-        existingVulnerabilities.selected.reduce((acc: Record<string, string>, val: ValueWithDetails) => {
-          acc[`vulnerabilitiesDetails-${val.value}`] = val.details
-          return acc
-        }, {})),
-    }
+  requestBody = {
+    ...req.body,
+    ...(existingVulnerabilities &&
+      existingVulnerabilities.selected.reduce((acc: Record<string, string>, val: ValueWithDetails) => {
+        acc[`vulnerabilitiesDetails-${val.value}`] = val.details
+        return acc
+      }, {})),
   }
 
-  const { errors, valuesToSave, unsavedValues } = await validationToUse({
+  const { errors, valuesToSave, unsavedValues } = await validateVulnerabilities({
     requestBody,
     recommendationId,
     urlInfo,
@@ -93,20 +81,18 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   let nextPageId = 'task-list#heading-vulnerability'
 
-  if (flags.flagRiskToSelfEnabled) {
-    const vulnerabilitiesAreSelected = valuesToSaveVulnerabilities.selected.filter(
-      vulnerability =>
-        ![VULNERABILITY.NONE_OR_NOT_KNOWN, VULNERABILITY.NOT_KNOWN, VULNERABILITY.NONE].includes(
-          vulnerability.value as VULNERABILITY
-        )
-    )
+  const vulnerabilitiesAreSelected = valuesToSaveVulnerabilities.selected.filter(
+    vulnerability =>
+      ![VULNERABILITY.NONE_OR_NOT_KNOWN, VULNERABILITY.NOT_KNOWN, VULNERABILITY.NONE].includes(
+        vulnerability.value as VULNERABILITY,
+      ),
+  )
 
-    if (vulnerabilitiesAreSelected.length) {
-      nextPageId = ppPaths.vulnerabilitiesDetails
-    }
+  if (vulnerabilitiesAreSelected.length) {
+    nextPageId = ppPaths.vulnerabilitiesDetails
   }
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

@@ -1,13 +1,13 @@
 import { ContactHistoryResponse } from '../../../@types/make-recall-decision-api/models/ContactHistoryResponse'
-import { filterContactsByDateRange } from './filterContactsByDateRange'
+import filterContactsByDateRange from './filterContactsByDateRange'
 import { groupContactsByStartDate } from './groupContactsByStartDate'
-import { filterContactsByContactType } from './filterContactsByContactType'
-import { filterContactsBySearch } from './filterContactsBySearch'
-import { removeFutureContacts } from './removeFutureContacts'
+import filterContactsByContactType from './filterContactsByContactType'
+import filterContactsBySearch from './filterContactsBySearch'
+import removeFutureContacts from './removeFutureContacts'
 import { ContactHistoryFilters } from '../../../@types/contacts'
 import { filterContactsBySystemGenerated } from './filterContactsBySystemGenerated'
 
-export const transformContactHistory = ({
+const transformContactHistory = ({
   caseSummary,
   filters,
 }: {
@@ -52,7 +52,7 @@ export const transformContactHistory = ({
     filters,
   })
   const hasActiveFilters = Boolean(
-    selectedDateRange || selectedContactTypes?.length || selectedSearch || selectedSystemGenerated
+    selectedDateRange || selectedContactTypes?.length || selectedSearch || selectedSystemGenerated,
   )
   const combinedErrors =
     errorsDateRange || errorsSearchFilter ? [...(errorsDateRange || []), ...(errorsSearchFilter || [])] : undefined
@@ -94,3 +94,5 @@ export const transformContactHistory = ({
     },
   }
 }
+
+export default transformContactHistory

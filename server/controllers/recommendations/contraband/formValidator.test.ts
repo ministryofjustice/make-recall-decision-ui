@@ -1,4 +1,4 @@
-import { validateContraband } from './formValidator'
+import validateContraband from './formValidator'
 
 describe('validateContraband', () => {
   const recommendationId = '456'

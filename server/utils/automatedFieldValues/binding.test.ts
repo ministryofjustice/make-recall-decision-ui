@@ -1,4 +1,4 @@
-import { bindPlaceholderValues } from './binding'
+import bindPlaceholderValues from './binding'
 
 describe('Bind placeholder values', () => {
   it('string with no placeholders is left untouched', () => {

@@ -23,7 +23,7 @@ describe('retrieve recommendation', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.locals.recommendation).toEqual(recommendationApiResponse)
@@ -54,7 +54,7 @@ describe('retrieve recommendation', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.locals.caseSummary).toEqual(lockedCase)
@@ -82,7 +82,7 @@ describe('retrieve recommendation', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).toHaveBeenCalledWith(301, '/cases/X12345/overview')

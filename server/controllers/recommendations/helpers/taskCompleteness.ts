@@ -1,9 +1,10 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { hasData, hasValue, isEmptyStringOrWhitespace } from '../../../utils/utils'
-import { FeatureFlags } from '../../../@types/featureFlags'
+import type { FeatureFlags } from '../../../@types/featureFlags'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -39,11 +40,7 @@ const isVulnerabilitiesComplete = (recommendation: RecommendationResponse, _feat
   if (recommendation.vulnerabilities === null || typeof recommendation.vulnerabilities === 'undefined') {
     return false
   }
-  if (!!_featureFlags?.flagRiskToSelfEnabled === true) {
-    return recommendation.vulnerabilities?.selected?.length > 0 && hasAllRequiredVulnerabilityDetails(recommendation)
-  }
-
-  return recommendation.vulnerabilities?.selected?.length > 0
+  return recommendation.vulnerabilities?.selected?.length > 0 && hasAllRequiredVulnerabilityDetails(recommendation)
 }
 
 export const hasAllRequiredVulnerabilityDetails = (recommendation: RecommendationResponse): boolean => {
@@ -53,7 +50,7 @@ export const hasAllRequiredVulnerabilityDetails = (recommendation: Recommendatio
     !selectedVulnerabilities.some(
       valueWithDetails =>
         vulnerabilityRequiresDetails(valueWithDetails.value as VULNERABILITY) &&
-        isEmptyStringOrWhitespace(valueWithDetails?.details)
+        isEmptyStringOrWhitespace(valueWithDetails?.details),
     )
   )
 }
@@ -66,6 +63,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     responseToProbation: hasValue(recommendation.responseToProbation),
     isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
     isExtendedSentence: hasValue(recommendation.isExtendedSentence),
+    sentenceGroup: hasValue(recommendation.sentenceGroup),
+    triggerLeadingToRecall: hasValue(recommendation.triggerLeadingToRecall),
     previousReleases: isPreviousReleasesComplete(recommendation),
     previousRecalls: isPreviousRecallsComplete(recommendation),
     indeterminateSentenceType:
@@ -77,12 +76,67 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
       hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected) ||
       hasData(recommendation.additionalLicenceConditionsText),
+    isChargedWithOffence: hasValue(recommendation.isChargedWithOffence),
+    isServingTerroristOrNationalSecurityOffence: hasValue(recommendation.isServingTerroristOrNationalSecurityOffence),
+    isAtRiskOfInvolvedInForeignPowerThreat: hasValue(recommendation.isAtRiskOfInvolvedInForeignPowerThreat),
+    wasReferredToParoleBoard244ZB: hasValue(recommendation.wasReferredToParoleBoard244ZB),
+    wasRepatriatedForMurder: hasValue(recommendation.wasRepatriatedForMurder),
+    isServingSOPCSentence: hasValue(recommendation.isServingSOPCSentence),
+    isServingDCRSentence: hasValue(recommendation.isServingDCRSentence),
+    isYouthSentenceOver12Months: hasValue(recommendation.isYouthSentenceOver12Months),
+    isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
   }
+
+  let triggerLeadingToRecall = true
+
+  if (_featureFlags?.flagFTR56Enabled) {
+    triggerLeadingToRecall = statuses.triggerLeadingToRecall
+  }
+
+  const isAdultSDSSuitabilityCriteriaSet =
+    statuses.isChargedWithOffence &&
+    statuses.isServingTerroristOrNationalSecurityOffence &&
+    statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
+    statuses.wasReferredToParoleBoard244ZB &&
+    statuses.wasRepatriatedForMurder &&
+    statuses.isServingSOPCSentence &&
+    statuses.isServingDCRSentence
+
+  const isYouthSDSSuitabilityCriteriaSet =
+    statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence
+
+  let suitabilityForRecallValidation = true
+
+  if (_featureFlags?.flagFTR56Enabled) {
+    if (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
+      suitabilityForRecallValidation = isAdultSDSSuitabilityCriteriaSet
+    } else if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+      suitabilityForRecallValidation = isYouthSDSSuitabilityCriteriaSet
+    }
+  }
+
+  const sentenceValidation = _featureFlags?.flagFTR56Enabled
+    ? statuses.sentenceGroup
+    : statuses.isIndeterminateSentence && statuses.isExtendedSentence
+
+  const indeterminateSentenceValidation = _featureFlags?.flagFTR56Enabled
+    ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
+    : !recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType
+
+  const responseToProbation = _featureFlags?.flagFTR56Enabled ? true : statuses.responseToProbation
 
   if (recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL) {
     const whyConsideredRecall = hasValue(recommendation.whyConsideredRecall)
     const reasonsForNoRecall = hasValue(recommendation.reasonsForNoRecall)
     const nextAppointment = hasValue(recommendation.nextAppointment)
+
+    const isAdultSDS = recommendation.sentenceGroup === SentenceGroup.ADULT_SDS
+
+    let mappaReviewed = true
+
+    if (_featureFlags?.flagFTR56Enabled && isAdultSDS) {
+      mappaReviewed = recommendation.personOnProbation.ftr56MappaReviewed
+    }
 
     return {
       statuses: {
@@ -93,13 +147,16 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       },
       isReadyForCounterSignature: false,
       areAllComplete:
+        triggerLeadingToRecall &&
+        suitabilityForRecallValidation &&
+        responseToProbation &&
+        mappaReviewed &&
+        (!_featureFlags?.flagFTR56Enabled || statuses.decisionDateTime) &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
-        statuses.responseToProbation &&
-        statuses.isIndeterminateSentence &&
-        statuses.isExtendedSentence &&
+        sentenceValidation &&
         statuses.licenceConditionsBreached &&
-        (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
+        indeterminateSentenceValidation &&
         whyConsideredRecall &&
         reasonsForNoRecall &&
         nextAppointment,
@@ -140,58 +197,68 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     ppcsQueryEmails: hasValue(recommendation.ppcsQueryEmails) && recommendation.ppcsQueryEmails.length > 0,
   }
 
+  const indeterminateOrExtendedSentenceDetails = _featureFlags?.flagFTR56Enabled
+    ? ![SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
+      statuses.indeterminateOrExtendedSentenceDetails
+    : !recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails
+
+  const isUnderIntegratedOffenderManagement = _featureFlags?.flagFTR56Enabled
+    ? true
+    : statuses.isUnderIntegratedOffenderManagement
+  const previousRecalls = _featureFlags?.flagFTR56Enabled ? true : statuses.previousRecalls
+
   return {
     statuses,
     isReadyForCounterSignature:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
-      statuses.responseToProbation &&
-      statuses.isIndeterminateSentence &&
-      statuses.isExtendedSentence &&
+      responseToProbation &&
+      sentenceValidation &&
+      suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&
       statuses.whatLedToRecall &&
       statuses.isThisAnEmergencyRecall &&
       statuses.vulnerabilities &&
       statuses.hasVictimsInContactScheme &&
-      statuses.isUnderIntegratedOffenderManagement &&
+      isUnderIntegratedOffenderManagement &&
       statuses.hasContrabandRisk &&
       statuses.personOnProbation &&
       statuses.offenceAnalysis &&
       statuses.convictionDetail &&
       statuses.mappa &&
       statuses.previousReleases &&
-      statuses.previousRecalls &&
+      previousRecalls &&
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
       statuses.whoCompletedPartA &&
       (statuses.didProbationPractitionerCompletePartA || statuses.practitionerForPartA) &&
       statuses.isMainAddressWherePersonCanBeFound &&
-      (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
-      (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&
+      indeterminateSentenceValidation &&
+      indeterminateOrExtendedSentenceDetails &&
       statuses.fixedTermAdditionalLicenceConditions,
     areAllComplete:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
       statuses.decisionDateTime &&
-      statuses.responseToProbation &&
-      statuses.isIndeterminateSentence &&
-      statuses.isExtendedSentence &&
+      responseToProbation &&
+      sentenceValidation &&
+      suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&
       statuses.whatLedToRecall &&
       statuses.isThisAnEmergencyRecall &&
       statuses.vulnerabilities &&
       statuses.hasVictimsInContactScheme &&
-      statuses.isUnderIntegratedOffenderManagement &&
+      isUnderIntegratedOffenderManagement &&
       statuses.hasContrabandRisk &&
       statuses.personOnProbation &&
       statuses.offenceAnalysis &&
       statuses.convictionDetail &&
       statuses.mappa &&
       statuses.previousReleases &&
-      statuses.previousRecalls &&
+      previousRecalls &&
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
@@ -200,8 +267,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.revocationOrderRecipients &&
       statuses.ppcsQueryEmails &&
       statuses.isMainAddressWherePersonCanBeFound &&
-      (!recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType) &&
-      (!recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails) &&
+      indeterminateSentenceValidation &&
+      indeterminateOrExtendedSentenceDetails &&
       statuses.fixedTermAdditionalLicenceConditions,
   }
 }

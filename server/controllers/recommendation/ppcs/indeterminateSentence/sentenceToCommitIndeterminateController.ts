@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
-import { formatPpudSentenceLength } from '../../../../utils/dates/ppudSentenceLength/formatting'
-import { ppcsPaths } from '../../../../routes/paths/ppcs'
+import formatPpudSentenceLength from '../../../../utils/dates/ppudSentenceLength/formatting'
+import ppcsPaths from '../../../../routes/paths/ppcs'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
   const recommendationResponse = recommendation as RecommendationResponse
   const ppudSentence = recommendationResponse.ppudOffender.sentences.find(
-    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
   )
 
   const sentenceSummary = {

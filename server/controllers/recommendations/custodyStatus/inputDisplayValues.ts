@@ -18,7 +18,7 @@ export const inputDisplayValuesCustodyStatus = ({
     if (!isDefined(errors.custodyStatusDetailsYesPolice)) {
       inputDisplayValues.details = getProperty<RecommendationResponse, string>(
         apiValues,
-        'custodyStatus.details'
+        'custodyStatus.details',
       ) as string
     }
   }
@@ -41,7 +41,7 @@ export const inputDisplayValuesArrestIssues = ({
     if (!isDefined(errors.hasArrestIssuesDetailsYes)) {
       inputDisplayValues.details = getProperty<RecommendationResponse, string>(
         apiValues,
-        'hasArrestIssues.details'
+        'hasArrestIssues.details',
       ) as string
     }
   }

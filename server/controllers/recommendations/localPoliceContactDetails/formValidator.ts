@@ -1,11 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { routeUrls } from '../../../routes/routeUrls'
-import { strings } from '../../../textStrings/en'
+import routeUrls from '../../../routes/routeUrls'
+import strings from '../../../textStrings/en'
 import { isEmailValid, isPhoneValid } from '../../../utils/validate-formats'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateLocalPoliceContactDetails = async ({
+const validateLocalPoliceContactDetails = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
@@ -31,7 +31,7 @@ export const validateLocalPoliceContactDetails = async ({
         id,
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
     return {
       errors,
@@ -55,3 +55,5 @@ export const validateLocalPoliceContactDetails = async ({
     nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-custody`,
   }
 }
+
+export default validateLocalPoliceContactDetails
