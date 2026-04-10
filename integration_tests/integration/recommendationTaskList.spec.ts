@@ -82,7 +82,6 @@ context('Recommendation - task list', () => {
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('When did the SPO agree this recall? Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
-    cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
     cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
     cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
@@ -516,7 +515,6 @@ context('Recommendation - task list', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-    cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
     cy.getElement('Consider if recall could affect vulnerabilities or needs To do').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? To do').should('exist')
@@ -551,15 +549,6 @@ context('Recommendation - task list', () => {
         cy.log('============= Continue button')
         cy.clickLink('What has led to this recall?')
         cy.fillInput('What has led to this recall?', 'Re-offending has occurred')
-        cy.clickButton('Continue')
-      } else {
-        cy.clickLink('How has Jane Bloggs responded to probation so far?')
-        cy.log('============= Back link')
-        cy.clickLink('Back')
-        cy.pageHeading().should('equal', 'Create a Part A form')
-        cy.log('============= Continue button')
-        cy.clickLink('How has Jane Bloggs responded to probation so far?')
-        cy.fillInput('How has Jane Bloggs responded to probation so far?', 'Re-offending has occurred')
         cy.clickButton('Continue')
       }
 
