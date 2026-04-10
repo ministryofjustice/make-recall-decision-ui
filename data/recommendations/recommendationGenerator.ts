@@ -47,7 +47,6 @@ export type RecommendationOptions = {
   indexOffenceDetails?: boolean
   offenceAnalysis?: boolean
   previousReleases?: boolean
-  previousRecalls?: boolean
   recallType?: AnyNoneOrOption<RecallTypeOptions>
   decisionDateTime?: boolean
   vulnerabilities?: AnyNoneOrOption<VulnerabilitiesOptions>
@@ -188,14 +187,6 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             lastReleasingPrisonOrCustodialEstablishment: `${faker.location.city()} UT Prison`,
             hasBeenReleasedPreviously: faker.datatype.boolean(),
             previousReleaseDates: [faker.date.past().toDateString()],
-          }
-        : undefined,
-    previousRecalls:
-      (options?.previousRecalls ?? true)
-        ? {
-            lastRecallDate: faker.date.past().toDateString(),
-            hasBeenRecalledPreviously: faker.datatype.boolean(),
-            previousRecallDates: [faker.date.past().toDateString()],
           }
         : undefined,
     recallType: RecallTypeGenerator.generate(options?.recallType ?? 'none'),

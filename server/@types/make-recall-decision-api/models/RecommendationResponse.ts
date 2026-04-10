@@ -12,7 +12,6 @@ import type { LocalPoliceContact } from './LocalPoliceContact'
 import type { ManagerRecallDecision } from './ManagerRecallDecision'
 import type { NextAppointment } from './NextAppointment'
 import type { PersonOnProbationDto } from './PersonOnProbationDto'
-import type { PreviousRecalls } from './PreviousRecalls'
 import type { PreviousReleases } from './PreviousReleases'
 import type { ReasonsForNoRecall } from './ReasonsForNoRecall'
 import type { RecallConsidered } from './RecallConsidered'
@@ -79,7 +78,6 @@ export type RecommendationResponse = {
   reasonsForNoRecall?: ReasonsForNoRecall;
   nextAppointment?: NextAppointment;
   previousReleases?: PreviousReleases;
-  previousRecalls?: PreviousRecalls;
   recallConsideredList?: Array<RecallConsidered>;
   currentRoshForPartA?: RoshData;
   roshSummary?: RoshSummary;

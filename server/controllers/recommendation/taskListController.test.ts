@@ -55,7 +55,6 @@ describe('get', () => {
     offenceAnalysis: 'text',
     isMainAddressWherePersonCanBeFound: { selected: true },
     previousReleases: { hasBeenReleasedPreviously: false },
-    previousRecalls: { hasBeenRecalledPreviously: false },
     currentRoshForPartA: {},
     whoCompletedPartA: {
       name: 'john',
@@ -99,7 +98,6 @@ describe('get', () => {
       mappa: true,
       offenceAnalysis: true,
       personOnProbation: true,
-      previousRecalls: true,
       previousReleases: true,
       recallType: true,
       decisionDateTime: true,

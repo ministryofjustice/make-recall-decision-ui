@@ -65,8 +65,6 @@ import revocationOrderRecipientsController from '../controllers/recommendation/r
 import ppcsQueryEmailsController from '../controllers/recommendation/ppcsQueryEmailsController'
 import arrestIssuesController from '../controllers/recommendation/arrestIssuesController'
 import addPreviousReleaseController from '../controllers/recommendation/addPreviousReleaseController'
-import addPreviousRecallController from '../controllers/recommendation/addPreviousRecallController'
-import previousRecallController from '../controllers/recommendation/previousRecallsController'
 import previousReleasesController from '../controllers/recommendation/previousReleasesController'
 import offenceAnalysisController from '../controllers/recommendation/offenceAnalysisController'
 import roshController from '../controllers/recommendation/roshController'
@@ -292,12 +290,6 @@ ppRouteBuilder.post('arrest-issues', arrestIssuesController.post)
 
 ppRouteBuilder.get('add-previous-release', addPreviousReleaseController.get)
 ppRouteBuilder.post('add-previous-release', addPreviousReleaseController.post)
-
-ppRouteBuilder.get('add-previous-recall', addPreviousRecallController.get)
-ppRouteBuilder.post('add-previous-recall', addPreviousRecallController.post)
-
-ppRouteBuilder.get('previous-recalls', previousRecallController.get)
-ppRouteBuilder.post('previous-recalls', previousRecallController.post)
 
 ppRouteBuilder.get('previous-releases', previousReleasesController.get)
 ppRouteBuilder.post('previous-releases', previousReleasesController.post)

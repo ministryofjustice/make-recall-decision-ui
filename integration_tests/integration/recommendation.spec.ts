@@ -980,13 +980,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'When did the SPO agree to this recall?')
     })
 
-    it('Previous recalls', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-recalls`)
-      cy.pageHeading().should('equal', 'Previous recalls')
-    })
-
     it('Previous releases', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
       cy.task('getStatuses', { statusCode: 200, response: [] })

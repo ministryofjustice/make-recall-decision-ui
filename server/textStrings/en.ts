@@ -129,7 +129,6 @@ const strings: Record<string, Record<string, string>> = {
     missingManagerRecallTypeDetail: 'Explain your decision',
     missingRosh: 'Select a RoSH level for the risk to',
     noDeletePreviousReleaseIndex: 'Select a previous release to delete',
-    noDeletePreviousRecallIndex: 'Select a previous recall to delete',
     missingManagerCountersignatureExposition: 'Add a comment to confirm your countersignature',
     missingWhoCompletedPartAName: 'Enter the name of the person who completed the Part A',
     missingWhoCompletedPartAEmail: 'Enter the GOV.UK email of the person who completed the Part A',
@@ -179,7 +178,6 @@ const strings: Record<string, Record<string, string>> = {
   },
   confirmations: {
     previousReleaseDeleted: 'The previous release has been deleted',
-    previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
     rationaleCheck: 'You must record your rationale',
@@ -252,9 +250,7 @@ const strings: Record<string, Record<string, string>> = {
     seniorManagerCounterSignature: 'Senior manager countersignature',
     previousReleases: 'Previous releases',
     releaseDetails: 'Release details',
-    previousRecalls: 'Previous recalls',
     addPreviousRelease: 'Add previous release',
-    addPreviousRecall: 'Add previous recall',
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',

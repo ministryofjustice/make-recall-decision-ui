@@ -80,8 +80,6 @@ const urls = [
   recommendationEndpoint('ppcs-query-emails'),
   recommendationEndpoint('arrest-issues'),
   recommendationEndpoint('add-previous-release'),
-  recommendationEndpoint('add-previous-recall'),
-  recommendationEndpoint('previous-recalls'),
   recommendationEndpoint('previous-releases'),
   recommendationEndpoint('offence-analysis'),
   recommendationEndpoint('rosh'),

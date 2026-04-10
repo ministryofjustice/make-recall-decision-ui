@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
- 
+
 
 export { ActiveRecommendation } from './models/ActiveRecommendation';
 export type { AdditionalLicenceConditionOption } from './models/AdditionalLicenceConditionOption';
@@ -55,7 +55,6 @@ export type { PersonDetailsResponse } from './models/PersonDetailsResponse';
 export type { PersonOnProbationDto } from './models/PersonOnProbationDto';
 export type { PredictorScore } from './models/PredictorScore';
 export type { PredictorScores } from './models/PredictorScores';
-export type { PreviousRecalls } from './models/PreviousRecalls';
 export type { PreviousReleases } from './models/PreviousReleases';
 export type { ProbationTeam } from './models/ProbationTeam';
 export type { PurgeQueueResult } from './models/PurgeQueueResult';

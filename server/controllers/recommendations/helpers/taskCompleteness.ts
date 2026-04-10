@@ -26,16 +26,6 @@ const isPreviousReleasesComplete = (recommendation: RecommendationResponse) => {
   return recommendation.previousReleases?.hasBeenReleasedPreviously === false
 }
 
-const isPreviousRecallsComplete = (recommendation: RecommendationResponse) => {
-  if (recommendation.previousRecalls === null || typeof recommendation.previousRecalls === 'undefined') {
-    return false
-  }
-  if (recommendation.previousRecalls?.hasBeenRecalledPreviously === true) {
-    return recommendation.previousRecalls?.previousRecallDates?.length > 0
-  }
-  return recommendation.previousRecalls?.hasBeenRecalledPreviously === false
-}
-
 const isVulnerabilitiesComplete = (recommendation: RecommendationResponse, _featureFlags?: FeatureFlags) => {
   if (recommendation.vulnerabilities === null || typeof recommendation.vulnerabilities === 'undefined') {
     return false
@@ -65,7 +55,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     sentenceGroup: hasValue(recommendation.sentenceGroup),
     triggerLeadingToRecall: hasValue(recommendation.triggerLeadingToRecall),
     previousReleases: isPreviousReleasesComplete(recommendation),
-    previousRecalls: isPreviousRecallsComplete(recommendation),
     indeterminateSentenceType:
       !!recommendation.isIndeterminateSentence && hasValue(recommendation.indeterminateSentenceType),
     licenceConditionsBreached:
@@ -201,7 +190,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
   const isUnderIntegratedOffenderManagement = _featureFlags?.flagFTR56Enabled
     ? true
     : statuses.isUnderIntegratedOffenderManagement
-  const previousRecalls = _featureFlags?.flagFTR56Enabled ? true : statuses.previousRecalls
 
   return {
     statuses,
@@ -223,7 +211,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.convictionDetail &&
       statuses.mappa &&
       statuses.previousReleases &&
-      previousRecalls &&
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
@@ -252,7 +239,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.convictionDetail &&
       statuses.mappa &&
       statuses.previousReleases &&
-      previousRecalls &&
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
