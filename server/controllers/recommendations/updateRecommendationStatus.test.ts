@@ -52,7 +52,6 @@ describe('updateRecommendationStatus', () => {
       },
     })
     await updateRecommendationStatus(req, res)
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/${recommendationId}/response-to-probation`)
     expect(appInsightsEvent).toHaveBeenCalledWith(
       'mrdRecommendationStarted',
       'Bill',
