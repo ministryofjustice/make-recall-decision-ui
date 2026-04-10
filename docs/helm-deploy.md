@@ -20,7 +20,8 @@ version.BuildInfo{Version:"v3.0.1", GitCommit:"7c22ef9ce89e0ebeb7125ba2ebf7d421f
 For example in the dev environment:
 1. Set the Kube context with command `kubectl config use-context live.cloud-platform.service.justice.gov.uk`
 2. Set the Kube namespace with command `kubectl config set-context --current --namespace make-recall-decision-dev`
-3. List the charts deployed by helm with command `helm ls -a` (note: use this in preference to `helm list` which might not list everything)
+3. List the charts deployed by helm with command `helm ls -a` (note: use this in preference to `helm list` which might
+   not list everything)
 4. List the deployments for this application with command `helm history make-recall-decision-ui`
 5. Given the application version you wish to roll back to, find the related revision number
 6. Rollback to that version with command `helm rollback make-recall-decision-ui <revision-number> --wait`
