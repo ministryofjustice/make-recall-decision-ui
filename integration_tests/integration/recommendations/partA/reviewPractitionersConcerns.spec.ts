@@ -37,7 +37,7 @@ describe("SPO review practitioner's concerns page", () => {
 
       cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
       cy.get('.govuk-details')
-        .eq(2)
+        .eq(1)
         .within(() => {
           cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
 
@@ -79,7 +79,7 @@ describe("SPO review practitioner's concerns page", () => {
 
       cy.getElement('What alternatives have been tried already?').should('exist')
       cy.get('.govuk-details')
-        .eq(3)
+        .eq(2)
         .within(() => {
           cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
 
