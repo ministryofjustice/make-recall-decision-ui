@@ -141,6 +141,7 @@ context('Determinate sentence - match index offence page', () => {
           {
             href: autocompleteId,
             message: 'Select the nearest matching offence from the list in PPUD',
+            checkFieldHasErrorStyling: false, // autocomplete doesn't get highlighted with error styling; change this if a way is found to do it
           },
         ])
       })

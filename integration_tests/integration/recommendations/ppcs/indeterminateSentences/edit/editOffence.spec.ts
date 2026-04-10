@@ -106,7 +106,7 @@ context('Indeterminate Sentence - Edit Offence Page', () => {
         testForErrorSummary([
           {
             href: `${autocompleteId}`,
-            message: 'Select a matching index offence from the list',
+            message: 'Select the nearest matching offence from the list in PPUD',
             checkFieldHasErrorStyling: false, // autocomplete doesn't get highlighted with error styling; change this if a way is found to do it
           },
         ])

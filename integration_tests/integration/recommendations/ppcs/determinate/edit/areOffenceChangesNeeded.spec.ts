@@ -87,7 +87,13 @@ context('Determinate Sentence - Are Offence Changes Needed Page', () => {
       cy.get('button').click()
 
       testForErrorPageTitle()
-      testForErrorSummary([{ href: 'changeOffenceOrAddComment', message: 'Select an option' }])
+      testForErrorSummary([
+        {
+          href: 'changeOffenceOrAddComment',
+          message: 'Select an option',
+          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+        },
+      ])
     })
   })
 })

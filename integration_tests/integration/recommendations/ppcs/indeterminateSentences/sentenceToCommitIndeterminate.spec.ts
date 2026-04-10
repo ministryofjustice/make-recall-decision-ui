@@ -30,7 +30,12 @@ context('Indeterminate Sentence - Sentence to Commit Page', () => {
           sentences: faker.helpers
             .multiple(() => faker.helpers.arrayElement(indeterminateCustodyTypes))
             .map(indeterminateCustodyType => {
-              return { custodyType: indeterminateCustodyType }
+              return {
+                custodyType: indeterminateCustodyType,
+                sentenceLength: {
+                  partYears: faker.number.int({ min: 0, max: 10 }),
+                },
+              }
             }),
         },
       })
