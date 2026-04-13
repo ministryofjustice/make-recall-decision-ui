@@ -31,18 +31,6 @@ context('Make a recommendation - form validation', () => {
     },
   }
 
-  it('Response to probation', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/response-to-probation`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'responseToProbation',
-      errorText: 'Explain how Jane Bloggs has responded to probation',
-    })
-  })
-
   describe('Licence conditions', () => {
     ;[true, false].forEach(ftr56Enabled => {
       describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {

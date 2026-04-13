@@ -128,8 +128,6 @@ r197,0,"^seniorProbationOfficerInfo_functionalEmail$","functional@probation.gov.
 r198,0,"^seniorProbationOfficerInfo_fullName$","Jo Bloggs","/recalls/[^\/]+/secondary-dossier-probation",0,c1
 r199,0,"^seniorProbationOfficerInfo_phoneNumber$","01305737387","/recalls/[^\/]+/secondary-dossier-probation",0,c1
 r201,0,"^seniorProbationOfficerInfo_email$","jbloggs@probation.gov.uk","/recalls/[^\/]+/secondary-dossier-probation",0,c1
-r203,0,"^responseToProbation$","DC has been attending appointments and says he is focusing on controlling his drinking. When I questioned the smell of alcohol he claimed it was a strong cologne. contacting family they’ve said he’s doing ok and that all is back to normal.
-He missed some rehab appointments but the worker has said that he’s struggling to focus.","/recommendations/[^\/]+/response-to-probation",0,c2
 r204,3,"^standard\|GOOD_BEHAVIOUR$","1","/recommendations/[^\/]+/licence-conditions",0,c2
 r205,3,"^additional\|LC74$","1","/recommendations/[^\/]+/licence-conditions",0,c2
 r206,3,"^REFERRAL_TO_PARTNERSHIP_AGENCIES$","1","/recommendations/[^\/]+/alternatives-tried",0,c2

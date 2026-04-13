@@ -109,12 +109,6 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
        <ul class="moj-task-list__items">
          <li class="moj-task-list__item">
              <span class="moj-task-list__task-name">
-                 <a aria-describedby='task-list-status-responseToProbation' href="{{ changeLinkUrl({ pageUrlSlug: 'response-to-probation', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.responseToProbation }}</a>
-             </span>
-             <span id='task-list-status-responseToProbation'>{{ taskStatus({ hasData: hasData(recommendation.responseToProbation) }) }}</span>
-         </li>
-         <li class="moj-task-list__item">
-             <span class="moj-task-list__task-name">
                  <a aria-describedby='task-list-status-licenceConditions' href="{{ changeLinkUrl({ pageUrlSlug: 'licence-conditions', urlInfo: urlInfo, fromAnchor: 'heading-circumstances' }) }}">{{ pageHeadings.licenceConditions }}</a>
              </span>
              <span id='task-list-status-licenceConditions'>{{ taskStatus({ hasData: licenceConditionsBreached }) }}</span>

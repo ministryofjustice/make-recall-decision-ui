@@ -95,7 +95,6 @@ const strings: Record<string, Record<string, string>> = {
     missingExclusive:
       'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
     missingTriggerLeadingToRecall: 'Explain what has made you consider recalling {{ fullName }}',
-    missingResponseToProbation: 'Explain how {{ fullName }} has responded to probation',
     missingWhatLedToRecall: 'Enter details of what has led to this recall',
     missingSentenceGroup: 'Select a sentence group',
     noArrestIssuesSelected: "Select whether there's anything the police should know",
@@ -211,7 +210,6 @@ const strings: Record<string, Record<string, string>> = {
     managerRecordDecision: 'Record your decision',
     managerRecordDecisionDelius: 'Record your decision in NDelius',
     managerViewDecision: 'Your decision',
-    responseToProbation: 'How has {{ fullName }} responded to probation so far?',
     licenceConditions: 'What licence conditions has {{ fullName }} breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     managerReview: 'Stop and think',

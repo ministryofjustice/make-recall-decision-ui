@@ -153,7 +153,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'Consider a recall')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
-      cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')

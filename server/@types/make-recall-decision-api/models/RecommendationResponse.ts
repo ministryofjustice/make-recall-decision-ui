@@ -44,7 +44,6 @@ export type RecommendationResponse = {
   managerRecallDecision?: ManagerRecallDecision;
   recallType?: RecallType;
   decisionDateTime?: string;
-  responseToProbation?: string;
   triggerLeadingToRecall?: string;
   whatLedToRecall?: string;
   sentenceGroup?: SentenceGroup;

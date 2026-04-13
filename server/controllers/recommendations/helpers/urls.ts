@@ -1,5 +1,4 @@
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import routeUrls from '../../../routes/routeUrls'
 import type { FeatureFlags } from '../../../@types/featureFlags'
@@ -101,7 +100,6 @@ export const checkForRedirectPath = ({
     recallType,
   )
   const isNoRecall = RecallTypeSelectedValue.value.NO_RECALL === recallType
-  const isNotSet = !isDefined(recallType)
   const isCompletedRecommendation = recommendationStatus === RecommendationResponse.status.DOCUMENT_DOWNLOADED
   const isConfirmationPage = ['confirmation-part-a', 'confirmation-no-recall'].includes(requestedPageId)
   if (isCompletedRecommendation && !isConfirmationPage) {
@@ -112,9 +110,6 @@ export const checkForRedirectPath = ({
   }
   if ((isRecallTaskListRequested && isRecall) || (isNoRecallTaskListRequested && isNoRecall)) {
     return null
-  }
-  if ((isRecallTaskListRequested || isNoRecallTaskListRequested) && isNotSet) {
-    return `${basePathRecFlow}response-to-probation`
   }
   if (isRecallTaskListRequested && isNoRecall) {
     return `${basePathRecFlow}task-list-no-recall`

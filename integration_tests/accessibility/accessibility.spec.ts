@@ -40,7 +40,6 @@ const urls = [
   recommendationEndpoint('already-existing', [], true),
   recommendationEndpoint('task-list-consider-recall'),
   recommendationEndpoint('trigger-leading-to-recall'),
-  recommendationEndpoint('response-to-probation'),
   recommendationEndpoint('licence-conditions'),
   recommendationEndpoint('alternatives-tried'),
   recommendationEndpoint('indeterminate-type'),

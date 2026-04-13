@@ -81,7 +81,6 @@ describe('get', () => {
 
     expect(res.locals.offenderName).toEqual('Joe Bloggs')
     expect(res.locals.triggerLeadingToRecall).toBeUndefined()
-    expect(res.locals.responseToProbation).toBeUndefined()
     expect(res.locals.standardLicenceConditions).toEqual([
       'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
       'Not commit any offence',
@@ -220,7 +219,6 @@ describe('get', () => {
                   isExtendedSentence: ftr56Enabled ? undefined : isExtendedSentence,
                   sentenceGroup: ftr56Enabled ? sentenceGroup : undefined,
                   triggerLeadingToRecall: 'some reason 1',
-                  responseToProbation: 'some reason 2',
                   personOnProbation: { name: 'Joe Bloggs' },
                   crn: 'X123',
                   licenceConditionsBreached: {
@@ -258,7 +256,6 @@ describe('get', () => {
 
             expect(res.locals.offenderName).toEqual('Joe Bloggs')
             expect(res.locals.triggerLeadingToRecall).toEqual('some reason 1')
-            expect(res.locals.responseToProbation).toEqual('some reason 2')
             expect(res.locals.standardLicenceConditions).toEqual([])
             expect(res.locals.additionalLicenceConditions).toEqual([
               {
