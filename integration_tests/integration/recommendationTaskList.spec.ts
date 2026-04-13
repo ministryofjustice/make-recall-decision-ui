@@ -172,7 +172,7 @@ context('Recommendation - task list', () => {
       }
       setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
 
-      cy.getElement('MAPPA information to assess recall type To do').should(expect.mappa ? 'exist' : 'not.exist')
+      cy.getElement('MAPPA information to assess recall type To review').should(expect.mappa ? 'exist' : 'not.exist')
 
       cy.getElement('Suitability for standard or fixed term recall To do').should(
         expect.suitability ? 'exist' : 'not.exist',
@@ -200,7 +200,7 @@ context('Recommendation - task list', () => {
       )
 
       cy.getElement('Personal details To review').should('exist')
-      cy.getElement('Release details To do').should('exist')
+      cy.getElement('Release details To review').should('exist')
       cy.getElement('Offence details To review').should('exist')
       cy.getElement('Offence analysis To do').should('exist')
       cy.getElement('Address To do').should('exist')
@@ -264,7 +264,7 @@ context('Recommendation - task list', () => {
       }
       setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
 
-      cy.getElement('MAPPA information to assess recall type Completed').should(expect.mappa ? 'exist' : 'not.exist')
+      cy.getElement('MAPPA information to assess recall type Reviewed').should(expect.mappa ? 'exist' : 'not.exist')
 
       cy.getElement('Suitability for standard or fixed term recall Completed').should(
         expect.suitability ? 'exist' : 'not.exist',
@@ -292,7 +292,7 @@ context('Recommendation - task list', () => {
       )
 
       cy.getElement('Personal details Reviewed').should('exist')
-      cy.getElement('Release details Completed').should('exist')
+      cy.getElement('Release details Reviewed').should('exist')
       cy.getElement('Offence details Reviewed').should('exist')
       cy.getElement('Offence analysis Completed').should('exist')
       cy.getElement('Address Completed').should('exist')
