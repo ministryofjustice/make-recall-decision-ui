@@ -36,12 +36,6 @@
               </span>
               <span id='task-list-status-previousReleases'>{{ taskStatus({ hasData: taskCompleteness.statuses.previousReleases }) }}</span>
           </li>
-          <li class="moj-task-list__item">
-              <span class="moj-task-list__task-name">
-                  <a aria-describedby='task-list-status-previousRecalls' href="{{ changeLinkUrl({ pageUrlSlug: 'previous-recalls', urlInfo: urlInfo, fromAnchor: 'heading-person-details' }) }}">{{ pageHeadings.previousRecalls }}</a>
-              </span>
-              <span id='task-list-status-previousRecalls'>{{ taskStatus({ hasData: taskCompleteness.statuses.previousRecalls }) }}</span>
-          </li>
         {% endif %}
         {% if recommendation.isInCustody == false %}
             <li class="moj-task-list__item">

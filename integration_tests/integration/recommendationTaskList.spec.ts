@@ -820,13 +820,6 @@ context('Recommendation - task list', () => {
         )
       }
 
-      function checkPreviousRecallsLink() {
-        checkLink(
-          `Previous recalls`,
-          `/recommendations/${recommendationId}/previous-recalls?fromPageId=task-list&fromAnchor=heading-person-details`,
-        )
-      }
-
       function checkAddressDetailsLink() {
         checkLink(
           addressDetailsLinkText,
@@ -857,9 +850,6 @@ context('Recommendation - task list', () => {
           })
           it('shows previous releases link', () => {
             checkPreviousReleasesLink()
-          })
-          it('shows previous recalls link', () => {
-            checkPreviousRecallsLink()
           })
           if (!isInCustody) {
             it('shows address details link', () => {
