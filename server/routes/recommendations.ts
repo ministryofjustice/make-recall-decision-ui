@@ -130,6 +130,7 @@ import editSentencingCourtController from '../controllers/recommendation/ppcs/in
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
+import areOffenceChangesNeededController from '../controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/areOffenceChangesNeededController'
 import checkMappaInformationController from '../controllers/recommendation/checkMappaInformationController'
 import sentenceInformationController from '../controllers/recommendation/sentenceInformationController'
 
@@ -526,6 +527,9 @@ ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.selectIndexOffence, selectInde
 ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.selectIndexOffence, selectIndexOffenceController.post)
 
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.consecutiveSentenceDetails, consecutiveSentenceDetailsController.get)
+
+ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.areOffenceChangesNeeded, areOffenceChangesNeededController.get)
+ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.areOffenceChangesNeeded, areOffenceChangesNeededController.post)
 
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.matchIndexOffence, matchIndexOffenceController.get)
 ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.matchIndexOffence, matchIndexOffenceController.post)

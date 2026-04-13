@@ -68,12 +68,15 @@ async function get(_: Request, res: Response, next: NextFunction) {
       }
     : null
 
+  const offenderExistsAndHasSentences = recommendation.ppudOffender && recommendation.ppudOffender.sentences.length > 0
+  const nextPageId = offenderExistsAndHasSentences ? ppcsPaths.selectPpudSentence : ppcsPaths.matchIndexOffence
+
   res.locals = {
     ...res.locals,
     pageData: {
       nomisError,
       sentenceInfo,
-      nextPagePath: nextPageLinkUrl({ nextPageId: ppcsPaths.matchIndexOffence, urlInfo }),
+      nextPagePath: nextPageLinkUrl({ nextPageId, urlInfo }),
     },
   }
 

@@ -26,6 +26,7 @@ import regionEnum from '../../server/controllers/recommendations/formOptions/reg
 */
 
 export type RecommendationOptions = {
+  id?: number
   crn?: string
   alternativesToRecallTried?: boolean
   custodyStatus?: NoneOrOption<CustodyStatusOptions>
@@ -64,7 +65,7 @@ export type RecommendationOptions = {
   revocationOrderRecipients?: boolean
   ppcsQueryEmails?: boolean
   bookRecallToPpud?: BookRecallToPpudOptions
-  nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
+  nomisIndexOffence?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: NoneOrOption<PpudOffenderOptions>
   bookingMemento?: NoneOrOption<BookingMementoOptions>
   isUnder18?: boolean
@@ -87,7 +88,7 @@ export type RecommendationOptions = {
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
   generate: options => ({
-    id: faker.number.int({ min: 1, max: 99 }),
+    id: options?.id ?? faker.number.int({ min: 1, max: 99 }),
     status: RecommendationResponse.status.DRAFT,
     crn: options?.crn ?? faker.helpers.replaceSymbols('?######'),
     createdByUserFullName: 'Integration test data generator',
@@ -255,7 +256,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     ppcsQueryEmails: (options?.ppcsQueryEmails ?? true) ? [faker.internet.email()] : undefined,
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
     nomisIndexOffence:
-      options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
+      options?.nomisIndexOffence === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisIndexOffence),
     ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),
     bookingMemento:
       options?.bookingMemento === 'none' ? undefined : BookingMementoGenerator.generate(options?.bookingMemento),

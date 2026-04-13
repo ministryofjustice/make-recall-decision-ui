@@ -22,6 +22,7 @@ const generateInternal: (options?: PpudSentenceOptions) => PpudSentence = (optio
   custodyType: options?.custodyType ?? 'Determinate',
   mappaLevel: 'MAPPA_LEVEL',
   licenceExpiryDate: faker.date.future().toISOString(),
+  tariffExpiryDate: faker.date.future().toISOString(),
   offence: PpudOffenceGenerator.generate(options?.offence),
   releaseDate: (options.releaseDate ?? faker.date.future()).toISOString(),
   sentenceLength: PpudSentenceLengthGenerator.generate(options?.sentenceLength),
