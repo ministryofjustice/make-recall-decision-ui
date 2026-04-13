@@ -47,7 +47,6 @@ describe('get', () => {
         selected: ['GOOD_BEHAVIOUR'],
       },
     },
-    isUnderIntegratedOffenderManagement: { selected: 'NO' },
     vulnerabilities: {
       selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE }],
     },
@@ -92,7 +91,6 @@ describe('get', () => {
       triggerLeadingToRecall: false,
       isMainAddressWherePersonCanBeFound: true,
       isThisAnEmergencyRecall: true,
-      isUnderIntegratedOffenderManagement: true,
       licenceConditionsBreached: true,
       localPoliceContact: true,
       mappa: true,

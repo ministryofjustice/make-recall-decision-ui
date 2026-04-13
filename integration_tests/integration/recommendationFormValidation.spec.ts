@@ -335,18 +335,6 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('IOM', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/iom`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'isUnderIntegratedOffenderManagement',
-      errorText: 'Select whether Jane Bloggs is under Integrated Offender Management',
-    })
-  })
-
   it('Local police contact details', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })

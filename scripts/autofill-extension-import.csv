@@ -141,7 +141,6 @@ r214,3,"^YES$","1","/recommendations/[^\/]+/victim-contact-scheme",0,c2
 r215,0,"^dateVloInformed-day$","02","/recommendations/[^\/]+/victim-liaison-officer",0,c2
 r216,0,"^dateVloInformed-month$","09","/recommendations/[^\/]+/victim-liaison-officer",0,c2
 r217,0,"^dateVloInformed-year$","2022","/recommendations/[^\/]+/victim-liaison-officer",0,c2
-r219,3,"^NO$","1","/recommendations/[^\/]+/iom",0,c2
 r220,3,"^YES$","1","/recommendations/[^\/]+/arrest-issues",0,c2
 r221,0,"^hasArrestIssuesDetailsYes$","Prone to drinking and violence","/recommendations/[^\/]+/arrest-issues",0,c2
 r222,0,"^phoneNumber$","07838383929","/recommendations/[^\/]+/police-details",0,c2

@@ -55,7 +55,6 @@ import indeterminateDetailsController from '../controllers/recommendation/indete
 import fixedTermLicenceConditionsController from '../controllers/recommendation/fixedTermLicenceConditionsController'
 import vulnerabilitiesController from '../controllers/recommendation/vulnerabilitiesController'
 import vulnerabilitiesDetailsController from '../controllers/recommendation/vulnerabilitiesDetailsController'
-import iomController from '../controllers/recommendation/iomController'
 import policeDetailsController from '../controllers/recommendation/policeDetailsController'
 import victimContactSchemeController from '../controllers/recommendation/victimContactSchemeController'
 import victimLiasonOfficerController from '../controllers/recommendation/victimLiasonOfficerController'
@@ -248,9 +247,6 @@ ppRouteBuilder.post('contraband', contrabandController.post)
 
 ppRouteBuilder.get('address-details', addressDetailsController.get)
 ppRouteBuilder.post('address-details', addressDetailsController.post)
-
-ppRouteBuilder.get('iom', iomController.get)
-ppRouteBuilder.post('iom', iomController.post)
 
 ppRouteBuilder.get('police-details', policeDetailsController.get)
 ppRouteBuilder.post('police-details', policeDetailsController.post)

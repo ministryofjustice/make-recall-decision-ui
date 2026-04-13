@@ -19,7 +19,6 @@ import type { RecallType } from './RecallType'
 import type { RoshData } from './RoshData'
 import type { RoshSummary } from './RoshSummary'
 import type { SelectedWithDetails } from './SelectedWithDetails'
-import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement'
 import type { UserAccessResponse } from './UserAccessResponse'
 import type { VictimsInContactScheme } from './VictimsInContactScheme'
 import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation'
@@ -59,7 +58,6 @@ export type RecommendationResponse = {
   alternativesToRecallTried?: AlternativesToRecallTried;
   licenceConditionsBreached?: LicenceConditionsBreached;
   cvlLicenceConditionsBreached?: CvlLicenceConditionsBreached;
-  isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
   vulnerabilities?: VulnerabilitiesRecommendation;
   convictionDetail?: ConvictionDetail;
   region?: string;

@@ -73,7 +73,6 @@ export type PageId =
   | 'vulnerabilities'
   | 'taskList'
   | 'fixedTermLicenceConditions'
-  | 'integratedOffenderManagement'
   | 'localPoliceContactDetails'
   | 'victimContactScheme'
   | 'whatLedToRecall'

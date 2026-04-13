@@ -87,7 +87,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
-    cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('exist')
     cy.getElement('Is Jane Bloggs on an indeterminate sentence? Completed').should('exist')
     cy.getElement('Is Jane Bloggs on an extended sentence? Completed').should('exist')
     cy.getElement('Type of indeterminate sentence Completed').should('exist')
@@ -211,7 +210,6 @@ context('Recommendation - task list', () => {
       cy.getElement('Local police contact details To do').should('exist')
       cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? To do').should('exist')
       cy.getElement('Do you think Jane Bloggs is using recall to bring contraband into prison? To do').should('exist')
-      cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? To do').should('not.exist')
 
       cy.getElement('Indicative risk assessment pending OASys review To do').should('exist')
       cy.getElement('MAPPA for Jane Bloggs To review').should('exist')
@@ -308,7 +306,6 @@ context('Recommendation - task list', () => {
       cy.getElement('Do you think Jane Bloggs is using recall to bring contraband into prison? Completed').should(
         'exist',
       )
-      cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('not.exist')
 
       cy.getElement('Indicative risk assessment pending OASys review Completed').should('exist')
       cy.getElement('MAPPA for Jane Bloggs Reviewed').should('exist')
@@ -415,13 +412,6 @@ context('Recommendation - task list', () => {
       })
     })
 
-    describe('custody', () => {
-      it('does not show IOM item', () => {
-        setUp(recommendationResponse as RecommendationResponse, [], ['flagFTR56Enabled'])
-        cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)?').should('not.exist')
-      })
-    })
-
     describe('createLetter', () => {
       it('does not show Preview link when tasks are incomplete', () => {
         setUp(
@@ -520,7 +510,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Are there any victims in the victim contact scheme? To do').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? To do').should('exist')
     cy.getElement('Local police contact details To do').should('exist')
-    cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? To do').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? To do').should('exist')
     cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
     cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
@@ -943,13 +932,6 @@ context('Recommendation - task list', () => {
         checkLink('Local police contact details', `/recommendations/${recommendationId}/police-details`)
       }
 
-      function checkIsUnderIOMLink(personOnProbationName: string) {
-        checkLink(
-          `Is ${personOnProbationName} under Integrated Offender Management (IOM)?`,
-          `/recommendations/${recommendationId}/iom`,
-        )
-      }
-
       function checkArrestIssuesLink() {
         checkLink(arrestIssuesLinkText, `/recommendations/${recommendationId}/arrest-issues`)
       }
@@ -978,7 +960,6 @@ context('Recommendation - task list', () => {
           setUp(recommendation)
           checkCustodyStatusLink(recommendation.personOnProbation.name)
           checkPoliceDetailsLink()
-          checkIsUnderIOMLink(recommendation.personOnProbation.name)
           if (!isInCustody) {
             checkArrestIssuesLink()
           } else {
