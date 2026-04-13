@@ -1,6 +1,7 @@
 import custodyStatus from '../custodyStatus/formOptions'
 import { recallType, recallTypeFTR56 } from '../recallType/formOptions'
-
+import { yesNoOptions, YesNoValues } from './yesNo'
+import strings from '../../../textStrings/en'
 import { UiListItem } from '../../../@types/pagesForms'
 import { renderTemplateString } from '../../../utils/nunjucks'
 import alternativesToRecallTried from '../alternativesToRecallTried/formOptions'
@@ -9,7 +10,6 @@ import {
   indeterminateOrExtendedSentenceDetailsFtr56,
 } from '../indeterminateOrExtendedSentenceDetails/formOptions'
 import { indeterminateSentenceType, indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
-import isUnderIntegratedOffenderManagement from '../integratedOffenderManagement/formOptions'
 import howWillAppointmentHappen from '../nextAppointment/formOptions'
 import rationaleCheck from '../rationaleCheck/formOptions'
 import { recallTypeExtended, recallTypeExtendedFTR56 } from '../recallTypeExtended/formOptions'
@@ -24,7 +24,6 @@ import { vulnerabilities } from '../vulnerabilities/formOptions'
 import whyConsideredRecall from '../whyConsideredRecall/formOptions'
 import standardLicenceConditions from './licenceConditions'
 import spoRecallTypeEnum from './spoRecallTypeEnum'
-import yesNo from './yesNo'
 import { sentenceGroup } from '../sentenceInformation/formOptions'
 
 export type FormOption = {
@@ -59,10 +58,13 @@ export const formOptions: FormOptionsType = {
   indeterminateOrExtendedSentenceDetailsFtr56,
   whyConsideredRecall,
   howWillAppointmentHappen,
-  yesNo,
+  yesNo: yesNoOptions(),
   hasVictimsInContactScheme,
-  isUnderIntegratedOffenderManagement,
   roshLevels,
+  yesNoOffenceChanges: yesNoOptions({
+    [YesNoValues.YES]: strings.labels.yesOffenceChanges,
+    [YesNoValues.NO]: strings.labels.no,
+  }),
 }
 
 export const isValueValid = (val: string, optionId: string) =>

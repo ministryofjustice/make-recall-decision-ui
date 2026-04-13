@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
- 
+
 
 export { ActiveRecommendation } from './models/ActiveRecommendation';
 export type { AdditionalLicenceConditionOption } from './models/AdditionalLicenceConditionOption';
@@ -55,7 +55,6 @@ export type { PersonDetailsResponse } from './models/PersonDetailsResponse';
 export type { PersonOnProbationDto } from './models/PersonOnProbationDto';
 export type { PredictorScore } from './models/PredictorScore';
 export type { PredictorScores } from './models/PredictorScores';
-export type { PreviousRecalls } from './models/PreviousRecalls';
 export type { PreviousReleases } from './models/PreviousReleases';
 export type { ProbationTeam } from './models/ProbationTeam';
 export type { PurgeQueueResult } from './models/PurgeQueueResult';
@@ -85,7 +84,6 @@ export type { SelectedOption } from './models/SelectedOption';
 export type { SelectedWithDetails } from './models/SelectedWithDetails';
 export type { StandardLicenceConditions } from './models/StandardLicenceConditions';
 export type { TextValueOption } from './models/TextValueOption';
-export type { UnderIntegratedOffenderManagement } from './models/UnderIntegratedOffenderManagement';
 export type { UserAccessResponse } from './models/UserAccessResponse';
 export type { ValueWithDetails } from './models/ValueWithDetails';
 export { VictimsInContactScheme } from './models/VictimsInContactScheme';

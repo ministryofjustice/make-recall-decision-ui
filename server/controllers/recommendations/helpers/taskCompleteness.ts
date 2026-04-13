@@ -26,16 +26,6 @@ const isPreviousReleasesComplete = (recommendation: RecommendationResponse) => {
   return recommendation.previousReleases?.hasBeenReleasedPreviously === false
 }
 
-const isPreviousRecallsComplete = (recommendation: RecommendationResponse) => {
-  if (recommendation.previousRecalls === null || typeof recommendation.previousRecalls === 'undefined') {
-    return false
-  }
-  if (recommendation.previousRecalls?.hasBeenRecalledPreviously === true) {
-    return recommendation.previousRecalls?.previousRecallDates?.length > 0
-  }
-  return recommendation.previousRecalls?.hasBeenRecalledPreviously === false
-}
-
 const isVulnerabilitiesComplete = (recommendation: RecommendationResponse, _featureFlags?: FeatureFlags) => {
   if (recommendation.vulnerabilities === null || typeof recommendation.vulnerabilities === 'undefined') {
     return false
@@ -60,13 +50,11 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     alternativesToRecallTried: hasData(recommendation.alternativesToRecallTried?.selected),
     recallType: hasValue(recommendation.recallType?.selected),
     decisionDateTime: hasValue(recommendation.decisionDateTime),
-    responseToProbation: hasValue(recommendation.responseToProbation),
     isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
     isExtendedSentence: hasValue(recommendation.isExtendedSentence),
     sentenceGroup: hasValue(recommendation.sentenceGroup),
     triggerLeadingToRecall: hasValue(recommendation.triggerLeadingToRecall),
     previousReleases: isPreviousReleasesComplete(recommendation),
-    previousRecalls: isPreviousRecallsComplete(recommendation),
     indeterminateSentenceType:
       !!recommendation.isIndeterminateSentence && hasValue(recommendation.indeterminateSentenceType),
     licenceConditionsBreached:
@@ -123,8 +111,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
     : !recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType
 
-  const responseToProbation = _featureFlags?.flagFTR56Enabled ? true : statuses.responseToProbation
-
   if (recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL) {
     const whyConsideredRecall = hasValue(recommendation.whyConsideredRecall)
     const reasonsForNoRecall = hasValue(recommendation.reasonsForNoRecall)
@@ -149,7 +135,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       areAllComplete:
         triggerLeadingToRecall &&
         suitabilityForRecallValidation &&
-        responseToProbation &&
         mappaReviewed &&
         (!_featureFlags?.flagFTR56Enabled || statuses.decisionDateTime) &&
         statuses.alternativesToRecallTried &&
@@ -170,7 +155,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isThisAnEmergencyRecall: hasValue(recommendation.isThisAnEmergencyRecall),
     vulnerabilities: isVulnerabilitiesComplete(recommendation, _featureFlags),
     hasVictimsInContactScheme: isVictimContactSchemeComplete(recommendation),
-    isUnderIntegratedOffenderManagement: hasValue(recommendation.isUnderIntegratedOffenderManagement?.selected),
     hasContrabandRisk: hasValue(recommendation.hasContrabandRisk),
     personOnProbation: recommendation.personOnProbation?.hasBeenReviewed === true,
     offenceAnalysis: hasValue(recommendation.offenceAnalysis),
@@ -202,17 +186,11 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.indeterminateOrExtendedSentenceDetails
     : !recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails
 
-  const isUnderIntegratedOffenderManagement = _featureFlags?.flagFTR56Enabled
-    ? true
-    : statuses.isUnderIntegratedOffenderManagement
-  const previousRecalls = _featureFlags?.flagFTR56Enabled ? true : statuses.previousRecalls
-
   return {
     statuses,
     isReadyForCounterSignature:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
-      responseToProbation &&
       sentenceValidation &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
@@ -221,14 +199,12 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.isThisAnEmergencyRecall &&
       statuses.vulnerabilities &&
       statuses.hasVictimsInContactScheme &&
-      isUnderIntegratedOffenderManagement &&
       statuses.hasContrabandRisk &&
       statuses.personOnProbation &&
       statuses.offenceAnalysis &&
       statuses.convictionDetail &&
       statuses.mappa &&
       statuses.previousReleases &&
-      previousRecalls &&
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&
@@ -242,7 +218,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
       statuses.decisionDateTime &&
-      responseToProbation &&
       sentenceValidation &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
@@ -251,14 +226,12 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.isThisAnEmergencyRecall &&
       statuses.vulnerabilities &&
       statuses.hasVictimsInContactScheme &&
-      isUnderIntegratedOffenderManagement &&
       statuses.hasContrabandRisk &&
       statuses.personOnProbation &&
       statuses.offenceAnalysis &&
       statuses.convictionDetail &&
       statuses.mappa &&
       statuses.previousReleases &&
-      previousRecalls &&
       statuses.currentRoshForPartA &&
       statuses.hasArrestIssues &&
       statuses.localPoliceContact &&

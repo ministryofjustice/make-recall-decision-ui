@@ -238,40 +238,6 @@ describe('checkForRedirectPath', () => {
       expect(pageUrlSlug).toEqual(`${basePath}task-list`)
     })
 
-    it('returns response to probation if recall task list requested and recall not set', () => {
-      const pageUrlSlug = checkForRedirectPath({
-        requestedPageId: 'task-list',
-        recommendation: {
-          managerRecallDecision: {
-            isSentToDelius: true,
-          },
-        },
-        basePathRecFlow: basePath,
-        crn,
-        featureFlags: {},
-        hasSpoRole: false,
-        recommendationStatus: RecommendationResponse.status.DRAFT,
-      })
-      expect(pageUrlSlug).toEqual(`${basePath}response-to-probation`)
-    })
-
-    it('returns response to probation if no recall task list requested and recall not set', () => {
-      const pageUrlSlug = checkForRedirectPath({
-        requestedPageId: 'task-list-no-recall',
-        recommendation: {
-          managerRecallDecision: {
-            isSentToDelius: true,
-          },
-        },
-        basePathRecFlow: basePath,
-        crn,
-        featureFlags: {},
-        hasSpoRole: false,
-        recommendationStatus: RecommendationResponse.status.DRAFT,
-      })
-      expect(pageUrlSlug).toEqual(`${basePath}response-to-probation`)
-    })
-
     it('returns case summary overview if recommendation status is DOCUMENT_DOWNLOADED', () => {
       const pageUrlSlug = checkForRedirectPath({
         requestedPageId: 'task-list-no-recall',

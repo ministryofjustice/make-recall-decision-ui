@@ -12,7 +12,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
   } = res.locals
 
   const triggerLeadingToRecallCompleted = hasData(recommendation.triggerLeadingToRecall)
-  const responseToProbationCompleted = hasData(recommendation.responseToProbation)
   const licenceConditionsBreachedCompleted =
     hasData(recommendation.licenceConditionsBreached) ||
     hasData(recommendation.cvlLicenceConditionsBreached) ||
@@ -30,7 +29,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
       sentenceGroupCompleted &&
       (recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || indeterminateSentenceTypeCompleted)
     : triggerLeadingToRecallCompleted &&
-      responseToProbationCompleted &&
       licenceConditionsBreachedCompleted &&
       alternativesToRecallTriedCompleted &&
       isExtendedSentenceCompleted &&
@@ -42,7 +40,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     backLinkUrl: flagFTR56Enabled ? `/cases/${recommendation.crn}/overview` : undefined,
     isIndeterminateSentence: recommendation.sentenceGroup === SentenceGroup.INDETERMINATE,
     triggerLeadingToRecallCompleted,
-    responseToProbationCompleted,
     licenceConditionsBreachedCompleted,
     alternativesToRecallTriedCompleted,
     sentenceGroupCompleted,

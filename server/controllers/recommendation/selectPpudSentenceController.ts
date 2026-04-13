@@ -64,6 +64,8 @@ async function post(req: Request, res: Response, next: NextFunction) {
         ...recommendation.bookRecallToPpud,
         ppudSentenceId,
         custodyType: ppudSentence?.custodyType,
+        indexOffence: ppudSentence?.offence.indexOffence,
+        indexOffenceComment: ppudSentence?.offence.indexOffenceComment,
       },
     },
     token,
@@ -71,7 +73,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: ppudSentenceId === 'ADD_NEW' ? ppcsPaths.editCustodyType : ppcsPaths.sentenceToCommitExistingOffender,
+    nextPageId: ppudSentenceId === 'ADD_NEW' ? ppcsPaths.matchIndexOffence : ppcsPaths.areOffenceChangesNeeded,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

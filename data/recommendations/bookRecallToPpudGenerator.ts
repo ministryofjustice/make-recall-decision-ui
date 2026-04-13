@@ -19,6 +19,7 @@ export type BookRecallToPpudOptions = {
   custodyGroup?: AnyNoneOrOption<CUSTODY_GROUP>
   custodyTypeBasedOnGroup?: CUSTODY_GROUP
   custodyType?: AnyNoneOrOption<CustodyType>
+  changeOffenceOrAddComment?: AnyNoneOrOption<boolean>
   indexOffence?: IncludeNoneOrOption<string>
   indexOffenceComment?: IncludeNoneOrOption<string>
   ppudSentenceId?: string
@@ -63,6 +64,7 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
       ethnicity: EthnicityGenerator.generate(options?.ethnicity),
       custodyGroup: resolveAnyNoneOrOption(options?.custodyGroup ?? 'any', Object.values(CUSTODY_GROUP)),
       custodyType: resolvedCustodyType,
+      changeOffenceOrAddComment: resolveAnyNoneOrOption(options?.changeOffenceOrAddComment ?? 'any', [true, false]),
       indexOffence: resolveIncludeNoneOrOption(options?.indexOffence, faker.lorem.words),
       indexOffenceComment: resolveIncludeNoneOrOption(options?.indexOffenceComment, faker.lorem.sentence),
       ppudSentenceId: options?.ppudSentenceId,

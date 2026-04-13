@@ -15,12 +15,10 @@ const isValidStatus = (status: string) => {
   return validValues.includes(status)
 }
 
-const getRedirectPath = (status: string, crn: string, recommendationId: string) => {
+const getRedirectPath = (status: string, crn: string) => {
   switch (status) {
     case 'DELETED':
       return `${routeUrls.cases}/${crn}/recommendations`
-    case 'DRAFT':
-      return `${routeUrls.recommendations}/${recommendationId}/response-to-probation`
     default:
       return `${routeUrls.cases}/${crn}/overview`
   }
@@ -38,7 +36,7 @@ const updateRecommendationStatus = async (req: Request, res: Response): Promise<
   }
   const normalizedCrn = validateCrn(crn)
   await updateRecommendation({ recommendationId, valuesToSave: { status }, token })
-  const redirectPath = getRedirectPath(status, normalizedCrn, recommendationId)
+  const redirectPath = getRedirectPath(status, normalizedCrn)
   res.redirect(303, redirectPath)
   if (status === 'DRAFT') {
     appInsightsEvent(

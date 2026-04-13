@@ -125,14 +125,13 @@ describe('Task List Consider a Recall Controller', () => {
     })
 
     describe('with FTR56 flag disabled', () => {
-      generateBooleanCombinations(6).forEach(testCaseBooleanCombination => {
+      generateBooleanCombinations(5).forEach(testCaseBooleanCombination => {
         const testCaseOptions: RecommendationOptions = {
           triggerLeadingToRecall: testCaseBooleanCombination[0],
-          responseToProbation: testCaseBooleanCombination[1],
-          licenceConditionsBreached: testCaseBooleanCombination[2],
-          alternativesToRecallTried: testCaseBooleanCombination[3],
-          isIndeterminateSentence: testCaseBooleanCombination[4] ? faker.datatype.boolean() : 'none',
-          isExtendedSentence: testCaseBooleanCombination[5] ? faker.datatype.boolean() : 'none',
+          licenceConditionsBreached: testCaseBooleanCombination[1],
+          alternativesToRecallTried: testCaseBooleanCombination[2],
+          isIndeterminateSentence: testCaseBooleanCombination[3] ? faker.datatype.boolean() : 'none',
+          isExtendedSentence: testCaseBooleanCombination[4] ? faker.datatype.boolean() : 'none',
         }
         checkTestCaseCombination(testCaseOptions, testCaseBooleanCombination, false)
       })

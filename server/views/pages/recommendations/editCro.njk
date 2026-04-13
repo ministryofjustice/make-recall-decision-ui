@@ -14,21 +14,21 @@
             <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
 
             {% if recommendation.prisonOffender.cro %}
-                <dl class="govuk-text-list">
+                <dl class="car-text-list">
                     <h3 class='govuk-heading-m'>From NOMIS</h3>
-                    <div class="govuk-text-list__row">
-                        <dt class="govuk-text-list__key">CRO</dt>
-                        <dd class="govuk-text-list__value" data-qa="nomisCro">{{ recommendation.prisonOffender.cro }}</dd>
+                    <div class="car-text-list__row">
+                        <dt class="car-text-list__key">CRO</dt>
+                        <dd class="car-text-list__value" data-qa="nomisCro">{{ recommendation.prisonOffender.cro }}</dd>
                     </div>
                 </dl>
             {% endif %}
 
             {% if recommendation.ppudOffender.croOtherNumber %}
-                <dl class="govuk-text-list">
+                <dl class="car-text-list">
                     <h3 class='govuk-heading-m'>From PPUD</h3>
-                    <div class="govuk-text-list__row">
-                        <dt class="govuk-text-list__key">CRO</dt>
-                        <dd class="govuk-text-list__value" data-qa="ppudCro">{{ recommendation.ppudOffender.croOtherNumber }}</dd>
+                    <div class="car-text-list__row">
+                        <dt class="car-text-list__key">CRO</dt>
+                        <dd class="car-text-list__value" data-qa="ppudCro">{{ recommendation.ppudOffender.croOtherNumber }}</dd>
                     </div>
                 </dl>
             {% endif %}

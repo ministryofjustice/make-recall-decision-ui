@@ -7,7 +7,6 @@ import updateRecommendationStatus from '../controllers/recommendations/updateRec
 import RouteBuilder from './RouteBuilder'
 import { STATUSES } from '../middleware/recommendationStatusCheck'
 import taskListConsiderRecallController from '../controllers/recommendation/taskListConsiderRecallController'
-import responseToProbationController from '../controllers/recommendation/responseToProbationController'
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
 import alternativesToRecallTriedController from '../controllers/recommendation/alternativesToRecallTriedController'
 import triggerLeadingToRecallController from '../controllers/recommendation/triggerLeadingToRecallController'
@@ -56,7 +55,6 @@ import indeterminateDetailsController from '../controllers/recommendation/indete
 import fixedTermLicenceConditionsController from '../controllers/recommendation/fixedTermLicenceConditionsController'
 import vulnerabilitiesController from '../controllers/recommendation/vulnerabilitiesController'
 import vulnerabilitiesDetailsController from '../controllers/recommendation/vulnerabilitiesDetailsController'
-import iomController from '../controllers/recommendation/iomController'
 import policeDetailsController from '../controllers/recommendation/policeDetailsController'
 import victimContactSchemeController from '../controllers/recommendation/victimContactSchemeController'
 import victimLiasonOfficerController from '../controllers/recommendation/victimLiasonOfficerController'
@@ -66,8 +64,6 @@ import revocationOrderRecipientsController from '../controllers/recommendation/r
 import ppcsQueryEmailsController from '../controllers/recommendation/ppcsQueryEmailsController'
 import arrestIssuesController from '../controllers/recommendation/arrestIssuesController'
 import addPreviousReleaseController from '../controllers/recommendation/addPreviousReleaseController'
-import addPreviousRecallController from '../controllers/recommendation/addPreviousRecallController'
-import previousRecallController from '../controllers/recommendation/previousRecallsController'
 import previousReleasesController from '../controllers/recommendation/previousReleasesController'
 import offenceAnalysisController from '../controllers/recommendation/offenceAnalysisController'
 import roshController from '../controllers/recommendation/roshController'
@@ -134,6 +130,7 @@ import editSentencingCourtController from '../controllers/recommendation/ppcs/in
 import selectIndexOffenceController from '../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import editOffenceController from '../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 import editCustodyTypeController from '../controllers/recommendation/editCustodyTypeController'
+import areOffenceChangesNeededController from '../controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/areOffenceChangesNeededController'
 import checkMappaInformationController from '../controllers/recommendation/checkMappaInformationController'
 import sentenceInformationController from '../controllers/recommendation/sentenceInformationController'
 
@@ -166,9 +163,6 @@ ppRouteBuilder.post('task-list-consider-recall', taskListConsiderRecallControlle
 
 ppRouteBuilder.get('trigger-leading-to-recall', triggerLeadingToRecallController.get)
 ppRouteBuilder.post('trigger-leading-to-recall', triggerLeadingToRecallController.post)
-
-ppRouteBuilder.get('response-to-probation', responseToProbationController.get)
-ppRouteBuilder.post('response-to-probation', responseToProbationController.post)
 
 ppRouteBuilder.get('licence-conditions', licenceConditionsController.get)
 ppRouteBuilder.post('licence-conditions', licenceConditionsController.post)
@@ -255,9 +249,6 @@ ppRouteBuilder.post('contraband', contrabandController.post)
 ppRouteBuilder.get('address-details', addressDetailsController.get)
 ppRouteBuilder.post('address-details', addressDetailsController.post)
 
-ppRouteBuilder.get('iom', iomController.get)
-ppRouteBuilder.post('iom', iomController.post)
-
 ppRouteBuilder.get('police-details', policeDetailsController.get)
 ppRouteBuilder.post('police-details', policeDetailsController.post)
 
@@ -296,12 +287,6 @@ ppRouteBuilder.post('arrest-issues', arrestIssuesController.post)
 
 ppRouteBuilder.get('add-previous-release', addPreviousReleaseController.get)
 ppRouteBuilder.post('add-previous-release', addPreviousReleaseController.post)
-
-ppRouteBuilder.get('add-previous-recall', addPreviousRecallController.get)
-ppRouteBuilder.post('add-previous-recall', addPreviousRecallController.post)
-
-ppRouteBuilder.get('previous-recalls', previousRecallController.get)
-ppRouteBuilder.post('previous-recalls', previousRecallController.post)
 
 ppRouteBuilder.get('previous-releases', previousReleasesController.get)
 ppRouteBuilder.post('previous-releases', previousReleasesController.post)
@@ -542,6 +527,9 @@ ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.selectIndexOffence, selectInde
 ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.selectIndexOffence, selectIndexOffenceController.post)
 
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.consecutiveSentenceDetails, consecutiveSentenceDetailsController.get)
+
+ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.areOffenceChangesNeeded, areOffenceChangesNeededController.get)
+ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.areOffenceChangesNeeded, areOffenceChangesNeededController.post)
 
 ppcsDeterminateSentenceRouteBuilder.get(ppcsPaths.matchIndexOffence, matchIndexOffenceController.get)
 ppcsDeterminateSentenceRouteBuilder.post(ppcsPaths.matchIndexOffence, matchIndexOffenceController.post)

@@ -153,7 +153,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'Consider a recall')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
-      cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
@@ -979,13 +978,6 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-agree-to-recall`)
       cy.pageHeading().should('equal', 'When did the SPO agree to this recall?')
-    })
-
-    it('Previous recalls', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-recalls`)
-      cy.pageHeading().should('equal', 'Previous recalls')
     })
 
     it('Previous releases', () => {
@@ -2693,111 +2685,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Edit MAPPA level')
 
       cy.getText('mappaLevel').should('contain', 'Unknown')
-    })
-
-    it('match index offence - single-sentence sequence (non-null sentenceEndDate)', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
-          ppudOffender: {},
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                bookingId: 13,
-                courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA12345',
-                offenceDescription: 'Attack / assault / batter a member of the public',
-                offenceStatute: 'SA96',
-                offenderChargeId: 3934369,
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3021-11-15',
-                sentenceSequenceExpiryDate: '3022-11-15',
-                sentenceStartDate: '2023-11-16',
-                sentenceTypeDescription: 'Adult Mandatory Life',
-                terms: [],
-                releaseDate: '2025-11-16',
-                licenceExpiryDate: '2025-11-17',
-                releasingPrison: 'Broad Moor',
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('getReferenceList', {
-        name: 'index-offences',
-        statusCode: 200,
-        response: {
-          values: ['Abscond', 'Abstracting electricity'],
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/match-index-offence`)
-      cy.pageHeading().should('contain', 'Select a matching index offence in PPUD')
-
-      cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
-      cy.getText('sentenceStartDate').should('contain', '16 November 2023')
-      cy.getText('sentenceEndDate').should('contain', '15 November 3021')
-      cy.getElement('sentenceSequenceExpiryDate').should('not.exist')
-    })
-
-    it('match index offence - multi-sentence sequence (no sentenceEndDate)', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
-          ppudOffender: {},
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                bookingId: 13,
-                courtDescription: 'Blackburn County Court',
-                offenceCode: 'SA12345',
-                offenceDescription: 'Attack / assault / batter a member of the public',
-                offenceStatute: 'SA96',
-                offenderChargeId: 3934369,
-                sentenceDate: '2023-11-16',
-                sentenceSequenceExpiryDate: '3022-11-15',
-                sentenceStartDate: '2023-11-16',
-                sentenceTypeDescription: 'Adult Mandatory Life',
-                terms: [],
-                releaseDate: '2025-11-16',
-                licenceExpiryDate: '2025-11-17',
-                releasingPrison: 'Broad Moor',
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('getReferenceList', {
-        name: 'index-offences',
-        statusCode: 200,
-        response: {
-          values: ['Abscond', 'Abstracting electricity'],
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/match-index-offence`)
-      cy.pageHeading().should('contain', 'Select a matching index offence in PPUD')
-
-      cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
-      cy.getText('sentenceStartDate').should('contain', '16 November 2023')
-      cy.getElement('sentenceEndDate').should('not.exist')
-      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
     })
 
     it('select determinate ppud sentence - NOMIS sentence is in single-sentence sequence (non-null sentenceEndDate)', () => {

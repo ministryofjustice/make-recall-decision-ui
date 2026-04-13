@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { booleanToYesNo } from '../../utils/utils'
+import { booleanToYesNo } from '../recommendations/formOptions/yesNo'
 import validateIsIndeterminateSentence from '../recommendations/isIndeterminateSentence/formValidator'
 import ppPaths from '../../routes/paths/pp'
 

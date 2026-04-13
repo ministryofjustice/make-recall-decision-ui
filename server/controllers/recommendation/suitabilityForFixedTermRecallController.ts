@@ -8,8 +8,8 @@ import getCaseSection from '../caseSummary/getCaseSection'
 import { NamedFormError, UrlInfo } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import {
-  isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
+  isFixedTermRecallMandatoryForValueKeys,
   isRecommendationDiscretionaryRecall,
 } from '../../utils/fixedTermRecallUtils'
 import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'

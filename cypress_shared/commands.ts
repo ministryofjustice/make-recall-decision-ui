@@ -491,16 +491,3 @@ Cypress.Commands.add('getPreviousReleases', () => {
   else previousReleaseDetails.previousReleaseDates = ''
   return cy.wrap(previousReleaseDetails)
 })
-
-Cypress.Commands.add('getPreviousRecalls', () => {
-  const previousRecallDates = []
-  if (Cypress.$('[data-qa="recall-info-table"]:contains("Last recall")').length > 0)
-    cy.getDefinitionListValue('Last recall').then(text => {
-      previousRecallDates.push(replaceMissingNDeliusInfoWithBlank(text))
-    })
-  if (Cypress.$('[data-qa="recall-info-table"]:contains("Previous recall")').length > 0)
-    cy.getDefinitionListValue('Previous recall').then(text => {
-      previousRecallDates.push(replaceMissingNDeliusInfoWithBlank(text))
-    })
-  return cy.wrap(previousRecallDates)
-})

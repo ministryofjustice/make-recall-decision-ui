@@ -1,7 +1,6 @@
 const ppPaths = {
   taskListConsiderRecall: 'task-list-consider-recall',
   triggerLeadingToRecall: 'trigger-leading-to-recall',
-  responseToProbation: 'response-to-probation',
   licenceConditions: 'licence-conditions',
   alternativesTried: 'alternatives-tried',
   sentenceInformation: 'sentence-information',

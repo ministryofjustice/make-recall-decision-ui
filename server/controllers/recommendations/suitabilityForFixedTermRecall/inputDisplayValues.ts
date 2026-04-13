@@ -1,5 +1,5 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
-import { booleanToYesNo } from '../../../utils/utils'
+import { booleanToYesNo } from '../formOptions/yesNo'
 
 type SuitabilityFormOptions = {
   label: string

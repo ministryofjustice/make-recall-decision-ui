@@ -20,7 +20,7 @@ describe('get', () => {
 
     expect(res.locals.page.id).toEqual('sentenceToCommitExistingOffender')
     const selectedIndexOffence = recommendation.nomisIndexOffence.allOptions.find(
-      offence => offence.offenderChargeId === recommendation.nomisIndexOffence.selected
+      offence => offence.offenderChargeId === recommendation.nomisIndexOffence.selected,
     )
     expect(res.locals.offence).toEqual(selectedIndexOffence)
     expect(res.locals.ppudSentence).toEqual(selectedPpudSentence)

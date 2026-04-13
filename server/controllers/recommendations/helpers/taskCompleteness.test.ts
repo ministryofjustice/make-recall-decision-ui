@@ -27,7 +27,6 @@ const sharedProperties: RecommendationResponse = {
   licenceConditionsBreached: undefined,
   recallType: undefined,
   decisionDateTime: undefined,
-  responseToProbation: undefined,
 }
 
 const suitabilityForRecallProperties: RecommendationResponse = {
@@ -48,7 +47,6 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   hasVictimsInContactScheme: undefined,
   isThisAnEmergencyRecall: undefined,
   indeterminateOrExtendedSentenceDetails: undefined,
-  isUnderIntegratedOffenderManagement: undefined,
   personOnProbation: undefined,
   whatLedToRecall: undefined,
   vulnerabilities: undefined,
@@ -57,7 +55,6 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   mappa: undefined,
   currentRoshForPartA: undefined,
   previousReleases: undefined,
-  previousRecalls: undefined,
   fixedTermAdditionalLicenceConditions: undefined,
   hasArrestIssues: undefined,
   isMainAddressWherePersonCanBeFound: undefined,
@@ -195,7 +192,6 @@ describe('taskCompleteness', () => {
         ...setAllProperties(indeterminateSentenceProperties, true),
         ...setAllProperties(noRecallProperties, true),
         ...setAllProperties(suitabilityForRecallProperties, false),
-        previousRecalls: false,
         previousReleases: false,
         sentenceGroup: false,
         triggerLeadingToRecall: false,
@@ -216,7 +212,6 @@ describe('taskCompleteness', () => {
         ...setAllProperties(noRecallProperties, true),
         ...setAllProperties(suitabilityForRecallProperties, false),
         decisionDateTime: false,
-        previousRecalls: false,
         previousReleases: false,
         indeterminateSentenceType: false,
         sentenceGroup: false,
@@ -243,7 +238,6 @@ describe('taskCompleteness', () => {
         ...setAllProperties(suitabilityForRecallProperties, false),
         triggerLeadingToRecall: false,
         recallType: true,
-        previousRecalls: false,
         previousReleases: false,
         sentenceGroup: false,
         indeterminateSentenceType: false,
@@ -683,32 +677,6 @@ describe('taskCompleteness', () => {
         previousReleases: { hasBeenReleasedPreviously: false },
       })
       expect(statuses.previousReleases).toEqual(true)
-    })
-  })
-
-  describe('Previous recalls', () => {
-    it('returns true if hasBeenRecalledPreviously is true and previous release date set', () => {
-      const { statuses } = taskCompleteness({
-        ...emptyRecall,
-        previousRecalls: { hasBeenRecalledPreviously: true, previousRecallDates: ['2022-09-05'] },
-      })
-      expect(statuses.previousRecalls).toEqual(true)
-    })
-
-    it('returns false if hasBeenRecalledPreviously is true and previous release date not set', () => {
-      const { statuses } = taskCompleteness({
-        ...emptyRecall,
-        previousRecalls: { hasBeenRecalledPreviously: true },
-      })
-      expect(statuses.previousRecalls).toEqual(false)
-    })
-
-    it('returns true if hasBeenRecalledPreviously is false and previous release date not set', () => {
-      const { statuses } = taskCompleteness({
-        ...emptyRecall,
-        previousRecalls: { hasBeenRecalledPreviously: false },
-      })
-      expect(statuses.previousRecalls).toEqual(true)
     })
   })
 
@@ -1255,70 +1223,6 @@ describe('taskCompleteness', () => {
             isIndeterminateSentence: false,
             indeterminateOrExtendedSentenceDetails: undefined,
           } as RecommendationResponse,
-          { flagFTR56Enabled: false },
-        )
-        expect(areAllComplete).toEqual(true)
-      })
-    })
-  })
-
-  describe('isUnderIntegratedOffenderManagement', () => {
-    describe('flagFTR56Enabled: true', () => {
-      it('does not block areAllComplete or isReadyForCounterSignature when field is undefined', () => {
-        const { areAllComplete, isReadyForCounterSignature } = taskCompleteness(
-          {
-            ...baseRecall,
-            sentenceGroup: SentenceGroup.EXTENDED,
-            isUnderIntegratedOffenderManagement: undefined,
-          } as RecommendationResponse,
-          { flagFTR56Enabled: true },
-        )
-        expect(areAllComplete).toEqual(true)
-        expect(isReadyForCounterSignature).toEqual(true)
-      })
-    })
-
-    describe('flagFTR56Enabled: false', () => {
-      it('blocks areAllComplete and isReadyForCounterSignature when field is undefined', () => {
-        const { areAllComplete, isReadyForCounterSignature } = taskCompleteness(
-          { ...baseRecall, isUnderIntegratedOffenderManagement: undefined },
-          { flagFTR56Enabled: false },
-        )
-        expect(areAllComplete).toEqual(false)
-        expect(isReadyForCounterSignature).toEqual(false)
-      })
-    })
-  })
-
-  describe('previousRecalls', () => {
-    describe('flagFTR56Enabled: true', () => {
-      it('does not block areAllComplete or isReadyForCounterSignature when field is undefined', () => {
-        const { areAllComplete, isReadyForCounterSignature } = taskCompleteness(
-          {
-            ...baseRecall,
-            sentenceGroup: SentenceGroup.EXTENDED,
-            previousRecalls: undefined,
-          } as RecommendationResponse,
-          { flagFTR56Enabled: true },
-        )
-        expect(areAllComplete).toEqual(true)
-        expect(isReadyForCounterSignature).toEqual(true)
-      })
-    })
-
-    describe('flagFTR56Enabled: false', () => {
-      it('blocks areAllComplete and isReadyForCounterSignature when previousRecalls is undefined', () => {
-        const { areAllComplete, isReadyForCounterSignature } = taskCompleteness(
-          { ...baseRecall, previousRecalls: undefined },
-          { flagFTR56Enabled: false },
-        )
-        expect(areAllComplete).toEqual(false)
-        expect(isReadyForCounterSignature).toEqual(false)
-      })
-
-      it('does not block when hasBeenRecalledPreviously is false (no dates required)', () => {
-        const { areAllComplete } = taskCompleteness(
-          { ...baseRecall, previousRecalls: { hasBeenRecalledPreviously: false } },
           { flagFTR56Enabled: false },
         )
         expect(areAllComplete).toEqual(true)

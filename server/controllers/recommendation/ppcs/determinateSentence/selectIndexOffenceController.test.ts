@@ -65,7 +65,7 @@ const next = mockNext()
 describe('Select Index Offence Controller', () => {
   describe('get', () => {
     const defaultGetRecommendation = RecommendationResponseGenerator.generate({
-      nomisOffenceIndex: 'none',
+      nomisIndexOffence: 'none',
     })
     const defaultGetSentence = PrisonSentenceGenerator.generate()
     const defaultGetSentenceSequence: PrisonSentenceSequence = {
@@ -152,7 +152,7 @@ describe('Select Index Offence Controller', () => {
             it(' - endDate', async () => expect(offenceData().endDate).toEqual(expectedNomisOffenceData.endDate))
             it(' - sentenceSequenceExpiryDate', async () =>
               expect(offenceData().sentenceSequenceExpiryDate).toEqual(
-                expectedNomisOffenceData.sentenceSequenceExpiryDate
+                expectedNomisOffenceData.sentenceSequenceExpiryDate,
               ))
             it(' - terms (to be defined, conditional)', async () => expect(offenceData().terms).toBeDefined())
             it(' - consecutiveCount (to be undefined, conditional)', async () =>
@@ -436,7 +436,7 @@ describe('Select Index Offence Controller', () => {
 
   describe('post', () => {
     const defaultPostRecommendation = RecommendationResponseGenerator.generate({
-      nomisOffenceIndex: { selectedIndex: 'none' },
+      nomisIndexOffence: { selectedIndex: 'none' },
     })
     const expectedSelectedOffence = defaultPostRecommendation.nomisIndexOffence.allOptions.at(0)
     const expectedSelectedOffenceIndex = expectedSelectedOffence.offenderChargeId
@@ -517,8 +517,8 @@ describe('Select Index Offence Controller', () => {
       })
       describe('Navigation:', () => {
         const selectedOffenceIndex = faker.number.int()
-        const recommonendationResponseForNavigationTests = RecommendationResponseGenerator.generate({
-          nomisOffenceIndex: {
+        const recommendationResponseForNavigationTests = RecommendationResponseGenerator.generate({
+          nomisIndexOffence: {
             selectedIndex: 'none',
             offeredOffenceOptions: [{ offenderChargeId: selectedOffenceIndex }, {}, {}],
           },
@@ -526,10 +526,9 @@ describe('Select Index Offence Controller', () => {
         const navigationReq = mockReq({
           body: { indexOffence: selectedOffenceIndex.toString() },
         })
+        const basePath = '/recommendations/123/'
         const navigationRes = mockRes({
-          locals: {
-            urlInfo: { basePath: '/recommendations/123/' },
-          },
+          locals: { urlInfo: { basePath } },
         })
         describe('When the selected offence does not have a consecutive sentence', () => {
           const nonConsecutiveSentence = PrisonSentenceSequenceGenerator.generate({
@@ -538,13 +537,58 @@ describe('Select Index Offence Controller', () => {
             },
             sentencesInSequence: null,
           })
-          beforeEach(async () => {
-            ;(getRecommendation as jest.Mock).mockResolvedValue(recommonendationResponseForNavigationTests)
-            ;(prisonSentences as jest.Mock).mockResolvedValue([nonConsecutiveSentence])
-            await selectIndexOffenceController.post(navigationReq, navigationRes, next)
-          })
-          it('Then the user is navigated to the Match Index Offence page', async () => {
-            expect(navigationRes.redirect).toHaveBeenCalledWith(303, '/recommendations/123/match-index-offence')
+          const testCases: {
+            useCaseDescription: string
+            recommendation: RecommendationResponse
+            redirectionPageId: string
+          }[] = [
+            {
+              useCaseDescription: 'And no PPUD offender was selected',
+              recommendation: RecommendationResponseGenerator.generate({
+                nomisIndexOffence: {
+                  selectedIndex: 'none',
+                  offeredOffenceOptions: [{ offenderChargeId: selectedOffenceIndex }, {}, {}],
+                },
+                ppudOffender: 'none',
+              }),
+              redirectionPageId: ppcsPaths.matchIndexOffence,
+            },
+            {
+              useCaseDescription: 'And a PPUD offender with no sentences was selected',
+              recommendation: RecommendationResponseGenerator.generate({
+                nomisIndexOffence: {
+                  selectedIndex: 'none',
+                  offeredOffenceOptions: [{ offenderChargeId: selectedOffenceIndex }, {}, {}],
+                },
+                ppudOffender: {
+                  sentences: [],
+                },
+              }),
+              redirectionPageId: ppcsPaths.matchIndexOffence,
+            },
+            {
+              useCaseDescription: 'And a PPUD offender with sentences was selected',
+              recommendation: RecommendationResponseGenerator.generate({
+                nomisIndexOffence: {
+                  selectedIndex: 'none',
+                  offeredOffenceOptions: [{ offenderChargeId: selectedOffenceIndex }, {}, {}],
+                },
+              }),
+              redirectionPageId: ppcsPaths.selectPpudSentence,
+            },
+          ]
+          testCases.forEach(testCase => {
+            describe(testCase.useCaseDescription, () => {
+              beforeEach(async () => {
+                // the recommendation response generator creates a PPUD offender with sentences by default
+                ;(getRecommendation as jest.Mock).mockResolvedValue(testCase.recommendation)
+                ;(prisonSentences as jest.Mock).mockResolvedValue([nonConsecutiveSentence])
+                await selectIndexOffenceController.post(navigationReq, navigationRes, next)
+              })
+              it(`Then the user is navigated to the ${testCase.redirectionPageId} page`, async () => {
+                expect(navigationRes.redirect).toHaveBeenCalledWith(303, `${basePath}${testCase.redirectionPageId}`)
+              })
+            })
           })
         })
         describe('When the selected offence does have consecutive sentences', () => {
@@ -555,14 +599,14 @@ describe('Select Index Offence Controller', () => {
             sentencesInSequence: new Map([[1, [{}]]]),
           })
           beforeEach(async () => {
-            ;(getRecommendation as jest.Mock).mockResolvedValue(recommonendationResponseForNavigationTests)
+            ;(getRecommendation as jest.Mock).mockResolvedValue(recommendationResponseForNavigationTests)
             ;(prisonSentences as jest.Mock).mockResolvedValue([consecutiveSentence])
             await selectIndexOffenceController.post(navigationReq, navigationRes, next)
           })
           it('Then the user is navigated to the Consecutive Sentence Details page', async () => {
             expect(navigationRes.redirect).toHaveBeenCalledWith(
               303,
-              `/recommendations/123/${ppcsPaths.consecutiveSentenceDetails}`,
+              `${basePath}${ppcsPaths.consecutiveSentenceDetails}`,
             )
           })
         })

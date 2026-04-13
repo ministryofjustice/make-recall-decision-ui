@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
-import { booleanToYesNo, isDefined, isMandatoryTextValue } from '../../utils/utils'
+import { isDefined, isMandatoryTextValue } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import regionEnum from '../recommendations/formOptions/region'
+import { booleanToYesNo } from '../recommendations/formOptions/yesNo'
 import { isEmailValid, isGovUkEmail } from '../../utils/validate-formats'
 
 async function get(req: Request, res: Response, next: NextFunction) {

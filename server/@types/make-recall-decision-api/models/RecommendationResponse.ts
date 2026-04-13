@@ -12,7 +12,6 @@ import type { LocalPoliceContact } from './LocalPoliceContact'
 import type { ManagerRecallDecision } from './ManagerRecallDecision'
 import type { NextAppointment } from './NextAppointment'
 import type { PersonOnProbationDto } from './PersonOnProbationDto'
-import type { PreviousRecalls } from './PreviousRecalls'
 import type { PreviousReleases } from './PreviousReleases'
 import type { ReasonsForNoRecall } from './ReasonsForNoRecall'
 import type { RecallConsidered } from './RecallConsidered'
@@ -20,7 +19,6 @@ import type { RecallType } from './RecallType'
 import type { RoshData } from './RoshData'
 import type { RoshSummary } from './RoshSummary'
 import type { SelectedWithDetails } from './SelectedWithDetails'
-import type { UnderIntegratedOffenderManagement } from './UnderIntegratedOffenderManagement'
 import type { UserAccessResponse } from './UserAccessResponse'
 import type { VictimsInContactScheme } from './VictimsInContactScheme'
 import type { VulnerabilitiesRecommendation } from './VulnerabilitiesRecommendation'
@@ -44,7 +42,6 @@ export type RecommendationResponse = {
   managerRecallDecision?: ManagerRecallDecision;
   recallType?: RecallType;
   decisionDateTime?: string;
-  responseToProbation?: string;
   triggerLeadingToRecall?: string;
   whatLedToRecall?: string;
   sentenceGroup?: SentenceGroup;
@@ -61,7 +58,6 @@ export type RecommendationResponse = {
   alternativesToRecallTried?: AlternativesToRecallTried;
   licenceConditionsBreached?: LicenceConditionsBreached;
   cvlLicenceConditionsBreached?: CvlLicenceConditionsBreached;
-  isUnderIntegratedOffenderManagement?: UnderIntegratedOffenderManagement;
   vulnerabilities?: VulnerabilitiesRecommendation;
   convictionDetail?: ConvictionDetail;
   region?: string;
@@ -80,7 +76,6 @@ export type RecommendationResponse = {
   reasonsForNoRecall?: ReasonsForNoRecall;
   nextAppointment?: NextAppointment;
   previousReleases?: PreviousReleases;
-  previousRecalls?: PreviousRecalls;
   recallConsideredList?: Array<RecallConsidered>;
   currentRoshForPartA?: RoshData;
   roshSummary?: RoshSummary;
@@ -188,6 +183,7 @@ export type BookRecallToPpud = {
   receivedDateTime?: string,
   custodyType?: string,
   custodyGroup?: CUSTODY_GROUP,
+  changeOffenceOrAddComment?: boolean,
   indexOffence?: string,
   indexOffenceComment?: string,
   ppudSentenceId?: string,
@@ -231,6 +227,10 @@ export type PrisonOffender = {
   pnc: string,
 }
 
+// The PPUD types below are aligned with those defined in PpudDetailsResponse.ts
+// I don't know why they are defined separately, and not one based on the other
+// (or just one type used throughout). Maybe worth looking into at some point to
+// prevent divergence.
 export type PpudOffender = {
   id: string,
   croOtherNumber: string,
@@ -265,6 +265,7 @@ export type PpudSentence = {
 
 export type PpudOffence = {
   indexOffence?: string,
+  indexOffenceComment?: string,
   dateOfIndexOffence?: string,
 }
 

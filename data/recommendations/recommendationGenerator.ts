@@ -26,6 +26,7 @@ import regionEnum from '../../server/controllers/recommendations/formOptions/reg
 */
 
 export type RecommendationOptions = {
+  id?: number
   crn?: string
   alternativesToRecallTried?: boolean
   custodyStatus?: NoneOrOption<CustodyStatusOptions>
@@ -39,7 +40,6 @@ export type RecommendationOptions = {
   isIndeterminateSentence?: NoneOrOption<boolean> // remove once FTR56 is live? or default to 'none'?
   isMainAddressWherePersonCanBeFound?: SelectedWithDetailsOptions
   isThisAnEmergencyRecall?: boolean
-  isUnderIntegratedOffenderManagement?: boolean
   licenceConditionsBreached?: boolean
   localPoliceContact?: boolean
   personOnProbation?: AnyNoneOrOption<PersonOnProbationOptions>
@@ -47,10 +47,8 @@ export type RecommendationOptions = {
   indexOffenceDetails?: boolean
   offenceAnalysis?: boolean
   previousReleases?: boolean
-  previousRecalls?: boolean
   recallType?: AnyNoneOrOption<RecallTypeOptions>
   decisionDateTime?: boolean
-  responseToProbation?: boolean
   vulnerabilities?: AnyNoneOrOption<VulnerabilitiesOptions>
   triggerLeadingToRecall?: boolean
   whatLedToRecall?: boolean
@@ -67,7 +65,7 @@ export type RecommendationOptions = {
   revocationOrderRecipients?: boolean
   ppcsQueryEmails?: boolean
   bookRecallToPpud?: BookRecallToPpudOptions
-  nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
+  nomisIndexOffence?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: NoneOrOption<PpudOffenderOptions>
   bookingMemento?: NoneOrOption<BookingMementoOptions>
   isUnder18?: boolean
@@ -90,7 +88,7 @@ export type RecommendationOptions = {
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
   generate: options => ({
-    id: faker.number.int({ min: 1, max: 99 }),
+    id: options?.id ?? faker.number.int({ min: 1, max: 99 }),
     status: RecommendationResponse.status.DRAFT,
     crn: options?.crn ?? faker.helpers.replaceSymbols('?######'),
     createdByUserFullName: 'Integration test data generator',
@@ -148,13 +146,6 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
         ? SelectedWithDetailsGenerator.generate(options?.isMainAddressWherePersonCanBeFound)
         : undefined,
     isThisAnEmergencyRecall: options?.isThisAnEmergencyRecall ?? faker.datatype.boolean(),
-    isUnderIntegratedOffenderManagement:
-      (options?.isUnderIntegratedOffenderManagement ?? true)
-        ? {
-            selected: 'YES',
-            allOptions: [],
-          }
-        : undefined,
     licenceConditionsBreached:
       (options?.licenceConditionsBreached ?? true)
         ? {
@@ -191,17 +182,8 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             previousReleaseDates: [faker.date.past().toDateString()],
           }
         : undefined,
-    previousRecalls:
-      (options?.previousRecalls ?? true)
-        ? {
-            lastRecallDate: faker.date.past().toDateString(),
-            hasBeenRecalledPreviously: faker.datatype.boolean(),
-            previousRecallDates: [faker.date.past().toDateString()],
-          }
-        : undefined,
     recallType: RecallTypeGenerator.generate(options?.recallType ?? 'none'),
     decisionDateTime: (options?.decisionDateTime ?? true) ? faker.date.past().toISOString() : undefined,
-    responseToProbation: (options?.responseToProbation ?? true) ? faker.lorem.sentence() : undefined,
     vulnerabilities: VulnerabilitiesGenerator.generate(options?.vulnerabilities ?? 'any'),
     triggerLeadingToRecall: (options?.triggerLeadingToRecall ?? true) ? faker.lorem.word() : undefined,
     whatLedToRecall: (options?.whatLedToRecall ?? true) ? faker.lorem.sentence() : undefined,
@@ -274,7 +256,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     ppcsQueryEmails: (options?.ppcsQueryEmails ?? true) ? [faker.internet.email()] : undefined,
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
     nomisIndexOffence:
-      options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
+      options?.nomisIndexOffence === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisIndexOffence),
     ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),
     bookingMemento:
       options?.bookingMemento === 'none' ? undefined : BookingMementoGenerator.generate(options?.bookingMemento),
