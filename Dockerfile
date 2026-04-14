@@ -4,8 +4,6 @@ FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS base
 ARG BUILD_NUMBER
 ARG GIT_REF
 ARG GIT_BRANCH
-# ARG BUILD_NUMBER=1_0_0
-# ARG GIT_REF=not-available
 
 # Cache breaking and ensure required build / git args defined
 RUN test -n "$BUILD_NUMBER" || (echo "BUILD_NUMBER not set" && false)
