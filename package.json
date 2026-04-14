@@ -37,8 +37,8 @@
     "setup:no-audit": "npm ci --no-audit && hmpps-npm-script-run-allowlist"
   },
   "engines": {
-    "node": "^20",
-    "npm": "^10"
+    "node": "^24",
+    "npm": "^11"
   },
   "jest": {
     "preset": "ts-jest",
@@ -156,6 +156,7 @@
     "@aws-sdk/types": "^3.667.0",
     "@ministryofjustice/eslint-config-hmpps": "2.0.0-alpha.1",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
+    "@tsconfig/node24": "24.0.4",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.7.5",
@@ -170,7 +171,7 @@
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/luxon": "^3.4.2",
-    "@types/node": "^20.16.11",
+    "@types/node": "^24.12.0",
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.16",
     "@types/passport-oauth2": "^1.4.15",
@@ -199,7 +200,7 @@
     "sass": "^1.74.1",
     "supertest": "^7.0.0",
     "ts-jest": "29.4.6",
-    "typescript": "^5.6.3",
+    "typescript": "^5.9.3",
     "wait-for-expect": "^3.0.2",
     "xml2js": "^0.6.0"
   },
@@ -208,6 +209,7 @@
     "csurf": {
       "cookie": "0.7.2"
     },
+    "diff": "8.0.3",
     "mocha": {
       "serialize-javascript": "7.0.5"
     }
