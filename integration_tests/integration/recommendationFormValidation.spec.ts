@@ -31,18 +31,6 @@ context('Make a recommendation - form validation', () => {
     },
   }
 
-  it('Response to probation', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/response-to-probation`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'responseToProbation',
-      errorText: 'Explain how Jane Bloggs has responded to probation',
-    })
-  })
-
   describe('Licence conditions', () => {
     ;[true, false].forEach(ftr56Enabled => {
       describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
@@ -305,27 +293,6 @@ context('Make a recommendation - form validation', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
-      fieldName: 'vulnerabilities',
-      errorText: 'Select if there are vulnerabilities or additional needs',
-    })
-    cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
-      'Relationship breakdown',
-      'Physical disabilities',
-    ])
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'vulnerabilitiesDetail-PHYSICAL_DISABILITIES',
-      errorText: 'Enter more detail for physical disabilities',
-    })
-  })
-
-  it('Vulnerabilities with RiskToSelf enabled', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities?flagRiskToSelfEnabled=1`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
       fieldGroupId: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
       fieldName: 'vulnerabilities',
       errorText: 'Select the vulnerabilities or needs Jane Bloggs may have, or ‘No concerns or do not know’',
@@ -360,23 +327,11 @@ context('Make a recommendation - form validation', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities-details?flagRiskToSelfEnabled=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities-details`)
     cy.clickButton('Save and continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
-      errorText: 'Enter more detail for risk of suicide or self-harm',
-    })
-  })
-
-  it('IOM', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/iom`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'isUnderIntegratedOffenderManagement',
-      errorText: 'Select whether Jane Bloggs is under Integrated Offender Management',
+      errorText: 'Enter more detail for at risk of suicide or self-harm',
     })
   })
 
@@ -499,22 +454,6 @@ context('Make a recommendation - form validation', () => {
       fieldName: 'previousReleaseDate',
       fieldGroupId: 'previousReleaseDate-day',
       errorText: 'Enter the previous release date',
-    })
-  })
-
-  it('Add a previous recall', () => {
-    cy.signIn()
-    cy.task('updateRecommendation', {
-      statusCode: 200,
-      response: { ...completeRecommendationResponse, previousRecalls: null },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/add-previous-recall`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'previousRecallDate',
-      fieldGroupId: 'previousRecallDate-day',
-      errorText: 'Enter the previous recall date',
     })
   })
 

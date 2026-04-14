@@ -6,7 +6,7 @@
 
 If a person on probation breaches their licence conditions, they could be recalled to prison. This service helps a
 probation officer to review case information and make the decision to recall or not.
-Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD/overview).
+Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/CARC1/overview).
 
 ## Running the app locally
 
@@ -81,10 +81,10 @@ These should be ordered by priority, for example if there's a different banner f
 
 ### Dashboards
 
-* MI dashboard (AppInsights) - useful if you want to see the user activity for a given CRN
+* MI dashboard (AppInsights) - useful if you want to see the user activity for a given CRN (SC clearance needed to access)
     * [Prod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/302220ae-7f13-458d-9149-9c9b40cf6465)
     * [Preprod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/302220ae-7f13-458d-9149-9c9b40cf656d)
-* Developer dashboard (AppInsights)
+* Developer dashboard (AppInsights) (SC clearance needed to access)
     * [Prod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/c920c355-b321-4048-8795-230b9c5a2728)
     * [Preprod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/c920c355-b321-4048-8795-230b9c5a24b2)
-* [Monitoring & operability (Confluence)](https://dsdmoj.atlassian.net/wiki/spaces/MRD/pages/3987210241/Monitoring+Operability)
+* [Monitoring & operability (Confluence)](https://dsdmoj.atlassian.net/wiki/spaces/CARC1/pages/5055185029/Monitoring+Operability)

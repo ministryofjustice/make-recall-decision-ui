@@ -16,7 +16,7 @@ const strings: Record<string, Record<string, string>> = {
     missingLegislationReleasedUnder: 'Enter legislation',
     missingReleasingPrison: 'Select a releasing prison from the list',
     missingProbationArea: 'Enter probation area',
-    missingIndexOffence: 'Select a matching index offence from the list',
+    missingIndexOffence: 'Select the nearest matching offence from the list in PPUD',
     missingSpoNoRecallRationale: 'Explain your decision',
     missingLastName: 'Enter a last name',
     missingFirstName: 'Enter a first name',
@@ -73,7 +73,6 @@ const strings: Record<string, Record<string, string>> = {
     noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
     noIndeterminateSentenceTypeSelectedFtr56: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
     noVictimContactSchemeSelected: 'Select whether there are any victims in the victim contact scheme',
-    noIntegratedOffenderManagementSelected: 'Select whether {{ fullName }} is under Integrated Offender Management',
     noAlternativesTriedSelected: 'Select which alternatives to recall have been tried already',
     noIndeterminateDetailsSelected: 'Select at least one of the criteria',
     noIndeterminateDetailsSelectedFtr56: 'Select all the criteria that apply to {{ fullName }}',
@@ -87,8 +86,7 @@ const strings: Record<string, Record<string, string>> = {
     missingIndeterminateDetailLikelyResultSexualViolent:
       'Enter details about the behaviour likely to result in a sexual or violent offence',
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
-    noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
-    noVulnerabilitiesSelectedRiskToSelf:
+    noVulnerabilitiesSelected:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
     normalAndExclusiveSelected:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
@@ -96,7 +94,6 @@ const strings: Record<string, Record<string, string>> = {
     missingExclusive:
       'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
     missingTriggerLeadingToRecall: 'Explain what has made you consider recalling {{ fullName }}',
-    missingResponseToProbation: 'Explain how {{ fullName }} has responded to probation',
     missingWhatLedToRecall: 'Enter details of what has led to this recall',
     missingSentenceGroup: 'Select a sentence group',
     noArrestIssuesSelected: "Select whether there's anything the police should know",
@@ -131,7 +128,6 @@ const strings: Record<string, Record<string, string>> = {
     missingManagerRecallTypeDetail: 'Explain your decision',
     missingRosh: 'Select a RoSH level for the risk to',
     noDeletePreviousReleaseIndex: 'Select a previous release to delete',
-    noDeletePreviousRecallIndex: 'Select a previous recall to delete',
     missingManagerCountersignatureExposition: 'Add a comment to confirm your countersignature',
     missingWhoCompletedPartAName: 'Enter the name of the person who completed the Part A',
     missingWhoCompletedPartAEmail: 'Enter the GOV.UK email of the person who completed the Part A',
@@ -167,6 +163,7 @@ const strings: Record<string, Record<string, string>> = {
     invalidIndeterminatePpudSentenceSelected:
       "Something went wrong. PPUD does not recognise the indeterminate sentence you've selected. Refresh the page and try again. If the problem continues, contact the support team.",
     missingSentencingCourt: 'Select a sentencing court from the list',
+    missingChangeOffenceOrAddComment: 'Select an option',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -181,7 +178,6 @@ const strings: Record<string, Record<string, string>> = {
   },
   confirmations: {
     previousReleaseDeleted: 'The previous release has been deleted',
-    previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
     rationaleCheck: 'You must record your rationale',
@@ -212,7 +208,6 @@ const strings: Record<string, Record<string, string>> = {
     managerRecordDecision: 'Record your decision',
     managerRecordDecisionDelius: 'Record your decision in NDelius',
     managerViewDecision: 'Your decision',
-    responseToProbation: 'How has {{ fullName }} responded to probation so far?',
     licenceConditions: 'What licence conditions has {{ fullName }} breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     managerReview: 'Stop and think',
@@ -226,14 +221,11 @@ const strings: Record<string, Record<string, string>> = {
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
-    vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
+    vulnerabilities: 'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
-    vulnerabilitiesRiskToSelf:
-      'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     taskList: 'Create a Part A form',
     taskListFTR56: 'Part A for {{ fullName }}',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
-    integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
     practitionerForPartA: 'Practitioner for {{ fullName }}',
@@ -257,9 +249,7 @@ const strings: Record<string, Record<string, string>> = {
     seniorManagerCounterSignature: 'Senior manager countersignature',
     previousReleases: 'Previous releases',
     releaseDetails: 'Release details',
-    previousRecalls: 'Previous recalls',
     addPreviousRelease: 'Add previous release',
-    addPreviousRecall: 'Add previous recall',
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',
@@ -295,6 +285,7 @@ const strings: Record<string, Record<string, string>> = {
     editReleasingPrison: 'Edit releasing prison',
     editProbationArea: 'Edit probation area',
     matchIndexOffence: 'Select a matching index offence in PPUD',
+    changeIndexOffence: 'Change index offence or add a comment',
     deleteRecommendationRationale: 'Delete recommendation for {{ fullName }}',
     deletePartARationale: 'Delete Part A for {{ fullName }}',
     deleteDntrRationale: 'Delete decision not to recall for {{ fullName }}',
@@ -318,13 +309,18 @@ const strings: Record<string, Record<string, string>> = {
     // indeterminate sentence selection
     selectIndeterminatePpudSentence: 'Select a sentence for your booking',
     determinatePpudSentences: 'Determinate sentences in PPUD',
+    areOffenceChangesNeeded: 'Do you need to change the index offence or add a comment?',
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
   },
+  labels: {
+    yes: 'Yes',
+    no: 'No',
+    yesOffenceChanges: 'Yes, change index offence or add a comment',
+  },
   taskListLinkTexts: {
-    vulnerabilities: 'Would recall affect vulnerability or additional needs?',
-    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Consider if recall could affect vulnerabilities or needs',
-    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Add more details about vulnerabilities or needs',
+    vulnerabilities: 'Consider if recall could affect vulnerabilities or needs',
+    vulnerabilitiesDetails: 'Add more details about vulnerabilities or needs',
   },
   automatedFieldValues: {
     mandatoryFTRRationale:

@@ -63,7 +63,7 @@ function attachListenerForToggleAllButton(button, sections, individualButtons, i
         individualButtons[i].innerText = closeText
         individualButtons[i].setAttribute(
           'aria-label',
-          individualButtons[i].getAttribute('aria-label').replace('View', 'Hide')
+          individualButtons[i].getAttribute('aria-label').replace('View', 'Hide'),
         )
         individualButtons[i].setAttribute('aria-expanded', 'true')
       }
@@ -77,7 +77,7 @@ function attachListenerForToggleAllButton(button, sections, individualButtons, i
         individualButtons[i].innerText = openText
         individualButtons[i].setAttribute(
           'aria-label',
-          individualButtons[i].getAttribute('aria-label').replace('Hide', 'View')
+          individualButtons[i].getAttribute('aria-label').replace('Hide', 'View'),
         )
         individualButtons[i].setAttribute('aria-expanded', 'false')
       }

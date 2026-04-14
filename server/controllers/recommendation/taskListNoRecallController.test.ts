@@ -47,23 +47,6 @@ describe('get', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/task-list')
   })
 
-  it('present - response to probation if no recall type set', async () => {
-    const recommendation = {
-      crn: 'X1213',
-    }
-
-    const res = mockRes({
-      locals: {
-        recommendation,
-        urlInfo: { basePath: `/recommendations/123/` },
-      },
-    })
-    const next = mockNext()
-    await taskListNoRecallController.get(mockReq(), res, next)
-
-    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/response-to-probation')
-  })
-
   it('present - redirect to task-list-consider-recall if recall type is undefined and FTR56 enabled', async () => {
     const recommendation = {
       crn: 'X1213',

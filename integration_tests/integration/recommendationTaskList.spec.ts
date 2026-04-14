@@ -82,12 +82,11 @@ context('Recommendation - task list', () => {
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('When did the SPO agree this recall? Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
-    cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? Completed').should('exist')
+    cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
+    cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
-    cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('exist')
     cy.getElement('Is Jane Bloggs on an indeterminate sentence? Completed').should('exist')
     cy.getElement('Is Jane Bloggs on an extended sentence? Completed').should('exist')
     cy.getElement('Type of indeterminate sentence Completed').should('exist')
@@ -169,9 +168,9 @@ context('Recommendation - task list', () => {
         },
         sentenceGroup,
       }
-      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
+      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
 
-      cy.getElement('MAPPA information to assess recall type To do').should(expect.mappa ? 'exist' : 'not.exist')
+      cy.getElement('MAPPA information to assess recall type To review').should(expect.mappa ? 'exist' : 'not.exist')
 
       cy.getElement('Suitability for standard or fixed term recall To do').should(
         expect.suitability ? 'exist' : 'not.exist',
@@ -199,7 +198,7 @@ context('Recommendation - task list', () => {
       )
 
       cy.getElement('Personal details To review').should('exist')
-      cy.getElement('Release details To do').should('exist')
+      cy.getElement('Release details To review').should('exist')
       cy.getElement('Offence details To review').should('exist')
       cy.getElement('Offence analysis To do').should('exist')
       cy.getElement('Address To do').should('exist')
@@ -211,7 +210,6 @@ context('Recommendation - task list', () => {
       cy.getElement('Local police contact details To do').should('exist')
       cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? To do').should('exist')
       cy.getElement('Do you think Jane Bloggs is using recall to bring contraband into prison? To do').should('exist')
-      cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? To do').should('not.exist')
 
       cy.getElement('Indicative risk assessment pending OASys review To do').should('exist')
       cy.getElement('MAPPA for Jane Bloggs To review').should('exist')
@@ -261,9 +259,9 @@ context('Recommendation - task list', () => {
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
       }
-      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled', 'flagRiskToSelfEnabled'])
+      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
 
-      cy.getElement('MAPPA information to assess recall type Completed').should(expect.mappa ? 'exist' : 'not.exist')
+      cy.getElement('MAPPA information to assess recall type Reviewed').should(expect.mappa ? 'exist' : 'not.exist')
 
       cy.getElement('Suitability for standard or fixed term recall Completed').should(
         expect.suitability ? 'exist' : 'not.exist',
@@ -291,7 +289,7 @@ context('Recommendation - task list', () => {
       )
 
       cy.getElement('Personal details Reviewed').should('exist')
-      cy.getElement('Release details Completed').should('exist')
+      cy.getElement('Release details Reviewed').should('exist')
       cy.getElement('Offence details Reviewed').should('exist')
       cy.getElement('Offence analysis Completed').should('exist')
       cy.getElement('Address Completed').should('exist')
@@ -308,7 +306,6 @@ context('Recommendation - task list', () => {
       cy.getElement('Do you think Jane Bloggs is using recall to bring contraband into prison? Completed').should(
         'exist',
       )
-      cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? Completed').should('not.exist')
 
       cy.getElement('Indicative risk assessment pending OASys review Completed').should('exist')
       cy.getElement('MAPPA for Jane Bloggs Reviewed').should('exist')
@@ -355,7 +352,6 @@ context('Recommendation - task list', () => {
         ;[
           ['whatLedToRecall', 'What has led to this recall?'],
           ['emergencyRecall', 'Is this an emergency recall?'],
-          ['responseToProbation', "Jane Bloggs's response to probation"],
         ].forEach(([field, elementText]) => {
           it(`does not show ${field}`, () => {
             setUp(noRecallFtr56Base, [], ['flagFTR56Enabled'])
@@ -371,7 +367,6 @@ context('Recommendation - task list', () => {
         } as RecommendationResponse
 
         ;[
-          ['responseToProbation', "Jane Bloggs's response to probation", SentenceGroup.EXTENDED],
           ['triggerLeadingToRecall', 'What led to this trigger?', SentenceGroup.EXTENDED],
           ['emergencyRecall', 'Is this an emergency recall?', SentenceGroup.INDETERMINATE],
         ].forEach(([field, elementText, sentenceGroup]: [string, string, SentenceGroup]) => {
@@ -417,13 +412,6 @@ context('Recommendation - task list', () => {
       })
     })
 
-    describe('custody', () => {
-      it('does not show IOM item', () => {
-        setUp(recommendationResponse as RecommendationResponse, [], ['flagFTR56Enabled'])
-        cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)?').should('not.exist')
-      })
-    })
-
     describe('createLetter', () => {
       it('does not show Preview link when tasks are incomplete', () => {
         setUp(
@@ -449,7 +437,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+          ['flagFTR56Enabled'],
         )
         cy.getElement('Add more details about vulnerabilities or needs To do').should('exist')
       })
@@ -463,7 +451,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+          ['flagFTR56Enabled'],
         )
         cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
       })
@@ -477,7 +465,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagRiskToSelfEnabled', 'flagFTR56Enabled'],
+          ['flagFTR56Enabled'],
         )
         cy.getElement('Add more details about vulnerabilities or needs').should('not.exist')
       })
@@ -517,13 +505,11 @@ context('Recommendation - task list', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
     cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-    cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
     cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
-    cy.getElement('Would recall affect vulnerability or additional needs? To do').should('exist')
+    cy.getElement('Consider if recall could affect vulnerabilities or needs To do').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? To do').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? To do').should('exist')
     cy.getElement('Local police contact details To do').should('exist')
-    cy.getElement('Is Jane Bloggs under Integrated Offender Management (IOM)? To do').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? To do').should('exist')
     cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
     cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
@@ -552,15 +538,6 @@ context('Recommendation - task list', () => {
         cy.log('============= Continue button')
         cy.clickLink('What has led to this recall?')
         cy.fillInput('What has led to this recall?', 'Re-offending has occurred')
-        cy.clickButton('Continue')
-      } else {
-        cy.clickLink('How has Jane Bloggs responded to probation so far?')
-        cy.log('============= Back link')
-        cy.clickLink('Back')
-        cy.pageHeading().should('equal', 'Create a Part A form')
-        cy.log('============= Continue button')
-        cy.clickLink('How has Jane Bloggs responded to probation so far?')
-        cy.fillInput('How has Jane Bloggs responded to probation so far?', 'Re-offending has occurred')
         cy.clickButton('Continue')
       }
 
@@ -654,13 +631,6 @@ context('Recommendation - task list', () => {
       const indeterminateOrExtendedDetailsLinkText =
         'Confirm the recall criteria - indeterminate and extended sentences'
 
-      function checkResponseToProbationLink(personOnProbationName: string) {
-        checkLink(
-          `How has ${personOnProbationName} responded to probation so far?`,
-          `/recommendations/${recommendationId}/response-to-probation?fromPageId=task-list&fromAnchor=heading-circumstances`,
-        )
-      }
-
       function checkLicenceConditionsLink(personOnProbationName: string) {
         checkLink(
           `What licence conditions has ${personOnProbationName} breached?`,
@@ -739,9 +709,6 @@ context('Recommendation - task list', () => {
                 })
                 beforeEach(() => {
                   setUp(recommendation)
-                })
-                it('shows response to probation link', () => {
-                  checkResponseToProbationLink(recommendation.personOnProbation.name)
                 })
                 it('shows licence conditions link', () => {
                   checkLicenceConditionsLink(recommendation.personOnProbation.name)
@@ -842,13 +809,6 @@ context('Recommendation - task list', () => {
         )
       }
 
-      function checkPreviousRecallsLink() {
-        checkLink(
-          `Previous recalls`,
-          `/recommendations/${recommendationId}/previous-recalls?fromPageId=task-list&fromAnchor=heading-person-details`,
-        )
-      }
-
       function checkAddressDetailsLink() {
         checkLink(
           addressDetailsLinkText,
@@ -880,9 +840,6 @@ context('Recommendation - task list', () => {
           it('shows previous releases link', () => {
             checkPreviousReleasesLink()
           })
-          it('shows previous recalls link', () => {
-            checkPreviousRecallsLink()
-          })
           if (!isInCustody) {
             it('shows address details link', () => {
               checkAddressDetailsLink()
@@ -897,86 +854,56 @@ context('Recommendation - task list', () => {
     })
 
     context('vulnerabilities', () => {
-      context('with risk to self flag disabled', () => {
-        beforeEach(() => {
-          setUp(RecommendationResponseGenerator.generate())
-        })
-        it('shows vulnerabilities link', () => {
-          checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
-        })
-        it("doesn't show vulnerabilities details link", () => {
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-        })
+      const vulnerabilitiesNotRequiringDetails = [
+        VULNERABILITY.NONE_OR_NOT_KNOWN,
+        VULNERABILITY.NONE,
+        VULNERABILITY.NOT_KNOWN,
+      ]
+      const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
+        (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
+      )
+
+      it('with no vulnerabilities selected', () => {
+        setUp(
+          RecommendationResponseGenerator.generate({
+            vulnerabilities: {
+              selected: [],
+            },
+          }),
+          [],
+        )
+        checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
+        checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
       })
 
-      context('with risk to self flag enabled', () => {
-        const riskToSelfFlag = 'flagRiskToSelfEnabled'
-
-        const vulnerabilitiesNotRequiringDetails = [
-          VULNERABILITY.NONE_OR_NOT_KNOWN,
-          VULNERABILITY.NONE,
-          VULNERABILITY.NOT_KNOWN,
-        ]
-        const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
-          (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
-        )
-
-        it('with no vulnerabilities selected', () => {
+      vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityRequiringDetails} selected (which requires details)`, () => {
           setUp(
             RecommendationResponseGenerator.generate({
               vulnerabilities: {
-                selected: [],
+                selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
               },
             }),
             [],
-            [riskToSelfFlag],
+            [],
           )
-          checkLink(
-            linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-            `/recommendations/${recommendationId}/vulnerabilities`,
+          checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
+          checkLink(linkTexts.vulnerabilitiesDetails, `/recommendations/${recommendationId}/vulnerabilities-details`)
+        })
+      })
+
+      vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: {
+                selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
+              },
+            }),
+            [],
           )
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-        })
-
-        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityRequiringDetails} selected (which requires details)`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-            checkLink(
-              linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities`,
-            )
-            checkLink(
-              linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities-details`,
-            )
-          })
-        })
-
-        vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-            checkLink(
-              linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled,
-              `/recommendations/${recommendationId}/vulnerabilities`,
-            )
-            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
+          checkLink(linkTexts.vulnerabilities, `/recommendations/${recommendationId}/vulnerabilities`)
+          checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
         })
       })
     })
@@ -1003,13 +930,6 @@ context('Recommendation - task list', () => {
 
       function checkPoliceDetailsLink() {
         checkLink('Local police contact details', `/recommendations/${recommendationId}/police-details`)
-      }
-
-      function checkIsUnderIOMLink(personOnProbationName: string) {
-        checkLink(
-          `Is ${personOnProbationName} under Integrated Offender Management (IOM)?`,
-          `/recommendations/${recommendationId}/iom`,
-        )
       }
 
       function checkArrestIssuesLink() {
@@ -1040,7 +960,6 @@ context('Recommendation - task list', () => {
           setUp(recommendation)
           checkCustodyStatusLink(recommendation.personOnProbation.name)
           checkPoliceDetailsLink()
-          checkIsUnderIOMLink(recommendation.personOnProbation.name)
           if (!isInCustody) {
             checkArrestIssuesLink()
           } else {
@@ -1244,97 +1163,71 @@ context('Recommendation - task list', () => {
     }
 
     context('vulnerabilities', () => {
-      context('with risk to self flag disabled', () => {
-        it('no vulnerabilities selected', () => {
-          setUp(
-            RecommendationResponseGenerator.generate({
-              vulnerabilities: 'none',
-            }),
-          )
-          hasToDoLabel(linkTexts.vulnerabilities)
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-        })
+      const vulnerabilitiesNotRequiringDetails = [
+        VULNERABILITY.NONE_OR_NOT_KNOWN,
+        VULNERABILITY.NONE,
+        VULNERABILITY.NOT_KNOWN,
+      ]
+      const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
+        (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
+      )
 
-        it('vulnerabilities selected', () => {
-          setUp(RecommendationResponseGenerator.generate())
-          hasCompletedLabel(linkTexts.vulnerabilities)
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-        })
+      it('with no vulnerabilities selected', () => {
+        setUp(
+          RecommendationResponseGenerator.generate({
+            vulnerabilities: {
+              selected: [],
+            },
+          }),
+          [],
+        )
+        hasToDoLabel(linkTexts.vulnerabilities)
+        checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
       })
 
-      context('with risk to self flag enabled', () => {
-        const riskToSelfFlag = 'flagRiskToSelfEnabled'
-
-        const vulnerabilitiesNotRequiringDetails = [
-          VULNERABILITY.NONE_OR_NOT_KNOWN,
-          VULNERABILITY.NONE,
-          VULNERABILITY.NOT_KNOWN,
-        ]
-        const vulnerabilitiesRequiringDetails = Object.keys(VULNERABILITY).filter(
-          (vulnerability: VULNERABILITY) => !vulnerabilitiesNotRequiringDetails.includes(vulnerability),
-        )
-
-        it('with no vulnerabilities selected', () => {
+      vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityRequiringDetails} selected but missing mandatory details`, () => {
           setUp(
             RecommendationResponseGenerator.generate({
               vulnerabilities: {
-                selected: [],
+                selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
               },
             }),
             [],
-            [riskToSelfFlag],
           )
-          hasToDoLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-          checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
+
+          hasCompletedLabel(linkTexts.vulnerabilities)
+          hasToDoLabel(linkTexts.vulnerabilitiesDetails)
         })
+      })
 
-        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityRequiringDetails} selected but missing mandatory details`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityRequiringDetails, details: undefined }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-
-            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-            hasToDoLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
+      vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityRequiringDetails} selected and details set`, () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: {
+                selected: [{ value: vulnerabilityRequiringDetails, details: faker.lorem.sentence() }],
+              },
+            }),
+            [],
+          )
+          hasCompletedLabel(linkTexts.vulnerabilities)
+          hasCompletedLabel(linkTexts.vulnerabilitiesDetails)
         })
+      })
 
-        vulnerabilitiesRequiringDetails.forEach(vulnerabilityRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityRequiringDetails} selected and details set`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityRequiringDetails, details: faker.lorem.sentence() }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-            hasCompletedLabel(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
-        })
-
-        vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
-          it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
-            setUp(
-              RecommendationResponseGenerator.generate({
-                vulnerabilities: {
-                  selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
-                },
-              }),
-              [],
-              [riskToSelfFlag],
-            )
-            hasCompletedLabel(linkTexts.vulnerabilitiesWithRiskToSelfFlagEnabled)
-            checkElementDoesntExist(linkTexts.vulnerabilitiesDetailsWithRiskToSelfFlagEnabled)
-          })
+      vulnerabilitiesNotRequiringDetails.forEach(vulnerabilityNotRequiringDetails => {
+        it(`with vulnerability ${vulnerabilityNotRequiringDetails} selected (which doesn't require details)`, () => {
+          setUp(
+            RecommendationResponseGenerator.generate({
+              vulnerabilities: {
+                selected: [{ value: vulnerabilityNotRequiringDetails, details: undefined }],
+              },
+            }),
+            [],
+          )
+          hasCompletedLabel(linkTexts.vulnerabilities)
+          checkElementDoesntExist(linkTexts.vulnerabilitiesDetails)
         })
       })
     })

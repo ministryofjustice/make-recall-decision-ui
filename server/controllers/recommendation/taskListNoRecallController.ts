@@ -14,18 +14,8 @@ function get(req: Request, res: Response, next: NextFunction) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: ppPaths.taskListConsiderRecall, urlInfo }))
   }
 
-  if (recallType === undefined) {
-    return res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
-  }
-
   if (recallType !== 'NO_RECALL') {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list', urlInfo }))
-  }
-
-  const recallTypeNotSet = !isDefined(recommendation?.recallType?.selected?.value)
-  if (recallTypeNotSet) {
-    res.redirect(303, nextPageLinkUrl({ nextPageId: 'response-to-probation', urlInfo }))
-    return null
   }
 
   res.locals = {

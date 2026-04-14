@@ -23,7 +23,6 @@ describe('get', () => {
       selected: { value: 'STANDARD' },
     },
     decisionDateTime: '2021-01-01T12:00:00',
-    responseToProbation: 'text',
     whatLedToRecall: 'text',
     isThisAnEmergencyRecall: false,
     isIndeterminateSentence: false,
@@ -48,7 +47,6 @@ describe('get', () => {
         selected: ['GOOD_BEHAVIOUR'],
       },
     },
-    isUnderIntegratedOffenderManagement: { selected: 'NO' },
     vulnerabilities: {
       selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE }],
     },
@@ -56,7 +54,6 @@ describe('get', () => {
     offenceAnalysis: 'text',
     isMainAddressWherePersonCanBeFound: { selected: true },
     previousReleases: { hasBeenReleasedPreviously: false },
-    previousRecalls: { hasBeenRecalledPreviously: false },
     currentRoshForPartA: {},
     whoCompletedPartA: {
       name: 'john',
@@ -94,17 +91,14 @@ describe('get', () => {
       triggerLeadingToRecall: false,
       isMainAddressWherePersonCanBeFound: true,
       isThisAnEmergencyRecall: true,
-      isUnderIntegratedOffenderManagement: true,
       licenceConditionsBreached: true,
       localPoliceContact: true,
       mappa: true,
       offenceAnalysis: true,
       personOnProbation: true,
-      previousRecalls: true,
       previousReleases: true,
       recallType: true,
       decisionDateTime: true,
-      responseToProbation: true,
       vulnerabilities: true,
       whatLedToRecall: true,
       fixedTermAdditionalLicenceConditions: true,
@@ -150,7 +144,7 @@ describe('get', () => {
     })
     expect(next).toHaveBeenCalled()
 
-    expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+    expect(vulnerabilityRequiresDetails).toHaveBeenCalled()
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
@@ -161,7 +155,7 @@ describe('get', () => {
     expect(res.locals.isSpo).toEqual(false)
     expect(res.locals.shareLink).toEqual(`${config.domain}/recommendations/123/task-list`)
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type`)
-    expect(res.locals.selectedVulnerabilitiesRequireDetails).not.toBeDefined()
+    expect(res.locals.selectedVulnerabilitiesRequireDetails).toBeDefined()
   })
 
   it('present for indeterminate', async () => {
@@ -386,7 +380,8 @@ describe('get', () => {
 
     expect(res.locals.isSpo).toEqual(true)
   })
-  describe('when riskToSelf flag enabled', () => {
+
+  describe('VulnerabilitiesRequireDetails', () => {
     ;[true, false].forEach(expectedSelectedVulnerabilitiesRequireDetails => {
       it(`selectedVulnerabilitiesRequireDetails value set to result of vulnerabilityRequiresDetails call (${expectedSelectedVulnerabilitiesRequireDetails})`, async () => {
         ;(getStatuses as jest.Mock).mockResolvedValue([])
@@ -405,7 +400,6 @@ describe('get', () => {
               },
             },
             user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-            flags: { flagRiskToSelfEnabled: true },
           },
         })
         const next = mockNext()
@@ -440,7 +434,6 @@ describe('get', () => {
             },
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()
@@ -463,7 +456,6 @@ describe('get', () => {
             },
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()
@@ -481,7 +473,6 @@ describe('get', () => {
             vulnerabilities: undefined,
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()

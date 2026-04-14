@@ -21,7 +21,7 @@ export enum VULNERABILITY {
   CULTURAL_OR_LANGUAGE_DIFFERENCES = 'CULTURAL_OR_LANGUAGE_DIFFERENCES',
 }
 
-export const vulnerabilitiesRiskToSelf = [
+export const vulnerabilities = [
   {
     value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
     text: 'At risk of suicide or self-harm',
@@ -123,93 +123,5 @@ export const vulnerabilitiesRiskToSelf = [
       { value: VULNERABILITY.NONE, text: 'No concerns about vulnerabilities or needs' },
       { value: VULNERABILITY.NOT_KNOWN, text: 'Do not know about vulnerabilities or needs' },
     ],
-  },
-]
-
-export const vulnerabilities = [
-  {
-    text: 'None',
-    value: VULNERABILITY.NONE,
-    behaviour: 'exclusive',
-  },
-  {
-    text: 'Not known',
-    value: VULNERABILITY.NOT_KNOWN,
-    behaviour: 'exclusive',
-  },
-  {
-    value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
-    text: 'Risk of suicide or self-harm',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.RELATIONSHIP_BREAKDOWN,
-    text: 'Relationship breakdown',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.DOMESTIC_ABUSE,
-    text: 'Domestic abuse',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.DRUG_OR_ALCOHOL_USE,
-    text: 'Drug or alcohol abuse',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.BULLYING_OTHERS,
-    text: 'Bullying others',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.BEING_BULLIED_BY_OTHERS,
-    text: 'Being bullied by others',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS,
-    text: 'Being at risk of serious harm from others',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.ADULT_OR_CHILD_SAFEGUARDING_CONCERNS,
-    text: 'Adult or child safeguarding concerns',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.MENTAL_HEALTH_CONCERNS,
-    text: 'Mental health concerns',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.PHYSICAL_HEALTH_CONCERNS,
-    text: 'Physical health concerns',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION,
-    text: 'Medication taken, including compliance with medication',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.BEREAVEMENT_ISSUES,
-    text: 'Bereavement issues',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.LEARNING_DIFFICULTIES,
-    text: 'Learning difficulties',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.PHYSICAL_DISABILITIES,
-    text: 'Physical disabilities',
-    detailsLabel: 'Give details',
-  },
-  {
-    value: VULNERABILITY.CULTURAL_OR_LANGUAGE_DIFFERENCES,
-    text: 'Cultural or language differences',
-    detailsLabel: 'Give details',
   },
 ]

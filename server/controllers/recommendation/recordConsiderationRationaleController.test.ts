@@ -21,7 +21,6 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recordConsiderationRationale')
 
     expect(res.locals.triggerLeadingToRecallCompleted).toBeFalsy()
-    expect(res.locals.responseToProbationCompleted).toBeFalsy()
     expect(res.locals.licenceConditionsBreachedCompleted).toBeFalsy()
     expect(res.locals.alternativesToRecallTriedCompleted).toBeFalsy()
     expect(res.locals.isExtendedSentenceCompleted).toBeFalsy()

@@ -28,17 +28,6 @@
                             </span>
                             <span id='task-list-status-whatLedToRecall'>{{ taskStatus({ hasData: triggerLeadingToRecallCompleted }) }}</span>
                         </li>
-                        {% if not flagFTR56Enabled %}
-                            <li class="moj-task-list__item">
-                            <span class="moj-task-list__task-name">
-                                <a aria-describedby='task-list-status-responseToProbation'
-                                   href="/recommendations/{{ recommendation.id }}/response-to-probation">
-                                    How has {{ recommendation.personOnProbation.name }} responded to probation so far?
-                                </a>
-                            </span>
-                                <span id='task-list-status-responseToProbation'>{{ taskStatus({ hasData: responseToProbationCompleted }) }}</span>
-                            </li>
-                        {% endif %}
                         <li class="moj-task-list__item">
                             <span class="moj-task-list__task-name">
                                 <a aria-describedby='task-list-status-licenceConditionsBreached'

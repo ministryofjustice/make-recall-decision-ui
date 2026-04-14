@@ -7,19 +7,6 @@ describe('updatePageReviewedStatus', () => {
   const recommendationId = '123'
   const token = '456abc'
 
-  it('updates the status if reviewedProperty is supplied', async () => {
-    await updatePageReviewedStatus({
-      reviewedProperty: 'previousRecalls',
-      recommendationId,
-      token,
-    })
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId,
-      valuesToSave: { hasBeenReviewed: { previousRecalls: true } },
-      token,
-    })
-  })
-
   it('updates the status for MAPPA page', async () => {
     await updatePageReviewedStatus({
       reviewedProperty: 'mappa',

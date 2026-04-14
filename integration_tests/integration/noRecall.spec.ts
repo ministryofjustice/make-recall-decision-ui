@@ -84,7 +84,6 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-      cy.getElement('How has Jane Bloggs responded to probation so far? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
       cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
@@ -101,7 +100,6 @@ context('No recall', () => {
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
-      cy.getElement('How has Jane Bloggs responded to probation so far? Completed').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
       cy.getElement('Is Jane Bloggs on an indeterminate sentence? Completed').should('exist')
       cy.getElement('Is Jane Bloggs on an extended sentence? Completed').should('exist')
@@ -148,7 +146,7 @@ context('No recall', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
-      cy.getElement('MAPPA information to assess recall type To do').should('exist')
+      cy.getElement('MAPPA information to assess recall type To review').should('exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? To do').should('exist')
@@ -256,7 +254,7 @@ context('No recall', () => {
       cy.getElement('Create letter').should('not.exist')
     })
 
-    it('Completed', () => {
+    it('Completed ADULT_SDS', () => {
       const recommendation = {
         ...noRecallResponse,
         triggerLeadingToRecall: 'reason',
@@ -277,7 +275,43 @@ context('No recall', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
 
-      cy.getElement('MAPPA information to assess recall type Completed').should('exist')
+      cy.getElement('MAPPA information to assess recall type Reviewed').should('exist')
+      cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
+      cy.getElement('What you recommend Completed').should('exist')
+      cy.getElement('When did the SPO agree this recall? Completed').should('exist')
+
+      cy.getElement('What has made you consider recalling Jane Bloggs? Completed').should('exist')
+      cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
+      cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
+      cy.getElement("Jane Bloggs's sentence information Completed").should('exist')
+
+      cy.getElement('Type of indeterminate sentence').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
+      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
+
+      cy.getElement('Explain why you considered recall Completed').should('exist')
+      cy.getElement('Explain why Jane Bloggs should not be recalled Completed').should('exist')
+      cy.getElement('Add the appointment date and time Completed').should('exist')
+      cy.getElement('Preview the letter').should('exist')
+
+      cy.getElement('Create letter').should('exist')
+    })
+
+    it('Completed YOUTH_SDS', () => {
+      const recommendation = {
+        ...noRecallResponse,
+        triggerLeadingToRecall: 'reason',
+        sentenceGroup: SentenceGroup.YOUTH_SDS,
+        personOnProbation: {
+          name: 'Jane Bloggs',
+        },
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
+      }
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+
       cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? Completed').should('exist')
