@@ -15,7 +15,7 @@ import { SentenceGroup } from '../../server/controllers/recommendations/sentence
 import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
 import ppPaths from '../../server/routes/paths/pp'
 
-// remove isIndeterminateSentence and isExtendedSentence from completeRecommendationResponse.json once FTR56 is live
+// remove isExtendedSentence from completeRecommendationResponse.json once FTR56 is live
 // (can't add this comment to the json file, as json standard doesn't allow comments)
 const ftr56TestCases = [
   {
@@ -278,7 +278,6 @@ context('Make a recommendation', () => {
           const recommendation = {
             ...completeRecommendationResponse,
             recallConsideredList: null,
-            isIndeterminateSentence: ftr56Enabled ? undefined : false,
             isExtendedSentence: ftr56Enabled ? undefined : true,
             sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
           }
@@ -319,7 +318,6 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               recallConsideredList: null,
-              isIndeterminateSentence: false,
               isExtendedSentence: true,
             },
           })
@@ -339,7 +337,6 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               recallConsideredList: null,
-              isIndeterminateSentence: false,
               isExtendedSentence: true,
               recallType: { selected: { value: 'NO_RECALL' } }, // we set this so that the correct task list page loads when continue button is pushed.
             },
@@ -2939,7 +2936,6 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
-              isIndeterminateSentence: ftr56Enabled ? undefined : true,
               bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
               ppudOffender: {
                 id: '1',
@@ -3008,7 +3004,6 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: {
               ...completeRecommendationResponse,
-              isIndeterminateSentence: ftr56Enabled ? undefined : true,
               isExtendedSentence: ftr56Enabled ? undefined : true,
               sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
               bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
@@ -3087,7 +3082,6 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: {
               ...completeRecommendationResponse,
-              isIndeterminateSentence: ftr56Enabled ? undefined : true,
               isExtendedSentence: ftr56Enabled ? undefined : true,
               sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
               bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },

@@ -6,6 +6,7 @@ import recommendationApiResponse from '../../../api/responses/get-recommendation
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { YesNoValues } from '../recommendations/formOptions/yesNo'
 import ppPaths from '../../routes/paths/pp'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -107,7 +108,7 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it('post with valid data, given prior indeterminateSentence set to false', async () => {
+  it('post with valid data, given its not an indeterminate Sentence', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
@@ -117,7 +118,7 @@ describe('post', () => {
         crn: 'X098092',
         currentSavedValue: YesNoValues.NO,
         isExtendedSentence: YesNoValues.YES,
-        isIndeterminateSentence: '0',
+        sentenceGroup: SentenceGroup.EXTENDED,
       },
     })
 
@@ -150,7 +151,7 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  it('post with non extended, given prior indeterminateSentence set to true', async () => {
+  it('post with non extended, given prior indeterminate Sentence', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
@@ -160,7 +161,7 @@ describe('post', () => {
         crn: 'X098092',
         currentSavedValue: YesNoValues.YES,
         isExtendedSentence: YesNoValues.NO,
-        isIndeterminateSentence: '1',
+        sentenceGroup: SentenceGroup.INDETERMINATE,
       },
     })
 
@@ -199,7 +200,6 @@ describe('post', () => {
         crn: 'X098092',
         currentSavedValue: YesNoValues.NO,
         isExtendedSentence: YesNoValues.YES,
-        isIndeterminateSentence: '0',
       },
     })
 
@@ -278,7 +278,6 @@ describe('post', () => {
         crn: 'X098092',
         currentSavedValue: YesNoValues.NO,
         isExtendedSentence: YesNoValues.YES,
-        isIndeterminateSentence: '0',
       },
     })
 
@@ -306,7 +305,6 @@ describe('post', () => {
         crn: 'X098092',
         currentSavedValue: YesNoValues.YES,
         isExtendedSentence: YesNoValues.NO,
-        isIndeterminateSentence: '0',
       },
     })
 

@@ -114,7 +114,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const isIndeterminate = featureFlags.flagFTR56Enabled
     ? recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
-    : recommendation.isIndeterminateSentence
+    : false
 
   const isExtended = featureFlags.flagFTR56Enabled
     ? recommendation.sentenceGroup === SentenceGroup.EXTENDED

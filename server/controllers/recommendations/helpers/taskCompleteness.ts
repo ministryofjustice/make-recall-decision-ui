@@ -5,6 +5,7 @@ import type { FeatureFlags } from '../../../@types/featureFlags'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
+import logger from '../../../../logger'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -50,13 +51,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     alternativesToRecallTried: hasData(recommendation.alternativesToRecallTried?.selected),
     recallType: hasValue(recommendation.recallType?.selected),
     decisionDateTime: hasValue(recommendation.decisionDateTime),
-    isIndeterminateSentence: hasValue(recommendation.isIndeterminateSentence),
     isExtendedSentence: hasValue(recommendation.isExtendedSentence),
     sentenceGroup: hasValue(recommendation.sentenceGroup),
     triggerLeadingToRecall: hasValue(recommendation.triggerLeadingToRecall),
     previousReleases: isPreviousReleasesComplete(recommendation),
-    indeterminateSentenceType:
-      !!recommendation.isIndeterminateSentence && hasValue(recommendation.indeterminateSentenceType),
     licenceConditionsBreached:
       hasData(recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected) ||
       hasData(recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions) ||
@@ -103,13 +101,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     }
   }
 
-  const sentenceValidation = _featureFlags?.flagFTR56Enabled
-    ? statuses.sentenceGroup
-    : statuses.isIndeterminateSentence && statuses.isExtendedSentence
+  const sentenceValidation = _featureFlags?.flagFTR56Enabled ? statuses.sentenceGroup : statuses.isExtendedSentence
 
-  const indeterminateSentenceValidation = _featureFlags?.flagFTR56Enabled
-    ? recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
-    : !recommendation.isIndeterminateSentence || statuses.indeterminateSentenceType
+  const indeterminateSentenceValidation =
+    recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
 
   if (recommendation.recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL) {
     const whyConsideredRecall = hasValue(recommendation.whyConsideredRecall)
@@ -164,9 +159,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     fixedTermAdditionalLicenceConditions:
       recommendation.recallType?.selected?.value !== 'FIXED_TERM' ||
       hasValue(recommendation.fixedTermAdditionalLicenceConditions),
-    indeterminateOrExtendedSentenceDetails:
-      recommendation.isIndeterminateSentence === false ||
-      hasValue(recommendation.indeterminateOrExtendedSentenceDetails),
+    indeterminateOrExtendedSentenceDetails: hasValue(recommendation.indeterminateOrExtendedSentenceDetails),
     hasArrestIssues: recommendation.custodyStatus?.selected !== 'NO' || hasValue(recommendation.hasArrestIssues),
     localPoliceContact: hasValue(recommendation.localPoliceContact?.contactName),
     isMainAddressWherePersonCanBeFound:
@@ -181,10 +174,11 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     ppcsQueryEmails: hasValue(recommendation.ppcsQueryEmails) && recommendation.ppcsQueryEmails.length > 0,
   }
 
-  const indeterminateOrExtendedSentenceDetails = _featureFlags?.flagFTR56Enabled
-    ? ![SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
-      statuses.indeterminateOrExtendedSentenceDetails
-    : !recommendation.isIndeterminateSentence || statuses.indeterminateOrExtendedSentenceDetails
+  const indeterminateOrExtendedSentenceDetails =
+    ![SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
+    statuses.indeterminateOrExtendedSentenceDetails
+
+  logger.info(`taskCompleteness: indeterminateOrExtendedSentenceDetails: ${indeterminateOrExtendedSentenceDetails}`)
 
   return {
     statuses,

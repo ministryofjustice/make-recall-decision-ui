@@ -46,14 +46,12 @@ async function get(req: Request, res: Response, next: NextFunction) {
   } else if (isAPRationalRecorded) {
     // in the case of the OOH people raising a recall, when the PP enters, he should skip the trigger stuff as the decision has already been met.
 
-    if (!flagFTR56Enabled && !hasValue(recommendation.isIndeterminateSentence)) {
-      nextPageId = 'is-indeterminate'
-    } else if (!flagFTR56Enabled && !hasValue(recommendation.isExtendedSentence)) {
+    if (!flagFTR56Enabled && !hasValue(recommendation.isExtendedSentence)) {
       nextPageId = 'is-extended'
     } else if (flagFTR56Enabled && !hasValue(recommendation.sentenceGroup)) {
       nextPageId = 'sentence-information'
     } else if (!hasValue(recallType)) {
-      if (recommendation?.isIndeterminateSentence || recommendation?.sentenceGroup === SentenceGroup.INDETERMINATE) {
+      if (recommendation?.sentenceGroup === SentenceGroup.INDETERMINATE) {
         nextPageId = 'recall-type-indeterminate'
       } else if (recommendation?.isExtendedSentence || recommendation?.sentenceGroup === SentenceGroup.EXTENDED) {
         nextPageId = 'recall-type-extended'
@@ -69,7 +67,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }
   } else if (!isDefined(recallType)) {
     if (isSpoRecordedRationale) {
-      if (recommendation?.isIndeterminateSentence || recommendation?.sentenceGroup === SentenceGroup.INDETERMINATE) {
+      if (recommendation?.sentenceGroup === SentenceGroup.INDETERMINATE) {
         nextPageId = 'recall-type-indeterminate'
       } else if (recommendation?.isExtendedSentence || recommendation?.sentenceGroup === SentenceGroup.EXTENDED) {
         nextPageId = 'recall-type-extended'

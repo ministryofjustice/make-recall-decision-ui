@@ -9,9 +9,9 @@ import { RecommendationResponseGenerator } from '../../data/recommendations/reco
 import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
 import strings from '../../server/textStrings/en'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import recallTypeValues = RecallTypeSelectedValue.value
 import selected = CustodyStatus.selected
-import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 
 const ftr56TestCases = [
   {
@@ -590,7 +590,7 @@ context('Recommendation - task list', () => {
                   expectedRecallTypeLink = isExtendedSentence ? 'recall-type-extended' : 'recall-type'
                 }
                 const recommendation = RecommendationResponseGenerator.generate({
-                  isIndeterminateSentence,
+                  sentenceGroup: isIndeterminateSentence ? SentenceGroup.INDETERMINATE : null,
                   isExtendedSentence,
                   recallType: {
                     selected: {
@@ -699,7 +699,7 @@ context('Recommendation - task list', () => {
               () => {
                 const isRecall = recallTypeValue !== recallTypeValues.NO_RECALL
                 const recommendation = RecommendationResponseGenerator.generate({
-                  isIndeterminateSentence,
+                  sentenceGroup: isIndeterminateSentence ? SentenceGroup.INDETERMINATE : null,
                   isExtendedSentence,
                   recallType: {
                     selected: {
@@ -1252,7 +1252,6 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: {
         ...completeRecommendationResponse,
-        isIndeterminateSentence: false,
         isExtendedSentence: false,
         recallType: { selected: { value: 'FIXED_TERM' } },
       },
@@ -1261,12 +1260,11 @@ context('Recommendation - task list', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
   })
-  it('task list - determinate, not extended, fixed term recall and FTR flag and suitability completed', () => {
+  it('task list - not extended, fixed term recall and FTR flag and suitability completed', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
       response: {
         ...completeRecommendationResponse,
-        isIndeterminateSentence: false,
         isExtendedSentence: false,
         recallType: { selected: { value: 'FIXED_TERM' } },
         isUnder18: false,
