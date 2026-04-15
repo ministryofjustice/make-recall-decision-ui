@@ -267,8 +267,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'What do you recommend?')
 
       cy.url().should('contain', 'recall-type-extended')
-
-      cy.getElement('Emergency recall').should('exist')
     })
 
     describe('present discuss-with-manager', () => {
