@@ -5,7 +5,6 @@ import type { FeatureFlags } from '../../../@types/featureFlags'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
-import logger from '../../../../logger'
 
 const isVictimContactSchemeComplete = (recommendation: RecommendationResponse) => {
   if (recommendation.hasVictimsInContactScheme === null) {
@@ -177,8 +176,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
   const indeterminateOrExtendedSentenceDetails =
     ![SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
     statuses.indeterminateOrExtendedSentenceDetails
-
-  logger.info(`taskCompleteness: indeterminateOrExtendedSentenceDetails: ${indeterminateOrExtendedSentenceDetails}`)
 
   return {
     statuses,
