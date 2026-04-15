@@ -155,7 +155,6 @@ context('Make a recommendation', () => {
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-      cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
       cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
     })
 
@@ -267,7 +266,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'What do you recommend?')
 
-      cy.url().should('contain', 'recall-type-indeterminate')
+      cy.url().should('contain', 'recall-type-extended')
 
       cy.getElement('Emergency recall').should('exist')
     })
@@ -2976,7 +2975,7 @@ context('Make a recommendation', () => {
           cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
           cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should(
             'contain.text',
-            CUSTODY_GROUP.INDETERMINATE,
+            ftr56Enabled ? CUSTODY_GROUP.INDETERMINATE : CUSTODY_GROUP.DETERMINATE,
           )
           cy.get('div[id=nomis-sentence-details-sentence-expiry-date-row] dd').should('contain.text', '10 May 2024')
 
