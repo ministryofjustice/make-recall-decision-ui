@@ -16,7 +16,7 @@ parameters:
     default: make-recall-decisions-pipeline
   node-version:
     type: string
-    default: 24.13.0-browsers
+    default: 24.14.1-browsers
   redis-version:
     type: string
     default: "6.2"
