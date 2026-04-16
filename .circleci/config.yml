@@ -154,7 +154,6 @@ jobs:
 
     steps:
       - checkout
-      - run: sudo apt-get update
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - node/install # this way we make sure we are aligned with the version used for the build
