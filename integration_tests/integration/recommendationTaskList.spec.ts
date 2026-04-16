@@ -77,7 +77,10 @@ context('Recommendation - task list', () => {
   }
 
   it('task list - Completed - in custody', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse, sentenceGroup: SentenceGroup.INDETERMINATE } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, sentenceGroup: SentenceGroup.INDETERMINATE },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
