@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   browser-tools: circleci/browser-tools@1.4.8
-  hmpps: ministryofjustice/hmpps@10
+  hmpps: ministryofjustice/hmpps@11
   node: circleci/node@6.1.0
   slack: circleci/slack@4.14.0
   sonarcloud: sonarsource/sonarcloud@2.0.0
@@ -16,7 +16,7 @@ parameters:
     default: make-recall-decisions-pipeline
   node-version:
     type: string
-    default: 20.9-browsers
+    default: 24.14.1-browsers
   redis-version:
     type: string
     default: "6.2"
@@ -31,7 +31,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 6
+    default: 8
   e2e-parallelism-env:
     type: integer
     default: 1
@@ -82,6 +82,7 @@ jobs:
             DATE=$(date '+%Y-%m-%d')
             export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
             export GIT_REF="$CIRCLE_SHA1"
+            export GIT_BRANCH="$CIRCLE_BRANCH"
             npm run record-build-info
       - run:
           # Run linter after build because the integration test code depend on compiled typescript...
@@ -255,7 +256,7 @@ jobs:
   e2e_environment_test:
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
-      - image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
+      - image: cypress/browsers:node-24.14.1-chrome-146.0.7680.177-1-ff-149.0.2-edge-146.0.3856.97-1
 
     parallelism: << pipeline.parameters.e2e-parallelism-env >>
     resource_class: large
@@ -271,7 +272,7 @@ jobs:
           name: Checkout/clone make-recall-decision-e2e-tests
           command: |
             git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
-            cd make-recall-decision-e2e-tests 
+            cd make-recall-decision-e2e-tests
             git checkout main
       # the credentials need to be updated before running apt-get update
       - run:
@@ -282,7 +283,7 @@ jobs:
           name: Install curl
           command: 'apt-get update && apt-get install curl -y'
       - node/install:
-          node-version: '20' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
+          node-version: '24' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
                              # sub-directory (make-recall-decision-e2e-tests), so we need to set the node version here
       - run:
           working_directory: make-recall-decision-e2e-tests
@@ -332,7 +333,7 @@ jobs:
           name: Checkout/clone make-recall-decision-e2e-tests
           command: |
             git clone https://github.com/ministryofjustice/make-recall-decision-e2e-tests.git
-            cd make-recall-decision-e2e-tests 
+            cd make-recall-decision-e2e-tests
             git checkout main
       - run:
           name: Checkout/clone make-recall-decision-api
@@ -344,7 +345,7 @@ jobs:
           name: Checkout/clone make-recall-decision-ui
           command: git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
       - node/install:
-          node-version: '20' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
+          node-version: '24' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
                              # sub-directory (make-recall-decision-e2e-tests), so we need to set the node version here
       - run:
           name: Start components
