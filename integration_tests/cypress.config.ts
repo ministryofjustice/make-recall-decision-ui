@@ -42,7 +42,6 @@ export default defineConfig({
     configFile: 'reporter-config.json',
   },
   taskTimeout: 60000,
-  // numTestsKeptInMemory: 10,
   video: false,
   e2e: {
     // We've imported your old cypress plugins here.
