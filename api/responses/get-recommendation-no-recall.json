@@ -23,7 +23,6 @@
     ]
   },
   "decisionDateTime": "2022-04-24T20:39:00.000Z",
-  "isExtendedSentence": true,
   "indeterminateSentenceType": {
     "selected": "LIFE",
     "allOptions": [

@@ -11,7 +11,7 @@ describe('get', () => {
   it('loads the page correctly', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { id: '123', isExtendedSentence: false },
+        recommendation: { id: '123' },
       },
     })
 

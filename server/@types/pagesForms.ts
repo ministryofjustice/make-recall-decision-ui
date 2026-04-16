@@ -62,7 +62,6 @@ export type PageId =
   | 'alternativesToRecallTried'
   | 'indeterminateOrExtendedSentenceDetails'
   | 'managerReview'
-  | 'isExtendedSentence' // remove once FTR56 is live? Or remove entirely with PageMetaData if unused (PR #877?)?
   | 'indeterminateSentenceType'
   | 'recallType'
   | 'recallTypeIndeterminate'

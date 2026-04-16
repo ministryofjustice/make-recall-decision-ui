@@ -49,7 +49,6 @@ describe('update recall', () => {
             probationArea: 'london',
             receivedDateTime: '2024-01-29T16:15:39',
           },
-          isExtendedSentence: ftr56Enabled ? undefined : true,
           sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
           hasContrabandRisk: {
             selected: true,
@@ -65,7 +64,6 @@ describe('update recall', () => {
 
         expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
           decisionDateTime: '2024-01-29T16:15:39',
-          isExtendedSentence: true,
           isInCustody: false,
           mappaLevel: 'Level 2 - local inter-agency management',
           policeForce: 'Bethnal Green Police Force',

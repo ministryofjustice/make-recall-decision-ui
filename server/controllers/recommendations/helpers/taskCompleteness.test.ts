@@ -22,7 +22,6 @@ const setAllProperties = (object: Record<string, unknown>, valueToSet: unknown) 
 
 const sharedProperties: RecommendationResponse = {
   alternativesToRecallTried: undefined,
-  isExtendedSentence: undefined,
   licenceConditionsBreached: undefined,
   recallType: undefined,
   decisionDateTime: undefined,
@@ -790,11 +789,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(false)
     })
 
-    it('returns true if its not an Indeterminate Sentence, extended sentence is true and indeterminate sentence type not set', () => {
+    it('returns true if its an Extended Sentence and indeterminate sentence type not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         sentenceGroup: SentenceGroup.EXTENDED,
-        isExtendedSentence: true,
         indeterminateSentenceType: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)

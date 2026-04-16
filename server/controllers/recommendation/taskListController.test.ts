@@ -6,6 +6,7 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
 import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
@@ -25,7 +26,6 @@ describe('get', () => {
     decisionDateTime: '2021-01-01T12:00:00',
     whatLedToRecall: 'text',
     isThisAnEmergencyRecall: false,
-    isExtendedSentence: false,
     activeCustodialConvictionCount: 1,
     hasVictimsInContactScheme: {
       selected: 'NO',
@@ -84,7 +84,6 @@ describe('get', () => {
       hasArrestIssues: true,
       hasContrabandRisk: true,
       hasVictimsInContactScheme: true,
-      isExtendedSentence: true,
       sentenceGroup: false,
       triggerLeadingToRecall: false,
       isMainAddressWherePersonCanBeFound: true,
@@ -157,7 +156,7 @@ describe('get', () => {
 
   it('present for extended', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate, isExtendedSentence: true }
+    const recommendation = { ...recommendationTemplate, sentenceGroup: SentenceGroup.EXTENDED }
     const res = mockRes({
       locals: {
         recommendation,

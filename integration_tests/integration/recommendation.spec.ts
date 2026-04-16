@@ -15,8 +15,6 @@ import { SentenceGroup } from '../../server/controllers/recommendations/sentence
 import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
 import ppPaths from '../../server/routes/paths/pp'
 
-// remove isExtendedSentence from completeRecommendationResponse.json once FTR56 is live
-// (can't add this comment to the json file, as json standard doesn't allow comments)
 const ftr56TestCases = [
   {
     description: 'with FTR56 flag enabled',
@@ -275,7 +273,6 @@ context('Make a recommendation', () => {
           const recommendation = {
             ...completeRecommendationResponse,
             recallConsideredList: null,
-            isExtendedSentence: ftr56Enabled ? undefined : true,
             sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
           }
           cy.task('getRecommendation', {
@@ -315,7 +312,6 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               recallConsideredList: null,
-              isExtendedSentence: true,
             },
           })
 
@@ -334,7 +330,6 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               recallConsideredList: null,
-              isExtendedSentence: true,
               recallType: { selected: { value: 'NO_RECALL' } }, // we set this so that the correct task list page loads when continue button is pushed.
             },
           })
@@ -3001,7 +2996,6 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: {
               ...completeRecommendationResponse,
-              isExtendedSentence: ftr56Enabled ? undefined : true,
               sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
               bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
               ppudOffender: {
@@ -3079,7 +3073,6 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: {
               ...completeRecommendationResponse,
-              isExtendedSentence: ftr56Enabled ? undefined : true,
               sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
               bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
               ppudOffender: {

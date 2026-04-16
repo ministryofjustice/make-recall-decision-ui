@@ -85,19 +85,6 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
   })
 
-  it('indeterminate sentence - if extended sentence is selected, task list', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse },
-    })
-    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
-    cy.selectRadio('Is Jane Bloggs on an extended sentence?', 'Yes')
-    cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'Consider a recall')
-  })
-
   it('victim contact scheme - directs "no" to the task list page with FTR56 Enabled', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })

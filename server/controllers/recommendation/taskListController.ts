@@ -114,9 +114,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const isIndeterminate = recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
 
-  const isExtended = featureFlags.flagFTR56Enabled
-    ? recommendation.sentenceGroup === SentenceGroup.EXTENDED
-    : recommendation.isExtendedSentence
+  const isExtended = recommendation.sentenceGroup === SentenceGroup.EXTENDED
 
   if (isIndeterminate) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-indeterminate'

@@ -38,7 +38,6 @@ context('Task List Consider a Recall Page', () => {
           triggerLeadingToRecall: false,
           licenceConditionsBreached: false,
           alternativesToRecallTried: false,
-          isExtendedSentence: 'none',
         })
         const popName = recommendationWithNoTasksCompleted.personOnProbation.name
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
