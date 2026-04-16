@@ -46,7 +46,7 @@ context('Task List Consider a Recall Page', () => {
 
         testStandardBackLink()
 
-        cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 3).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -79,7 +79,7 @@ context('Task List Consider a Recall Page', () => {
 
         testStandardBackLink()
 
-        cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 3).as('taskListItems')
 
         checkTaskListItem(
           0,
