@@ -15,7 +15,7 @@ import { SentenceGroup } from '../../server/controllers/recommendations/sentence
 import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
 import ppPaths from '../../server/routes/paths/pp'
 
-// remove isIndeterminateSentence and isExtendedSentence from completeRecommendationResponse.json once FTR56 is live
+// remove isExtendedSentence from completeRecommendationResponse.json once FTR56 is live
 // (can't add this comment to the json file, as json standard doesn't allow comments)
 const ftr56TestCases = [
   {
@@ -155,7 +155,6 @@ context('Make a recommendation', () => {
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-      cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
       cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
     })
 
@@ -267,9 +266,7 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('equal', 'What do you recommend?')
 
-      cy.url().should('contain', 'recall-type-indeterminate')
-
-      cy.getElement('Emergency recall').should('exist')
+      cy.url().should('contain', 'recall-type-extended')
     })
 
     describe('present discuss-with-manager', () => {
@@ -278,7 +275,6 @@ context('Make a recommendation', () => {
           const recommendation = {
             ...completeRecommendationResponse,
             recallConsideredList: null,
-            isIndeterminateSentence: ftr56Enabled ? undefined : false,
             isExtendedSentence: ftr56Enabled ? undefined : true,
             sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
           }
@@ -319,7 +315,6 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               recallConsideredList: null,
-              isIndeterminateSentence: false,
               isExtendedSentence: true,
             },
           })
@@ -339,7 +334,6 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               recallConsideredList: null,
-              isIndeterminateSentence: false,
               isExtendedSentence: true,
               recallType: { selected: { value: 'NO_RECALL' } }, // we set this so that the correct task list page loads when continue button is pushed.
             },
@@ -2939,7 +2933,6 @@ context('Make a recommendation', () => {
             response: {
               ...completeRecommendationResponse,
               sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
-              isIndeterminateSentence: ftr56Enabled ? undefined : true,
               bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
               ppudOffender: {
                 id: '1',
@@ -2980,7 +2973,7 @@ context('Make a recommendation', () => {
           cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
           cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should(
             'contain.text',
-            CUSTODY_GROUP.INDETERMINATE,
+            ftr56Enabled ? CUSTODY_GROUP.INDETERMINATE : CUSTODY_GROUP.DETERMINATE,
           )
           cy.get('div[id=nomis-sentence-details-sentence-expiry-date-row] dd').should('contain.text', '10 May 2024')
 
@@ -3008,7 +3001,6 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: {
               ...completeRecommendationResponse,
-              isIndeterminateSentence: ftr56Enabled ? undefined : true,
               isExtendedSentence: ftr56Enabled ? undefined : true,
               sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
               bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
@@ -3087,7 +3079,6 @@ context('Make a recommendation', () => {
             statusCode: 200,
             response: {
               ...completeRecommendationResponse,
-              isIndeterminateSentence: ftr56Enabled ? undefined : true,
               isExtendedSentence: ftr56Enabled ? undefined : true,
               sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
               bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },

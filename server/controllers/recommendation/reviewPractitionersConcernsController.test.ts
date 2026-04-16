@@ -208,13 +208,12 @@ describe('get', () => {
           if (ftr56Enabled) {
             sentenceDescription = `sentence group ${sentenceGroup}`
           } else {
-            sentenceDescription = `isIndeterminateSentence ${isIndeterminateSentence}, isExtendedSentence ${isExtendedSentence}`
+            sentenceDescription = `isExtendedSentence ${isExtendedSentence}`
           }
           it(`load 2, some variation of data - ${sentenceDescription}`, async () => {
             const res = mockRes({
               locals: {
                 recommendation: {
-                  isIndeterminateSentence: ftr56Enabled ? undefined : isIndeterminateSentence,
                   indeterminateSentenceType: ftr56Enabled && isIndeterminateSentence ? { selected: 'LIFE' } : undefined,
                   isExtendedSentence: ftr56Enabled ? undefined : isExtendedSentence,
                   sentenceGroup: ftr56Enabled ? sentenceGroup : undefined,
@@ -279,7 +278,6 @@ describe('get', () => {
                 sentenceGroup === SentenceGroup.INDETERMINATE ? 'Life sentence' : undefined,
               )
             } else {
-              expect(res.locals.isIndeterminateSentence).toEqual(isIndeterminateSentence ? 'Yes' : 'No')
               expect(res.locals.isExtendedSentence).toEqual(isExtendedSentence ? 'Yes' : 'No')
             }
 

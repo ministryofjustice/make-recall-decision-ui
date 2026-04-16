@@ -38,7 +38,6 @@ context('Task List Consider a Recall Page', () => {
           triggerLeadingToRecall: false,
           licenceConditionsBreached: false,
           alternativesToRecallTried: false,
-          isIndeterminateSentence: 'none',
           isExtendedSentence: 'none',
         })
         const popName = recommendationWithNoTasksCompleted.personOnProbation.name
@@ -48,7 +47,7 @@ context('Task List Consider a Recall Page', () => {
 
         testStandardBackLink()
 
-        cy.get('.moj-task-list__item').should('have.length', 5).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -70,12 +69,6 @@ context('Task List Consider a Recall Page', () => {
         )
         checkTaskListItem(
           3,
-          `Is ${popName} on an indeterminate sentence?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.isIndeterminate),
-        )
-        checkTaskListItem(
-          4,
           `Is ${popName} on an extended sentence?`,
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.isExtended),
@@ -93,7 +86,7 @@ context('Task List Consider a Recall Page', () => {
 
         testStandardBackLink()
 
-        cy.get('.moj-task-list__item').should('have.length', 5).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -115,12 +108,6 @@ context('Task List Consider a Recall Page', () => {
         )
         checkTaskListItem(
           3,
-          `Is ${popName} on an indeterminate sentence?`,
-          'Completed',
-          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.isIndeterminate),
-        )
-        checkTaskListItem(
-          4,
           `Is ${popName} on an extended sentence?`,
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.isExtended),

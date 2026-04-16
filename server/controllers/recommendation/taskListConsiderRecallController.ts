@@ -20,7 +20,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const sentenceGroupCompleted = hasData(recommendation.sentenceGroup)
   const indeterminateSentenceTypeCompleted = hasData(recommendation.indeterminateSentenceType)
   const isExtendedSentenceCompleted = hasData(recommendation.isExtendedSentence)
-  const isIndeterminateSentenceCompleted = hasData(recommendation.isIndeterminateSentence)
 
   const allTasksCompleted = flagFTR56Enabled
     ? triggerLeadingToRecallCompleted &&
@@ -31,8 +30,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     : triggerLeadingToRecallCompleted &&
       licenceConditionsBreachedCompleted &&
       alternativesToRecallTriedCompleted &&
-      isExtendedSentenceCompleted &&
-      isIndeterminateSentenceCompleted
+      isExtendedSentenceCompleted
 
   res.locals = {
     ...res.locals,
@@ -45,7 +43,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     sentenceGroupCompleted,
     indeterminateSentenceTypeCompleted,
     isExtendedSentenceCompleted,
-    isIndeterminateSentenceCompleted,
     allTasksCompleted,
     page: {
       id: 'taskListConsiderRecall',

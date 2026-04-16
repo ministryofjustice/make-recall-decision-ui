@@ -10,7 +10,6 @@ describe('get', () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
-      isIndeterminateSentence: false,
       isExtendedSentence: false,
     }
 
@@ -91,7 +90,7 @@ describe('get', () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
-      isIndeterminateSentence: true,
+      sentenceGroup: SentenceGroup.INDETERMINATE,
       isExtendedSentence: false,
     }
 
@@ -110,7 +109,6 @@ describe('get', () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
-      isIndeterminateSentence: false,
       isExtendedSentence: true,
     }
 
