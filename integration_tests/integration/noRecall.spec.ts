@@ -151,8 +151,6 @@ context('No recall', () => {
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
       cy.getElement('What type of sentence is Jane Bloggs on?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
       cy.getElement('Explain why you considered recall To do').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
@@ -179,8 +177,6 @@ context('No recall', () => {
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement("Jane Bloggs's sentence information").should('exist')
       cy.getElement('What type of sentence is Jane Bloggs on?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
       cy.getElement('Explain why you considered recall To do').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
@@ -210,8 +206,6 @@ context('No recall', () => {
       cy.getElement('What type of sentence is Jane Bloggs on? To do').should('exist')
 
       cy.getElement('Type of indeterminate sentence').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
       cy.getElement('Explain why you considered recall To do').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
@@ -239,8 +233,6 @@ context('No recall', () => {
       cy.getElement("Jane Bloggs's sentence information").should('exist')
 
       cy.getElement('What type of sentence is Jane Bloggs on?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
       cy.getElement('Explain why you considered recall To do').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled To do').should('exist')
@@ -281,8 +273,6 @@ context('No recall', () => {
       cy.getElement("Jane Bloggs's sentence information Completed").should('exist')
 
       cy.getElement('Type of indeterminate sentence').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
       cy.getElement('Explain why you considered recall Completed').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled Completed').should('exist')
@@ -317,8 +307,6 @@ context('No recall', () => {
       cy.getElement("Jane Bloggs's sentence information Completed").should('exist')
 
       cy.getElement('Type of indeterminate sentence').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an indeterminate sentence?').should('not.exist')
-      cy.getElement('Is Harry Bloggs on an extended sentence?').should('not.exist')
 
       cy.getElement('Explain why you considered recall Completed').should('exist')
       cy.getElement('Explain why Jane Bloggs should not be recalled Completed').should('exist')

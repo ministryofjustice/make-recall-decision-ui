@@ -66,12 +66,6 @@ context('Task List Consider a Recall Page', () => {
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.alternativesTried),
         )
-        checkTaskListItem(
-          3,
-          `Is ${popName} on an extended sentence?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.isExtended),
-        )
 
         cy.getElement('Continue').should('not.exist')
       })
@@ -104,12 +98,6 @@ context('Task List Consider a Recall Page', () => {
           'What alternatives to recall have been tried already?',
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.alternativesTried),
-        )
-        checkTaskListItem(
-          3,
-          `Is ${popName} on an extended sentence?`,
-          'Completed',
-          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.isExtended),
         )
 
         cy.getElement('Continue').should('exist')

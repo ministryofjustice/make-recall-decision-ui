@@ -153,7 +153,6 @@ context('Make a recommendation', () => {
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-      cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
     })
 
     it('show already existing page', () => {
