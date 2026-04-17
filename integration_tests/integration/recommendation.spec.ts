@@ -249,7 +249,11 @@ context('Make a recommendation', () => {
     it('present discuss-with-manager', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: {
+          ...completeRecommendationResponse,
+          recallConsideredList: null,
+          sentenceGroup: SentenceGroup.EXTENDED,
+        },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
@@ -272,7 +276,7 @@ context('Make a recommendation', () => {
           const recommendation = {
             ...completeRecommendationResponse,
             recallConsideredList: null,
-            sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
+            sentenceGroup: SentenceGroup.EXTENDED,
           }
           cy.task('getRecommendation', {
             statusCode: 200,
