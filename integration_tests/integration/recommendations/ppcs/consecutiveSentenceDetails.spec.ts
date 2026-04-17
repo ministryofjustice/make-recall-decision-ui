@@ -92,7 +92,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     {},
     {},
   ])
-  const defaultExpectedSentenceSequence = defaultPrisonSentenceSequence.at(0)
+  const defaultExpectedSentenceSequence = defaultPrisonSentenceSequence[0]
 
   const expectedLabels = {
     indexOffence: 'Index offence',
@@ -147,7 +147,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
         })
 
         it('Index sentence - correct summary details', () => {
-          const term = defaultExpectedSentenceSequence.indexSentence.terms.at(0)
+          const term = defaultExpectedSentenceSequence.indexSentence.terms?.[0]
           const expectedSentenceLength = `${term.years} years, ${term.months} months, ${term.weeks} weeks, ${term.days} days`
           testSentenceSummaryDetails(
             'indexSentence',
@@ -159,10 +159,10 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
 
         it('Consecutive sentence', () => {
           testConsecutiveGroup(1, 2, 'index', ['sentence-seq-1-initial'])
-          const singleConsecutiveSentence = new Map(Object.entries(defaultExpectedSentenceSequence.sentencesInSequence))
-            .get('1')
-            .at(0)
-          const term = singleConsecutiveSentence.terms.at(0)
+          const singleConsecutiveSentence = new Map(
+            Object.entries(defaultExpectedSentenceSequence.sentencesInSequence),
+          ).get('1')?.[0]
+          const term = singleConsecutiveSentence.terms?.[0]
           const expectedSentenceLength = `${term.years} years, ${term.months} months, ${term.weeks} weeks`
           testSentenceSummaryDetails('sentence-seq-1-initial', singleConsecutiveSentence, expectedLabels.offence, [
             { key: expectedLabels.sentenceLength, value: expectedSentenceLength },
@@ -175,12 +175,12 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             '2',
           )
 
-          const firstConcurrentSentence = concurrentSentences.at(0)
-          const firstSentenceTerm = firstConcurrentSentence.terms.at(0)
+          const firstConcurrentSentence = concurrentSentences?.[0]
+          const firstSentenceTerm = firstConcurrentSentence.terms?.[0]
           const expectedFirstTimeSentenceLength = `${firstSentenceTerm.years} years, ${firstSentenceTerm.months} months, ${firstSentenceTerm.days} days`
 
-          const secondConurrentSentence = concurrentSentences.at(1)
-          const secondSentenceTerm = secondConurrentSentence.terms.at(0)
+          const secondConurrentSentence = concurrentSentences?.[1]
+          const secondSentenceTerm = secondConurrentSentence.terms?.[0]
           const expectedSecondTimeSentenceLength = `${secondSentenceTerm.years} years, ${secondSentenceTerm.months} months`
 
           testSentenceSummaryDetails('sentence-seq-2-initial', firstConcurrentSentence, expectedLabels.offence, [
@@ -196,12 +196,12 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
 
         it('Consecutive sentence - after concurrent sentences, correctly sequenced', () => {
           testConsecutiveGroup(3, 5, 3, ['sentence-seq-3-initial'])
-          const singleConsecutiveSentence = new Map(Object.entries(defaultExpectedSentenceSequence.sentencesInSequence))
-            .get('3')
-            .at(0)
+          const singleConsecutiveSentence = new Map(
+            Object.entries(defaultExpectedSentenceSequence.sentencesInSequence),
+          ).get('3')?.[0]
           const { terms } = singleConsecutiveSentence
-          const impTerm = terms.at(0)
-          const licTerm = terms.at(1)
+          const impTerm = terms?.[0]
+          const licTerm = terms?.[1]
           const expectedIMPTerm = `${impTerm.years} years, ${impTerm.months} months, ${impTerm.weeks} weeks, ${impTerm.days} days`
           const expectedLICTerm = `${licTerm.years} years, ${licTerm.months} months, ${licTerm.weeks} weeks, ${licTerm.days} days`
 
@@ -222,19 +222,19 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             '5',
           )
 
-          const firstConcurrentSentence = concurrentSentences.at(0)
+          const firstConcurrentSentence = concurrentSentences?.[0]
           const expectedFirstTimeSentenceLength = '-'
 
-          const secondConurrentSentence = concurrentSentences.at(1)
-          const secondSentenceTerm = secondConurrentSentence.terms.at(0)
+          const secondConurrentSentence = concurrentSentences?.[1]
+          const secondSentenceTerm = secondConurrentSentence.terms?.[0]
           const expectedSecondTimeSentenceLength = `${secondSentenceTerm.years} years, ${secondSentenceTerm.months} months, ${secondSentenceTerm.weeks} weeks, ${secondSentenceTerm.days} days`
 
-          const thirdConurrentSentence = concurrentSentences.at(2)
-          const thirdSentenceTerm = thirdConurrentSentence.terms.at(0)
+          const thirdConurrentSentence = concurrentSentences?.[2]
+          const thirdSentenceTerm = thirdConurrentSentence.terms?.[0]
           const expectedThirdTimeSentenceLength = `${thirdSentenceTerm.years} years, ${thirdSentenceTerm.months} months, ${thirdSentenceTerm.weeks} weeks, ${thirdSentenceTerm.days} days`
 
-          const fourthConurrentSentence = concurrentSentences.at(3)
-          const fourthSentenceTerm = fourthConurrentSentence.terms.at(0)
+          const fourthConurrentSentence = concurrentSentences?.[3]
+          const fourthSentenceTerm = fourthConurrentSentence.terms?.[0]
           const expectedFourthTimeSentenceLength = `${fourthSentenceTerm.years} years, ${fourthSentenceTerm.months} months, ${fourthSentenceTerm.weeks} weeks, ${fourthSentenceTerm.days} days`
 
           testSentenceSummaryDetails('sentence-seq-4-initial', firstConcurrentSentence, expectedLabels.offence, [
@@ -265,7 +265,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
   ) => {
     cy.get(`dl#${id}`).should('exist').as('sentenceSummary')
     const expectedRows = [
-      { key: expectedOffenceLabel, value: expectedSentence.offences.at(0).offenceDescription },
+      { key: expectedOffenceLabel, value: expectedSentence.offences?.[0].offenceDescription },
       { key: expectedLabels.sentenceType, value: expectedSentence.sentenceTypeDescription },
       { key: expectedLabels.court, value: expectedSentence.courtDescription },
       { key: expectedLabels.dateOfSentence, value: expectedSentence.sentenceDate },

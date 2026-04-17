@@ -6,8 +6,9 @@ import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import { booleanToYesNo, YesNoValues } from '../recommendations/formOptions/yesNo'
+import { booleanToYesNo } from '../recommendations/formOptions/yesNo'
 import ppPaths from '../../routes/paths/pp'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -64,11 +65,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     status => status.name === STATUSES.AP_RECORDED_RATIONALE && status.active,
   )
 
-  const isIndeterminateSentence = req.body.isIndeterminateSentence === '1'
-  const isNo = isExtendedSentence === YesNoValues.NO
-  const isYes = isExtendedSentence === YesNoValues.YES
-  const changedToNo = isNo && currentSavedValue === YesNoValues.YES
-  const changedToYes = isYes && currentSavedValue === YesNoValues.NO
+  const isIndeterminateSentence = req.body.sentenceGroup === SentenceGroup.INDETERMINATE
+  const isNo = isExtendedSentence === 'NO'
+  const isYes = isExtendedSentence === 'YES'
+  const changedToNo = isNo && currentSavedValue === 'YES'
+  const changedToYes = isYes && currentSavedValue === 'NO'
 
   let valuesToSave
 

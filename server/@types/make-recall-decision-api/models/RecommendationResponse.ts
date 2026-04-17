@@ -46,7 +46,6 @@ export type RecommendationResponse = {
   whatLedToRecall?: string;
   sentenceGroup?: SentenceGroup;
   isThisAnEmergencyRecall?: boolean;
-  isIndeterminateSentence?: boolean;
   isExtendedSentence?: boolean;
   activeCustodialConvictionCount?: number;
   hasVictimsInContactScheme?: VictimsInContactScheme;

@@ -39,7 +39,7 @@ export function calculatePartACustodyGroup(
       : CUSTODY_GROUP.DETERMINATE
   }
 
-  return recommendation.isIndeterminateSentence ? CUSTODY_GROUP.INDETERMINATE : CUSTODY_GROUP.DETERMINATE
+  return CUSTODY_GROUP.DETERMINATE
 }
 
 export type SentencesByDate = {

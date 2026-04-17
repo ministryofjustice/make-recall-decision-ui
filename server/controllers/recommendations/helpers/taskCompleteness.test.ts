@@ -22,7 +22,6 @@ const setAllProperties = (object: Record<string, unknown>, valueToSet: unknown) 
 
 const sharedProperties: RecommendationResponse = {
   alternativesToRecallTried: undefined,
-  isIndeterminateSentence: undefined,
   isExtendedSentence: undefined,
   licenceConditionsBreached: undefined,
   recallType: undefined,
@@ -61,10 +60,6 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   localPoliceContact: undefined,
 }
 
-const indeterminateSentenceProperties: RecommendationResponse = {
-  indeterminateSentenceType: undefined,
-}
-
 const noRecallProperties: RecommendationResponse = {
   whyConsideredRecall: undefined,
   reasonsForNoRecall: undefined,
@@ -76,7 +71,6 @@ const emptyRecall: RecommendationResponse = {
   ...setAllProperties(recallProperties, null),
   activeCustodialConvictionCount: 1,
   recallType: { selected: { value: RecallTypeSelectedValue.value.STANDARD } },
-  isIndeterminateSentence: true,
 }
 
 describe('hasRequiredVulnerabilitiesDetails', () => {
@@ -142,7 +136,6 @@ describe('taskCompleteness', () => {
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(recallProperties, true),
-        ...setAllProperties(indeterminateSentenceProperties, true),
         ...setAllProperties(suitabilityForRecallProperties, false),
         didProbationPractitionerCompletePartA: true,
         whoCompletedPartA: true,
@@ -161,9 +154,7 @@ describe('taskCompleteness', () => {
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(recallProperties, false),
-        ...setAllProperties(indeterminateSentenceProperties, false),
         ...setAllProperties(suitabilityForRecallProperties, false),
-        isIndeterminateSentence: true,
         recallType: true,
         fixedTermAdditionalLicenceConditions: true,
         hasArrestIssues: true,
@@ -189,7 +180,6 @@ describe('taskCompleteness', () => {
       )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
-        ...setAllProperties(indeterminateSentenceProperties, true),
         ...setAllProperties(noRecallProperties, true),
         ...setAllProperties(suitabilityForRecallProperties, false),
         previousReleases: false,
@@ -204,7 +194,6 @@ describe('taskCompleteness', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...noRecallResponse,
         decisionDateTime: null,
-        isIndeterminateSentence: false,
         indeterminateSentenceType: undefined,
       } as RecommendationResponse)
       expect(statuses).toEqual({
@@ -213,7 +202,6 @@ describe('taskCompleteness', () => {
         ...setAllProperties(suitabilityForRecallProperties, false),
         decisionDateTime: false,
         previousReleases: false,
-        indeterminateSentenceType: false,
         sentenceGroup: false,
         triggerLeadingToRecall: false,
       })
@@ -240,7 +228,6 @@ describe('taskCompleteness', () => {
         recallType: true,
         previousReleases: false,
         sentenceGroup: false,
-        indeterminateSentenceType: false,
       })
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -681,10 +668,10 @@ describe('taskCompleteness', () => {
   })
 
   describe('Indeterminate sentence type', () => {
-    it('returns true if isIndeterminateSentence is true and indeterminateSentenceType set', () => {
+    it('returns true if its Indeterminate and indeterminateSentenceType set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         indeterminateSentenceType: {
           selected: 'LIFE' as IndeterminateSentenceType.selected,
         },
@@ -694,10 +681,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns true if isIndeterminateSentence is false and indeterminateSentenceType not set', () => {
+    it('returns true if its not Indeterminate and indeterminateSentenceType not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         indeterminateSentenceType: null,
         bookRecallToPpud: null,
         fixedTermAdditionalLicenceConditions: {}, // the default recommendation doesn't have this set
@@ -706,10 +693,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns false if isIndeterminateSentence is true and indeterminateSentenceType is not set', () => {
+    it('returns false if its an Indeterminate Sentence and indeterminateSentenceType is not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         indeterminateSentenceType: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -719,10 +706,10 @@ describe('taskCompleteness', () => {
   })
 
   describe('Indeterminate or extended details', () => {
-    it('returns true if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails set', () => {
+    it('returns true if Indeterminate is true and indeterminateOrExtendedSentenceDetails set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         indeterminateOrExtendedSentenceDetails: {
           selected: [{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'Details' }],
         },
@@ -732,10 +719,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns false if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails is not set', () => {
+    it('returns false if its an Indeterminate Sentence and indeterminateOrExtendedSentenceDetails is not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         indeterminateOrExtendedSentenceDetails: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -743,10 +730,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(false)
     })
 
-    it('returns true if isIndeterminateSentence is false and indeterminateOrExtendedSentenceDetails is not set', () => {
+    it('returns true if not an Indeterminate Sentence and indeterminateOrExtendedSentenceDetails is not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.ADULT_SDS,
         indeterminateOrExtendedSentenceDetails: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -756,10 +743,10 @@ describe('taskCompleteness', () => {
   })
 
   describe('Fixed term licence conditions', () => {
-    it('returns true if isIndeterminateSentence is false and fixedTermAdditionalLicenceConditions set', () => {
+    it('returns true if not Indeterminate Sentence and fixedTermAdditionalLicenceConditions set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         fixedTermAdditionalLicenceConditions: {
           selected: true,
         },
@@ -769,10 +756,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns true if isIndeterminateSentence is true and fixedTermAdditionalLicenceConditions not set', () => {
+    it('returns true if an Indeterminate Sentence and fixedTermAdditionalLicenceConditions not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         fixedTermAdditionalLicenceConditions: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -780,10 +767,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns true if isIndeterminateSentence is false, recall type is standard and fixedTermAdditionalLicenceConditions not set', () => {
+    it('returns true if its not an IndeterminateSentence, recall type is standard and fixedTermAdditionalLicenceConditions not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         fixedTermAdditionalLicenceConditions: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -791,11 +778,11 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns false if isIndeterminateSentence is false, recall type is fixed and fixedTermAdditionalLicenceConditions not set', () => {
+    it('returns false if its not an Indeterminate Sentence, recall type is fixed and fixedTermAdditionalLicenceConditions not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         recallType: { selected: { value: 'FIXED_TERM' } },
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         fixedTermAdditionalLicenceConditions: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -803,10 +790,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(false)
     })
 
-    it('returns true if isIndeterminateSentence is false, extended sentence is true and indeterminate sentence type not set', () => {
+    it('returns true if its not an Indeterminate Sentence, extended sentence is true and indeterminate sentence type not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         isExtendedSentence: true,
         indeterminateSentenceType: null,
         bookRecallToPpud: null,
@@ -1115,11 +1102,11 @@ describe('taskCompleteness', () => {
     })
 
     describe('flagFTR56Enabled: false', () => {
-      it('blocks areAllComplete when isIndeterminateSentence is true and indeterminateSentenceType is missing', () => {
+      it('blocks areAllComplete when its an Indeterminate Sentence and indeterminateSentenceType is missing', () => {
         const { areAllComplete } = taskCompleteness(
           {
             ...baseRecall,
-            isIndeterminateSentence: true,
+            sentenceGroup: SentenceGroup.INDETERMINATE,
             indeterminateSentenceType: undefined,
           } as RecommendationResponse,
           { flagFTR56Enabled: false },
@@ -1127,11 +1114,11 @@ describe('taskCompleteness', () => {
         expect(areAllComplete).toEqual(false)
       })
 
-      it('does not block areAllComplete when isIndeterminateSentence is false and indeterminateSentenceType is missing', () => {
+      it('does not block areAllComplete when its not an Indeterminate Sentence and indeterminateSentenceType is missing', () => {
         const { areAllComplete } = taskCompleteness(
           {
             ...baseRecall,
-            isIndeterminateSentence: false,
+            sentenceGroup: SentenceGroup.EXTENDED,
             indeterminateSentenceType: undefined,
             fixedTermAdditionalLicenceConditions: {},
           } as RecommendationResponse,
@@ -1149,7 +1136,6 @@ describe('taskCompleteness', () => {
           {
             ...baseRecall,
             sentenceGroup: SentenceGroup.INDETERMINATE,
-            isIndeterminateSentence: true,
             indeterminateOrExtendedSentenceDetails: undefined,
           } as RecommendationResponse,
           { flagFTR56Enabled: true },
@@ -1204,11 +1190,11 @@ describe('taskCompleteness', () => {
     })
 
     describe('flagFTR56Enabled: false', () => {
-      it('blocks areAllComplete when isIndeterminateSentence is true and details are missing', () => {
+      it('blocks areAllComplete when its an Indeterminate Sentence and details are missing', () => {
         const { areAllComplete } = taskCompleteness(
           {
             ...baseRecall,
-            isIndeterminateSentence: true,
+            sentenceGroup: SentenceGroup.INDETERMINATE,
             indeterminateOrExtendedSentenceDetails: undefined,
           } as RecommendationResponse,
           { flagFTR56Enabled: false },
@@ -1216,11 +1202,11 @@ describe('taskCompleteness', () => {
         expect(areAllComplete).toEqual(false)
       })
 
-      it('does not block areAllComplete when isIndeterminateSentence is false and details are missing', () => {
+      it('does not block areAllComplete when its not an Indeterminate Sentence and details are missing', () => {
         const { areAllComplete } = taskCompleteness(
           {
             ...baseRecall,
-            isIndeterminateSentence: false,
+            sentenceGroup: SentenceGroup.ADULT_SDS,
             indeterminateOrExtendedSentenceDetails: undefined,
           } as RecommendationResponse,
           { flagFTR56Enabled: false },

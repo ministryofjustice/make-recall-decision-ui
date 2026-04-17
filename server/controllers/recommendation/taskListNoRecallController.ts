@@ -28,9 +28,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     recallType,
   }
 
-  const isIndeterminate = featureFlags.flagFTR56Enabled
-    ? recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
-    : recommendation.isIndeterminateSentence
+  const isIndeterminate = recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
 
   const isExtended = featureFlags.flagFTR56Enabled
     ? recommendation.sentenceGroup === SentenceGroup.EXTENDED

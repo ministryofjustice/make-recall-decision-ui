@@ -12,7 +12,6 @@ describe('validateIsExtendedSentence', () => {
   it('redirects to indeterminate sentence type page if it is an indeterminate sentence', async () => {
     const requestBody = {
       isExtendedSentence: YesNoValues.NO,
-      isIndeterminateSentence: '1',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIsExtendedSentence({
@@ -28,7 +27,6 @@ describe('validateIsExtendedSentence', () => {
   it('redirects to recall type page if it is not an indeterminate sentence', async () => {
     const requestBody = {
       isExtendedSentence: YesNoValues.YES,
-      isIndeterminateSentence: '0',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIsExtendedSentence({
@@ -44,7 +42,6 @@ describe('validateIsExtendedSentence', () => {
   it('for determinate sentence, if answer changes from Yes to No, reset recallType', async () => {
     const requestBody = {
       isExtendedSentence: YesNoValues.NO,
-      isIndeterminateSentence: '0',
       currentSavedValue: YesNoValues.YES,
       crn: 'X34534',
     }
@@ -64,7 +61,6 @@ describe('validateIsExtendedSentence', () => {
   it('for determinate sentence, if answer changes from No to Yes, reset recallType', async () => {
     const requestBody = {
       isExtendedSentence: YesNoValues.YES,
-      isIndeterminateSentence: '0',
       currentSavedValue: YesNoValues.NO,
       crn: 'X34534',
     }
