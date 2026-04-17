@@ -155,7 +155,7 @@ jobs:
     steps:
       - checkout
       - browser-tools/install-chrome:
-          use_cache: true
+          timeout: 20m
       - browser-tools/install-chromedriver
       - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages:
