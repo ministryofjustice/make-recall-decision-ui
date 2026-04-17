@@ -156,8 +156,7 @@ jobs:
       - checkout
       - browser-tools/install_chrome:
           use_cache: true
-      - browser-tools/install_chromedriver:
-          use_cache: true
+      - browser-tools/install_chromedriver
       - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages:
           override-ci-command: npm run setup
