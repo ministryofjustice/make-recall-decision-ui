@@ -31,7 +31,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 6
+    default: 8
   e2e-parallelism-env:
     type: integer
     default: 1
@@ -154,8 +154,7 @@ jobs:
 
     steps:
       - checkout
-      - browser-tools/install_chrome:
-          use_cache: true
+      - browser-tools/install_chrome
       - browser-tools/install_chromedriver
       - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages:
