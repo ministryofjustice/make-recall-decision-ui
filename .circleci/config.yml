@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  browser-tools: circleci/browser-tools@1.4.8
+  browser-tools: circleci/browser-tools@2.4.1
   hmpps: ministryofjustice/hmpps@11
   node: circleci/node@6.1.0
   slack: circleci/slack@4.14.0
@@ -31,7 +31,7 @@ parameters:
     default: false
   e2e-parallelism:
     type: integer
-    default: 8
+    default: 6
   e2e-parallelism-env:
     type: integer
     default: 1
@@ -154,8 +154,10 @@ jobs:
 
     steps:
       - checkout
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      - browser-tools/install-chrome:
+          use_cache: true
+      - browser-tools/install-chromedriver:
+          use_cache: true
       - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages:
           override-ci-command: npm run setup
