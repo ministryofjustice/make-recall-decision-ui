@@ -30,25 +30,19 @@ describe('generate recall minute text', () => {
   const ftr56TestCases = [
     {
       description: 'with FTR56 flag enabled',
-      ftr56Enabled: true,
     },
     {
       description: 'with FTR56 flag disabled',
-      ftr56Enabled: false,
     },
   ]
-  ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+  ftr56TestCases.forEach(({ description }) => {
     describe(description, () => {
       it('all inputs populated', async () => {
         expect(
-          generateRecallMinuteText(
-            {
-              ...recommendationResponse,
-              isExtendedSentence: ftr56Enabled ? undefined : true,
-              sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
-            },
-            ftr56Enabled,
-          ),
+          generateRecallMinuteText({
+            ...recommendationResponse,
+            sentenceGroup: SentenceGroup.EXTENDED,
+          }),
         ).toEqual(
           `BACKGROUND INFO \n` +
             `Extended sentence: YES\n` +
@@ -61,25 +55,21 @@ describe('generate recall minute text', () => {
 
       it('all inputs alternatively populated', async () => {
         expect(
-          generateRecallMinuteText(
-            {
-              ...recommendationResponse,
-              isExtendedSentence: ftr56Enabled ? undefined : false,
-              sentenceGroup: ftr56Enabled ? randomEnum(SentenceGroup, [SentenceGroup.EXTENDED]) : undefined,
-              prisonOffender: { status: 'OUT' } as unknown as PrisonOffender,
-              currentRoshForPartA: {
-                riskToChildren: 'NOT_APPLICABLE',
-                riskToPublic: 'MEDIUM',
-                riskToKnownAdult: 'HIGH',
-                riskToStaff: 'MEDIUM',
-                riskToPrisoners: 'LOW',
-              } as unknown as RoshData,
-              bookRecallToPpud: {
-                minute: 'another minute',
-              } as unknown as BookRecallToPpud,
-            },
-            ftr56Enabled,
-          ),
+          generateRecallMinuteText({
+            ...recommendationResponse,
+            sentenceGroup: randomEnum(SentenceGroup, [SentenceGroup.EXTENDED]),
+            prisonOffender: { status: 'OUT' } as unknown as PrisonOffender,
+            currentRoshForPartA: {
+              riskToChildren: 'NOT_APPLICABLE',
+              riskToPublic: 'MEDIUM',
+              riskToKnownAdult: 'HIGH',
+              riskToStaff: 'MEDIUM',
+              riskToPrisoners: 'LOW',
+            } as unknown as RoshData,
+            bookRecallToPpud: {
+              minute: 'another minute',
+            } as unknown as BookRecallToPpud,
+          }),
         ).toEqual(
           `BACKGROUND INFO \n` +
             `Extended sentence: NO\n` +
@@ -91,21 +81,17 @@ describe('generate recall minute text', () => {
       })
 
       it('all nullable inputs null', async () => {
-        const sentenceGroup = ftr56Enabled ? randomEnum(SentenceGroup) : undefined
+        const sentenceGroup = randomEnum(SentenceGroup)
         expect(
-          generateRecallMinuteText(
-            {
-              ...recommendationResponse,
-              isExtendedSentence: null,
-              sentenceGroup,
-              prisonOffender: null,
-              currentRoshForPartA: null,
-              bookRecallToPpud: null,
-            },
-            ftr56Enabled,
-          ),
+          generateRecallMinuteText({
+            ...recommendationResponse,
+            sentenceGroup,
+            prisonOffender: null,
+            currentRoshForPartA: null,
+            bookRecallToPpud: null,
+          }),
         ).toEqual(
-          `BACKGROUND INFO \nExtended sentence: ${ftr56Enabled && sentenceGroup === SentenceGroup.EXTENDED ? 'YES' : 'NO'}\nRisk of Serious Harm Level: undefined\nIn custody: NO`,
+          `BACKGROUND INFO \nExtended sentence: ${sentenceGroup === SentenceGroup.EXTENDED ? 'YES' : 'NO'}\nRisk of Serious Harm Level: undefined\nIn custody: NO`,
         )
       })
     })

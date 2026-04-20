@@ -152,7 +152,6 @@
       }
     ]
   },
-  "isExtendedSentence": true,
   "isMainAddressWherePersonCanBeFound": {
     "selected": false,
     "details": "123 Oak Avenue, Birmingham, B23 456"

@@ -19,7 +19,6 @@ describe('get', () => {
         const res = mockRes({
           locals: {
             recommendation: {
-              isExtendedSentence: ftr56Enabled ? undefined : false,
               sentenceGroup: ftr56Enabled ? SentenceGroup.YOUTH_SDS : undefined,
             },
             flags: { flagFTR56Enabled: ftr56Enabled },
@@ -38,7 +37,6 @@ describe('get', () => {
         const res = mockRes({
           locals: {
             recommendation: {
-              isExtendedSentence: ftr56Enabled ? undefined : false,
               sentenceGroup: ftr56Enabled ? SentenceGroup.ADULT_SDS : undefined,
             },
             flags: { flagFTR56Enabled: ftr56Enabled },
@@ -54,7 +52,6 @@ describe('get', () => {
         const res = mockRes({
           locals: {
             recommendation: {
-              isExtendedSentence: ftr56Enabled ? undefined : false,
               sentenceGroup: SentenceGroup.INDETERMINATE,
             },
             flags: { flagFTR56Enabled: ftr56Enabled },
@@ -68,8 +65,7 @@ describe('get', () => {
         const res = mockRes({
           locals: {
             recommendation: {
-              isExtendedSentence: ftr56Enabled ? undefined : true,
-              sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
+              sentenceGroup: SentenceGroup.EXTENDED,
             },
             flags: { flagFTR56Enabled: ftr56Enabled },
           },

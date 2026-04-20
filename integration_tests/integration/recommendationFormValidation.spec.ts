@@ -116,18 +116,6 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Extended sentence', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'isExtendedSentence',
-      errorText: 'Select whether Jane Bloggs is on an extended sentence or not',
-    })
-  })
-
   it('Indeterminate sentence type', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })

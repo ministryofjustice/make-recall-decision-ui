@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker/locale/en_GB'
 import taskListConsiderRecallController from './taskListConsiderRecallController'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
@@ -125,12 +124,11 @@ describe('Task List Consider a Recall Controller', () => {
     })
 
     describe('with FTR56 flag disabled', () => {
-      generateBooleanCombinations(4).forEach(testCaseBooleanCombination => {
+      generateBooleanCombinations(3).forEach(testCaseBooleanCombination => {
         const testCaseOptions: RecommendationOptions = {
           triggerLeadingToRecall: testCaseBooleanCombination[0],
           licenceConditionsBreached: testCaseBooleanCombination[1],
           alternativesToRecallTried: testCaseBooleanCombination[2],
-          isExtendedSentence: testCaseBooleanCombination[3] ? faker.datatype.boolean() : 'none',
         }
         checkTestCaseCombination(testCaseOptions, testCaseBooleanCombination, false)
       })

@@ -413,7 +413,7 @@ describe('post', () => {
       flags,
     )
 
-    expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation, flags.flagFTR56Enabled)
+    expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],

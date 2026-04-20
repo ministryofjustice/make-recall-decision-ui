@@ -50,7 +50,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     alternativesToRecallTried: hasData(recommendation.alternativesToRecallTried?.selected),
     recallType: hasValue(recommendation.recallType?.selected),
     decisionDateTime: hasValue(recommendation.decisionDateTime),
-    isExtendedSentence: hasValue(recommendation.isExtendedSentence),
     sentenceGroup: hasValue(recommendation.sentenceGroup),
     triggerLeadingToRecall: hasValue(recommendation.triggerLeadingToRecall),
     previousReleases: isPreviousReleasesComplete(recommendation),
@@ -100,8 +99,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     }
   }
 
-  const sentenceValidation = _featureFlags?.flagFTR56Enabled ? statuses.sentenceGroup : statuses.isExtendedSentence
-
   const indeterminateSentenceValidation =
     recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
 
@@ -133,7 +130,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         (!_featureFlags?.flagFTR56Enabled || statuses.decisionDateTime) &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
-        sentenceValidation &&
+        (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
         statuses.licenceConditionsBreached &&
         indeterminateSentenceValidation &&
         whyConsideredRecall &&
@@ -182,7 +179,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isReadyForCounterSignature:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
-      sentenceValidation &&
+      (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&
@@ -209,7 +206,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
       statuses.decisionDateTime &&
-      sentenceValidation &&
+      (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&

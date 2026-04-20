@@ -107,7 +107,6 @@ describe('get', () => {
     ])
     expect(res.locals.additionalLicenceConditionsText).toEqual('test 1 2 3')
     expect(res.locals.isIndeterminateSentence).toEqual('No')
-    expect(res.locals.isExtendedSentence).toEqual('No')
 
     expect(next).toHaveBeenCalled()
   })
@@ -204,19 +203,13 @@ describe('get', () => {
             sentenceGroup = randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED])
           }
 
-          let sentenceDescription: string
-          if (ftr56Enabled) {
-            sentenceDescription = `sentence group ${sentenceGroup}`
-          } else {
-            sentenceDescription = `isExtendedSentence ${isExtendedSentence}`
-          }
+          const sentenceDescription = `sentence group ${sentenceGroup}`
           it(`load 2, some variation of data - ${sentenceDescription}`, async () => {
             const res = mockRes({
               locals: {
                 recommendation: {
                   indeterminateSentenceType: ftr56Enabled && isIndeterminateSentence ? { selected: 'LIFE' } : undefined,
-                  isExtendedSentence: ftr56Enabled ? undefined : isExtendedSentence,
-                  sentenceGroup: ftr56Enabled ? sentenceGroup : undefined,
+                  sentenceGroup,
                   triggerLeadingToRecall: 'some reason 1',
                   personOnProbation: { name: 'Joe Bloggs' },
                   crn: 'X123',
@@ -278,7 +271,7 @@ describe('get', () => {
                 sentenceGroup === SentenceGroup.INDETERMINATE ? 'Life sentence' : undefined,
               )
             } else {
-              expect(res.locals.isExtendedSentence).toEqual(isExtendedSentence ? 'Yes' : 'No')
+              expect(res.locals.isExtendedSentence).toEqual(sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No')
             }
 
             expect(next).toHaveBeenCalled()

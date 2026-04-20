@@ -10,7 +10,6 @@ import taskListConsiderRecallController from '../controllers/recommendation/task
 import licenceConditionsController from '../controllers/recommendation/licenceConditionsController'
 import alternativesToRecallTriedController from '../controllers/recommendation/alternativesToRecallTriedController'
 import triggerLeadingToRecallController from '../controllers/recommendation/triggerLeadingToRecallController'
-import isExtendedController from '../controllers/recommendation/isExtendedController'
 import indeterminateTypeController from '../controllers/recommendation/indeterminateTypeController'
 import shareCaseWithManagerController from '../controllers/recommendation/shareCaseWithManagerController'
 import shareCaseWithAdminController from '../controllers/recommendation/shareCaseWithAdminController'
@@ -174,9 +173,6 @@ ppRouteBuilder.post(ppPaths.sentenceInformation, sentenceInformationController.p
 
 ppRouteBuilder.get('indeterminate-type', indeterminateTypeController.get)
 ppRouteBuilder.post('indeterminate-type', indeterminateTypeController.post)
-
-ppRouteBuilder.get('is-extended', isExtendedController.get)
-ppRouteBuilder.post('is-extended', isExtendedController.post)
 
 ppRouteBuilder.get('record-consideration-rationale', recordConsiderationRationaleController.get)
 ppRouteBuilder.post('record-consideration-rationale', recordConsiderationRationaleController.post)

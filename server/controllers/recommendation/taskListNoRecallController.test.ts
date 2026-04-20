@@ -10,7 +10,6 @@ describe('get', () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
-      isExtendedSentence: false,
     }
 
     const res = mockRes({
@@ -91,7 +90,6 @@ describe('get', () => {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
       sentenceGroup: SentenceGroup.INDETERMINATE,
-      isExtendedSentence: false,
     }
 
     const res = mockRes({
@@ -109,7 +107,7 @@ describe('get', () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
-      isExtendedSentence: true,
+      sentenceGroup: SentenceGroup.EXTENDED,
     }
 
     const res = mockRes({

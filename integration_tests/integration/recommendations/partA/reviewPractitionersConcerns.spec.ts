@@ -105,8 +105,6 @@ describe("SPO review practitioner's concerns page", () => {
             })
         })
 
-      cy.getElement('Is Jane Bloggs on an extended sentence?').should('exist').parent().should('contain.text', 'Yes')
-
       cy.getElement('Continue').should('exist')
     })
   })
