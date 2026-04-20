@@ -60,7 +60,8 @@ export default function createApp(userService: UserService): express.Application
     pdsComponents.getPageComponents({
       pdsUrl: config.apis.probationApi.url,
       logger,
-      useFallbacksByDefault: ['local', 'test'].includes(process.env.ENVIRONMENT),
+      useFallbacksByDefault:
+        ['local', 'test'].includes(process.env.ENVIRONMENT) || process.env.USE_LOCAL_HEADER_FALLBACKS === 'true',
     }),
   )
 
