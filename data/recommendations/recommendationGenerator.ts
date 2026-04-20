@@ -36,8 +36,6 @@ export type RecommendationOptions = {
   hasVictimsInContactScheme?: boolean
   indeterminateOrExtendedSentenceDetails?: boolean
   indeterminateSentenceType?: boolean
-  isExtendedSentence?: NoneOrOption<boolean> // remove once FTR56 is live? or default to 'none'?
-  isIndeterminateSentence?: NoneOrOption<boolean> // remove once FTR56 is live? or default to 'none'?
   isMainAddressWherePersonCanBeFound?: SelectedWithDetailsOptions
   isThisAnEmergencyRecall?: boolean
   licenceConditionsBreached?: boolean
@@ -135,12 +133,6 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             allOptions: [],
           }
         : undefined,
-    isExtendedSentence:
-      options?.isExtendedSentence === 'none' ? undefined : (options?.isExtendedSentence ?? faker.datatype.boolean()), // remove once FTR56 is live
-    isIndeterminateSentence:
-      options?.isIndeterminateSentence === 'none'
-        ? undefined
-        : (options?.isIndeterminateSentence ?? faker.datatype.boolean()), // remove once FTR56 is live
     isMainAddressWherePersonCanBeFound:
       (options?.isMainAddressWherePersonCanBeFound ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.isMainAddressWherePersonCanBeFound)

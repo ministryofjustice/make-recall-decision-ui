@@ -23,11 +23,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
-  if (res.locals.flags.flagFTR56Enabled) {
-    res.locals.isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED
-  } else {
-    res.locals.isExtendedSentence = recommendation.isExtendedSentence
-  }
+  res.locals.isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED
 
   res.render(`pages/recommendations/emergencyRecall`)
   next()
@@ -36,12 +32,13 @@ function get(req: Request, res: Response, next: NextFunction) {
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const {
+    recommendation,
     flags,
     user: { token, username, region },
     urlInfo,
   } = res.locals
 
-  const { recallType, crn, isExtendedSentence } = req.body
+  const { recallType, crn } = req.body
   const { errors, valuesToSave, unsavedValues } = await validateEmergencyRecall({
     requestBody: req.body,
     recommendationId,
@@ -68,7 +65,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageId = 'fixed-licence'
   }
 
-  if (!flags.flagFTR56Enabled && recallType === 'STANDARD' && isExtendedSentence === 'true') {
+  if (!flags.flagFTR56Enabled && recallType === 'STANDARD' && recommendation.sentenceGroup === SentenceGroup.EXTENDED) {
     nextPageId = 'indeterminate-details'
   }
 

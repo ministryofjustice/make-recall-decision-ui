@@ -43,8 +43,6 @@ const urls = [
   recommendationEndpoint('licence-conditions'),
   recommendationEndpoint('alternatives-tried'),
   recommendationEndpoint('indeterminate-type'),
-  recommendationEndpoint('is-indeterminate'),
-  recommendationEndpoint('is-extended'),
   recommendationEndpoint('share-case-with-manager'),
   recommendationEndpoint('share-case-with-admin'),
   recommendationEndpoint('discuss-with-manager'),

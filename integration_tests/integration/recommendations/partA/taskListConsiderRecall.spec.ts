@@ -38,8 +38,6 @@ context('Task List Consider a Recall Page', () => {
           triggerLeadingToRecall: false,
           licenceConditionsBreached: false,
           alternativesToRecallTried: false,
-          isIndeterminateSentence: 'none',
-          isExtendedSentence: 'none',
         })
         const popName = recommendationWithNoTasksCompleted.personOnProbation.name
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
@@ -48,7 +46,7 @@ context('Task List Consider a Recall Page', () => {
 
         testStandardBackLink()
 
-        cy.get('.moj-task-list__item').should('have.length', 5).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 3).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -68,18 +66,6 @@ context('Task List Consider a Recall Page', () => {
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.alternativesTried),
         )
-        checkTaskListItem(
-          3,
-          `Is ${popName} on an indeterminate sentence?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.isIndeterminate),
-        )
-        checkTaskListItem(
-          4,
-          `Is ${popName} on an extended sentence?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.isExtended),
-        )
 
         cy.getElement('Continue').should('not.exist')
       })
@@ -93,7 +79,7 @@ context('Task List Consider a Recall Page', () => {
 
         testStandardBackLink()
 
-        cy.get('.moj-task-list__item').should('have.length', 5).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 3).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -112,18 +98,6 @@ context('Task List Consider a Recall Page', () => {
           'What alternatives to recall have been tried already?',
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.alternativesTried),
-        )
-        checkTaskListItem(
-          3,
-          `Is ${popName} on an indeterminate sentence?`,
-          'Completed',
-          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.isIndeterminate),
-        )
-        checkTaskListItem(
-          4,
-          `Is ${popName} on an extended sentence?`,
-          'Completed',
-          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.isExtended),
         )
 
         cy.getElement('Continue').should('exist')

@@ -7,12 +7,8 @@ function get(req: Request, res: Response, next: NextFunction) {
 
   let nextPageId = 'suitability-for-fixed-term-recall'
 
-  const isIndeterminateSentence =
-    (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.INDETERMINATE) ||
-    (!res.locals.flags.flagFTR56Enabled && recommendation.isIndeterminateSentence)
-  const isExtendedSentence =
-    (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.EXTENDED) ||
-    (!res.locals.flags.flagFTR56Enabled && recommendation.isExtendedSentence)
+  const isIndeterminateSentence = recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
+  const isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED
 
   if (isIndeterminateSentence) {
     nextPageId = 'recall-type-indeterminate'

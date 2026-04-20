@@ -85,19 +85,6 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
   })
 
-  it('indeterminate sentence - if extended sentence is selected, task list', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...recommendationResponse, isIndeterminateSentence: false },
-    })
-    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/is-extended`)
-    cy.selectRadio('Is Jane Bloggs on an extended sentence?', 'Yes')
-    cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'Consider a recall')
-  })
-
   it('victim contact scheme - directs "no" to the task list page with FTR56 Enabled', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
@@ -118,27 +105,5 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a Part A form')
-  })
-
-  it('AP-created recommendation - PO directed taken through FTR preconditions page before recall type one', () => {
-    cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
-    cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
-    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'AP_RECORDED_RATIONALE', active: true }] })
-
-    cy.visit(`${routeUrls.cases}/${crn}/overview`)
-    cy.clickLink('Update recommendation')
-
-    cy.pageHeading().should('contain', 'Is Jane Bloggs on an indeterminate sentence?')
-    cy.selectRadio('Is Jane Bloggs on an indeterminate sentence?', 'No')
-    cy.clickButton('Continue')
-
-    cy.pageHeading().should('contain', 'Is Jane Bloggs on an extended sentence?')
-    cy.selectRadio('Is Jane Bloggs on an extended sentence?', 'No')
-    cy.clickButton('Continue')
-
-    cy.pageHeading().should(
-      'equals',
-      `Check ${recommendationResponse.personOnProbation.name}'s suitability for a standard or fixed term recall`,
-    )
   })
 })

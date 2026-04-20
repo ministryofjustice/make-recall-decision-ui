@@ -33,8 +33,7 @@ describe('get', () => {
               locals: {
                 recommendation: {
                   personOnProbation: { name: 'Joe Bloggs' },
-                  sentenceGroup: ftr56Enabled ? sentenceGroup : undefined,
-                  isExtendedSentence: ftr56Enabled ? undefined : isExtendedSentence,
+                  sentenceGroup,
                 },
                 token: 'token1',
                 flags: { flagFTR56Enabled: ftr56Enabled },
@@ -210,7 +209,6 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         recallType: 'FIXED_TERM',
-        isExtendedSentence: 'false',
         isThisAnEmergencyRecall: 'NO',
       },
     })
@@ -238,7 +236,6 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         recallType: 'STANDARD',
-        isExtendedSentence: 'true',
         isThisAnEmergencyRecall: 'NO',
       },
     })
@@ -247,7 +244,7 @@ describe('post', () => {
       token: 'token1',
       locals: {
         user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: SentenceGroup.EXTENDED },
         urlInfo: { basePath },
       },
     })
@@ -267,7 +264,6 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         recallType: 'STANDARD',
-        isExtendedSentence: 'true',
         isThisAnEmergencyRecall: 'NO',
       },
     })

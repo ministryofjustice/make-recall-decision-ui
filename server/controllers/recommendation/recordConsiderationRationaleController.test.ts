@@ -23,8 +23,6 @@ describe('get', () => {
     expect(res.locals.triggerLeadingToRecallCompleted).toBeFalsy()
     expect(res.locals.licenceConditionsBreachedCompleted).toBeFalsy()
     expect(res.locals.alternativesToRecallTriedCompleted).toBeFalsy()
-    expect(res.locals.isExtendedSentenceCompleted).toBeFalsy()
-    expect(res.locals.isIndeterminateSentenceCompleted).toBeFalsy()
     expect(res.locals.allTasksCompleted).toBeFalsy()
 
     expect(next).toHaveBeenCalled()

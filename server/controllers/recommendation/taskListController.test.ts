@@ -6,6 +6,7 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
 import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
@@ -25,8 +26,6 @@ describe('get', () => {
     decisionDateTime: '2021-01-01T12:00:00',
     whatLedToRecall: 'text',
     isThisAnEmergencyRecall: false,
-    isIndeterminateSentence: false,
-    isExtendedSentence: false,
     activeCustodialConvictionCount: 1,
     hasVictimsInContactScheme: {
       selected: 'NO',
@@ -85,8 +84,6 @@ describe('get', () => {
       hasArrestIssues: true,
       hasContrabandRisk: true,
       hasVictimsInContactScheme: true,
-      isExtendedSentence: true,
-      isIndeterminateSentence: true,
       sentenceGroup: false,
       triggerLeadingToRecall: false,
       isMainAddressWherePersonCanBeFound: true,
@@ -102,8 +99,7 @@ describe('get', () => {
       vulnerabilities: true,
       whatLedToRecall: true,
       fixedTermAdditionalLicenceConditions: true,
-      indeterminateOrExtendedSentenceDetails: true,
-      indeterminateSentenceType: false,
+      indeterminateOrExtendedSentenceDetails: false,
       didProbationPractitionerCompletePartA: true,
       practitionerForPartA: true,
       whoCompletedPartA: true,
@@ -158,24 +154,9 @@ describe('get', () => {
     expect(res.locals.selectedVulnerabilitiesRequireDetails).toBeDefined()
   })
 
-  it('present for indeterminate', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate, isIndeterminateSentence: true }
-    const res = mockRes({
-      locals: {
-        recommendation,
-        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
-      },
-    })
-    const next = mockNext()
-    await taskListController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
-
-    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type-indeterminate`)
-  })
-
   it('present for extended', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate, isExtendedSentence: true }
+    const recommendation = { ...recommendationTemplate, sentenceGroup: SentenceGroup.EXTENDED }
     const res = mockRes({
       locals: {
         recommendation,

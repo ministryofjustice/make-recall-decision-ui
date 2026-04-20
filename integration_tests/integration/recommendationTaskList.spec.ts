@@ -9,9 +9,10 @@ import { RecommendationResponseGenerator } from '../../data/recommendations/reco
 import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
 import strings from '../../server/textStrings/en'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import recallTypeValues = RecallTypeSelectedValue.value
 import selected = CustodyStatus.selected
-import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
+import { NoneOrOption } from '../../data/@generators/dataGenerators'
 
 const ftr56TestCases = [
   {
@@ -76,7 +77,10 @@ context('Recommendation - task list', () => {
   }
 
   it('task list - Completed - in custody', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse, sentenceGroup: SentenceGroup.INDETERMINATE },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('What you recommend Completed').should('exist')
@@ -87,9 +91,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
     cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
     cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
-    cy.getElement('Is Jane Bloggs on an indeterminate sentence? Completed').should('exist')
-    cy.getElement('Is Jane Bloggs on an extended sentence? Completed').should('exist')
-    cy.getElement('Type of indeterminate sentence Completed').should('exist')
     cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed').should('exist')
     cy.getElement('Personal details Reviewed').should('exist')
     cy.getElement('Offence details Reviewed').should('exist')
@@ -511,8 +512,6 @@ context('Recommendation - task list', () => {
     cy.getElement('Is Jane Bloggs in custody now? To do').should('exist')
     cy.getElement('Local police contact details To do').should('exist')
     cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? To do').should('exist')
-    cy.getElement('Is Jane Bloggs on an indeterminate sentence? To do').should('exist')
-    cy.getElement('Is Jane Bloggs on an extended sentence? To do').should('exist')
     cy.getElement('Personal details To review').should('exist')
     cy.getElement('Offence details To review').should('exist')
     cy.getElement('Offence analysis To do').should('exist')
@@ -581,7 +580,7 @@ context('Recommendation - task list', () => {
         ;[true, false].forEach(isIndeterminateSentence => {
           ;[true, false].forEach(isExtendedSentence => {
             context(
-              `${recallTypeValue.toString()} recall for ${isIndeterminateSentence ? 'in' : ''}determinate, ${isExtendedSentence ? '' : 'non-'}extended sentence`,
+              `${recallTypeValue.toString()} recall for ${isExtendedSentence ? '' : 'non-'}extended sentence`,
               () => {
                 let expectedRecallTypeLink: 'recall-type' | 'recall-type-indeterminate' | 'recall-type-extended'
                 if (isIndeterminateSentence) {
@@ -589,9 +588,17 @@ context('Recommendation - task list', () => {
                 } else {
                   expectedRecallTypeLink = isExtendedSentence ? 'recall-type-extended' : 'recall-type'
                 }
+                let sentenceGroup: NoneOrOption<SentenceGroup>
+
+                if (isIndeterminateSentence) {
+                  sentenceGroup = SentenceGroup.INDETERMINATE
+                } else if (isExtendedSentence) {
+                  sentenceGroup = SentenceGroup.EXTENDED
+                } else {
+                  sentenceGroup = 'none'
+                }
                 const recommendation = RecommendationResponseGenerator.generate({
-                  isIndeterminateSentence,
-                  isExtendedSentence,
+                  sentenceGroup,
                   recallType: {
                     selected: {
                       value: recallTypeValue as RecallTypeSelectedValue.value,
@@ -656,24 +663,10 @@ context('Recommendation - task list', () => {
         )
       }
 
-      function checkIsIndeterminateLink(personOnProbationName: string) {
-        checkLink(
-          `Is ${personOnProbationName} on an indeterminate sentence?`,
-          `/recommendations/${recommendationId}/is-indeterminate?fromPageId=task-list&fromAnchor=heading-circumstances`,
-        )
-      }
-
       function checkIndeterminateTypeLink() {
         checkLink(
           indeterminateTypeLinkText,
           `/recommendations/${recommendationId}/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances`,
-        )
-      }
-
-      function checkIsExtendedLink(personOnProbationName: string) {
-        checkLink(
-          `Is ${personOnProbationName} on an extended sentence?`,
-          `/recommendations/${recommendationId}/is-extended?fromPageId=task-list&fromAnchor=heading-circumstances`,
         )
       }
 
@@ -697,10 +690,18 @@ context('Recommendation - task list', () => {
             context(
               `${recallTypeValue.toString()} recall for ${isIndeterminateSentence ? 'in' : ''}determinate, ${isExtendedSentence ? '' : 'non-'}extended sentence`,
               () => {
+                let sentenceGroup: NoneOrOption<SentenceGroup>
+
+                if (isIndeterminateSentence) {
+                  sentenceGroup = SentenceGroup.INDETERMINATE
+                } else if (isExtendedSentence) {
+                  sentenceGroup = SentenceGroup.EXTENDED
+                } else {
+                  sentenceGroup = 'none'
+                }
                 const isRecall = recallTypeValue !== recallTypeValues.NO_RECALL
                 const recommendation = RecommendationResponseGenerator.generate({
-                  isIndeterminateSentence,
-                  isExtendedSentence,
+                  sentenceGroup,
                   recallType: {
                     selected: {
                       value: recallTypeValue as RecallTypeSelectedValue.value,
@@ -734,9 +735,6 @@ context('Recommendation - task list', () => {
                     checkElementDoesntExist(emergencyRecallLinkText)
                   })
                 }
-                it('shows is indeterminate link', () => {
-                  checkIsIndeterminateLink(recommendation.personOnProbation.name)
-                })
                 if (isIndeterminateSentence) {
                   it('shows indeterminate type link', () => {
                     checkIndeterminateTypeLink()
@@ -746,9 +744,6 @@ context('Recommendation - task list', () => {
                     checkElementDoesntExist(indeterminateTypeLinkText)
                   })
                 }
-                it('shows is extended link', () => {
-                  checkIsExtendedLink(recommendation.personOnProbation.name)
-                })
                 if (
                   recallTypeValue === recallTypeValues.FIXED_TERM &&
                   !isIndeterminateSentence &&
@@ -1252,8 +1247,6 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: {
         ...completeRecommendationResponse,
-        isIndeterminateSentence: false,
-        isExtendedSentence: false,
         recallType: { selected: { value: 'FIXED_TERM' } },
       },
     })
@@ -1261,13 +1254,11 @@ context('Recommendation - task list', () => {
     cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
     cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
   })
-  it('task list - determinate, not extended, fixed term recall and FTR flag and suitability completed', () => {
+  it('task list - not extended, fixed term recall and FTR flag and suitability completed', () => {
     cy.task('getRecommendation', {
       statusCode: 200,
       response: {
         ...completeRecommendationResponse,
-        isIndeterminateSentence: false,
-        isExtendedSentence: false,
         recallType: { selected: { value: 'FIXED_TERM' } },
         isUnder18: false,
       },

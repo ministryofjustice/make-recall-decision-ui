@@ -109,14 +109,9 @@ describe('get', () => {
         ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
         const res = mockRes({
           locals: {
-            recommendation: flagFTR56Enabled
-              ? {
-                  sentenceGroup: SentenceGroup.EXTENDED,
-                }
-              : {
-                  isIndeterminate: false,
-                  isExtendedSentence: true,
-                },
+            recommendation: {
+              sentenceGroup: SentenceGroup.EXTENDED,
+            },
             urlInfo: { basePath: '/recommendation/123/' },
             user: {
               token: 'token1',
@@ -142,9 +137,7 @@ describe('get', () => {
               ? {
                   sentenceGroup: SentenceGroup.INDETERMINATE,
                 }
-              : {
-                  isIndeterminateSentence: true,
-                },
+              : { sentenceGroup: SentenceGroup.INDETERMINATE },
             urlInfo: { basePath: '/recommendation/123/' },
             user: {
               token: 'token1',
@@ -215,10 +208,7 @@ describe('get', () => {
           ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
           const res = mockRes({
             locals: {
-              recommendation: {
-                isIndeterminateSentence: false,
-                isExtendedSentence: false,
-              },
+              recommendation: {},
               urlInfo: { basePath: '/recommendation/123/' },
               user: {
                 token: 'token1',
@@ -337,7 +327,7 @@ describe('get', () => {
           expect(next).toHaveBeenCalled()
         })
       } else {
-        it('redirect to is-indeterminate if AP_RECORDED_RATIONALE and is indeterminate not set', async () => {
+        it('redirect to suitability-for-fixed-term-recall if AP_RECORDED_RATIONALE and sentence group not set', async () => {
           ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
           const res = mockRes({
             locals: {
@@ -355,76 +345,18 @@ describe('get', () => {
 
           expect(updateStatuses).not.toHaveBeenCalled()
 
-          expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/is-indeterminate')
-          expect(next).toHaveBeenCalled()
-        })
-
-        it('redirect to is-extended if AP_RECORDED_RATIONALE and is extended not set', async () => {
-          ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
-          const res = mockRes({
-            locals: {
-              recommendation: {
-                isIndeterminateSentence: faker.datatype.boolean(),
-              },
-              urlInfo: { basePath: '/recommendation/123/' },
-              user: {
-                token: 'token1',
-                roles: [HMPPS_AUTH_ROLE.PO],
-              },
-              flags: { flagFTR56Enabled },
-            },
-          })
-          const next = mockNext()
-          await redirectController.get(mockReq(), res, next)
-
-          expect(updateStatuses).not.toHaveBeenCalled()
-
-          expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/is-extended')
+          expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/suitability-for-fixed-term-recall')
           expect(next).toHaveBeenCalled()
         })
       }
-
-      it('redirect to recall-type-indeterminate if AP_RECORDED_RATIONALE and is indeterminate', async () => {
-        ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
-        const res = mockRes({
-          locals: {
-            recommendation: flagFTR56Enabled
-              ? {
-                  sentenceGroup: SentenceGroup.INDETERMINATE,
-                }
-              : {
-                  isIndeterminateSentence: true,
-                  isExtendedSentence: faker.datatype.boolean(),
-                },
-            urlInfo: { basePath: '/recommendation/123/' },
-            user: {
-              token: 'token1',
-              roles: [HMPPS_AUTH_ROLE.PO],
-            },
-            flags: { flagFTR56Enabled },
-          },
-        })
-        const next = mockNext()
-        await redirectController.get(mockReq(), res, next)
-
-        expect(updateStatuses).not.toHaveBeenCalled()
-
-        expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-indeterminate')
-        expect(next).toHaveBeenCalled()
-      })
 
       it('redirect to recall-type-extended if AP_RECORDED_RATIONALE and is extended', async () => {
         ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
         const res = mockRes({
           locals: {
-            recommendation: flagFTR56Enabled
-              ? {
-                  sentenceGroup: SentenceGroup.EXTENDED,
-                }
-              : {
-                  isIndeterminateSentence: false,
-                  isExtendedSentence: true,
-                },
+            recommendation: {
+              sentenceGroup: SentenceGroup.EXTENDED,
+            },
             urlInfo: { basePath: '/recommendation/123/' },
             user: {
               token: 'token1',
@@ -495,10 +427,7 @@ describe('get', () => {
           ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
           const res = mockRes({
             locals: {
-              recommendation: {
-                isIndeterminateSentence: false,
-                isExtendedSentence: false,
-              },
+              recommendation: {},
               urlInfo: { basePath: '/recommendation/123/' },
               user: {
                 token: 'token1',
@@ -531,8 +460,6 @@ describe('get', () => {
                   },
                 }
               : {
-                  isIndeterminateSentence: faker.datatype.boolean(),
-                  isExtendedSentence: faker.datatype.boolean(),
                   recallType: {
                     selected: {
                       value: 'NO_RECALL',
@@ -570,8 +497,6 @@ describe('get', () => {
                   },
                 }
               : {
-                  isIndeterminateSentence: faker.datatype.boolean(),
-                  isExtendedSentence: faker.datatype.boolean(),
                   recallType: {
                     selected: {
                       value: 'STANDARD',

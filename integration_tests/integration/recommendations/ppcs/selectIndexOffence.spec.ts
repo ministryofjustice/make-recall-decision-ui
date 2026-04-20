@@ -79,8 +79,8 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       cy.get('@radios').should('have.length', expectedIndexOffenceCount)
       cy.get('@radios').each((radio, index) => {
         const expectedSentenceAndOffence = {
-          expectedSentence: defaultPrisonSentenceSequence.at(index).indexSentence,
-          expectedOffence: defaultPrisonSentenceSequence.at(index).indexSentence.offences.at(0),
+          expectedSentence: defaultPrisonSentenceSequence?.[index].indexSentence,
+          expectedOffence: defaultPrisonSentenceSequence?.[index].indexSentence.offences?.[0],
         }
         const { expectedSentence, expectedOffence } = expectedSentenceAndOffence
         const expectedInputId = `indexOffence-${index + 1}-input`
@@ -105,7 +105,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
           .should('have.class', 'govuk-radios__hint')
           .should('contain.html', `dl id="${expectedSummaryId}"`)
         cy.wrap(radio).find(`dl#${expectedSummaryId}`).should('exist').as('hintSummaryList')
-        const expectedTerm = defaultPrisonSentenceSequence.at(index).indexSentence.terms.at(0)
+        const expectedTerm = defaultPrisonSentenceSequence?.[index].indexSentence.terms?.[0]
         const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
         testSummaryList(cy.get('@hintSummaryList'), {
           matchLength: false,
@@ -196,7 +196,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         const radio = verifyAndRetrieveSingleNOMISRadioItem()
         const hintSummaryList = radio.find(`dl`).should('exist')
 
-        const expectedTerm = prisonSentenceSequenceWithSingleTerm.indexSentence.terms.at(0)
+        const expectedTerm = prisonSentenceSequenceWithSingleTerm.indexSentence.terms?.[0]
         const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
         testNOMISSummaryListForTermRows(
           hintSummaryList,
@@ -228,9 +228,9 @@ context('Determinate Sentence - Select Index Offence Page', () => {
         const radio = verifyAndRetrieveSingleNOMISRadioItem()
         const hintSummaryList = radio.find(`dl`).should('exist')
 
-        const expectedCustodialTerm = prisonSentenceSequenceWithMultipleTerms.indexSentence.terms.at(0)
+        const expectedCustodialTerm = prisonSentenceSequenceWithMultipleTerms.indexSentence.terms?.[0]
         const expectedCustodialTermText = `${expectedCustodialTerm.years} years, ${expectedCustodialTerm.months} months, ${expectedCustodialTerm.weeks} weeks, ${expectedCustodialTerm.days} days`
-        const expectedExtendedTerm = prisonSentenceSequenceWithMultipleTerms.indexSentence.terms.at(1)
+        const expectedExtendedTerm = prisonSentenceSequenceWithMultipleTerms.indexSentence.terms?.[1]
         const expectedExtendedTermText = `${expectedExtendedTerm.years} years, ${expectedExtendedTerm.months} months, ${expectedExtendedTerm.weeks} weeks, ${expectedExtendedTerm.days} days`
         testNOMISSummaryListForTermRows(
           hintSummaryList,

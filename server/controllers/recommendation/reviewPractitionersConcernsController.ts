@@ -140,11 +140,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const additionalLicenceConditions = extractAdditionalLicenceConditions(recommendation)
   const bespokeLicenceConditions = extractBespokeLicenceConditions(recommendation)
 
-  const isIndeterminateSentence =
-    (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.INDETERMINATE) ||
-    (!res.locals.flags.flagFTR56Enabled && recommendation.isIndeterminateSentence)
-      ? 'Yes'
-      : 'No'
+  const isIndeterminateSentence = recommendation.sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No'
+  const isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No'
 
   res.locals = {
     ...res.locals,
@@ -162,11 +159,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     alternativesToRecallTried,
     additionalLicenceConditionsText: recommendation.additionalLicenceConditionsText,
     isIndeterminateSentence,
-    isExtendedSentence:
-      (res.locals.flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.EXTENDED) ||
-      (!res.locals.flags.flagFTR56Enabled && recommendation.isExtendedSentence)
-        ? 'Yes'
-        : 'No',
+    isExtendedSentence,
     indeterminateSentenceHumanReadable:
       flags.flagFTR56Enabled && isIndeterminateSentence === 'Yes'
         ? indeterminateSentenceTypeFtr56.find(

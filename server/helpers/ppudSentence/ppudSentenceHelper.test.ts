@@ -144,51 +144,6 @@ describe('getIndeterminateSentences', () => {
 })
 
 describe('getSentenceType', () => {
-  describe('with FTR56 flag disabled', () => {
-    it('returns DETERMINATE when indeterminate flag set to false', () => {
-      const recommendation: RecommendationResponse = {
-        isIndeterminateSentence: false,
-      }
-      const actualSentenceType = calculatePartACustodyGroup(recommendation, false)
-
-      expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
-    })
-
-    it('returns INDETERMINATE when indeterminate flag set to true', () => {
-      const recommendation: RecommendationResponse = {
-        isIndeterminateSentence: true,
-      }
-      const actualSentenceType = calculatePartACustodyGroup(recommendation, false)
-
-      expect(actualSentenceType).toEqual(CUSTODY_GROUP.INDETERMINATE)
-    })
-
-    it('returns DETERMINATE when indeterminate flag not present', () => {
-      const recommendation: RecommendationResponse = {}
-      const actualSentenceType = calculatePartACustodyGroup(recommendation, false)
-
-      expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
-    })
-
-    it('returns DETERMINATE when indeterminate flag set to null', () => {
-      const recommendation: RecommendationResponse = {
-        isIndeterminateSentence: null,
-      }
-      const actualSentenceType = calculatePartACustodyGroup(recommendation, false)
-
-      expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
-    })
-
-    it('returns DETERMINATE when indeterminate flag set to undefined', () => {
-      const recommendation: RecommendationResponse = {
-        isIndeterminateSentence: undefined,
-      }
-      const actualSentenceType = calculatePartACustodyGroup(recommendation, false)
-
-      expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
-    })
-  })
-
   describe('with FTR56 flag enabled', () => {
     it('returns DETERMINATE when SDS sentence group selected', () => {
       const recommendation: RecommendationResponse = {

@@ -177,7 +177,6 @@ describe('get', () => {
           },
         ],
         recommendation: {
-          isExtendedSentence: '',
           personOnProbation: {
             name: faker.person.fullName(),
           },

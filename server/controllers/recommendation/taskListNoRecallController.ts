@@ -28,13 +28,9 @@ function get(req: Request, res: Response, next: NextFunction) {
     recallType,
   }
 
-  const isIndeterminate = featureFlags.flagFTR56Enabled
-    ? recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
-    : recommendation.isIndeterminateSentence
+  const isIndeterminate = recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
 
-  const isExtended = featureFlags.flagFTR56Enabled
-    ? recommendation.sentenceGroup === SentenceGroup.EXTENDED
-    : recommendation.isExtendedSentence
+  const isExtended = recommendation.sentenceGroup === SentenceGroup.EXTENDED
 
   if (isIndeterminate) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-indeterminate'

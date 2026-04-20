@@ -1,4 +1,4 @@
-import { fakerEN_GB as faker } from '@faker-js/faker/.'
+import { faker } from '@faker-js/faker/locale/en_GB'
 import whenDidSpoAgreeDecisionController from './whenDidSpoAgreeDecision'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
