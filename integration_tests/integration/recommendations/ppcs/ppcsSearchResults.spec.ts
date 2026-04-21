@@ -81,4 +81,26 @@ context('PPCS Search Results Page', () => {
       })
     })
   })
+
+  describe('No results', () => {
+    it('displays no results page when search returns empty results', () => {
+      cy.task('ppcsSearch', {
+        statusCode: 200,
+        response: { results: [] },
+      })
+
+      cy.visit(testPageUrl)
+
+      cy.pageHeading().should('contain', 'No recall request found')
+      cy.get('[data-qa="no-results"]').should(
+        'contain.text',
+        'No results found. Double-check you entered the right CRN.',
+      )
+
+      const crnRegexp = new RegExp(`\\s*Case reference number \\(CRN\\):\\s+${crn}\\s*`)
+      cy.get('.govuk-body').invoke('text').should('match', crnRegexp)
+
+      cy.get('a.govuk-button').should('contain.text', 'Search for another CRN').and('have.attr', 'href', '/ppcs-search')
+    })
+  })
 })
