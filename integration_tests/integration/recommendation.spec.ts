@@ -2164,6 +2164,7 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/search-ppud`)
 
       cy.pageHeading().should('contain', 'Use these details to search PPUD')
+      cy.getLinkHref('Search for another CRN').should('contain', `/${ppcsPaths.ppcsSearch}`)
     })
 
     it('search ppud results', () => {
