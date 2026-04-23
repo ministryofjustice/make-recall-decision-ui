@@ -8,6 +8,7 @@ import { sentenceGroup } from '../recommendations/sentenceInformation/formOption
 import { renderString } from '../../utils/nunjucks'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import recommendationUtils from '../../utils/recommendationUtils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -20,9 +21,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   // Need to check if an OOH recall to prevent backlink from sending PO to the first task list
   // Out of hours recalls should have the AP_ statuses
-  const isOutOfHoursRecall = !!(statuses as RecommendationStatusResponse[])
-    .filter(s => s.active)
-    .find(s => s.name === STATUSES.AP_RECORDED_RATIONALE)
+  const isOutOfHoursRecall = recommendationUtils.isOutOfHoursRecall(statuses)
 
   let backLinkUrl
 

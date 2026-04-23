@@ -1,5 +1,6 @@
 import { testForErrorSummary } from '../../../componentTests/errors.tests'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
+import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
 
 context('What led to recall screen', () => {
   const recommendation = RecommendationResponseGenerator.generate()
@@ -41,6 +42,17 @@ context('What led to recall screen', () => {
 
           cy.get('button').should('contain.text', 'Copy this text')
         })
+    })
+
+    it('should hide the previous related questions section when OOH recall', () => {
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.AP_RECORDED_RATIONALE, active: true }],
+      })
+      cy.visit('/recommendations/123/what-led')
+
+      cy.getElement('Previous related question').should('not.exist')
+      cy.get('.mid-grey-panel').should('not.exist')
     })
   })
 
