@@ -152,7 +152,7 @@
     "url-value-parser": "^2.2.0",
     "util": "0.12.5",
     "util.inherits": "1.0.3",
-    "uuid": "^10.0.0",
+    "uuid": "^14.0.0",
     "web-vitals": "^4.0.0"
   },
   "devDependencies": {
@@ -208,13 +208,23 @@
     "xml2js": "^0.6.0"
   },
   "overrides": {
+    "@cypress/request": {
+      "uuid": "14.0.0"
+    },
     "brace-expansion": "5.0.5",
     "csurf": {
       "cookie": "0.7.2"
     },
     "diff": "8.0.3",
+    "fast-xml-parser": "5.7.0",
+    "jest-junit": {
+      "uuid": "14.0.0"
+    },
     "mocha": {
       "serialize-javascript": "7.0.5"
+    },
+    "multiple-cucumber-html-reporter": {
+      "uuid": "14.0.0"
     }
   }
 }
