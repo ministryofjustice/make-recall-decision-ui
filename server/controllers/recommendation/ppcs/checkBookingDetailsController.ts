@@ -21,6 +21,7 @@ import { NamedFormError } from '../../../@types/pagesForms'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
 import getRoute from './custodyGroupRouter'
 import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import recommendationUtils from '../../../utils/recommendationUtils'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -39,9 +40,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     .find(s => s.name === STATUSES.ACO_SIGNED)
 
   // Out of hours recalls should have the AP_ statuses
-  const isOutOfHoursRecall = !!(statuses as RecommendationStatusResponse[])
-    .filter(s => s.active)
-    .find(s => s.name === STATUSES.AP_RECORDED_RATIONALE)
+  const isOutOfHoursRecall = recommendationUtils.isOutOfHoursRecall(statuses)
 
   let errorMessage
   const valuesToSave = {

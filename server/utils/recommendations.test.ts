@@ -46,3 +46,51 @@ describe('hasActiveStatus', () => {
     expect(recommendationUtils.hasActiveStatus(undefined, RECOMMENDATION_STATUS.AP_COLLECTED_RATIONALE)).toBeFalsy()
   })
 })
+
+describe('isOutOfHoursRecall', () => {
+  it('finds an OOH recall', () => {
+    expect(
+      recommendationUtils.isOutOfHoursRecall([
+        {
+          name: 'AP_RECORDED_RATIONALE',
+          active: true,
+          recommendationId: '123',
+          createdBy: 'TEST_USER',
+          created: '2026-01-01T00:00:00',
+          modifiedBy: null,
+          modified: null,
+          createdByUserFullName: 'User',
+          modifiedByUserFullName: null,
+          emailAddress: null,
+        },
+      ]),
+    ).toBeTruthy()
+  })
+
+  it('does not find an OOH recall', () => {
+    expect(
+      recommendationUtils.isOutOfHoursRecall([
+        {
+          name: 'FAKE_STATUS',
+          active: true,
+          recommendationId: '123',
+          createdBy: 'TEST_USER',
+          created: '2026-01-01T00:00:00',
+          modifiedBy: null,
+          modified: null,
+          createdByUserFullName: 'User',
+          modifiedByUserFullName: null,
+          emailAddress: null,
+        },
+      ]),
+    ).toBeFalsy()
+  })
+
+  it('handles the status list being empty', () => {
+    expect(recommendationUtils.isOutOfHoursRecall([])).toBeFalsy()
+  })
+
+  it('handles the status list being undefined', () => {
+    expect(recommendationUtils.isOutOfHoursRecall(undefined)).toBeFalsy()
+  })
+})
