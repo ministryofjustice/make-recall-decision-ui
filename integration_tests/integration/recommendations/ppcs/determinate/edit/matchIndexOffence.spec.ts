@@ -53,8 +53,9 @@ context('Determinate sentence - match index offence page', () => {
     })
     describe('Initial page load', () => {
       newSentenceTestCases.forEach(testCase => {
-        // We only test the ADD_NEW case here, as for existing PPUD sentences the offence details in
+        // We only test the ADD_NEW case here. For existing PPUD sentences the offence details in
         // bookRecallToPpud are pre-populated from the selected PPUD sentence, so there is no scenario
+        // where the inputs on the page should be empty (which is what the test below checks).
         const recommendationWithNoMatchingDone = RecommendationResponseGenerator.generate({
           id: recommendationId,
           nomisIndexOffence: {
