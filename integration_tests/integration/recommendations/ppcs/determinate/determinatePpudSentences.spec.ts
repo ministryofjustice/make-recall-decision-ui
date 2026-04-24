@@ -137,6 +137,106 @@ context('Determinate Ppud Sentences', () => {
         .and('have.attr', 'href', `/recommendations/${recommendationId}/select-indeterminate-ppud-sentence`)
     })
 
+    it('should only display determinate sentences ', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+          ppudOffender: {
+            id: '1',
+            sentences: [
+              {
+                id: '1',
+                dateOfSentence: '2003-06-12',
+                custodyType: 'IPP',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'non-determinate offence',
+                  dateOfIndexOffence: null,
+                },
+                sentencingCourt: 'Manchester',
+                sentenceExpiryDate: '1969-03-02',
+                sentenceLength: {
+                  partDays: 0,
+                  partYears: 5,
+                  partMonths: 0,
+                },
+              },
+              {
+                id: '2',
+                dateOfSentence: '2003-06-12',
+                custodyType: 'DPP',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'another non-determinate offence',
+                  dateOfIndexOffence: null,
+                },
+                sentencingCourt: 'Birmingham',
+                sentenceExpiryDate: '1969-03-02',
+                sentenceLength: {
+                  partDays: 0,
+                  partYears: 3,
+                  partMonths: 0,
+                },
+              },
+              {
+                id: '3',
+                dateOfSentence: '2004-06-12',
+                custodyType: 'EDS',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'determinate offence',
+                  dateOfIndexOffence: null,
+                },
+                sentencingCourt: 'Hertfordshire',
+                sentenceExpiryDate: '2007-03-02',
+                sentenceLength: {
+                  partDays: 3,
+                  partYears: 1,
+                  partMonths: 2,
+                },
+              },
+            ],
+          },
+          convictionDetail: {
+            indexOffenceDescription: 'Burglary',
+            sentenceExpiryDate: '2024-05-10',
+            dateOfSentence: '2022-03-11',
+          },
+        },
+      })
+
+      const recommendationId = '1'
+      const testPageUrl = `/recommendations/${recommendationId}/determinate-ppud-sentences`
+
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+
+      cy.visit(testPageUrl)
+
+      cy.pageHeading().should('equals', 'Determinate sentences in PPUD')
+
+      // non-determinate sentences should NOT appear
+      cy.get('h3[class="govuk-heading-m govuk-!-margin-top-8"]')
+        .filter(':contains("Court case: Manchester")')
+        .should('have.length', 0)
+
+      cy.get('h3[class="govuk-heading-m govuk-!-margin-top-8"]')
+        .filter(':contains("Court case: Birmingham")')
+        .should('have.length', 0)
+
+      // only the determinate (EDS) sentence from Glasgow should appear
+      cy.get('h3[class="govuk-heading-m govuk-!-margin-top-8"]')
+        .filter(':contains("Court case: Glasgow")')
+        .should('have.length', 1)
+    })
+
     it('should group multiple sentences under the same court', () => {
       const courtName = 'Glasgow'
       cy.task('getRecommendation', {
