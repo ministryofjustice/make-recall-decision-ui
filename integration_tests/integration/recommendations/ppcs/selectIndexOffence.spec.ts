@@ -79,7 +79,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       cy.get('@radioGroup').get('div.govuk-radios__item').as('radios')
       cy.get('@radios').should('have.length', expectedIndexOffenceCount)
       cy.get('@radios').each((radio, index) => {
-        const expectedOffence = defaultPrisonSentenceSequences.at(index).indexSentence.offences?.[0]
+        const expectedOffence = defaultPrisonSentenceSequences?.[index].indexSentence.offences?.[0]
         const expectedInputId = `indexOffence-${index + 1}-input`
         const expectedHintId = `indexOffence-${index + 1}-input-item-hint`
         const expectedSummaryId = `indexOffence-${index + 1}-summary`
@@ -341,7 +341,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
           cy.get('@radios').should('have.length', 1)
           cy.get('@radios').eq(0).find('dl#indexOffence-1-summary').should('exist').as('hintSummaryList')
           const expectedSentence = prisonSentenceSequenceWithoutConsecutiveGroup.indexSentence
-          const expectedTerm = expectedSentence.terms.at(0)
+          const expectedTerm = expectedSentence.terms?.[0]
           const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
           testSummaryList(cy.get('@hintSummaryList'), {
             matchLength: false,
@@ -384,7 +384,7 @@ context('Determinate Sentence - Select Index Offence Page', () => {
           cy.get('@radios').should('have.length', 1)
           cy.get('@radios').eq(0).find('dl#indexOffence-1-summary').should('exist').as('hintSummaryList')
           const expectedSentence = prisonSentenceSequenceWithConsecutiveGroup.indexSentence
-          const expectedTerm = expectedSentence.terms.at(0)
+          const expectedTerm = expectedSentence.terms?.[0]
           const expectedTermText = `${expectedTerm.years} years, ${expectedTerm.months} months, ${expectedTerm.weeks} weeks, ${expectedTerm.days} days`
           testSummaryList(cy.get('@hintSummaryList'), {
             matchLength: false,

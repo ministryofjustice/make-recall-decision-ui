@@ -65,7 +65,7 @@ describe('Consecutive Sentence Details Controller', () => {
       const expectedInfoForSentence = (sentence: PrisonSentence) =>
         ({
           lineSequence: sentence.lineSequence,
-          offence: sentence.offences.at(0).offenceDescription,
+          offence: sentence.offences?.[0].offenceDescription,
           sentenceType: sentence.sentenceTypeDescription,
           court: sentence.courtDescription,
           dateOfSentence: sentence.sentenceDate,
@@ -102,7 +102,7 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Is provided', async () => expect(res.locals.pageData.sentenceInfo.indexSentence).toBeDefined())
               describe('Maps non-conditiomal as expected:', () => {
                 describe('Index offence:', () => {
-                  const expectedIndexInfo = expectedInfoForSentence(defaultGetSentenceSequence.at(0).indexSentence)
+                  const expectedIndexInfo = expectedInfoForSentence(defaultGetSentenceSequence?.[0].indexSentence)
                   const actualIndexInfo = (response: Response) => response.locals.pageData.sentenceInfo.indexSentence
                   testSentenceInfo(expectedIndexInfo, actualIndexInfo)
                 })
@@ -112,16 +112,16 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Is provided', async () =>
                 expect(res.locals.pageData.sentenceInfo.sentencesInSequence).toBeDefined())
               describe('Maps non-conditiomal as expected:', () => {
-                new Map(Object.entries(defaultGetSentenceSequence.at(0).sentencesInSequence)).forEach(
+                new Map(Object.entries(defaultGetSentenceSequence?.[0].sentencesInSequence)).forEach(
                   (sentences, consecTo) => {
                     describe(`Consecutive to group: ${consecTo}`, () => {
                       sentences.forEach((sentence, i) => {
                         describe(`Sentence ${i + 1}`, () => {
                           const expectedSentenceInfo = expectedInfoForSentence(sentence)
                           const actualSentenceInfo = (response: Response) =>
-                            (response.locals.pageData.sentenceInfo.sentencesInSequence as Map<string, SentenceInfo[]>)
-                              .get(consecTo)
-                              .at(i)
+                            (
+                              response.locals.pageData.sentenceInfo.sentencesInSequence as Map<string, SentenceInfo[]>
+                            ).get(consecTo)?.[i]
                           testSentenceInfo(expectedSentenceInfo, actualSentenceInfo)
                         })
                       })

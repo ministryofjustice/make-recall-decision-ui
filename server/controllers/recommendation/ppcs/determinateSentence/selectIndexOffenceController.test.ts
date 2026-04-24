@@ -24,11 +24,11 @@ const expectedOptionForSentence = (sentence: PrisonSentence, expectedConsecutive
     bookingId: sentence.bookingId,
     consecutiveCount: expectedConsecutiveCount,
     courtDescription: sentence.courtDescription,
-    offenceCode: sentence.offences.at(0).offenceCode,
-    offenceDate: sentence.offences.at(0).offenceStartDate,
-    offenceDescription: sentence.offences.at(0).offenceDescription,
-    offenceStatute: sentence.offences.at(0).offenceStatute,
-    offenderChargeId: sentence.offences.at(0).offenderChargeId,
+    offenceCode: sentence.offences?.[0].offenceCode,
+    offenceDate: sentence.offences?.[0].offenceStartDate,
+    offenceDescription: sentence.offences?.[0].offenceDescription,
+    offenceStatute: sentence.offences?.[0].offenceStatute,
+    offenderChargeId: sentence.offences?.[0].offenderChargeId,
     sentenceDate: sentence.sentenceDate,
     sentenceStartDate: sentence.sentenceStartDate,
     sentenceEndDate: sentence.sentenceEndDate,
@@ -105,9 +105,9 @@ describe('Select Index Offence Controller', () => {
             nomisIndexOffence: {
               selected: undefined,
               allOptions: [
-                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(0).indexSentence, undefined),
-                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(1).indexSentence, 1),
-                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(2).indexSentence, 3),
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives?.[0].indexSentence, undefined),
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives?.[1].indexSentence, 1),
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives?.[2].indexSentence, 3),
               ],
             },
           },
@@ -438,7 +438,7 @@ describe('Select Index Offence Controller', () => {
     const defaultPostRecommendation = RecommendationResponseGenerator.generate({
       nomisIndexOffence: { selectedIndex: 'none' },
     })
-    const expectedSelectedOffence = defaultPostRecommendation.nomisIndexOffence.allOptions.at(0)
+    const expectedSelectedOffence = defaultPostRecommendation.nomisIndexOffence.allOptions?.[0]
     const expectedSelectedOffenceIndex = expectedSelectedOffence.offenderChargeId
     const defaultPostSentence = PrisonSentenceGenerator.generate({
       offences: [{ offenderChargeId: expectedSelectedOffenceIndex }, {}, {}],
