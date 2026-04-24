@@ -42,7 +42,8 @@
                         headingSize: 's',
                         rows: [
                             { key: 'Date of sentence', value: formatDateTimeFromIsoString({isoDate: nomisIndexOffence.sentenceStartDate, dateOnly: true}) },
-                            { key: 'Sentence expiry date', value: formatDateTimeFromIsoString({isoDate: nomisIndexOffence.sentenceEndDate, dateOnly: true}) }
+                            { key: 'Sentence expiry date', value: formatDateTimeFromIsoString({isoDate: nomisIndexOffence.sentenceEndDate, dateOnly: true}) } if nomisIndexOffence.sentenceEndDate
+                       else { key: 'Latest sentence expiry date', value: formatDateTimeFromIsoString({isoDate: nomisIndexOffence.sentenceSequenceExpiryDate, dateOnly: true}) }
                         ]
                     }) }}
                 {% endcall %}

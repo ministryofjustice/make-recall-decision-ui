@@ -42,15 +42,16 @@ async function get(_: Request, res: Response, next: NextFunction) {
   }
   const prisonSentenceToInfo = (sentence: PrisonSentence) => ({
     lineSequence: sentence.lineSequence,
-    offence: sentence.offences.at(0).offenceDescription,
+    offence: sentence.offences?.[0].offenceDescription,
     sentenceType: sentence.sentenceTypeDescription,
     court: sentence.courtDescription,
     dateOfSentence: sentence.sentenceDate,
     startDate: sentence.sentenceStartDate,
-    sentenceExpiryDate: sentence.sentenceEndDate,
+    sentenceEndDate: sentence.sentenceEndDate,
+    sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
     sentenceLength:
       sentence.terms && sentence.terms.length < 2
-        ? [{ key: 'Sentence length', value: sentence.terms.at(0) ?? {} }]
+        ? [{ key: 'Sentence length', value: sentence.terms?.[0] ?? {} }]
         : sentence.terms.map(t => resolveTerm(t)),
   })
 

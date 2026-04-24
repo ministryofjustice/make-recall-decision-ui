@@ -29,7 +29,7 @@ const recommendation = RecommendationResponseGenerator.generate({
     sentences: [{ id: sentenceId, custodyType: 'IPP' }, { custodyType: 'DPP' }, { custodyType: 'Mandatory (MLP)' }],
   },
 })
-const expectedSentence = recommendation.ppudOffender.sentences.at(0)
+const expectedSentence = recommendation.ppudOffender.sentences?.[0]
 
 describe('get', () => {
   it('load with no sentence selected', async () => {
