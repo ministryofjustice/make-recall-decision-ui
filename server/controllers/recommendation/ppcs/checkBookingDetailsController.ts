@@ -199,6 +199,12 @@ async function get(_: Request, res: Response, next: NextFunction) {
     hasLastKnownAddress = !checkIfAddressesAreEmpty(addresses)
   }
 
+  // force ppcs users to enter the date and time they received the recall, even if it is the same as the decision date/time
+  // receivedDateTimeUpdatedByPpcs will be set once they submitted the edit recall received form, so we can use it to determine if the date/time has been updated
+  if (!recommendation.bookRecallToPpud.receivedDateTimeUpdatedByPpcs) {
+    recommendation.bookRecallToPpud.receivedDateTime = null
+  }
+
   res.locals = {
     ...res.locals,
     page: {
@@ -252,7 +258,14 @@ async function post(req: Request, res: Response, next: NextFunction) {
     )
   }
 
+  // force ppcs users to enter the date and time they received the recall, even if it is the same as the decision date/time
+  // receivedDateTimeUpdatedByPpcs will be set once they submitted the edit recall received form, so we can use it to determine if the date/time has been updated
+  if (!bookRecallToPpud.receivedDateTimeUpdatedByPpcs) {
+    bookRecallToPpud.receivedDateTime = null
+  }
+
   validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
+  validateBookRecallToPpudField(bookRecallToPpud, 'receivedDateTime', 'missingReceivedDateTime', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'probationArea', 'missingProbationArea', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'policeForce', 'missingPoliceForce', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'releasingPrison', 'missingReleasingPrison', errors)

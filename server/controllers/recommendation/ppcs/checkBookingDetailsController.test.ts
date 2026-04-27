@@ -176,7 +176,7 @@ describe('get', () => {
           firstNames: 'Jane C',
           lastName: 'Doe',
           prisonNumber: '1234',
-          receivedDateTime: '2023-11-13T09:49:31.371Z',
+          receivedDateTime: null,
         },
         prisonOffender: expectedPrisonOffender,
       },
@@ -195,7 +195,7 @@ describe('get', () => {
           lastName: convertedLastName,
           cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
           prisonNumber: PRISON_OFFENDER_TEMPLATE.bookingNo,
-          receivedDateTime: SENT_TO_PPCS_STATUS_TEMPLATE.created,
+          receivedDateTime: null,
           currentEstablishment: expectedCurrentEstablishment,
           image: undefined,
         },
@@ -456,11 +456,53 @@ describe('get', () => {
       expect.objectContaining({
         valuesToSave: expect.objectContaining({
           bookRecallToPpud: expect.objectContaining({
-            receivedDateTime: '2026-01-01T08:00:00',
+            receivedDateTime: null,
           }),
         }),
       }),
     )
+  })
+
+  it('clears receivedDateTime on page load when receivedDateTimeUpdatedByPpcs is not set, to force PPCS to re-enter it', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          bookRecallToPpud: { receivedDateTime: '2023-11-13T09:49:31.371Z' },
+          prisonOffender: {},
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {},
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(res.locals.recommendation.bookRecallToPpud.receivedDateTime).toBeNull()
+  })
+
+  it('preserves receivedDateTime on page load when receivedDateTimeUpdatedByPpcs is set', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          bookRecallToPpud: { receivedDateTime: '2023-11-13T09:49:31.371Z', receivedDateTimeUpdatedByPpcs: true },
+          prisonOffender: {},
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {},
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(res.locals.recommendation.bookRecallToPpud.receivedDateTime).toEqual('2023-11-13T09:49:31.371Z')
   })
 })
 
@@ -477,6 +519,7 @@ describe('post', () => {
         cro: '1234/2345',
         prisonNumber: '1234',
         receivedDateTime: '2023-11-13T09:49:31',
+        receivedDateTimeUpdatedByPpcs: true,
         releaseDate: null,
         riskOfContrabandDetails: '',
         riskOfSeriousHarmLevel: undefined,
@@ -595,6 +638,14 @@ describe('post', () => {
         values: undefined,
       },
       {
+        errorId: 'missingReceivedDateTime',
+        href: '#receivedDateTime',
+        name: 'receivedDateTime',
+        text: 'Enter recall received date and time',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
         errorId: 'missingProbationArea',
         href: '#probationArea',
         name: 'probationArea',
@@ -703,6 +754,14 @@ describe('post', () => {
         values: undefined,
       },
       {
+        errorId: 'missingReceivedDateTime',
+        href: '#receivedDateTime',
+        name: 'receivedDateTime',
+        text: 'Enter recall received date and time',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
         errorId: 'missingProbationArea',
         href: '#probationArea',
         name: 'probationArea',
@@ -805,6 +864,14 @@ describe('post', () => {
         values: undefined,
       },
       {
+        errorId: 'missingReceivedDateTime',
+        href: '#receivedDateTime',
+        name: 'receivedDateTime',
+        text: 'Enter recall received date and time',
+        invalidParts: undefined,
+        values: undefined,
+      },
+      {
         errorId: 'missingProbationArea',
         href: '#probationArea',
         name: 'probationArea',
@@ -838,6 +905,105 @@ describe('post', () => {
       },
     ])
 
+    expect(next).not.toHaveBeenCalled()
+  })
+
+  it('does not require receivedDateTime when receivedDateTimeUpdatedByPpcs is set', async () => {
+    const custodyGroup = randomEnum(CUSTODY_GROUP)
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      bookRecallToPpud: {
+        dateOfBirth: '1970-03-15',
+        firstNames: 'Jane J',
+        lastName: 'Bloggs',
+        cro: '1234/2345',
+        prisonNumber: '1234',
+        receivedDateTime: '2023-11-13T09:49:31',
+        receivedDateTimeUpdatedByPpcs: true,
+        image: undefined,
+        gender: 'm',
+        ethnicity: 'caucasian',
+        custodyGroup,
+        custodyType: 'extended',
+        releasingPrison: 'HMP leeds',
+        mappaLevel: '1',
+        policeForce: 'kent',
+        legislationReleasedUnder: 'c 2008',
+        probationArea: 'camden',
+        currentEstablishment: 'HMP Brixton in PPUD',
+      },
+    })
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '1' },
+      body: {},
+    })
+
+    const basePath = `/recommendations/123/`
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath },
+      },
+    })
+
+    const next = mockNext()
+    const destinationUrl = randomUUID()
+    ;(getRoute as jest.Mock).mockReturnValueOnce(destinationUrl)
+
+    await checkBookingDetailsController.post(req, res, next)
+
+    expect(req.session.errors).toBeUndefined()
+    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${destinationUrl}`)
+  })
+
+  it('requires receivedDateTime when receivedDateTimeUpdatedByPpcs is not set', async () => {
+    ;(getRecommendation as jest.Mock).mockResolvedValue({
+      ...recommendationApiResponse,
+      bookRecallToPpud: {
+        dateOfBirth: '1970-03-15',
+        firstNames: 'Jane J',
+        lastName: 'Bloggs',
+        cro: '1234/2345',
+        prisonNumber: '1234',
+        receivedDateTime: '2023-11-13T09:49:31',
+        image: undefined,
+        gender: 'm',
+        ethnicity: 'caucasian',
+        custodyGroup: CUSTODY_GROUP.DETERMINATE,
+        custodyType: 'extended',
+        releasingPrison: 'HMP leeds',
+        mappaLevel: '1',
+        policeForce: 'kent',
+        legislationReleasedUnder: 'c 2008',
+        probationArea: 'camden',
+        currentEstablishment: 'HMP Brixton in PPUD',
+      },
+    })
+
+    const req = mockReq({
+      originalUrl: 'some-url',
+      params: { recommendationId: '1' },
+      body: {},
+    })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+
+    const next = mockNext()
+
+    await checkBookingDetailsController.post(req, res, next)
+
+    expect(req.session.errors).toEqual(
+      expect.arrayContaining([expect.objectContaining({ errorId: 'missingReceivedDateTime' })]),
+    )
     expect(next).not.toHaveBeenCalled()
   })
 })
