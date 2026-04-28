@@ -1,0 +1,192 @@
+name: Pipeline [test -> build -> deploy]
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+    inputs:
+      additional_docker_tag:
+        description: Additional docker tag that can be used to specify stable or testing tags
+        required: false
+        default: ''
+        type: string
+      push:
+        description: Push docker image to registry flag
+        required: true
+        default: false
+        type: boolean
+permissions:
+  contents: read
+  packages: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+jobs:
+  node_build:
+    name: node build
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_build.yml@v2
+    with:
+      install_command: 'npm run setup:no-audit'
+    secrets: inherit
+  node_unit_tests:
+    name: node unit tests
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_unit_tests.yml@v2
+    with:
+      npm_script: 'test:coverage'
+    needs: [node_build]
+    secrets: inherit
+  node_integration_tests:
+    name: node integration tests
+    permissions:
+      actions: write
+      contents: read
+    uses: ./.github/workflows/node_integration_tests.yml
+    needs: [node_build]
+    secrets: inherit
+  node_accessibility_tests:
+    name: node accessibility tests
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2
+    needs: [node_build]
+    secrets: inherit
+    with:
+      npm_script: 'accessibility-test'
+      test_results_artifact_name: 'npm_accessibility_test_artifacts'
+      redis_tag: '7'
+  e2e_local_tests:
+    name: Run e2e tests locally
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      actions: write
+      contents: read
+    needs:
+      - node_integration_tests
+    secrets: inherit
+    uses: ./.github/workflows/e2e_local_tests.yml
+    with:
+      ui-branch-name: ${{ github.ref }}
+  helm_lint:
+    strategy:
+      matrix:
+        environments: ['dev', 'preprod', 'prod']
+    name: helm lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2
+    secrets: inherit
+    with:
+      environment: ${{ matrix.environments }}
+  build:
+    name: Build docker image from hmpps-github-actions
+    if: github.ref == 'refs/heads/main'
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2
+    needs:
+      - node_integration_tests
+      - node_unit_tests
+      - e2e_local_tests
+    with:
+      docker_registry: 'ghcr.io'
+      registry_org: 'ministryofjustice'
+      additional_docker_tag: ${{ inputs.additional_docker_tag }}
+      push: ${{ inputs.push || inputs.push == null }}
+      docker_multiplatform: false
+  deploy_dev:
+    name: Deploy to the dev environment
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - build
+      - helm_lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2
+    secrets: inherit
+    with:
+      environment: 'dev'
+      app_version: '${{ needs.build.outputs.app_version }}'
+  sentry_release_and_deploy_dev:
+    name: Sentry release and deploy to dev
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_dev
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/sentry_release_and_deploy.yml@v2
+    secrets: inherit
+    with:
+      sentry_project: make-recall-decision-ui
+      sentry_environment: DEV
+      sentry_create_release: true
+      app_version: '${{ needs.build.outputs.app_version }}'
+  e2e_dev_tests:
+    name: e2e tests against dev
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_dev
+    secrets: inherit
+    uses: ./.github/workflows/e2e_dev_tests.yml
+  deploy_preprod:
+    name: Deploy to the preprod environment
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - build
+      - helm_lint
+      - deploy_dev
+      - e2e_dev_tests
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2
+    secrets: inherit
+    with:
+      environment: 'preprod'
+      app_version: '${{ needs.build.outputs.app_version }}'
+  sentry_release_and_deploy_preprod:
+    name: Sentry release and deploy to preprod
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_preprod
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/sentry_release_and_deploy.yml@v2
+    secrets: inherit
+    with:
+      sentry_project: make-recall-decision-ui
+      sentry_environment: PRE-PROD
+      sentry_create_release: true
+      app_version: '${{ needs.build.outputs.app_version }}'
+  deploy_prod:
+    name: Deploy to the prod environment
+    needs:
+      - build
+      - helm_lint
+      - deploy_preprod
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2
+    secrets: inherit
+    with:
+      environment: 'prod'
+      app_version: '${{ needs.build.outputs.app_version }}'
+  sentry_release_and_deploy_prod:
+    name: Sentry release and deploy to prod
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_preprod
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/sentry_release_and_deploy.yml@v2
+    secrets: inherit
+    with:
+      sentry_project: make-recall-decision-ui
+      sentry_environment: PROD
+      sentry_create_release: true
+      app_version: '${{ needs.build.outputs.app_version }}'
+  notify_slack_of_failure:
+    name: Notify Slack of failure
+    if: always() && github.ref == 'refs/heads/main' && contains(needs.*.result, 'failure')
+    needs:
+        - node_build
+        - node_unit_tests
+        - node_integration_tests
+        - e2e_local_tests
+        - helm_lint
+        - build
+        - deploy_dev
+        - deploy_preprod
+        - deploy_prod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare Slack failure message
+        run: echo "Validation checks failed in workflow ${{ github.repository }} - ${{ github.workflow }}." > results_slack_message.txt
+      - name: Notify Slack of failure
+        uses: ministryofjustice/hmpps-github-shared-actions/.github/actions/slack_failure_results@c9b92b85a2aa7e313fb377a81fec08dd4f6f15b8 # v2
+        with:
+          channel_id: ${{ vars.PROD_RELEASES_SLACK_CHANNEL }}
+          SLACK_BOT_TOKEN: ${{ secrets.HMPPS_SRE_SLACK_BOT_TOKEN }}
+          input_file: results_slack_message.txt
+

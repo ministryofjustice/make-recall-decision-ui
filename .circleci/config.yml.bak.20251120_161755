@@ -1,5 +1,56 @@
 version: 2.1
 
+--------------------------------------------------------------------------------------------------------------------
+ The following is the output of running the migration script
+--------------------------------------------------------------------------------------------------------------------
+
+pablo.glenn@MJ004118 make-recall-decision-ui % /bin/bash -c "$(curl -fsSL https://github.com/ministryofjustice/hmpps-github-actions/raw/refs/heads/main/migrate-repo.sh)"
+
+Migration script for CircleCI -> Github Actions
+===============================================
+
+This script will migrate elements of CircleCI workflows to Github Actions.
+Please pick one of the following options by typing the corresponding number and hitting Enter:
+
+1. Migrate security workflows only
+2. Migrate deployment workflows only
+3. Migrate security and deployment workflows
+4. Get information about this migration script
+Any other selection will exit
+Enter your selection: 2
+Migrating deployment workflows only
+Migrating using hmpps-template-typescript template
+[WARNING] 16:18:00 --yaml-fix-merge-anchor-to-spec is false; causing merge anchors to override the existing values which isn't to the yaml spec. This flag will default to true in late 2025.
+Migrating deployment job for: dev .. preprod .. prod ..
+
+INFO: Enabled redis service in node_integration_tests
+INFO: Found node_redis executor job accessibility_test but no matching workflow in hmpps-github-actions
+----  Creating a placeholder workflow for accessibility_test in .github/workflows/node_accessibility_test_redis.yml
+         This will require manual modification to match the executor within .circleci/config.yml
+         It will also need a reference to this workflow to be added in .github/workflows/pipeline.yml
+INFO: quay.io -> ghcr.io migration complete.
+
+Summary of deployment migration:
+===============================
+  - A pipeline.yml file has been created in .github/workflows based on build-test-deploy in .circleci/config.yml
+  - Please refer to the backup file to identify the jobs that still require migration
+  - See above for warnings about executor jobs that will require configuration/manual migration
+  - Also see above for warnings about duplicate environments in the CircleCI config
+  - Finally, please review the pipeline and modify as required to ensure that it will behave as expected
+
+Backup file: .circleci/config.yml.bak.20251120_161755
+
+Please contact the SRE team (#ask-prisons-sre) for assistance with any tasks that need to be migrateed.
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+version: 2.1
+
 orbs:
   browser-tools: circleci/browser-tools@2.4.1
   hmpps: ministryofjustice/hmpps@11
