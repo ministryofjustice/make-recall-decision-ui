@@ -1,6 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { describe } from 'node:test'
-import { randomInt } from 'node:crypto'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import selectPpudSentenceController from './selectPpudSentenceController'
@@ -38,19 +37,11 @@ describe('Select Determinate PPUD Sentence Controller', () => {
           })
         })
         describe('Determinate sentences', async () => {
-          const req = mockReq({
-            params: { recommendationId: randomInt(0, 10000).toString() },
+          it('Check determinate sentences in the response and getDeterminateSentences is called', () => {
+            expect(res.locals.determinateSentences).toEqual(determinateSentences)
+
+            expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
           })
-
-          await selectPpudSentenceController.get(req, res, next)
-
-          expect(res.locals.page.id).toEqual('selectPpudSentence')
-          expect(res.locals.determinateSentences).toEqual(determinateSentences)
-          expect(res.locals.recommendation).toEqual(recommendation)
-
-          expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
-          expect(res.render).toHaveBeenCalledWith('pages/recommendations/selectPpudSentence')
-          expect(next).toHaveBeenCalled()
         })
       })
       it('- Calls render for the expected page', () =>

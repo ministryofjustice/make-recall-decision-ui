@@ -16,7 +16,7 @@ context('Select PPUD Sentence', () => {
       firstName: 'John',
       lastName: 'Doe',
       custodyGroup: CUSTODY_GROUP.DETERMINATE,
-      ppudSentenceId: 'ADD_NEW',
+      ppudSentenceId: '1',
     },
     ppudOffender: {
       sentences: [
@@ -66,6 +66,15 @@ context('Select PPUD Sentence', () => {
         expect(labels.some(l => l.includes('EDS'))).to.equal(true)
         expect(labels.some(l => l.includes('DPP'))).to.equal(false)
       })
+    })
+    it('should auto select previously selected determinate sentences', () => {
+      cy.visit(testPageUrl)
+
+      cy.get('.govuk-radios__input').should('exist')
+
+      cy.contains('.govuk-radios__item', 'EDS').find('input[type="radio"]').should('be.checked')
+
+      cy.contains('.govuk-radios__item', 'Determinate').find('input[type="radio"]').should('not.be.checked')
     })
   })
 })
