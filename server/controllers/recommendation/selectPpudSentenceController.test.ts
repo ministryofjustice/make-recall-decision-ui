@@ -11,7 +11,6 @@ import { ppudDetailsSentence } from '../../@types/make-recall-decision-api/model
 import { getDeterminateSentences } from '../../helpers/ppudSentence/ppudSentenceHelper'
 
 jest.mock('../../data/makeDecisionApiClient')
-jest.mock('../../helpers/ppudSentence/ppudSentenceHelper')
 
 describe('Select Determinate PPUD Sentence Controller', () => {
   describe('get', () => {
