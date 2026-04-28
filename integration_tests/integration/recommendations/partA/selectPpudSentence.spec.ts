@@ -2,6 +2,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
+import setUpSessionForPpcs from '../ppcs/util'
 
 context('Select PPUD Sentence', () => {
   const recommendationId = faker.number.int()
@@ -44,7 +45,7 @@ context('Select PPUD Sentence', () => {
   const testPageUrl = `/recommendations/${recommendationId}/select-ppud-sentence`
 
   beforeEach(() => {
-    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
+    setUpSessionForPpcs()
     cy.task('getStatuses', { statusCode: 200, response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendation })
   })
@@ -52,9 +53,7 @@ context('Select PPUD Sentence', () => {
   describe('Filtering', () => {
     it('should only show determinate sentences and not indeterminate ones', () => {
       cy.visit(testPageUrl)
-      cy.get('body').then($body => {
-        cy.writeFile(`cypress/logs/resultDeterminate.txt`, $body[0].outerHTML)
-      })
+
       cy.contains('Add your booking to PPUD - John Doe')
 
       cy.get('.govuk-radios__input').should('exist')
