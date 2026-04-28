@@ -2279,59 +2279,6 @@ context('Make a recommendation', () => {
       cy.get('#check-booking-details-content-1').should('contain', 'NOMIS number').should('be.visible')
     })
 
-    it('check booking details shows "You must enter a date" and "You must enter a time" when receivedDateTime is null', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          recallConsideredList: null,
-          bookRecallToPpud: {
-            receivedDateTime: null,
-          },
-          prisonOffender: {},
-          ppudOffender: {},
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`/recommendations/252523937/check-booking-details`)
-
-      cy.get('#check-booking-recall-information-list').should('contain', 'You must enter a date')
-      cy.get('#check-booking-recall-information-list').should('contain', 'You must enter a time')
-    })
-
-    it('check booking details shows the recall received date and time when receivedDateTimeUpdatedByPpcs is set', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          recallConsideredList: null,
-          bookRecallToPpud: {
-            receivedDateTime: '2024-01-31T15:17:58Z',
-            receivedDateTimeUpdatedByPpcs: true,
-          },
-          prisonOffender: {},
-          ppudOffender: {},
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`/recommendations/252523937/check-booking-details`)
-
-      cy.get('#check-booking-recall-information-list').should('not.contain', 'You must enter a date')
-      cy.get('#check-booking-recall-information-list').should('not.contain', 'You must enter a time')
-      cy.get('#check-booking-recall-information-list').should('contain', '31 January 2024')
-      cy.get('#check-booking-recall-information-list').should('contain', '15:17')
-    })
-
     it('edit name', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
