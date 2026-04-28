@@ -31,7 +31,7 @@ describe('Select Determinate PPUD Sentence Controller', () => {
             expect(res.locals.page.id).toEqual('selectPpudSentence')
           })
         })
-        describe('Selected NOMIS offence:', async () => {
+        describe('Selected NOMIS offence:', () => {
           it('- Is provided', () => expect(res.locals.offence).toBeDefined())
           it('- Is correct', () => {
             expect(res.locals.offence).toEqual(recommendation.nomisIndexOffence.allOptions[0])
