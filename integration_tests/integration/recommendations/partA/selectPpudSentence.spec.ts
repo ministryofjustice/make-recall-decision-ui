@@ -50,7 +50,7 @@ context('Select PPUD Sentence', () => {
   })
 
   describe('Filtering', () => {
-    it('should only show determinate sentences and not non-determinate ones', () => {
+    it('should only show determinate sentences and not indeterminate ones', () => {
       cy.visit(testPageUrl)
       cy.get('body').then($body => {
         cy.writeFile(`cypress/logs/resultDeterminate.txt`, $body[0].outerHTML)
