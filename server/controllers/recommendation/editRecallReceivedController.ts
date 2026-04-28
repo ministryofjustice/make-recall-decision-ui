@@ -61,7 +61,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
         receivedDateTime: valuesToSave.receivedDateTime.toString(),
-        receivedDateTimeUpdatedByPpcs: true,
       },
     },
     token,

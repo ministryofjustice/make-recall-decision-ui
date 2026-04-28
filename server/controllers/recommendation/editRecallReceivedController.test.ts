@@ -135,7 +135,6 @@ describe('post', () => {
       valuesToSave: {
         bookRecallToPpud: {
           receivedDateTime: '2023-05-01T11:59:00.000Z',
-          receivedDateTimeUpdatedByPpcs: true,
         },
       },
       featureFlags: {},
@@ -143,42 +142,6 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
-
-  it('sets receivedDateTimeUpdatedByPpcs to true when saving', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(getRecommendation as jest.Mock).mockReturnValueOnce(recommendationWithBookRecallToPpud)
-
-    const req = mockReq({
-      params: { recommendationId: '1' },
-      body: {
-        'dateTime-day': '01',
-        'dateTime-month': '05',
-        'dateTime-year': '2023',
-        'dateTime-hour': '12',
-        'dateTime-minute': '59',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/1/` },
-      },
-    })
-
-    await editRecallReceivedController.post(req, res, mockNext())
-
-    expect(updateRecommendation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        valuesToSave: expect.objectContaining({
-          bookRecallToPpud: expect.objectContaining({
-            receivedDateTimeUpdatedByPpcs: true,
-          }),
-        }),
-      }),
-    )
   })
 
   it('post with invalid data', async () => {

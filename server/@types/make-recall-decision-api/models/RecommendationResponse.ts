@@ -179,7 +179,6 @@ export type BookRecallToPpud = {
   cro?: string,
   decisionDateTime?: string,
   receivedDateTime?: string,
-  receivedDateTimeUpdatedByPpcs?: boolean
   custodyType?: string,
   custodyGroup?: CUSTODY_GROUP,
   changeOffenceOrAddComment?: boolean,

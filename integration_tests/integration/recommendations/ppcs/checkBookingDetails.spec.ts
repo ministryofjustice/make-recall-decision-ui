@@ -1,15 +1,12 @@
 import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
-import searchMappedUserResponse from '../../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../../api/responses/ppudSearchActiveUsers.json'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
+import setUpSessionForPpcs from './util'
 
 context('Check Booking Details page', () => {
   const recommendationResponse = RecommendationResponseGenerator.generate()
 
   beforeEach(() => {
-    cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-    cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
-    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
+    setUpSessionForPpcs()
   })
 
   it('shows "You must enter a date" and "You must enter a time" when receivedDateTime is null', () => {
@@ -42,7 +39,6 @@ context('Check Booking Details page', () => {
         ...recommendationResponse,
         bookRecallToPpud: {
           receivedDateTime: '2024-01-31T15:17:58Z',
-          receivedDateTimeUpdatedByPpcs: true,
         },
         prisonOffender: {},
       },

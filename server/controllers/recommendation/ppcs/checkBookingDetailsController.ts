@@ -102,10 +102,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
       currentEstablishment = await determinePpudEstablishment(recommendation, token)
     }
 
-    const sentToPpcs = (statuses as RecommendationStatusResponse[])
-      .filter(s => s.active)
-      .find(s => s.name === STATUSES.SENT_TO_PPCS)
-
     valuesToSave.bookRecallToPpud = {
       firstNames: `${firstName} ${middleName}`.trim(),
       lastName,
@@ -115,7 +111,9 @@ async function get(_: Request, res: Response, next: NextFunction) {
       // When a recall is OOH, the recall received and recall decision date/time need to
       // match, so we use the decision date provided by the PP during the recommendation process
       // see: https://dsdmoj.atlassian.net/browse/MRD-3015
-      receivedDateTime: isOutOfHoursRecall ? decisionDateTime : sentToPpcs?.created,
+      // if its non OOH, force ppcs users to enter the date and time they received the recall,
+      // even if it is the same as the decision date/time, see: MRD-3042
+      receivedDateTime: isOutOfHoursRecall ? decisionDateTime : null,
       currentEstablishment,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
@@ -199,12 +197,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
     hasLastKnownAddress = !checkIfAddressesAreEmpty(addresses)
   }
 
-  // force ppcs users to enter the date and time they received the recall, even if it is the same as the decision date/time
-  // receivedDateTimeUpdatedByPpcs will be set once they submitted the edit recall received form, so we can use it to determine if the date/time has been updated
-  if (!recommendation.bookRecallToPpud.receivedDateTimeUpdatedByPpcs) {
-    recommendation.bookRecallToPpud.receivedDateTime = null
-  }
-
   res.locals = {
     ...res.locals,
     page: {
@@ -256,12 +248,6 @@ async function post(req: Request, res: Response, next: NextFunction) {
       'missingLegislationReleasedUnder',
       errors,
     )
-  }
-
-  // force ppcs users to enter the date and time they received the recall, even if it is the same as the decision date/time
-  // receivedDateTimeUpdatedByPpcs will be set once they submitted the edit recall received form, so we can use it to determine if the date/time has been updated
-  if (!bookRecallToPpud.receivedDateTimeUpdatedByPpcs) {
-    bookRecallToPpud.receivedDateTime = null
   }
 
   validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
