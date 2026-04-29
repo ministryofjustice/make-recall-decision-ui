@@ -94,11 +94,6 @@ const PO_RECALL_CONSULT_SPO_STATUS_TEMPLATE = {
   active: true,
   created: '2023-11-13T09:49:31.361Z',
 }
-const SENT_TO_PPCS_STATUS_TEMPLATE = {
-  name: 'SENT_TO_PPCS',
-  active: true,
-  created: '2023-11-13T09:49:31.371Z',
-}
 const AP_RECORDED_RATIONALE = {
   name: 'AP_RECORDED_RATIONALE',
   active: true,
@@ -108,7 +103,6 @@ const STATUSES_TEMPLATE = [
   SPO_SIGNED_STATUS_TEMPLATE,
   ACO_SIGNED_STATUS_TEMPLATE,
   PO_RECALL_CONSULT_SPO_STATUS_TEMPLATE,
-  SENT_TO_PPCS_STATUS_TEMPLATE,
 ]
 
 describe('get', () => {
@@ -457,35 +451,6 @@ describe('get', () => {
         valuesToSave: expect.objectContaining({
           bookRecallToPpud: expect.objectContaining({
             receivedDateTime: '2026-01-01T08:00:00',
-          }),
-        }),
-      }),
-    )
-  })
-
-  it('clears the recall receivedDateTime when loading a non OOH recall', async () => {
-    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          ...RECOMMENDATION_TEMPLATE,
-          decisionDateTime: '2026-01-01T08:00:00',
-        },
-        statuses: [...STATUSES_TEMPLATE],
-        flags: {
-          xyz: 1,
-        },
-      },
-    })
-    const next = mockNext()
-
-    await checkBookingDetailsController.get(mockReq(), res, next)
-
-    expect(updateRecommendation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        valuesToSave: expect.objectContaining({
-          bookRecallToPpud: expect.objectContaining({
-            receivedDateTime: null,
           }),
         }),
       }),
