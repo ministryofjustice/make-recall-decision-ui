@@ -26,6 +26,7 @@ import {
   updateRecommendation,
   updateStatuses,
 } from './mockApis/makeRecallDecisionApi'
+import getFlags from './mockApis/flipt'
 import { readBase64File, readPdf } from './plugins/readFiles'
 import readDocX from '../cypress_shared/plugins'
 import { resetStubs } from './mockApis/wiremock'
@@ -82,6 +83,7 @@ export default defineConfig({
         downloadSupportingDocument,
         searchMappedUsers,
         ppudSearchActiveUsers,
+        getFlags,
       })
     },
     baseUrl: 'http://localhost:3007',

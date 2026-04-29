@@ -1,26 +1,19 @@
 import { NextFunction, Request, Response } from 'express'
 
-import { FeatureFlagDefault } from '../@types/featureFlags'
 import { isPastDateTime, isPreprodOrProd } from '../utils/utils'
+import FeatureFlagService from '../services/featureFlagService'
 
-export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
-  flagRecommendationsPage: {
-    label: 'Recommendations tab',
-    description:
-      'Shows a "Recommendations" tab in Case summary, with a list of all recommendations that have been created for that CRN',
-    default: false,
-  },
-  flagDeleteRecommendation: {
-    label: 'Allow deletion of a recommendation',
-    description:
-      'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
-    default: false,
-  },
-  flagFTR56Enabled: {
-    label: 'FTR56/ISR changes',
-    description: 'Enables the behaviour required for the FTR56/ISR policy',
-    default: false,
-  },
+export const featureFlagsDefaults = async () => {
+  const ffService = new FeatureFlagService()
+  const flags = await ffService.getAll()
+  const uiFlags = flags
+    .filter(flag => flag.key.startsWith('ui-'))
+    .map(flag => ({
+      ...flag,
+      // remove the `ui-` prefix before doing anything with it
+      key: flag.key.replace('ui-', ''),
+    }))
+  return uiFlags
 }
 
 export const determineEnvFeatureOverride = (key: string) => {
@@ -37,29 +30,35 @@ export const determineEnvFeatureOverride = (key: string) => {
  * The former check takes precedence over the latter so an environment feature that is enabled is absolute,
  * when it is disabled however the locals settings and their validity are considered
  */
-export const readFeatureFlags =
-  (flags: Record<string, FeatureFlagDefault>) => (req: Request, res: Response, next: NextFunction) => {
-    res.locals.flags = Object.keys(flags).reduce((acc: Record<string, boolean>, key) => {
-      acc[key] = flags[key].default
-      return acc
-    }, {})
-    Object.keys(flags).forEach(key => {
-      const flag = req.query[key] || req.cookies[key]
-      const featureOverride = determineEnvFeatureOverride(key)
-      const featureFlagEnabledDefaultValue = !isPreprodOrProd(process.env.ENVIRONMENT)
-      const userFeatureFlagSettingAllowed =
-        typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
-          ? featureFlagEnabledDefaultValue
-          : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
-      const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
-      if (featureOverride) {
-        res.cookie(key, '1')
-        res.locals.flags[key] = true
-      } else if (userFeatureFlagSettingAllowedAndFlagPresent) {
-        const enabled = flag === '1'
-        res.cookie(key, flag)
-        res.locals.flags[key] = enabled
-      }
-    })
-    next()
-  }
+export const readFeatureFlags = () => async (req: Request, res: Response, next: NextFunction) => {
+  const flags = await featureFlagsDefaults()
+  const formattedFlags = flags.reduce(
+    (acc, flag) => ({
+      ...acc,
+      [flag.key]: flag.enabled,
+    }),
+    {},
+  )
+
+  res.locals.flags = formattedFlags
+
+  Object.keys(formattedFlags).forEach(key => {
+    const flag = req.query[key] || req.cookies[key]
+    const featureOverride = determineEnvFeatureOverride(key)
+    const featureFlagEnabledDefaultValue = !isPreprodOrProd(process.env.ENVIRONMENT)
+    const userFeatureFlagSettingAllowed =
+      typeof process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED === 'undefined'
+        ? featureFlagEnabledDefaultValue
+        : process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED
+    const userFeatureFlagSettingAllowedAndFlagPresent = userFeatureFlagSettingAllowed.toString() === 'true' && flag
+    if (featureOverride) {
+      res.cookie(key, '1')
+      res.locals.flags[key] = true
+    } else if (userFeatureFlagSettingAllowedAndFlagPresent) {
+      const enabled = flag === '1'
+      res.cookie(key, flag)
+      res.locals.flags[key] = enabled
+    }
+  })
+  next()
+}

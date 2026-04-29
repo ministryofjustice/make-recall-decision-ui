@@ -7,7 +7,7 @@ import personSearchResults from '../controllers/personSearch/personSearchResults
 import caseSummaryController from '../controllers/caseSummary/caseSummaryController'
 import getStoredSessionData from '../middleware/getStoredSessionData'
 import { startPage } from '../controllers/startPage/startPage'
-import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
+import { readFeatureFlags } from '../middleware/featureFlags'
 import getFeatureFlags from '../controllers/featureFlags'
 import downloadDocument from '../controllers/downloadDocument'
 import routeUrls from './routeUrls'
@@ -33,7 +33,7 @@ export default function routes(router: Router): Router {
 
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
-  router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults))
+  router.use(parseUrl, getStoredSessionData, readFeatureFlags())
 
   router.use(`${routeUrls.recommendations}`, recommendations)
   get('/', startPage)
