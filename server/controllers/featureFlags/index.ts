@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { determineEnvFeatureOverride, featureFlagsDefaults } from '../../middleware/featureFlags'
 
 const getFeatureFlags = async (req: Request, res: Response): Promise<Response | void> => {
-  const featureFlags = await featureFlagsDefaults()
+  const featureFlags = await featureFlagsDefaults(res.locals.user)
 
   res.locals.flagsList = Object.keys(res.locals.flags)
     .sort((a, b) => a.localeCompare(b))
