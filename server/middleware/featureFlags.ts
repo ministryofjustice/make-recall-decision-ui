@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 
 import { isPastDateTime, isPreprodOrProd } from '../utils/utils'
 import FeatureFlagService from '../services/featureFlagService'
+import { HmppsAuthUser } from '../@types/make-recall-decision-api/models/hmpps-auth/User'
 
-export const featureFlagsDefaults = async () => {
-  const ffService = new FeatureFlagService()
+export const featureFlagsDefaults = async (user: HmppsAuthUser) => {
+  const ffService = new FeatureFlagService(user)
   const flags = await ffService.getAll()
   const uiFlags = flags
     .filter(flag => flag.key.startsWith('ui-'))
@@ -31,7 +32,7 @@ export const determineEnvFeatureOverride = (key: string) => {
  * when it is disabled however the locals settings and their validity are considered
  */
 export const readFeatureFlags = () => async (req: Request, res: Response, next: NextFunction) => {
-  const flags = await featureFlagsDefaults()
+  const flags = await featureFlagsDefaults(res.locals.user)
   const formattedFlags = flags.reduce(
     (acc, flag) => ({
       ...acc,
