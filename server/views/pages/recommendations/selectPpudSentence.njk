@@ -81,7 +81,7 @@
                     {# TODO: Implement below radio buttons using https://design-system.service.gov.uk/components/radios/ #}
                     <div class="govuk-radios__item">
 
-                        <input class="govuk-radios__input" id={{`indexOffence-{{ loop.index + 1 }}`}} name="ppudSentenceId" type="radio"
+                        <input class="govuk-radios__input" id="indexOffence-{{ loop.index + 1 }}" name="ppudSentenceId" type="radio"
                             value="{{ sentence.id }}" {% if sentence.id == recommendation.bookRecallToPpud.ppudSentenceId %}checked{% endif %}/>
                         <label class="govuk-label govuk-radios__label govuk-!-font-weight-bold" for="indexOffence">
                             {{ hyphenForBlank(sentence.custodyType) }}
