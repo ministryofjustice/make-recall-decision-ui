@@ -43,7 +43,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     const errorId = 'noPpudSentenceSelected'
     errors.push(
       makeErrorObject({
-        id: 'ppudSentenceId',
+        id: 'indexOffence',
         text: strings.errors[errorId],
         errorId,
       }),

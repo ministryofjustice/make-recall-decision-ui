@@ -1,9 +1,9 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { testForErrorPageTitle } from '../../../componentTests/errors.tests'
-import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
-import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
-import setUpSessionForPpcs from '../ppcs/util'
+import { testForErrorPageTitle } from '../../../../componentTests/errors.tests'
+import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
+import CUSTODY_GROUP from '../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import RECOMMENDATION_STATUS from '../../../../../server/middleware/recommendationStatus'
+import setUpSessionForPpcs from '../util'
 
 context('Select PPUD Sentence', () => {
   const recommendationId = faker.number.int()
@@ -52,7 +52,6 @@ context('Select PPUD Sentence', () => {
       firstName: 'John',
       lastName: 'Doe',
       custodyGroup: CUSTODY_GROUP.DETERMINATE,
-      ppudSentenceId: 'NEW_PUD',
     },
     ppudOffender: {
       sentences: [
@@ -82,7 +81,6 @@ context('Select PPUD Sentence', () => {
   beforeEach(() => {
     setUpSessionForPpcs()
     cy.task('getStatuses', { statusCode: 200, response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }] })
-    cy.task('getRecommendation', { statusCode: 200, response: recommendation })
   })
 
   describe('Filtering', () => {
@@ -144,7 +142,12 @@ context('Select PPUD Sentence', () => {
       cy.get('button.govuk-button').click()
 
       testForErrorPageTitle()
-      // No Summary errors check required as this page is not using summary component.
+
+      cy.get('a[href="#indexOffence"]')
+        .should('be.visible')
+        .and('have.text', 'Select an existing sentence or add a new one')
+
+      // nunjucks file tech debt: MRD-3199, then use testForErrorSummary for component level error message testing.
     })
   })
 })

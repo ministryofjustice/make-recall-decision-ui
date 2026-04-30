@@ -168,9 +168,9 @@ describe('Select Determinate PPUD Sentence Controller', () => {
         expect(req.session.errors).toEqual([
           {
             errorId: 'noPpudSentenceSelected',
-            href: '#ppudSentenceId',
+            href: '#indexOffence',
             invalidParts: undefined,
-            name: 'ppudSentenceId',
+            name: 'indexOffence',
             text: 'Select an existing sentence or add a new one',
             values: undefined,
           },
