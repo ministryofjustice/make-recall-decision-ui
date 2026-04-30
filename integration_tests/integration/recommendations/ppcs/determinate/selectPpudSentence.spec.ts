@@ -85,10 +85,6 @@ context('Select PPUD Sentence', () => {
 
   describe('Filtering', () => {
     beforeEach(() => {
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
     })
     it('should only show determinate sentences and not indeterminate ones', () => {
@@ -130,10 +126,6 @@ context('Select PPUD Sentence', () => {
 
   describe('Error message display', () => {
     beforeEach(() => {
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
       cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoSelectedSentence })
     })
     it('Displays error message when no sentence is selected', () => {
