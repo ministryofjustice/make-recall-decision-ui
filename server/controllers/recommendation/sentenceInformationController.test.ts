@@ -52,7 +52,7 @@ describe('Sentence Information Controller', () => {
 
     await sentenceInformationController.get(req, res, next)
 
-    expect(res.locals.pageData.page).toEqual({ id: 'sentenceInformation' })
+    expect(res.locals.pageData.page).toEqual({ id: 'wrongPage' })
     expect(res.locals.pageData.caseSummary).toEqual(expectedCaseSummary)
     expect(getCaseSection).toHaveBeenCalledWith(
       'overview',
