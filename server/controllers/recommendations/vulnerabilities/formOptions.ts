@@ -28,7 +28,7 @@ export const vulnerabilities = [
     detailsLabel: 'Give full details, including any past or recent attempts',
     category: VulnerabilityCategory.SUICIDE_OR_SELF_HARM,
     categoryHint:
-      'Consider if {{ fullName }} has a history of self-harm or suicide attempts, or any recent incidents. Think about factors that could trigger an incident, such as separation from family.',
+      'Consider if {{ fullName | safe }} has a history of self-harm or suicide attempts, or any recent incidents. Think about factors that could trigger an incident, such as separation from family.',
   },
   {
     value: VULNERABILITY.DRUG_OR_ALCOHOL_USE,

@@ -4,6 +4,7 @@ import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import inputDisplayValuesWhatLedToRecall from '../recommendations/whatLedToRecall/inputDisplayValues'
 import validateWhatLedToRecall from '../recommendations/whatLedToRecall/formValidator'
 import routeUrls from '../../routes/routeUrls'
+import recommendationUtils from '../../utils/recommendationUtils'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -11,6 +12,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     page: {
       id: 'whatLedToRecall',
+      isOutOfHoursRecall: recommendationUtils.isOutOfHoursRecall(res.locals.statuses),
     },
     inputDisplayValues: inputDisplayValuesWhatLedToRecall({
       errors: res.locals.errors,

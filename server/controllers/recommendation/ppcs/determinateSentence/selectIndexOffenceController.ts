@@ -37,7 +37,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const nomisOffenceData = sentenceSequences?.flatMap(seq => {
     const { indexSentence } = seq
-    const indexOffence = indexSentence.offences.at(0)
+    const indexOffence = indexSentence.offences?.[0]
     return {
       id: indexOffence.offenderChargeId,
       description: indexOffence.offenceDescription,
@@ -46,9 +46,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
       dateOfSentence: indexSentence.sentenceDate,
       startDate: indexSentence.sentenceStartDate,
       endDate: indexSentence.sentenceEndDate,
+      sentenceSequenceExpiryDate: indexSentence.sentenceSequenceExpiryDate,
       terms:
         indexSentence.terms.length < 2
-          ? [{ key: 'Sentence length', value: seq.indexSentence.terms.at(0) ?? {} }]
+          ? [{ key: 'Sentence length', value: seq.indexSentence.terms?.[0] ?? {} }]
           : seq.indexSentence.terms.map(t => resolveTerm(t)),
       consecutiveCount: seq.sentencesInSequence
         ? Array.from(new Map(Object.entries(seq.sentencesInSequence)).values()).flatMap(x => x).length
@@ -108,6 +109,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
             courtDescription: seq.indexSentence.courtDescription,
             sentenceStartDate: seq.indexSentence.sentenceStartDate,
             sentenceEndDate: seq.indexSentence.sentenceEndDate,
+            sentenceSequenceExpiryDate: seq.indexSentence.sentenceSequenceExpiryDate,
             bookingId: seq.indexSentence.bookingId,
             terms: seq.indexSentence.terms,
             sentenceTypeDescription: seq.indexSentence.sentenceTypeDescription,
@@ -173,7 +175,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   )
   const sentences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
   const sentenceForOffence = sentences.find(
-    s => s.indexSentence.offences?.at(0)?.offenderChargeId === indexOffenceData.offenderChargeId,
+    s => s.indexSentence.offences?.[0]?.offenderChargeId === indexOffenceData.offenderChargeId,
   )
   const sentenceHasConsecutive = sentenceForOffence.sentencesInSequence != null
 

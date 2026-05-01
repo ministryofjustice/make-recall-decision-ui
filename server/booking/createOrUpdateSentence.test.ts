@@ -38,7 +38,7 @@ function expectedDeterminateSentenceRequest(
     licenceExpiryDate: nomisOffence.licenceExpiryDate,
     releaseDate: nomisOffence.releaseDate,
     sentenceLength,
-    sentenceExpiryDate: nomisOffence.sentenceEndDate,
+    sentenceExpiryDate: nomisOffence.sentenceSequenceExpiryDate,
     sentencingCourt: nomisOffence.courtDescription,
     sentencedUnder: bookRecallToPpud?.legislationSentencedUnder,
   }
