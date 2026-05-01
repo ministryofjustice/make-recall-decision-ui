@@ -1,5 +1,6 @@
 import routeUrls from '../../server/routes/routeUrls'
 import getRecommendationsResponse from '../../api/responses/get-case-recommendations.json'
+import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
 
 context('Recommendations tab in case summary', () => {
   const crn = 'X34983'
@@ -79,6 +80,7 @@ context('Recommendations tab in case summary', () => {
   it('if signed in user is a PO - lists all recommendations with actions', () => {
     cy.signIn()
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', { statusCode: 200, response: RecommendationResponseGenerator.generate() })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
@@ -125,6 +127,7 @@ context('Recommendations tab in case summary', () => {
   it('if signed in user is a SPO - lists all recommendations with only download actions available', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', { statusCode: 200, response: RecommendationResponseGenerator.generate() })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
@@ -151,6 +154,7 @@ context('Recommendations tab in case summary', () => {
   it('shows delete links if flag is on', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', { statusCode: 200, response: RecommendationResponseGenerator.generate() })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
@@ -182,6 +186,7 @@ context('Recommendations tab in case summary', () => {
   it('shows a message if no recommendations', () => {
     cy.signIn()
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', { statusCode: 200, response: RecommendationResponseGenerator.generate() })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
