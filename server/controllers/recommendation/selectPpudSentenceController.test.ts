@@ -1,9 +1,13 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
+import { describe } from 'node:test'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import selectPpudSentenceController from './selectPpudSentenceController'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import ppcsPaths from '../../routes/paths/ppcs'
+import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
+import { ppudDetailsSentence } from '../../@types/make-recall-decision-api/models/ppud/PpudDetailsResponse.testFactory'
+import { getDeterminateSentences } from '../../helpers/ppudSentence/ppudSentenceHelper'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -12,6 +16,8 @@ describe('Select Determinate PPUD Sentence Controller', () => {
     const recommendation = RecommendationResponseGenerator.generate()
     const res = mockRes({ locals: { recommendation } })
     const next = mockNext()
+    const determinateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
+    ;(getDeterminateSentences as jest.Mock).mockReturnValueOnce(determinateSentences)
 
     describe('Non conditional logic:', () => {
       beforeEach(async () => {
@@ -28,6 +34,13 @@ describe('Select Determinate PPUD Sentence Controller', () => {
           it('- Is provided', () => expect(res.locals.offence).toBeDefined())
           it('- Is correct', () => {
             expect(res.locals.offence).toEqual(recommendation.nomisIndexOffence.allOptions[0])
+          })
+        })
+        describe('Determinate sentences', async () => {
+          it('Check determinate sentences in the response and getDeterminateSentences is called', () => {
+            expect(res.locals.determinateSentences).toEqual(determinateSentences)
+
+            expect(getDeterminateSentences).toHaveBeenCalledWith(recommendation.ppudOffender.sentences)
           })
         })
       })
@@ -155,9 +168,9 @@ describe('Select Determinate PPUD Sentence Controller', () => {
         expect(req.session.errors).toEqual([
           {
             errorId: 'noPpudSentenceSelected',
-            href: '#ppudSentenceId',
+            href: '#indexOffence',
             invalidParts: undefined,
-            name: 'ppudSentenceId',
+            name: 'indexOffence',
             text: 'Select an existing sentence or add a new one',
             values: undefined,
           },
