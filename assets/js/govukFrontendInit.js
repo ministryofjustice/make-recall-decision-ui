@@ -1,3 +1,3 @@
-import * as GOVUKFrontend from '../../../../../../assets/govuk/govuk-frontend.min.js'
+import * as GOVUKFrontend from 'govuk-frontend'
 
 GOVUKFrontend.initAll()

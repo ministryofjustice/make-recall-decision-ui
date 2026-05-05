@@ -1,5 +1,5 @@
 const path = require('path')
-const { globSync } = require('glob')
+const { globSync } = require('node:fs')
 
 /**
  * Configuration for build steps
@@ -19,6 +19,7 @@ const getBuildConfig = () => {
         path.join(cwd, '*.ts'),
         path.join(cwd, 'server/**/*.ts'),
         path.join(cwd, 'api/**/*.ts'),
+        'server/**/*.njk',
       ]).filter(file => !file.endsWith('.test.ts') && !file.endsWith('.config.ts')),
       copy: [
         {
