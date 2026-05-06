@@ -43,9 +43,6 @@ context('Select PPUD Sentence', () => {
     it('Where a PPUD sentence already exists', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.visit(testPageUrl)
-      cy.get('body').then($body => {
-        cy.writeFile(`cypress/logs/bookToPpud.txt`, $body[0].outerHTML)
-      })
 
       cy.get('.govuk-panel.govuk-panel--confirmation').should('exist')
 
@@ -76,9 +73,6 @@ context('Select PPUD Sentence', () => {
     it('When user has had to create a new PPUD sentence', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.visit(testPageUrl)
-      cy.get('body').then($body => {
-        cy.writeFile(`cypress/logs/bookToPpud.txt`, $body[0].outerHTML)
-      })
 
       cy.get('.govuk-panel.govuk-panel--confirmation').should('exist')
 
@@ -115,9 +109,6 @@ context('Select PPUD Sentence', () => {
         },
       })
       cy.visit(testPageUrl)
-      cy.get('body').then($body => {
-        cy.writeFile(`cypress/logs/bookToPpud.txt`, $body[0].outerHTML)
-      })
 
       cy.get('.govuk-panel.govuk-panel--confirmation').should('exist')
 
@@ -153,9 +144,6 @@ context('Select PPUD Sentence', () => {
         response: { ...recommendation, bookingMemento: { failed: true } },
       })
       cy.visit(testPageUrl)
-      cy.get('body').then($body => {
-        cy.writeFile(`cypress/logs/bookToPpud.txt`, $body[0].outerHTML)
-      })
 
       cy.get('.govuk-panel.govuk-panel--confirmation').should('not.exist')
 
