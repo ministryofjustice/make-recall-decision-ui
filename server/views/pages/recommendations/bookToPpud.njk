@@ -18,35 +18,37 @@
                         There is a problem
                     </h2>
                     <div class="govuk-error-summary__body">
-
-
                         <p class='govuk-body'>
                             Something went wrong sending the booking to PPUD. Check PPUD to see what's there. You may have to add some details manually.
                         </p>
-
                         <a class='govuk-link' href='booking-summary'>View the information you tried to send to PPUD.</a>
                     </div>
                 </div>
-            {% endif %}
-
-            {% if recommendation.ppudOffender %}
-                <h1 class='govuk-heading-l'>Book {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }} onto PPUD</h1>
-
-                <p class='govuk-body'>
-                    You are creating a booking for {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}.
-                    This will include all the information you've just checked.
-                </p>
             {% else %}
-                <h1 class='govuk-heading-l'>Create new PPUD record for {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}</h1>
+                <div class="govuk-panel govuk-panel--confirmation">
+                    <h1 class="govuk-panel__title">
+                        {{ "Booked on to PPUD" if recommendation.ppudOffender else "Record created and booked on to PPUD" }}
+                    </h1>  
 
-                <p class='govuk-body'>
-                    You are creating a new PPUD record for {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}.
-                    This will include all the information you've just checked.
-                </p>
+                    <div class="govuk-panel__body">
+                        {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}
+                    </div>
+                    <div class="govuk-panel__body">
+                        NOMIS number: <strong>{{ recommendation.personOnProbation.nomsNumber }}</strong>
+                    </div>
+                </div>
+                <h2 class="govuk-heading-m">What happens next</h2>
+                {% if isInDeterminateSentences %}
+                    <p class='govuk-body'>
+                     You’ve added this recall to PPUD and can issue the revocation order. A parole eligible casework (PEC) manager will be assigned to the case.
+                    </p> 
+                {% else %}
+                    <p class='govuk-body'>
+                    You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use.
+                    </p> 
+                {% endif %}
+            
             {% endif %}
-
-            <p class='govuk-body'>It may take a few minutes to process.</p>
-
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
