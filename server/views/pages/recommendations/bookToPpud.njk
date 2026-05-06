@@ -27,7 +27,13 @@
             {% else %}
                 <div class="govuk-panel govuk-panel--confirmation">
                     <h1 class="govuk-panel__title">
-                        {{ "Booked on to PPUD" if recommendation.ppudOffender else "Record created and booked on to PPUD" }}
+                        {% if isInDeterminateSentences -%}
+                            Booked on in PPUD
+                        {%- elseif recommendation.ppudOffender -%}
+                            Booked on to PPUD
+                        {%- else -%}
+                            Record created and booked on to PPUD
+                        {%- endif %}
                     </h1>  
 
                     <div class="govuk-panel__body">

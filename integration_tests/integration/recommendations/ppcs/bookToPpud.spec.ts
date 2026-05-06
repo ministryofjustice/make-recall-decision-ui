@@ -117,7 +117,7 @@ context('Select PPUD Sentence', () => {
       cy.get('.govuk-panel.govuk-panel--confirmation')
         .should('be.visible')
         .within(() => {
-          cy.get('.govuk-panel__title').should('contain.text', 'Booked on to PPUD')
+          cy.get('.govuk-panel__title').should('contain.text', 'Booked on in PPUD')
 
           cy.get('.govuk-panel__body').eq(0).should('contain.text', 'John Doe')
 
