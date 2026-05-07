@@ -103,7 +103,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "3.1000.0",
+    "@aws-sdk/client-sqs": "^3.1036.0",
     "@faker-js/faker": "^9.7.0",
     "@microsoft/applicationinsights-web": "^3.1.2",
     "@ministryofjustice/frontend": "8.0.0",
@@ -208,23 +208,12 @@
     "xml2js": "^0.6.0"
   },
   "overrides": {
-    "@cypress/request": {
-      "uuid": "14.0.0"
-    },
-    "brace-expansion": "5.0.5",
     "csurf": {
       "cookie": "0.7.2"
     },
     "diff": "8.0.3",
-    "fast-xml-parser": "5.7.0",
-    "jest-junit": {
-      "uuid": "14.0.0"
-    },
     "mocha": {
       "serialize-javascript": "7.0.5"
-    },
-    "multiple-cucumber-html-reporter": {
-      "uuid": "14.0.0"
     }
   }
 }
