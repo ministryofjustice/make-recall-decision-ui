@@ -3,9 +3,6 @@ import createClient from '../data/fliptClient'
 import logger from '../../logger'
 import { HmppsAuthUser } from '../@types/make-recall-decision-api/models/hmpps-auth/User'
 
-const cache = new Map<string, { value: FeatureFlagResponse[]; expiresAt: number }>()
-const cacheTTL = 30 * 1000 // 30 second cache
-
 interface FeatureFlagResponse {
   key: string
   description: string
@@ -36,14 +33,6 @@ export default class FeatureFlagService {
   }
 
   async getAll(): Promise<FeatureFlagResponse[]> {
-    const cacheKey = 'allFlags'
-    const now = Date.now()
-    const cached = cache.get(cacheKey)
-
-    if (cached && cached.expiresAt > now) {
-      return cached.value
-    }
-
     try {
       logger.info('Making flipt flag request')
       const flags: FeatureFlagResponse[] = await (await this.fliptClient()).listFlags()
@@ -55,8 +44,7 @@ export default class FeatureFlagService {
         }),
       )
 
-      cache.set(cacheKey, { value: evaluatedFlags, expiresAt: now + cacheTTL })
-      return flags
+      return evaluatedFlags
     } catch (error) {
       logger.error(error, 'Error retrieving all flags')
       return []
@@ -83,9 +71,5 @@ export default class FeatureFlagService {
       logger.error(`Error evaluating flag with key ${key}:`, error)
       return null
     }
-  }
-
-  clearCache() {
-    cache.clear()
   }
 }

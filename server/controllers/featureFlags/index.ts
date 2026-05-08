@@ -7,15 +7,15 @@ const getFeatureFlags = async (req: Request, res: Response): Promise<Response | 
   res.locals.flagsList = Object.keys(res.locals.flags)
     .sort((a, b) => a.localeCompare(b))
     .map(key => {
-      const globalyEnabled = determineEnvFeatureOverride(key)
+      const globallyEnabled = determineEnvFeatureOverride(key)
       const flag = featureFlags.find(val => val.key === key)
       return {
         id: key,
         label: flag.key,
         description: flag.description,
         default: flag.enabled,
-        override: globalyEnabled || res.locals.flags[key],
-        globalyEnabled,
+        override: globallyEnabled || res.locals.flags[key],
+        globallyEnabled,
       }
     })
 

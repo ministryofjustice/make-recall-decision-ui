@@ -23,13 +23,13 @@
                           value: "1",
                           text: "On" + ("*" if flag.default == true else ""),
                           checked: flag.override == true,
-                          disabled: flag.globalyEnabled
+                          disabled: flag.globallyEnabled
                       },
                       {
                           value: "0",
                           text: "Off" + ("*" if flag.default == false else ""),
                           checked: flag.override == false,
-                          disabled: flag.globalyEnabled
+                          disabled: flag.globallyEnabled
                       }
                   ]
               }) }}

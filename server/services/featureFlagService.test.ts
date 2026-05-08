@@ -11,7 +11,6 @@ describe('Feature flag service', () => {
 
   beforeEach(() => {
     featureFlagService = new FeatureFlagService(mockUser)
-    featureFlagService.clearCache()
   })
 
   it('it creates and memoizes the client', async () => {
@@ -23,7 +22,7 @@ describe('Feature flag service', () => {
     expect(createClient).toHaveBeenCalledTimes(1)
   })
 
-  it('returns cached flags within TTL', async () => {
+  it('returns flags and evaluates correctly based on the type', async () => {
     const flags = [
       { key: 'a', description: 'A', enabled: true, type: 'BOOLEAN_FLAG_TYPE' },
       { key: 'b', description: 'B', enabled: true, type: 'VARIANT_FLAG_TYPE' },
@@ -34,48 +33,10 @@ describe('Feature flag service', () => {
     ;(createClient as jest.Mock).mockResolvedValue({ listFlags, evaluateBoolean, evaluateVariant })
 
     await featureFlagService.getAll()
-    await featureFlagService.getAll()
 
     expect(evaluateBoolean).toHaveBeenCalledTimes(1)
     expect(evaluateVariant).toHaveBeenCalledTimes(1)
     expect(listFlags).toHaveBeenCalledTimes(1)
-  })
-
-  it('refreshes cache after TTL expires', async () => {
-    jest.useFakeTimers()
-    jest.setSystemTime(new Date('2026-01-01T00:00:00.000Z'))
-
-    const listFlags = jest
-      .fn()
-      .mockResolvedValueOnce([
-        { key: 'a', description: 'A', enabled: true, type: 'BOOLEAN_FLAG_TYPE' },
-        { key: 'b', description: 'B', enabled: true, type: 'VARIANT_FLAG_TYPE' },
-      ])
-      .mockResolvedValueOnce([
-        { key: 'c', description: 'C', enabled: true, type: 'BOOLEAN_FLAG_TYPE' },
-        { key: 'd', description: 'D', enabled: true, type: 'VARIANT_FLAG_TYPE' },
-      ])
-    const evaluateBoolean = jest.fn().mockResolvedValue({ enabled: true })
-    const evaluateVariant = jest.fn().mockResolvedValue({ enabled: true })
-    ;(createClient as jest.Mock).mockResolvedValue({ listFlags, evaluateBoolean, evaluateVariant })
-
-    const cleanService = new FeatureFlagService(mockUser)
-
-    const firstRun = await cleanService.getAll()
-    expect(firstRun).toEqual([
-      { key: 'a', description: 'A', enabled: true, type: 'BOOLEAN_FLAG_TYPE' },
-      { key: 'b', description: 'B', enabled: true, type: 'VARIANT_FLAG_TYPE' },
-    ])
-
-    jest.setSystemTime(new Date('2026-01-01T00:01:00.000Z'))
-
-    const secondRun = await cleanService.getAll()
-    expect(secondRun).toEqual([
-      { key: 'c', description: 'C', enabled: true, type: 'BOOLEAN_FLAG_TYPE' },
-      { key: 'd', description: 'D', enabled: true, type: 'VARIANT_FLAG_TYPE' },
-    ])
-
-    expect(listFlags).toHaveBeenCalledTimes(2)
   })
 
   it('throws from fliptClient when createClient fails', async () => {
