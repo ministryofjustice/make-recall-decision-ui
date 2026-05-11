@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { taskCompleteness } from '../recommendations/helpers/taskCompleteness'
-import { isInCustody } from '../recommendations/helpers/isInCustody'
+import isInCustody from '../recommendations/helpers/isInCustody'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
 import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { ValueWithDetails } from '../../@types/make-recall-decision-api'
 import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -82,6 +83,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }
   }
 
+  const recallType = recommendation?.recallType?.selected?.value
+
   recommendation.isInCustody = isInCustody(recommendation.custodyStatus?.selected)
   res.locals = {
     ...res.locals,
@@ -105,28 +108,32 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     shareLink: `${config.domain}/recommendations/${recommendationId}/task-list`,
     countersignSpoExposition: recommendation.countersignSpoExposition,
+    ftr56Enabled: featureFlags.flagFTR56Enabled,
+    recallType,
   }
 
-  if (recommendation.isIndeterminateSentence) {
+  const isIndeterminate = recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
+
+  const isExtended = recommendation.sentenceGroup === SentenceGroup.EXTENDED
+
+  if (isIndeterminate) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-indeterminate'
-  } else if (recommendation.isExtendedSentence) {
+  } else if (isExtended) {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type-extended'
   } else {
     res.locals.whatDoYouRecommendPageUrlSlug = 'recall-type'
   }
 
-  if (featureFlags.flagRiskToSelfEnabled) {
-    const selectedVulnerabilities =
-      recommendation.vulnerabilities?.selected?.map(
-        (selectedVulnerability: ValueWithDetails) => selectedVulnerability.value
-      ) || []
-    res.locals.selectedVulnerabilitiesRequireDetails = selectedVulnerabilities.some(
-      (selectedVulnerability: VULNERABILITY) => vulnerabilityRequiresDetails(selectedVulnerability)
-    )
-  }
+  const selectedVulnerabilities =
+    recommendation.vulnerabilities?.selected?.map(
+      (selectedVulnerability: ValueWithDetails) => selectedVulnerability.value,
+    ) || []
+  res.locals.selectedVulnerabilitiesRequireDetails = selectedVulnerabilities.some(
+    (selectedVulnerability: VULNERABILITY) => vulnerabilityRequiresDetails(selectedVulnerability),
+  )
 
   res.render(`pages/recommendations/taskList`)
-  next()
+  return next()
 }
 
 export default { get }

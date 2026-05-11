@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesAddress } from '../recommendations/addressDetails/inputDisplayValues'
-import { validateAddress } from '../recommendations/addressDetails/formValidator'
+import inputDisplayValuesAddress from '../recommendations/addressDetails/inputDisplayValues'
+import validateAddress from '../recommendations/addressDetails/formValidator'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -54,7 +54,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'task-list#heading-person-details', urlInfo })
 
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

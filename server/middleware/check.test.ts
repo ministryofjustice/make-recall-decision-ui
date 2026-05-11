@@ -1,7 +1,7 @@
 import { authorisationCheck, flagIsActive, hasRole, ppcsCustodyGroup, statusIsActive } from './check'
 import { STATUSES } from './recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from './authorisationMiddleware'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { mockNext, mockReq, mockRes } from './testutils/mockRequestUtils'
 
 jest.mock('../data/makeDecisionApiClient')
@@ -124,7 +124,7 @@ describe('authorisationCheck', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).not.toHaveBeenCalled()
@@ -146,7 +146,7 @@ describe('authorisationCheck', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).toHaveBeenCalled()

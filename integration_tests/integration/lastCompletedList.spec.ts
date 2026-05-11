@@ -58,7 +58,7 @@ context('Recommendations tab in case summary', () => {
     cy.visit(`${sharedPaths.cases}/${crn}/last-completed`)
     cy.getElement('There are no documents to download').should('exist')
     cy.getElement(
-      'There are no documents to download. This is because this service has not been used to make a recommendation for Joe Bloggs yet. Check NDelius if you need an old Part A or decision not to recall letter.'
+      'There are no documents to download. This is because this service has not been used to make a recommendation for Joe Bloggs yet. Check NDelius if you need an old Part A or decision not to recall letter.',
     ).should('exist')
   })
 })

@@ -1,8 +1,8 @@
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { searchPersons } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { personSearchResultsByName } from './personSearchResultsByName'
-import { AuditService } from '../../services/auditService'
+import personSearchResultsByName from './personSearchResultsByName'
+import AuditService from '../../services/auditService'
 import { sharedPaths } from '../../routes/paths/shared.paths'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -50,7 +50,7 @@ describe('personSearchResultsByName', () => {
         lastName: 'Bloggs',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
 
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({

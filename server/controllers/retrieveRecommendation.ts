@@ -23,5 +23,5 @@ export default async function retrieveRecommendation(req: Request, res: Response
   }
 
   res.locals.recommendation = recommendation
-  next()
+  return next()
 }

@@ -19,7 +19,7 @@ const isValidFromPage = (pageUrlSlug: unknown) => {
   return valid
 }
 
-export const parseRecommendationUrl = (req: Request, res: Response, next: NextFunction) => {
+const parseRecommendationUrl = (req: Request, res: Response, next: NextFunction) => {
   const { recommendationId } = req.params
   const { fromPageId, fromAnchor } = req.query
   const currentPageId = req.path.substring(req.path.lastIndexOf('/') + 1)
@@ -32,3 +32,5 @@ export const parseRecommendationUrl = (req: Request, res: Response, next: NextFu
   }
   next()
 }
+
+export default parseRecommendationUrl

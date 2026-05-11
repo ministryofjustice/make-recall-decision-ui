@@ -20,7 +20,7 @@ const allEnvs = {
 }
 
 export const sharedPaths: typeof allEnvs & { searchInPpud?: string; flags?: string } = isPreprodOrProd(
-  process.env.ENVIRONMENT
+  process.env.ENVIRONMENT,
 )
   ? // Pre-prod/Prod paths
     { ...allEnvs }

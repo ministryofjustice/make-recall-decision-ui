@@ -8,7 +8,7 @@ import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import { not, statusIsActive } from '../../middleware/check'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../recommendations'
-import { apPaths } from '../paths/ap.paths'
+import apPaths from '../paths/ap.paths'
 
 const roles = {
   allow: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.RW, HMPPS_AUTH_ROLE.ODM],
@@ -17,15 +17,15 @@ const roles = {
 const apGetTemplate = createRecommendationRouteTemplate(
   'get',
   [recommendationStatusCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))],
-  roles
+  roles,
 )
 const apPostTemplate = createRecommendationRouteTemplate(
   'post',
   [recommendationStatusCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))],
-  roles
+  roles,
 )
 
-export const apRoutes: RouteDefinition[] = [
+const apRoutes: RouteDefinition[] = [
   {
     ...apGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${apPaths.apLicenceConditions}`,
@@ -70,9 +70,11 @@ export const apRoutes: RouteDefinition[] = [
     ...createRecommendationRouteTemplate(
       'get',
       [recommendationStatusCheck(statusIsActive(STATUSES.AP_RECORDED_RATIONALE))],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${apPaths.apRationaleConfirmation}`,
     handler: apRationaleConfirmationController.get,
   },
 ]
+
+export default apRoutes

@@ -4,22 +4,23 @@ import { getRecommendation, updateRecommendation } from '../../data/makeDecision
 import { NamedFormError } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { ppcsPaths } from '../../routes/paths/ppcs.paths'
+import strings from '../../textStrings/en'
+import ppcsPaths from '../../routes/paths/ppcs.paths'
+import { getDeterminateSentences } from '../../helpers/ppudSentence/ppudSentenceHelper'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
-
+  const determinateSentences = getDeterminateSentences(recommendation.ppudOffender?.sentences)
   const offence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
-
   res.locals = {
     ...res.locals,
     page: {
       id: 'selectPpudSentence',
     },
     offence,
+    determinateSentences,
   }
 
   res.render(`pages/recommendations/selectPpudSentence`)
@@ -42,10 +43,10 @@ async function post(req: Request, res: Response, next: NextFunction) {
     const errorId = 'noPpudSentenceSelected'
     errors.push(
       makeErrorObject({
-        id: 'ppudSentenceId',
+        id: 'indexOffence',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -64,6 +65,8 @@ async function post(req: Request, res: Response, next: NextFunction) {
         ...recommendation.bookRecallToPpud,
         ppudSentenceId,
         custodyType: ppudSentence?.custodyType,
+        indexOffence: ppudSentence?.offence.indexOffence,
+        indexOffenceComment: ppudSentence?.offence.indexOffenceComment,
       },
     },
     token,
@@ -71,12 +74,12 @@ async function post(req: Request, res: Response, next: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: ppudSentenceId === 'ADD_NEW' ? ppcsPaths.editCustodyType : ppcsPaths.sentenceToCommitExistingOffender,
+    nextPageId: ppudSentenceId === 'ADD_NEW' ? ppcsPaths.matchIndexOffence : ppcsPaths.areOffenceChangesNeeded,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
-  next()
+  return next()
 }
 
 export default { get, post }

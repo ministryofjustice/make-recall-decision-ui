@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import logger from '../../logger'
 

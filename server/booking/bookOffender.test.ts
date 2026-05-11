@@ -1,5 +1,5 @@
 import bookOffender from './bookOffender'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { ppudCreateOffender, ppudUpdateOffender, updateRecommendation } from '../data/makeDecisionApiClient'
 

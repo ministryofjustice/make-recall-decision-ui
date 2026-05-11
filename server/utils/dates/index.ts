@@ -65,3 +65,15 @@ export function getDateTimeUTC(isoDate: string) {
 export function getDateTimeInEuropeLondon(isoDate: string) {
   return getDateTimeUTC(isoDate).setZone(europeLondon)
 }
+
+export function parseDatePartsAsNumbers(dateParts: {
+  day: string | number
+  month: string | number
+  year: string | number
+}) {
+  return {
+    day: Number(dateParts.day) || '',
+    month: Number(dateParts.month) || '',
+    year: Number(dateParts.year) || '',
+  }
+}

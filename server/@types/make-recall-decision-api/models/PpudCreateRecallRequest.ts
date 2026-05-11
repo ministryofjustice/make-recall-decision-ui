@@ -1,6 +1,5 @@
 export type PpudCreateRecallRequest = {
   decisionDateTime: string,
-  isExtendedSentence: boolean,
   isInCustody: boolean,
   mappaLevel: string,
   policeForce: string,

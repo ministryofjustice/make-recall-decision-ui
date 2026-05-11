@@ -1,4 +1,4 @@
-import { validateWhyConsideredRecall } from './formValidator'
+import validateWhyConsideredRecall from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
 
 describe('validateWhyConsideredRecall', () => {

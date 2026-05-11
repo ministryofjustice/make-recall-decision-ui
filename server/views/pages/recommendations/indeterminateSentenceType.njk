@@ -24,11 +24,11 @@
                             isPageHeading: true
                         }
                     },
-                    items: radioCheckboxItems({ items: formOptions.indeterminateSentenceType,
+                    items: radioCheckboxItems({ items: indeterminateSentenceTypeOptions,
                         currentValues: inputDisplayValues.value }),
                     errorMessage: errorMessage(errors.indeterminateSentenceType)
                 }) }}
-                {{ formSubmitButton() }}
+                {{ formSubmitButton({ label: "Continue", marginTop: "7" }) }}
             </form>
         </div>
     </div>

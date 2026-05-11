@@ -1,9 +1,9 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import outOfHoursWarningController from './outOfHoursWarningController'
-import { getCaseSection } from '../caseSummary/getCaseSection'
+import getCaseSection from '../caseSummary/getCaseSection'
 import { createRecommendation, getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { RECOMMENDATION_STATUS } from '../../middleware/recommendationStatus'
+import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../caseSummary/getCaseSection')
@@ -135,7 +135,7 @@ describe('Out of Hours Warning Controller', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/ap-licence-conditions`)
@@ -159,7 +159,7 @@ describe('Out of Hours Warning Controller', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(createRecommendation).toHaveBeenCalledWith({ crn: 'X1234Y' }, 'token', {})
@@ -179,7 +179,7 @@ describe('Out of Hours Warning Controller', () => {
         recommendationId: '456',
         region: undefined,
       },
-      {}
+      {},
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/456/ap-licence-conditions`)

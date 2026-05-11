@@ -1,4 +1,4 @@
-import { inputDisplayValuesWhatLedToRecall } from './inputDisplayValues'
+import inputDisplayValuesWhatLedToRecall from './inputDisplayValues'
 
 describe('inputDisplayValuesWhatLedToRecall', () => {
   const apiValues = {

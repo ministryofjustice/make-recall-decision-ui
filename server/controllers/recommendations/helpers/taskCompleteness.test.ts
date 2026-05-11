@@ -8,10 +8,11 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api/models/VictimsInContactScheme'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 jest.mock('../vulnerabilitiesDetails/formValidator')
 
-export const setAllProperties = (object: Record<string, unknown>, valueToSet: unknown) => {
+const setAllProperties = (object: Record<string, unknown>, valueToSet: unknown) => {
   const copy = { ...object }
   Object.keys(object).forEach(key => {
     copy[key] = valueToSet
@@ -21,12 +22,21 @@ export const setAllProperties = (object: Record<string, unknown>, valueToSet: un
 
 const sharedProperties: RecommendationResponse = {
   alternativesToRecallTried: undefined,
-  isIndeterminateSentence: undefined,
-  isExtendedSentence: undefined,
   licenceConditionsBreached: undefined,
   recallType: undefined,
   decisionDateTime: undefined,
-  responseToProbation: undefined,
+}
+
+const suitabilityForRecallProperties: RecommendationResponse = {
+  isChargedWithOffence: undefined,
+  isServingTerroristOrNationalSecurityOffence: undefined,
+  isAtRiskOfInvolvedInForeignPowerThreat: undefined,
+  wasReferredToParoleBoard244ZB: undefined,
+  wasRepatriatedForMurder: undefined,
+  isServingSOPCSentence: undefined,
+  isServingDCRSentence: undefined,
+  isYouthSentenceOver12Months: undefined,
+  isYouthChargedWithSeriousOffence: undefined,
 }
 
 const recallProperties: RecommendationResponse & { mappa?: boolean } = {
@@ -35,7 +45,6 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   hasVictimsInContactScheme: undefined,
   isThisAnEmergencyRecall: undefined,
   indeterminateOrExtendedSentenceDetails: undefined,
-  isUnderIntegratedOffenderManagement: undefined,
   personOnProbation: undefined,
   whatLedToRecall: undefined,
   vulnerabilities: undefined,
@@ -44,15 +53,10 @@ const recallProperties: RecommendationResponse & { mappa?: boolean } = {
   mappa: undefined,
   currentRoshForPartA: undefined,
   previousReleases: undefined,
-  previousRecalls: undefined,
   fixedTermAdditionalLicenceConditions: undefined,
   hasArrestIssues: undefined,
   isMainAddressWherePersonCanBeFound: undefined,
   localPoliceContact: undefined,
-}
-
-const indeterminateSentenceProperties: RecommendationResponse = {
-  indeterminateSentenceType: undefined,
 }
 
 const noRecallProperties: RecommendationResponse = {
@@ -66,7 +70,6 @@ const emptyRecall: RecommendationResponse = {
   ...setAllProperties(recallProperties, null),
   activeCustodialConvictionCount: 1,
   recallType: { selected: { value: RecallTypeSelectedValue.value.STANDARD } },
-  isIndeterminateSentence: true,
 }
 
 describe('hasRequiredVulnerabilitiesDetails', () => {
@@ -127,17 +130,19 @@ describe('taskCompleteness', () => {
   describe('Recall', () => {
     it('all complete', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
-        recommendationResponse as RecommendationResponse
+        recommendationResponse as RecommendationResponse,
       )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(recallProperties, true),
-        ...setAllProperties(indeterminateSentenceProperties, true),
+        ...setAllProperties(suitabilityForRecallProperties, false),
         didProbationPractitionerCompletePartA: true,
         whoCompletedPartA: true,
         practitionerForPartA: true,
         revocationOrderRecipients: true,
         ppcsQueryEmails: true,
+        sentenceGroup: false,
+        triggerLeadingToRecall: true,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(true)
@@ -148,8 +153,7 @@ describe('taskCompleteness', () => {
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(recallProperties, false),
-        ...setAllProperties(indeterminateSentenceProperties, false),
-        isIndeterminateSentence: true,
+        ...setAllProperties(suitabilityForRecallProperties, false),
         recallType: true,
         fixedTermAdditionalLicenceConditions: true,
         hasArrestIssues: true,
@@ -160,6 +164,8 @@ describe('taskCompleteness', () => {
         practitionerForPartA: false,
         revocationOrderRecipients: false,
         ppcsQueryEmails: false,
+        sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -169,14 +175,15 @@ describe('taskCompleteness', () => {
   describe('No recall', () => {
     it('all complete', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
-        noRecallResponse as RecommendationResponse
+        noRecallResponse as RecommendationResponse,
       )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
-        ...setAllProperties(indeterminateSentenceProperties, true),
         ...setAllProperties(noRecallProperties, true),
-        previousRecalls: false,
+        ...setAllProperties(suitabilityForRecallProperties, false),
         previousReleases: false,
+        sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -185,15 +192,17 @@ describe('taskCompleteness', () => {
     it('all complete - sentence type not required if indeterminate is false', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
         ...noRecallResponse,
-        isIndeterminateSentence: false,
+        decisionDateTime: null,
         indeterminateSentenceType: undefined,
       } as RecommendationResponse)
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, true),
         ...setAllProperties(noRecallProperties, true),
-        previousRecalls: false,
+        ...setAllProperties(suitabilityForRecallProperties, false),
+        decisionDateTime: false,
         previousReleases: false,
-        indeterminateSentenceType: false,
+        sentenceGroup: false,
+        triggerLeadingToRecall: false,
       })
       expect(areAllComplete).toEqual(true)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -208,15 +217,16 @@ describe('taskCompleteness', () => {
 
     it('all incomplete', () => {
       const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
-        emptyNoRecall as RecommendationResponse
+        emptyNoRecall as RecommendationResponse,
       )
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(noRecallProperties, false),
+        ...setAllProperties(suitabilityForRecallProperties, false),
+        triggerLeadingToRecall: false,
         recallType: true,
-        previousRecalls: false,
         previousReleases: false,
-        indeterminateSentenceType: false,
+        sentenceGroup: false,
       })
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
@@ -253,6 +263,82 @@ describe('taskCompleteness', () => {
       expect(statuses.reasonsForNoRecall).toEqual(false)
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
+    })
+
+    it('sentenceGroup incomplete', () => {
+      const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
+        {
+          ...emptyNoRecall,
+          nextAppointment: {},
+          whyConsideredRecall: {},
+        } as RecommendationResponse,
+        { flagFTR56Enabled: true },
+      )
+      expect(statuses.reasonsForNoRecall).toEqual(false)
+      expect(statuses.sentenceGroup).toEqual(false)
+      expect(areAllComplete).toEqual(false)
+      expect(isReadyForCounterSignature).toEqual(false)
+    })
+  })
+
+  describe('Suitability for standard or fixed term recall', () => {
+    const allCompleteSentenceGroups = [
+      SentenceGroup.ADULT_SDS,
+      SentenceGroup.YOUTH_SDS,
+      SentenceGroup.EXTENDED,
+      SentenceGroup.INDETERMINATE,
+    ]
+
+    allCompleteSentenceGroups.forEach(group => {
+      it(`all complete for ${group} when ftr56 enabled`, () => {
+        const recommendationData = {
+          ...recommendationResponse,
+          sentenceGroup: group,
+          recallType: { selected: { value: 'NO_RECALL' } },
+          personOnProbation: {
+            ...recommendationResponse.personOnProbation,
+            ...(group === SentenceGroup.ADULT_SDS ? { ftr56MappaReviewed: true } : { ftr56MappaReviewed: undefined }),
+          },
+          ...setAllProperties(noRecallProperties, true),
+          ...(group === SentenceGroup.ADULT_SDS || group === SentenceGroup.YOUTH_SDS
+            ? setAllProperties(suitabilityForRecallProperties, true)
+            : {}),
+        } as RecommendationResponse
+
+        const { areAllComplete } = taskCompleteness(recommendationData, { flagFTR56Enabled: true })
+
+        expect(areAllComplete).toEqual(true)
+      })
+
+      it(`all complete for ${group} when ftr56 disbled`, () => {
+        const recommendationData = {
+          ...recommendationResponse,
+          sentenceGroup: group,
+          recallType: { selected: { value: 'NO_RECALL' } },
+          ...setAllProperties(noRecallProperties, true),
+        } as RecommendationResponse
+
+        const { areAllComplete } = taskCompleteness(recommendationData)
+
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+
+    const notCompleteSentenceGroups = [SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS]
+
+    notCompleteSentenceGroups.forEach(group => {
+      it(`not complete - ${group}`, () => {
+        const recommendationData = {
+          ...recommendationResponse,
+          sentenceGroup: group,
+          recallType: { selected: { value: 'NO_RECALL' } },
+          ...setAllProperties(noRecallProperties, true),
+        } as RecommendationResponse
+
+        const { areAllComplete } = taskCompleteness(recommendationData, { flagFTR56Enabled: true })
+
+        expect(areAllComplete).toEqual(false)
+      })
     })
   })
 
@@ -463,89 +549,56 @@ describe('taskCompleteness', () => {
   })
 
   describe('Vulnerabilities', () => {
-    describe('with riskToSelf flag disabled', () => {
-      it('returns false if vulnerabilities field not set', () => {
-        const recall = { ...emptyRecall }
-        delete recall.vulnerabilities
-        const { statuses } = taskCompleteness(recall)
-        expect(statuses.vulnerabilities).toEqual(false)
-      })
-      it('returns false if no vulnerabilities selected', () => {
-        const { statuses } = taskCompleteness(emptyRecall)
-        expect(statuses.vulnerabilities).toEqual(false)
-      })
-      it('returns true if some vulnerabilities selected', () => {
-        const { statuses } = taskCompleteness({
-          ...emptyRecall,
-          vulnerabilities: {
-            selected: [{ value: faker.helpers.enumValue(VULNERABILITY), details: faker.lorem.sentence() }],
-          },
-        })
-        expect(statuses.vulnerabilities).toEqual(true)
-      })
+    it('returns false if vulnerabilities field not set', () => {
+      const recall = { ...emptyRecall }
+      delete recall.vulnerabilities
+      const { statuses } = taskCompleteness(recall)
+      expect(statuses.vulnerabilities).toEqual(false)
+      expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
     })
+    it('returns false if no vulnerabilities selected', () => {
+      const { statuses } = taskCompleteness(emptyRecall)
+      expect(statuses.vulnerabilities).toEqual(false)
+      expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+    })
+    it('returns false if vulnerabilities selected but missing mandatory details', () => {
+      ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(true)
 
-    describe('with riskToSelf flag enabled', () => {
-      it('returns false if vulnerabilities field not set', () => {
-        const recall = { ...emptyRecall }
-        delete recall.vulnerabilities
-        const { statuses } = taskCompleteness(recall, { flagRiskToSelfEnabled: true })
-        expect(statuses.vulnerabilities).toEqual(false)
-        expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+      const vulnerability = faker.helpers.enumValue(VULNERABILITY)
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        vulnerabilities: {
+          selected: [{ value: vulnerability, details: undefined }],
+        },
       })
-      it('returns false if no vulnerabilities selected', () => {
-        const { statuses } = taskCompleteness(emptyRecall, { flagRiskToSelfEnabled: true })
-        expect(statuses.vulnerabilities).toEqual(false)
-        expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
-      })
-      it('returns false if vulnerabilities selected but missing mandatory details', () => {
-        ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(true)
+      expect(statuses.vulnerabilities).toEqual(false)
+      expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+    })
+    it('returns true if vulnerabilities selected with details provided', () => {
+      ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(true)
 
-        const vulnerability = faker.helpers.enumValue(VULNERABILITY)
-        const { statuses } = taskCompleteness(
-          {
-            ...emptyRecall,
-            vulnerabilities: {
-              selected: [{ value: vulnerability, details: undefined }],
-            },
-          },
-          { flagRiskToSelfEnabled: true }
-        )
-        expect(statuses.vulnerabilities).toEqual(false)
-        expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+      const vulnerability = faker.helpers.enumValue(VULNERABILITY)
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        vulnerabilities: {
+          selected: [{ value: vulnerability, details: faker.lorem.sentence() }],
+        },
       })
-      it('returns true if vulnerabilities selected with details provided', () => {
-        ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(true)
+      expect(statuses.vulnerabilities).toEqual(true)
+      expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+    })
+    it("returns true if vulnerabilities selected don't require details", () => {
+      ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(false)
 
-        const vulnerability = faker.helpers.enumValue(VULNERABILITY)
-        const { statuses } = taskCompleteness(
-          {
-            ...emptyRecall,
-            vulnerabilities: {
-              selected: [{ value: vulnerability, details: faker.lorem.sentence() }],
-            },
-          },
-          { flagRiskToSelfEnabled: true }
-        )
-        expect(statuses.vulnerabilities).toEqual(true)
-        expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
+      const vulnerability = faker.helpers.enumValue(VULNERABILITY)
+      const { statuses } = taskCompleteness({
+        ...emptyRecall,
+        vulnerabilities: {
+          selected: [{ value: vulnerability, details: undefined }],
+        },
       })
-      it("returns true if vulnerabilities selected don't require details", () => {
-        ;(vulnerabilityRequiresDetails as jest.Mock).mockReturnValueOnce(false)
-
-        const vulnerability = faker.helpers.enumValue(VULNERABILITY)
-        const { statuses } = taskCompleteness(
-          {
-            ...emptyRecall,
-            vulnerabilities: {
-              selected: [{ value: vulnerability, details: undefined }],
-            },
-          },
-          { flagRiskToSelfEnabled: true }
-        )
-        expect(statuses.vulnerabilities).toEqual(true)
-        expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
-      })
+      expect(statuses.vulnerabilities).toEqual(true)
+      expect(vulnerabilityRequiresDetails).toHaveBeenCalledWith(vulnerability)
     })
   })
 
@@ -613,37 +666,11 @@ describe('taskCompleteness', () => {
     })
   })
 
-  describe('Previous recalls', () => {
-    it('returns true if hasBeenRecalledPreviously is true and previous release date set', () => {
-      const { statuses } = taskCompleteness({
-        ...emptyRecall,
-        previousRecalls: { hasBeenRecalledPreviously: true, previousRecallDates: ['2022-09-05'] },
-      })
-      expect(statuses.previousRecalls).toEqual(true)
-    })
-
-    it('returns false if hasBeenRecalledPreviously is true and previous release date not set', () => {
-      const { statuses } = taskCompleteness({
-        ...emptyRecall,
-        previousRecalls: { hasBeenRecalledPreviously: true },
-      })
-      expect(statuses.previousRecalls).toEqual(false)
-    })
-
-    it('returns true if hasBeenRecalledPreviously is false and previous release date not set', () => {
-      const { statuses } = taskCompleteness({
-        ...emptyRecall,
-        previousRecalls: { hasBeenRecalledPreviously: false },
-      })
-      expect(statuses.previousRecalls).toEqual(true)
-    })
-  })
-
   describe('Indeterminate sentence type', () => {
-    it('returns true if isIndeterminateSentence is true and indeterminateSentenceType set', () => {
+    it('returns true if its Indeterminate and indeterminateSentenceType set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         indeterminateSentenceType: {
           selected: 'LIFE' as IndeterminateSentenceType.selected,
         },
@@ -653,10 +680,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns true if isIndeterminateSentence is false and indeterminateSentenceType not set', () => {
+    it('returns true if its not Indeterminate and indeterminateSentenceType not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         indeterminateSentenceType: null,
         bookRecallToPpud: null,
         fixedTermAdditionalLicenceConditions: {}, // the default recommendation doesn't have this set
@@ -665,10 +692,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns false if isIndeterminateSentence is true and indeterminateSentenceType is not set', () => {
+    it('returns false if its an Indeterminate Sentence and indeterminateSentenceType is not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         indeterminateSentenceType: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -678,10 +705,10 @@ describe('taskCompleteness', () => {
   })
 
   describe('Indeterminate or extended details', () => {
-    it('returns true if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails set', () => {
+    it('returns true if Indeterminate is true and indeterminateOrExtendedSentenceDetails set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         indeterminateOrExtendedSentenceDetails: {
           selected: [{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'Details' }],
         },
@@ -691,10 +718,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns false if isIndeterminateSentence is true and indeterminateOrExtendedSentenceDetails is not set', () => {
+    it('returns false if its an Indeterminate Sentence and indeterminateOrExtendedSentenceDetails is not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         indeterminateOrExtendedSentenceDetails: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -702,10 +729,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(false)
     })
 
-    it('returns true if isIndeterminateSentence is false and indeterminateOrExtendedSentenceDetails is not set', () => {
+    it('returns true if not an Indeterminate Sentence and indeterminateOrExtendedSentenceDetails is not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.ADULT_SDS,
         indeterminateOrExtendedSentenceDetails: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -715,10 +742,10 @@ describe('taskCompleteness', () => {
   })
 
   describe('Fixed term licence conditions', () => {
-    it('returns true if isIndeterminateSentence is false and fixedTermAdditionalLicenceConditions set', () => {
+    it('returns true if not Indeterminate Sentence and fixedTermAdditionalLicenceConditions set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         fixedTermAdditionalLicenceConditions: {
           selected: true,
         },
@@ -728,10 +755,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns true if isIndeterminateSentence is true and fixedTermAdditionalLicenceConditions not set', () => {
+    it('returns true if an Indeterminate Sentence and fixedTermAdditionalLicenceConditions not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: true,
+        sentenceGroup: SentenceGroup.INDETERMINATE,
         fixedTermAdditionalLicenceConditions: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -739,10 +766,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns true if isIndeterminateSentence is false, recall type is standard and fixedTermAdditionalLicenceConditions not set', () => {
+    it('returns true if its not an IndeterminateSentence, recall type is standard and fixedTermAdditionalLicenceConditions not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         fixedTermAdditionalLicenceConditions: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -750,11 +777,11 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(true)
     })
 
-    it('returns false if isIndeterminateSentence is false, recall type is fixed and fixedTermAdditionalLicenceConditions not set', () => {
+    it('returns false if its not an Indeterminate Sentence, recall type is fixed and fixedTermAdditionalLicenceConditions not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
         recallType: { selected: { value: 'FIXED_TERM' } },
-        isIndeterminateSentence: false,
+        sentenceGroup: SentenceGroup.EXTENDED,
         fixedTermAdditionalLicenceConditions: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -762,11 +789,10 @@ describe('taskCompleteness', () => {
       expect(isReadyForCounterSignature).toEqual(false)
     })
 
-    it('returns true if isIndeterminateSentence is false, extended sentence is true and indeterminate sentence type not set', () => {
+    it('returns true if its an Extended Sentence and indeterminate sentence type not set', () => {
       const { areAllComplete, isReadyForCounterSignature } = taskCompleteness({
         ...recommendationResponse,
-        isIndeterminateSentence: false,
-        isExtendedSentence: true,
+        sentenceGroup: SentenceGroup.EXTENDED,
         indeterminateSentenceType: null,
         bookRecallToPpud: null,
       } as RecommendationResponse)
@@ -782,7 +808,7 @@ describe('taskCompleteness', () => {
           bookRecallToPpud: null,
           whoCompletedPartA: null,
         } as RecommendationResponse,
-        {}
+        {},
       )
 
       expect(statuses.whoCompletedPartA).toEqual(false)
@@ -801,7 +827,7 @@ describe('taskCompleteness', () => {
           ppcsQueryEmails: ['here@me.com'],
           bookRecallToPpud: null,
         } as RecommendationResponse,
-        {}
+        {},
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)
@@ -821,7 +847,7 @@ describe('taskCompleteness', () => {
           ppcsQueryEmails: ['here@me.com'],
           bookRecallToPpud: null,
         } as RecommendationResponse,
-        {}
+        {},
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)
@@ -840,7 +866,7 @@ describe('taskCompleteness', () => {
           bookRecallToPpud: null,
           practitionerForPartA: null,
         } as RecommendationResponse,
-        {}
+        {},
       )
 
       expect(statuses.whoCompletedPartA).toEqual(true)
@@ -848,6 +874,343 @@ describe('taskCompleteness', () => {
       expect(statuses.didProbationPractitionerCompletePartA).toEqual(false)
       expect(areAllComplete).toEqual(false)
       expect(isReadyForCounterSignature).toEqual(false)
+    })
+  })
+
+  const baseRecall = {
+    ...recommendationResponse,
+    bookRecallToPpud: null,
+  } as RecommendationResponse
+
+  describe('triggerLeadingToRecall', () => {
+    describe('flagFTR56Enabled: true', () => {
+      it('blocks areAllComplete when triggerLeadingToRecall field is missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          { ...baseRecall, triggerLeadingToRecall: undefined },
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+
+      it('blocks isReadyForCounterSignature when triggerLeadingToRecall field is missing', () => {
+        const { isReadyForCounterSignature } = taskCompleteness(
+          { ...baseRecall, triggerLeadingToRecall: undefined },
+          { flagFTR56Enabled: true },
+        )
+        expect(isReadyForCounterSignature).toEqual(false)
+      })
+
+      it('does not block completion when triggerLeadingToRecall is set', () => {
+        const { areAllComplete } = taskCompleteness(
+          { ...baseRecall, triggerLeadingToRecall: 'some value', sentenceGroup: SentenceGroup.EXTENDED },
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+
+    describe('flagFTR56Enabled: false', () => {
+      it('does not block areAllComplete even when triggerLeadingToRecall is missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          { ...baseRecall, triggerLeadingToRecall: undefined },
+          { flagFTR56Enabled: false },
+        )
+        // triggerLeadingToRecall defaults to true when flag is off
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+  })
+
+  describe('suitabilityForRecallValidation — ADULT_SDS', () => {
+    const adultSDSBase = {
+      ...baseRecall,
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+      isChargedWithOffence: true,
+      isServingTerroristOrNationalSecurityOffence: true,
+      isAtRiskOfInvolvedInForeignPowerThreat: true,
+      wasReferredToParoleBoard244ZB: true,
+      wasRepatriatedForMurder: true,
+      isServingSOPCSentence: true,
+      isServingDCRSentence: true,
+    } as RecommendationResponse
+
+    describe('flagFTR56Enabled: true', () => {
+      it('returns areAllComplete true when all 7 adult criteria are set', () => {
+        const { areAllComplete } = taskCompleteness(adultSDSBase, { flagFTR56Enabled: true })
+        expect(areAllComplete).toEqual(true)
+      })
+
+      it.each([
+        'isChargedWithOffence',
+        'isServingTerroristOrNationalSecurityOffence',
+        'isAtRiskOfInvolvedInForeignPowerThreat',
+        'wasReferredToParoleBoard244ZB',
+        'wasRepatriatedForMurder',
+        'isServingSOPCSentence',
+        'isServingDCRSentence',
+      ] as const)('returns areAllComplete false when %s is missing', missingField => {
+        const { areAllComplete } = taskCompleteness(
+          { ...adultSDSBase, [missingField]: undefined },
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+    })
+
+    describe('flagFTR56Enabled: false', () => {
+      it('does not enforce adult SDS criteria — areAllComplete true even with all criteria missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...adultSDSBase,
+            isChargedWithOffence: undefined,
+            isServingTerroristOrNationalSecurityOffence: undefined,
+            isAtRiskOfInvolvedInForeignPowerThreat: undefined,
+            wasReferredToParoleBoard244ZB: undefined,
+            wasRepatriatedForMurder: undefined,
+            isServingSOPCSentence: undefined,
+            isServingDCRSentence: undefined,
+          },
+          { flagFTR56Enabled: false },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+  })
+
+  describe('suitabilityForRecallValidation — YOUTH_SDS', () => {
+    const youthSDSBase = {
+      ...baseRecall,
+      sentenceGroup: SentenceGroup.YOUTH_SDS,
+      isYouthSentenceOver12Months: true,
+      isYouthChargedWithSeriousOffence: true,
+    } as RecommendationResponse
+
+    describe('flagFTR56Enabled: true', () => {
+      it('returns areAllComplete true when both youth criteria are set', () => {
+        const { areAllComplete } = taskCompleteness(youthSDSBase, { flagFTR56Enabled: true })
+        expect(areAllComplete).toEqual(true)
+      })
+
+      it('returns areAllComplete false when isYouthSentenceOver12Months is missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          { ...youthSDSBase, isYouthSentenceOver12Months: undefined },
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+
+      it('returns areAllComplete false when isYouthChargedWithSeriousOffence is missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          { ...youthSDSBase, isYouthChargedWithSeriousOffence: undefined },
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+    })
+
+    describe('flagFTR56Enabled: false', () => {
+      it('does not enforce youth SDS criteria — areAllComplete true even with both criteria missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...youthSDSBase,
+            isYouthSentenceOver12Months: undefined,
+            isYouthChargedWithSeriousOffence: undefined,
+          },
+          { flagFTR56Enabled: false },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+  })
+
+  describe('suitabilityForRecallValidation — non-SDS sentence groups', () => {
+    describe('flagFTR56Enabled: true', () => {
+      it.each([SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE])(
+        'does not apply SDS suitability criteria for %s',
+        group => {
+          // suitabilityForRecallValidation stays true for these groups
+          // areAllComplete may still be false for other unrelated reasons (indeterminate type etc)
+          // so we only check that suitability is NOT the blocker by asserting the status directly
+          const { statuses } = taskCompleteness(
+            {
+              ...baseRecall,
+              sentenceGroup: group,
+              isChargedWithOffence: undefined,
+              isYouthSentenceOver12Months: undefined,
+            } as RecommendationResponse,
+            { flagFTR56Enabled: true },
+          )
+          expect(statuses.isChargedWithOffence).toEqual(false) // raw status is false
+          // but suitabilityForRecallValidation should not block — tested via a complete rec
+          const { areAllComplete: completeResult } = taskCompleteness(
+            { ...baseRecall, sentenceGroup: SentenceGroup.EXTENDED },
+            { flagFTR56Enabled: true },
+          )
+          expect(completeResult).toEqual(true)
+        },
+      )
+    })
+  })
+
+  describe('indeterminateSentenceValidation', () => {
+    describe('flagFTR56Enabled: true', () => {
+      it('blocks areAllComplete when sentenceGroup is INDETERMINATE and indeterminateSentenceType is missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.INDETERMINATE,
+            indeterminateSentenceType: undefined,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+
+      it('does not block areAllComplete for EXTENDED sentenceGroup even without indeterminateSentenceType', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.EXTENDED,
+            indeterminateSentenceType: undefined,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
+
+      it('does not block areAllComplete for ADULT_SDS sentenceGroup even without indeterminateSentenceType', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.ADULT_SDS,
+            indeterminateSentenceType: undefined,
+            // all adult SDS criteria must be set for the other validation to pass
+            isChargedWithOffence: true,
+            isServingTerroristOrNationalSecurityOffence: true,
+            isAtRiskOfInvolvedInForeignPowerThreat: true,
+            wasReferredToParoleBoard244ZB: true,
+            wasRepatriatedForMurder: true,
+            isServingSOPCSentence: true,
+            isServingDCRSentence: true,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+
+    describe('flagFTR56Enabled: false', () => {
+      it('blocks areAllComplete when its an Indeterminate Sentence and indeterminateSentenceType is missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.INDETERMINATE,
+            indeterminateSentenceType: undefined,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: false },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+
+      it('does not block areAllComplete when its not an Indeterminate Sentence and indeterminateSentenceType is missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.EXTENDED,
+            indeterminateSentenceType: undefined,
+            fixedTermAdditionalLicenceConditions: {},
+          } as RecommendationResponse,
+          { flagFTR56Enabled: false },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+  })
+
+  describe('indeterminateOrExtendedSentenceDetails', () => {
+    describe('flagFTR56Enabled: true', () => {
+      it('blocks areAllComplete when sentenceGroup is INDETERMINATE and details are missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.INDETERMINATE,
+            indeterminateOrExtendedSentenceDetails: undefined,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+
+      it('blocks areAllComplete when sentenceGroup is EXTENDED and details are missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.EXTENDED,
+            indeterminateOrExtendedSentenceDetails: undefined,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+
+      it('does not block areAllComplete when sentenceGroup is EXTENDED and details are present', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.EXTENDED,
+            indeterminateOrExtendedSentenceDetails: {
+              selected: [{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'Details' }],
+            },
+          } as RecommendationResponse,
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
+
+      it('does not block areAllComplete when sentenceGroup is ADULT_SDS and details are missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.ADULT_SDS,
+            indeterminateOrExtendedSentenceDetails: undefined,
+            isChargedWithOffence: true,
+            isServingTerroristOrNationalSecurityOffence: true,
+            isAtRiskOfInvolvedInForeignPowerThreat: true,
+            wasReferredToParoleBoard244ZB: true,
+            wasRepatriatedForMurder: true,
+            isServingSOPCSentence: true,
+            isServingDCRSentence: true,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: true },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
+    })
+
+    describe('flagFTR56Enabled: false', () => {
+      it('blocks areAllComplete when its an Indeterminate Sentence and details are missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.INDETERMINATE,
+            indeterminateOrExtendedSentenceDetails: undefined,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: false },
+        )
+        expect(areAllComplete).toEqual(false)
+      })
+
+      it('does not block areAllComplete when its not an Indeterminate Sentence and details are missing', () => {
+        const { areAllComplete } = taskCompleteness(
+          {
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.ADULT_SDS,
+            indeterminateOrExtendedSentenceDetails: undefined,
+          } as RecommendationResponse,
+          { flagFTR56Enabled: false },
+        )
+        expect(areAllComplete).toEqual(true)
+      })
     })
   })
 })

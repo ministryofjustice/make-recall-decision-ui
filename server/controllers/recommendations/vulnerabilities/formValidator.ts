@@ -1,16 +1,13 @@
 import { makeErrorObject } from '../../../utils/errors'
-import { formOptions, isValueValid, optionTextFromValue } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
-import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
-import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
-import { FormValidatorArgs, FormValidatorReturn, UiFormOption } from '../../../@types/pagesForms'
+import { formOptions, isValueValid } from '../formOptions/formOptions'
+import strings from '../../../textStrings/en'
+import { cleanseUiList } from '../../../utils/lists'
+import { isString, stripHtmlTags } from '../../../utils/utils'
+import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { VULNERABILITY } from './formOptions'
 import { sharedPaths } from '../../../routes/paths/shared.paths'
 
-export const validateVulnerabilitiesRiskToSelf = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validateVulnerabilities = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { vulnerabilities } = requestBody
   let vulnerabilitiesList: VULNERABILITY[] = []
   if (Array.isArray(vulnerabilities)) {
@@ -30,7 +27,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
   // Validation: any invalid vulnerability values
   const invalidVulnerability = vulnerabilitiesList
     .filter(v => !exclusiveList.includes(v))
-    .some(id => !isValueValid(id as string, 'vulnerabilitiesRiskToSelf'))
+    .some(id => !isValueValid(id as string, 'vulnerabilities'))
 
   const hasNoneOrNotKnown = vulnerabilitiesList.includes(VULNERABILITY.NONE_OR_NOT_KNOWN)
   const hasNone = vulnerabilitiesList.includes(VULNERABILITY.NONE)
@@ -52,11 +49,11 @@ export const validateVulnerabilitiesRiskToSelf = async ({
     if (noVulnerabilities) {
       errors.push(
         makeErrorObject({
-          id: formOptions.vulnerabilitiesRiskToSelf[0].value, // so the error shows on the first field on the screen
+          id: formOptions.vulnerabilities[0].value, // so the error shows on the first field on the screen
           name: 'vulnerabilities',
-          text: strings.errors.noVulnerabilitiesSelectedRiskToSelf,
+          text: strings.errors.noVulnerabilitiesSelected,
           errorId: 'noVulnerabilitiesSelected',
-        })
+        }),
       )
     }
 
@@ -67,7 +64,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
             id,
             text: strings.errors.normalAndExclusiveSelected,
             errorId: id,
-          })
+          }),
         )
       })
     } else if (missingExclusiveRadioSelection) {
@@ -76,7 +73,7 @@ export const validateVulnerabilitiesRiskToSelf = async ({
           id: VULNERABILITY.NONE_OR_NOT_KNOWN,
           text: strings.errors.missingExclusive,
           errorId: VULNERABILITY.NONE_OR_NOT_KNOWN,
-        })
+        }),
       )
     }
 
@@ -104,82 +101,6 @@ export const validateVulnerabilitiesRiskToSelf = async ({
             details: isString(details) ? stripHtmlTags(details as string) : undefined,
           }
         }),
-      allOptions: cleanseUiList(formOptions.vulnerabilitiesRiskToSelf),
-    },
-  }
-  return {
-    valuesToSave,
-    nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
-  }
-}
-
-export const validateVulnerabilities = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
-  const { vulnerabilities } = requestBody
-  const vulnerabilitiesList = Array.isArray(vulnerabilities) ? vulnerabilities : [vulnerabilities]
-  const invalidVulnerability = vulnerabilitiesList.some(id => !isValueValid(id, 'vulnerabilities'))
-  const missingDetails = vulnerabilitiesList.filter(id => {
-    const optionShouldHaveDetails = Boolean(
-      findListItemByValue<UiFormOption>({
-        items: formOptions.vulnerabilities,
-        value: id,
-      })?.detailsLabel
-    )
-    if (optionShouldHaveDetails && isEmptyStringOrWhitespace(requestBody[`vulnerabilitiesDetail-${id}`])) {
-      return id
-    }
-    return false
-  })
-  const hasError = !vulnerabilities || missingDetails.length
-  if (hasError) {
-    const errors = []
-    let errorId
-    if (!vulnerabilities || invalidVulnerability) {
-      errorId = 'noVulnerabilitiesSelected'
-      errors.push(
-        makeErrorObject({
-          id: 'vulnerabilities',
-          text: strings.errors[errorId],
-          errorId,
-        })
-      )
-    }
-    if (missingDetails.length) {
-      missingDetails.forEach(id => {
-        errorId = 'missingVulnerabilitiesDetail'
-        errors.push(
-          makeErrorObject({
-            id: `vulnerabilitiesDetail-${id}`,
-            text: `${strings.errors.missingDetail} for ${optionTextFromValue(id, 'vulnerabilities').toLowerCase()}`,
-            errorId,
-          })
-        )
-      })
-    }
-    const unsavedValues = {
-      vulnerabilities: vulnerabilitiesList.map(id => ({
-        value: id,
-        details: requestBody[`vulnerabilitiesDetail-${id}`],
-      })),
-    }
-    return {
-      errors,
-      unsavedValues,
-    }
-  }
-
-  // valid
-  const valuesToSave = {
-    vulnerabilities: {
-      selected: vulnerabilitiesList.map(alternative => {
-        const details = requestBody[`vulnerabilitiesDetail-${alternative}`]
-        return {
-          value: alternative,
-          details: isString(details) ? stripHtmlTags(details as string) : undefined,
-        }
-      }),
       allOptions: cleanseUiList(formOptions.vulnerabilities),
     },
   }
@@ -188,3 +109,5 @@ export const validateVulnerabilities = async ({
     nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
   }
 }
+
+export default validateVulnerabilities

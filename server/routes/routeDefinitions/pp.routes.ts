@@ -6,12 +6,9 @@ import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import alreadyExistingController from '../../controllers/recommendation/alreadyExistingController'
 import taskListConsiderRecallController from '../../controllers/recommendation/taskListConsiderRecallController'
 import triggerLeadingToRecallController from '../../controllers/recommendation/triggerLeadingToRecallController'
-import responseToProbationController from '../../controllers/recommendation/responseToProbationController'
 import licenceConditionsController from '../../controllers/recommendation/licenceConditionsController'
 import alternativesToRecallTriedController from '../../controllers/recommendation/alternativesToRecallTriedController'
 import indeterminateTypeController from '../../controllers/recommendation/indeterminateTypeController'
-import isIndeterminateController from '../../controllers/recommendation/isIndeterminateController'
-import isExtendedController from '../../controllers/recommendation/isExtendedController'
 import recordConsiderationRationaleController from '../../controllers/recommendation/recordConsiderationRationaleController'
 import shareCaseWithManagerController from '../../controllers/recommendation/shareCaseWithManagerController'
 import shareCaseWithAdminController from '../../controllers/recommendation/shareCaseWithAdminController'
@@ -32,7 +29,6 @@ import reasonsNoRecallController from '../../controllers/recommendation/reasonsN
 import appointmentNoRecallController from '../../controllers/recommendation/appointmentNoRecallController'
 import contrabandController from '../../controllers/recommendation/contrabandController'
 import addressDetailsController from '../../controllers/recommendation/addressDetailsController'
-import iomController from '../../controllers/recommendation/iomController'
 import policeDetailsController from '../../controllers/recommendation/policeDetailsController'
 import victimContactSchemeController from '../../controllers/recommendation/victimContactSchemeController'
 import victimLiasonOfficerController from '../../controllers/recommendation/victimLiasonOfficerController'
@@ -48,8 +44,6 @@ import revocationOrderRecipientsController from '../../controllers/recommendatio
 import ppcsQueryEmailsController from '../../controllers/recommendation/ppcsQueryEmailsController'
 import arrestIssuesController from '../../controllers/recommendation/arrestIssuesController'
 import addPreviousReleaseController from '../../controllers/recommendation/addPreviousReleaseController'
-import addPreviousRecallController from '../../controllers/recommendation/addPreviousRecallController'
-import previousRecallsController from '../../controllers/recommendation/previousRecallsController'
 import previousReleasesController from '../../controllers/recommendation/previousReleasesController'
 import offenceAnalysisController from '../../controllers/recommendation/offenceAnalysisController'
 import roshController from '../../controllers/recommendation/roshController'
@@ -61,7 +55,9 @@ import requestSpoCountersignController from '../../controllers/recommendation/re
 import requestAcoCountersignController from '../../controllers/recommendation/requestAcoCountersignController'
 import confirmationPartAController from '../../controllers/recommendation/confirmationPartAController'
 import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../recommendations'
-import { ppPaths } from '../paths/pp.paths'
+import ppPaths from '../paths/pp.paths'
+import sentenceInformationController from '../../controllers/recommendation/sentenceInformationController'
+import checkMappaInformationController from '../../controllers/recommendation/checkMappaInformationController'
 
 const roles = {
   allow: [HMPPS_AUTH_ROLE.PO],
@@ -71,12 +67,12 @@ const roles = {
 const ppGetTemplate = createRecommendationRouteTemplate(
   'get',
   [recommendationStatusCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))],
-  roles
+  roles,
 )
 const ppPostTemplate = createRecommendationRouteTemplate(
   'post',
   [recommendationStatusCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))],
-  roles
+  roles,
 )
 
 export const ppRecommendationRoutes: RouteDefinition[] = [
@@ -117,16 +113,6 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
   },
   {
     ...ppGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.responseToProbation}`,
-    handler: responseToProbationController.get,
-  },
-  {
-    ...ppPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.responseToProbation}`,
-    handler: responseToProbationController.post,
-  },
-  {
-    ...ppGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.licenceConditions}`,
     handler: licenceConditionsController.get,
   },
@@ -154,26 +140,6 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
     ...ppPostTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.indeterminateType}`,
     handler: indeterminateTypeController.post,
-  },
-  {
-    ...ppGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.isIndeterminate}`,
-    handler: isIndeterminateController.get,
-  },
-  {
-    ...ppPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.isIndeterminate}`,
-    handler: isIndeterminateController.post,
-  },
-  {
-    ...ppGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.isExtended}`,
-    handler: isExtendedController.get,
-  },
-  {
-    ...ppPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.isExtended}`,
-    handler: isExtendedController.post,
   },
   {
     ...ppGetTemplate,
@@ -352,16 +318,6 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
   },
   {
     ...ppGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.iom}`,
-    handler: iomController.get,
-  },
-  {
-    ...ppPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.iom}`,
-    handler: iomController.post,
-  },
-  {
-    ...ppGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.policeDetails}`,
     handler: policeDetailsController.get,
   },
@@ -482,26 +438,6 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
   },
   {
     ...ppGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.addPreviousRecall}`,
-    handler: addPreviousRecallController.get,
-  },
-  {
-    ...ppPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.addPreviousRecall}`,
-    handler: addPreviousRecallController.post,
-  },
-  {
-    ...ppGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.previousRecalls}`,
-    handler: previousRecallsController.get,
-  },
-  {
-    ...ppPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppPaths.previousRecalls}`,
-    handler: previousRecallsController.post,
-  },
-  {
-    ...ppGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.previousReleases}`,
     handler: previousReleasesController.get,
   },
@@ -560,12 +496,32 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.previewPartA}`,
     handler: previewPartAController.get,
   },
+  {
+    ...ppGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppPaths.sentenceInformation}`,
+    handler: sentenceInformationController.get,
+  },
+  {
+    ...ppPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppPaths.sentenceInformation}`,
+    handler: sentenceInformationController.post,
+  },
+  {
+    ...ppGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppPaths.checkMappaInformation}`,
+    handler: checkMappaInformationController.get,
+  },
+  {
+    ...ppPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppPaths.checkMappaInformation}`,
+    handler: checkMappaInformationController.post,
+  },
   // Non-default middleware routes
   {
     ...createRecommendationRouteTemplate(
       'get',
       [recommendationStatusCheck(not(statusIsActive(STATUSES.SPO_SIGNED)))],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.requestSpoCountersign}`,
     handler: requestSpoCountersignController.get,
@@ -574,7 +530,7 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
     ...createRecommendationRouteTemplate(
       'get',
       [recommendationStatusCheck(and(statusIsActive(STATUSES.SPO_SIGNED), not(statusIsActive(STATUSES.ACO_SIGNED))))],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.requestAcoCountersign}`,
     handler: requestAcoCountersignController.get,
@@ -586,7 +542,7 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
       {
         allow: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
         deny: [HMPPS_AUTH_ROLE.PPCS],
-      }
+      },
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.confirmationPartA}`,
     handler: confirmationPartAController.get,

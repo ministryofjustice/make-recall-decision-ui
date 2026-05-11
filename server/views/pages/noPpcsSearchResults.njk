@@ -17,7 +17,10 @@
             <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Case reference number (CRN):</span>
              <span>{{ crn }}</span>
         </p>
-        <a href="/ppcs-search" class="govuk-body govuk-link">Start a new search</a>
+       {{ govukButton({
+               text: 'Search for another CRN',
+               href: '/ppcs-search'
+        }) }}
     </p>
 
 {% endblock %}

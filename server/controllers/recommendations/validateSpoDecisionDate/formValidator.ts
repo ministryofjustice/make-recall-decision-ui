@@ -4,7 +4,7 @@ import { ValidationError } from '../../../@types/dates'
 import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateDateTime = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
+const validateDateTime = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors
 
   const dateTimeParts = {
@@ -32,7 +32,7 @@ export const validateDateTime = async ({ requestBody }: FormValidatorArgs): Form
           errorId: (dateTimeIso as ValidationError).errorId,
           invalidParts: (dateTimeIso as ValidationError).invalidParts,
           values: dateTimeParts as Record<string, string>,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -49,4 +49,8 @@ export const validateDateTime = async ({ requestBody }: FormValidatorArgs): Form
       valuesToSave,
     }
   }
+
+  return { errors }
 }
+
+export default validateDateTime

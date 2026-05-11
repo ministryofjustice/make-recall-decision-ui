@@ -45,7 +45,7 @@ export const selectedFilterItems = ({ items, urlInfo }: { items: SelectedFilterI
 export const removeUndefinedListItems = (items: unknown[]) => items.filter(Boolean)
 
 export const renderTemplateString = (str: string, data: Record<string, unknown>): string => {
-  const env = nunjucks.configure({ autoescape: false })
+  const env = new nunjucks.Environment(null, { autoescape: false })
   return env.renderString(str, data)
 }
 export const isDatePartInvalid = (datePart: string, errors: FormError) =>
@@ -134,4 +134,11 @@ export const countLabelSuffix = ({ count, label }: { count: number; label: strin
 
 export const renderString = (template: string, context: Record<string, string>) => {
   return nunjucks.renderString(template, context)
+}
+
+export function isBeforeDate(dateStr: string, targetDateStr: string | null = null): boolean {
+  const formattedDate = dateStr.replace(' at ', ' ')
+  const date = new Date(formattedDate)
+  const target = targetDateStr ? new Date(targetDateStr.replace(' at ', ' ')) : new Date()
+  return date < target
 }

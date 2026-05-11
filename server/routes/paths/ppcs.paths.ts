@@ -2,10 +2,11 @@
  * All paths/routes which are scoped to PPCS users
  */
 
-export const ppcsPaths = {
+export default {
   search: 'ppcs-search',
   searchResults: 'ppcs-search-results',
   noSearchResults: 'no-ppcs-search-results',
+  areOffenceChangesNeeded: 'are-offence-changes-needed',
 
   // determinate
   selectIndexOffence: 'select-index-offence',

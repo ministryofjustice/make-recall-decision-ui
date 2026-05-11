@@ -36,6 +36,7 @@ export type PpudDetailsSentence = {
 
 export type PpudDetailsOffence = {
   indexOffence?: string,
+  indexOffenceComment?: string,
   dateOfIndexOffence?: string,
 }
 

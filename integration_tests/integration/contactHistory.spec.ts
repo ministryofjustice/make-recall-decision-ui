@@ -44,7 +44,7 @@ context('Contact history', () => {
         }
         cy.getText('time', opts).should(
           'contain',
-          formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true })
+          formatDateTimeFromIsoString({ isoDate: contact.contactStartDate, timeOnly: true }),
         )
         if (contact.notes) {
           cy.getText('notes', opts).should('equal', contact.notes)
@@ -90,7 +90,7 @@ context('Contact history', () => {
 
       // contacts
       const systemGeneratedRemoved = getCaseContactHistoryResponse.contactSummary.filter(
-        contact => contact.systemGenerated === false
+        contact => contact.systemGenerated === false,
       )
       const sortedByDate = sortListByDateField({
         list: systemGeneratedRemoved,

@@ -1,4 +1,4 @@
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { ppudUploadMandatoryDocument, updateRecommendation } from '../data/makeDecisionApiClient'
 import uploadMandatoryDocument from './uploadMandatoryDocument'
 

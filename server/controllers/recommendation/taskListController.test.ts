@@ -6,6 +6,7 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
 import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
@@ -23,11 +24,8 @@ describe('get', () => {
       selected: { value: 'STANDARD' },
     },
     decisionDateTime: '2021-01-01T12:00:00',
-    responseToProbation: 'text',
     whatLedToRecall: 'text',
     isThisAnEmergencyRecall: false,
-    isIndeterminateSentence: false,
-    isExtendedSentence: false,
     activeCustodialConvictionCount: 1,
     hasVictimsInContactScheme: {
       selected: 'NO',
@@ -48,7 +46,6 @@ describe('get', () => {
         selected: ['GOOD_BEHAVIOUR'],
       },
     },
-    isUnderIntegratedOffenderManagement: { selected: 'NO' },
     vulnerabilities: {
       selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE }],
     },
@@ -56,7 +53,6 @@ describe('get', () => {
     offenceAnalysis: 'text',
     isMainAddressWherePersonCanBeFound: { selected: true },
     previousReleases: { hasBeenReleasedPreviously: false },
-    previousRecalls: { hasBeenRecalledPreviously: false },
     currentRoshForPartA: {},
     whoCompletedPartA: {
       name: 'john',
@@ -88,31 +84,36 @@ describe('get', () => {
       hasArrestIssues: true,
       hasContrabandRisk: true,
       hasVictimsInContactScheme: true,
-      isExtendedSentence: true,
-      isIndeterminateSentence: true,
+      sentenceGroup: false,
+      triggerLeadingToRecall: false,
       isMainAddressWherePersonCanBeFound: true,
       isThisAnEmergencyRecall: true,
-      isUnderIntegratedOffenderManagement: true,
       licenceConditionsBreached: true,
       localPoliceContact: true,
       mappa: true,
       offenceAnalysis: true,
       personOnProbation: true,
-      previousRecalls: true,
       previousReleases: true,
       recallType: true,
       decisionDateTime: true,
-      responseToProbation: true,
       vulnerabilities: true,
       whatLedToRecall: true,
       fixedTermAdditionalLicenceConditions: true,
-      indeterminateOrExtendedSentenceDetails: true,
-      indeterminateSentenceType: false,
+      indeterminateOrExtendedSentenceDetails: false,
       didProbationPractitionerCompletePartA: true,
       practitionerForPartA: true,
       whoCompletedPartA: true,
       ppcsQueryEmails: true,
       revocationOrderRecipients: true,
+      isChargedWithOffence: false,
+      isServingTerroristOrNationalSecurityOffence: false,
+      isAtRiskOfInvolvedInForeignPowerThreat: false,
+      wasReferredToParoleBoard244ZB: false,
+      wasRepatriatedForMurder: false,
+      isServingSOPCSentence: false,
+      isServingDCRSentence: false,
+      isYouthSentenceOver12Months: false,
+      isYouthChargedWithSeriousOffence: false,
     },
   }
 
@@ -139,7 +140,7 @@ describe('get', () => {
     })
     expect(next).toHaveBeenCalled()
 
-    expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+    expect(vulnerabilityRequiresDetails).toHaveBeenCalled()
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
@@ -150,27 +151,12 @@ describe('get', () => {
     expect(res.locals.isSpo).toEqual(false)
     expect(res.locals.shareLink).toEqual(`${config.domain}/recommendations/123/task-list`)
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type`)
-    expect(res.locals.selectedVulnerabilitiesRequireDetails).not.toBeDefined()
-  })
-
-  it('present for indeterminate', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate, isIndeterminateSentence: true }
-    const res = mockRes({
-      locals: {
-        recommendation,
-        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
-      },
-    })
-    const next = mockNext()
-    await taskListController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
-
-    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type-indeterminate`)
+    expect(res.locals.selectedVulnerabilitiesRequireDetails).toBeDefined()
   })
 
   it('present for extended', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate, isExtendedSentence: true }
+    const recommendation = { ...recommendationTemplate, sentenceGroup: SentenceGroup.EXTENDED }
     const res = mockRes({
       locals: {
         recommendation,
@@ -375,7 +361,8 @@ describe('get', () => {
 
     expect(res.locals.isSpo).toEqual(true)
   })
-  describe('when riskToSelf flag enabled', () => {
+
+  describe('VulnerabilitiesRequireDetails', () => {
     ;[true, false].forEach(expectedSelectedVulnerabilitiesRequireDetails => {
       it(`selectedVulnerabilitiesRequireDetails value set to result of vulnerabilityRequiresDetails call (${expectedSelectedVulnerabilitiesRequireDetails})`, async () => {
         ;(getStatuses as jest.Mock).mockResolvedValue([])
@@ -394,7 +381,6 @@ describe('get', () => {
               },
             },
             user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-            flags: { flagRiskToSelfEnabled: true },
           },
         })
         const next = mockNext()
@@ -414,7 +400,7 @@ describe('get', () => {
         vulnerability2 = faker.helpers.enumValue(VULNERABILITY)
       } while (vulnerability1 === vulnerability2)
       ;(vulnerabilityRequiresDetails as jest.Mock).mockImplementation(
-        (vulnerability: VULNERABILITY) => vulnerability === vulnerability1
+        (vulnerability: VULNERABILITY) => vulnerability === vulnerability1,
       )
 
       const res = mockRes({
@@ -429,7 +415,6 @@ describe('get', () => {
             },
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()
@@ -452,7 +437,6 @@ describe('get', () => {
             },
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()
@@ -470,7 +454,6 @@ describe('get', () => {
             vulnerabilities: undefined,
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()

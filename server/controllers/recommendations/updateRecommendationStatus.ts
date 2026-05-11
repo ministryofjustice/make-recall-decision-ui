@@ -4,8 +4,8 @@ import { isPreprodOrProd, validateCrn } from '../../utils/utils'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { AppError } from '../../AppError'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
-import { AuditService } from '../../services/auditService'
+import EVENTS from '../../utils/constants'
+import AuditService from '../../services/auditService'
 import { sharedPaths } from '../../routes/paths/shared.paths'
 
 const auditService = new AuditService()
@@ -15,17 +15,16 @@ const isValidStatus = (status: string) => {
   return validValues.includes(status)
 }
 
-const getRedirectPath = (status: string, crn: string, recommendationId: string) => {
+const getRedirectPath = (status: string, crn: string) => {
   switch (status) {
     case 'DELETED':
       return `${sharedPaths.cases}/${crn}/recommendations`
-    case 'DRAFT':
-      return `${sharedPaths.recommendations}/${recommendationId}/response-to-probation`
     default:
       return `${sharedPaths.cases}/${crn}/overview`
   }
 }
-export const updateRecommendationStatus = async (req: Request, res: Response): Promise<void> => {
+
+const updateRecommendationStatus = async (req: Request, res: Response): Promise<void> => {
   const { recommendationId } = req.params
   const { status, crn } = req.body
   const {
@@ -37,7 +36,7 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
   }
   const normalizedCrn = validateCrn(crn)
   await updateRecommendation({ recommendationId, valuesToSave: { status }, token })
-  const redirectPath = getRedirectPath(status, normalizedCrn, recommendationId)
+  const redirectPath = getRedirectPath(status, normalizedCrn)
   res.redirect(303, redirectPath)
   if (status === 'DRAFT') {
     appInsightsEvent(
@@ -48,7 +47,7 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
   if (status === 'DELETED') {
@@ -60,3 +59,5 @@ export const updateRecommendationStatus = async (req: Request, res: Response): P
     })
   }
 }
+
+export default updateRecommendationStatus

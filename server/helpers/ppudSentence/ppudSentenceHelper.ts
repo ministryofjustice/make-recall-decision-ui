@@ -1,20 +1,21 @@
 import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { determinateCustodyTypes, indeterminateCustodyTypes } from './custodyTypes'
 import { formatJSDate } from '../../utils/dates/formatting'
+import { SentenceGroup } from '../../controllers/recommendations/sentenceInformation/formOptions'
 
 export function getDeterminateSentences(sentences: PpudDetailsSentence[]): PpudDetailsSentence[] {
   return getSentencesByCustodyType(
     sentences,
-    determinateCustodyTypes.map(ct => ct.toString())
+    determinateCustodyTypes.map(ct => ct.toString()),
   )
 }
 
 export function getIndeterminateSentences(sentences: PpudDetailsSentence[]): PpudDetailsSentence[] {
   return getSentencesByCustodyType(
     sentences,
-    indeterminateCustodyTypes.map(ct => ct.toString())
+    indeterminateCustodyTypes.map(ct => ct.toString()),
   )
 }
 
@@ -25,10 +26,20 @@ function getSentencesByCustodyType(sentences: PpudDetailsSentence[], custodyType
 /**
  * Determines the custody group of the sentence based on the Part A information, i.e. what the Probation Practitioner
  * has responded (NOT what the PPCS worker responds).
- * @param recommendation
+ * @param recommendation The relevant recommendation
+ * @param ftr56Enabled Whether the FTR56 functionality is enabled
  */
-export function calculatePartACustodyGroup(recommendation: RecommendationResponse): CUSTODY_GROUP {
-  return recommendation.isIndeterminateSentence ? CUSTODY_GROUP.INDETERMINATE : CUSTODY_GROUP.DETERMINATE
+export function calculatePartACustodyGroup(
+  recommendation: RecommendationResponse,
+  ftr56Enabled: boolean,
+): CUSTODY_GROUP {
+  if (ftr56Enabled) {
+    return recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
+      ? CUSTODY_GROUP.INDETERMINATE
+      : CUSTODY_GROUP.DETERMINATE
+  }
+
+  return CUSTODY_GROUP.DETERMINATE
 }
 
 export type SentencesByDate = {
@@ -49,7 +60,7 @@ export function groupSentencesByCourtAndDate(ppudSentences: PpudDetailsSentence[
       acc[court].push(s)
       return acc
     },
-    {} as Record<string, PpudDetailsSentence[]>
+    {} as Record<string, PpudDetailsSentence[]>,
   )
 
   return Object.entries(byCourt).map(([court, courtSentences]) => {

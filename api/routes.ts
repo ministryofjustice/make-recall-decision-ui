@@ -1,4 +1,4 @@
-export const routes = {
+export default {
   personSearch: '/search',
   personSearchPaged: '/paged-search',
   ppcsSearch: '/ppcs-search',

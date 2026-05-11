@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express'
 import retrieveStatuses from '../controllers/retrieveStatuses'
 import retrieveRecommendation from '../controllers/retrieveRecommendation'
-import { parseRecommendationUrl } from '../middleware/parseRecommendationUrl'
-import { guardAgainstModifyingClosedRecommendation } from '../middleware/guardAgainstModifyingClosedRecommendation'
+import parseRecommendationUrl from '../middleware/parseRecommendationUrl'
+import guardAgainstModifyingClosedRecommendation from '../middleware/guardAgainstModifyingClosedRecommendation'
 import customizeMessages from '../controllers/customizeMessages'
 import audit from '../controllers/audit'
 import { RouteDefinition } from './standardRouter'
@@ -27,7 +27,7 @@ function generateDefaultRecommendationPostMiddleware(additionalMiddleware: Reque
 export function createRecommendationRouteTemplate(
   method: RouteDefinition['method'],
   additionalMiddleware: RouteDefinition['additionalMiddleware'],
-  roles: RouteDefinition['roles']
+  roles: RouteDefinition['roles'],
 ): Pick<RouteDefinition, 'method' | 'roles' | 'additionalMiddleware' | 'afterMiddleware'> {
   return {
     method,

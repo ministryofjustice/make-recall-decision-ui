@@ -1,15 +1,16 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { sharedPaths } from '../../../routes/paths/shared.paths'
+import { YesNoValues } from '../formOptions/yesNo'
 
-export const validateContraband = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
+const validateContraband = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { hasContrabandRisk, hasContrabandRiskDetailsYes } = requestBody
   const invalidContraband = !isValueValid(hasContrabandRisk as string, 'yesNo')
   const missingYesDetail =
-    hasContrabandRisk === 'YES' && isEmptyStringOrWhitespace(hasContrabandRiskDetailsYes as string)
+    hasContrabandRisk === YesNoValues.YES && isEmptyStringOrWhitespace(hasContrabandRiskDetailsYes as string)
   const hasError = !hasContrabandRisk || invalidContraband || missingYesDetail
   if (hasError) {
     const errors = []
@@ -21,7 +22,7 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
           id: 'hasContrabandRisk',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingYesDetail) {
@@ -31,7 +32,7 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
           id: 'hasContrabandRiskDetailsYes',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -46,8 +47,8 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
   // valid
   const valuesToSave = {
     hasContrabandRisk: {
-      selected: hasContrabandRisk === 'YES',
-      details: hasContrabandRisk === 'YES' ? stripHtmlTags(hasContrabandRiskDetailsYes as string) : null,
+      selected: hasContrabandRisk === YesNoValues.YES,
+      details: hasContrabandRisk === YesNoValues.YES ? stripHtmlTags(hasContrabandRiskDetailsYes as string) : null,
     },
   }
   return {
@@ -55,3 +56,5 @@ export const validateContraband = async ({ requestBody, recommendationId }: Form
     nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-custody`,
   }
 }
+
+export default validateContraband

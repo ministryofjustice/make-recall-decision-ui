@@ -33,7 +33,7 @@ import editPpudMinuteController from '../../controllers/recommendation/editPpudM
 import supportingDocumentReplaceController from '../../controllers/recommendation/supportingDocumentReplaceController'
 import supportingDocumentRemoveController from '../../controllers/recommendation/supportingDocumentRemoveController'
 import supportingDocumentDownloadController from '../../controllers/recommendation/supportingDocumentDownloadController'
-import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndexOffenceController from '../../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import consecutiveSentenceDetailsController from '../../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
 import matchIndexOffenceController from '../../controllers/recommendation/matchIndexOffenceController'
@@ -51,7 +51,8 @@ import bookToPpudController from '../../controllers/recommendation/bookToPpudCon
 import bookingSummaryController from '../../controllers/recommendation/bookingSummaryController'
 import editOffenceController from '../../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
 import editSentencingCourt from '../../controllers/recommendation/ppcs/indeterminateSentence/edit/editSentencingCourt'
-import { ppcsPaths } from '../paths/ppcs.paths'
+import ppcsPaths from '../paths/ppcs.paths'
+import areOffenceChangesNeededController from '../../controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/areOffenceChangesNeededController'
 
 const roles = { allow: [HMPPS_AUTH_ROLE.PPCS] }
 
@@ -62,11 +63,11 @@ const ppcsAfterSearchGetTemplate = createRecommendationRouteTemplate(
       and(
         statusIsActive(STATUSES.SENT_TO_PPCS),
         not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
-        not(statusIsActive(STATUSES.REC_CLOSED))
-      )
+        not(statusIsActive(STATUSES.REC_CLOSED)),
+      ),
     ),
   ],
-  roles
+  roles,
 )
 
 const ppcsAfterSearchPostTemplate = createRecommendationRouteTemplate(
@@ -76,11 +77,11 @@ const ppcsAfterSearchPostTemplate = createRecommendationRouteTemplate(
       and(
         statusIsActive(STATUSES.SENT_TO_PPCS),
         not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
-        not(statusIsActive(STATUSES.REC_CLOSED))
-      )
+        not(statusIsActive(STATUSES.REC_CLOSED)),
+      ),
     ),
   ],
-  roles
+  roles,
 )
 
 const ppcsRecommendationRoutes: RouteDefinition[] = [
@@ -347,22 +348,32 @@ const determinateSentenceMiddleware = [
       statusIsActive(STATUSES.SENT_TO_PPCS),
       ppcsCustodyGroup(CUSTODY_GROUP.DETERMINATE),
       not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
-      not(statusIsActive(STATUSES.REC_CLOSED))
-    )
+      not(statusIsActive(STATUSES.REC_CLOSED)),
+    ),
   ),
 ]
 const ppcsDeterminateSentenceGetTemplate = createRecommendationRouteTemplate(
   'get',
   determinateSentenceMiddleware,
-  roles
+  roles,
 )
 const ppcsDeterminateSentencePostTemplate = createRecommendationRouteTemplate(
   'post',
   determinateSentenceMiddleware,
-  roles
+  roles,
 )
 
 const ppcsDeterminateSentenceRoutes: RouteDefinition[] = [
+  {
+    ...ppcsDeterminateSentenceGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.areOffenceChangesNeeded}`,
+    handler: areOffenceChangesNeededController.get,
+  },
+  {
+    ...ppcsDeterminateSentencePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.areOffenceChangesNeeded}`,
+    handler: areOffenceChangesNeededController.post,
+  },
   {
     ...ppcsDeterminateSentenceGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.selectIndexOffence}`,
@@ -436,20 +447,20 @@ const indeterminateSentenceMiddleware = [
       statusIsActive(STATUSES.SENT_TO_PPCS),
       ppcsCustodyGroup(CUSTODY_GROUP.INDETERMINATE),
       not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
-      not(statusIsActive(STATUSES.REC_CLOSED))
-    )
+      not(statusIsActive(STATUSES.REC_CLOSED)),
+    ),
   ),
 ]
 
 const ppcsIndeterminateSentenceGetTemplate = createRecommendationRouteTemplate(
   'get',
   indeterminateSentenceMiddleware,
-  roles
+  roles,
 )
 const ppcsIndeterminateSentencePostTemplate = createRecommendationRouteTemplate(
   'post',
   indeterminateSentenceMiddleware,
-  roles
+  roles,
 )
 
 const ppcsIndeterminateSentenceRoutes: RouteDefinition[] = [
@@ -542,7 +553,7 @@ const ppcsBookingRoutes: RouteDefinition[] = [
   },
 ]
 
-export const ppcsRoutes: RouteDefinition[] = [
+const ppcsRoutes: RouteDefinition[] = [
   {
     path: `/${ppcsPaths.search}`,
     method: 'get',
@@ -568,7 +579,7 @@ export const ppcsRoutes: RouteDefinition[] = [
     ...createRecommendationRouteTemplate(
       'get',
       [recommendationStatusCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD))],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpud}`,
     method: 'get',
@@ -579,3 +590,5 @@ export const ppcsRoutes: RouteDefinition[] = [
   ...ppcsIndeterminateSentenceRoutes,
   ...ppcsBookingRoutes,
 ]
+
+export default ppcsRoutes

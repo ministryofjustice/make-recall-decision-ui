@@ -4,7 +4,6 @@ import { SelectedWithDetailsGenerator, SelectedWithDetailsOptions } from '../com
 import { RoshEnum } from '../../server/@types/make-recall-decision-api/models/RoshData'
 import { BookRecallToPpudGenerator, BookRecallToPpudOptions } from './bookRecallToPpudGenerator'
 import { AnyNoneOrOption, DataGenerator, NoneOrOption } from '../@generators/dataGenerators'
-import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
 import { IndeterminateSentenceType } from '../../server/@types/make-recall-decision-api/models/IndeterminateSentenceType'
 import { RecommendationResponse } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { VictimsInContactScheme } from '../../server/@types/make-recall-decision-api/models/VictimsInContactScheme'
@@ -16,6 +15,9 @@ import { PersonOnProbationGenerator, PersonOnProbationOptions } from './personOn
 import { WhoCompletedPartAGenerator, WhoCompletedPartAOptions } from './whoCompletedPartAGenerator'
 import { VulnerabilitiesGenerator, VulnerabilitiesOptions } from './vulnerabilitiesGenerator'
 import { BookingMementoGenerator, BookingMementoOptions } from './bookingMementoGenerator'
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
+import { CustodyStatusGenerator, CustodyStatusOptions } from './custodyStatusGenerator'
+import regionEnum from '../../server/controllers/recommendations/formOptions/region'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -24,20 +26,18 @@ import { BookingMementoGenerator, BookingMementoOptions } from './bookingMemento
 */
 
 export type RecommendationOptions = {
+  id?: number
   crn?: string
   alternativesToRecallTried?: boolean
-  custodyStatus?: boolean
-  hasArrestIssues?: SelectedWithDetailsOptions
+  custodyStatus?: NoneOrOption<CustodyStatusOptions>
+  hasArrestIssues?: NoneOrOption<SelectedWithDetailsOptions>
   fixedTermAdditionalLicenceConditions?: SelectedWithDetailsOptions
   hasContrabandRisk?: SelectedWithDetailsOptions
   hasVictimsInContactScheme?: boolean
   indeterminateOrExtendedSentenceDetails?: boolean
   indeterminateSentenceType?: boolean
-  isExtendedSentence?: boolean
-  isIndeterminateSentence?: boolean
   isMainAddressWherePersonCanBeFound?: SelectedWithDetailsOptions
   isThisAnEmergencyRecall?: boolean
-  isUnderIntegratedOffenderManagement?: boolean
   licenceConditionsBreached?: boolean
   localPoliceContact?: boolean
   personOnProbation?: AnyNoneOrOption<PersonOnProbationOptions>
@@ -45,13 +45,12 @@ export type RecommendationOptions = {
   indexOffenceDetails?: boolean
   offenceAnalysis?: boolean
   previousReleases?: boolean
-  previousRecalls?: boolean
   recallType?: AnyNoneOrOption<RecallTypeOptions>
   decisionDateTime?: boolean
-  responseToProbation?: boolean
   vulnerabilities?: AnyNoneOrOption<VulnerabilitiesOptions>
   triggerLeadingToRecall?: boolean
   whatLedToRecall?: boolean
+  sentenceGroup?: NoneOrOption<SentenceGroup>
   recallConsideredList?: boolean
   managerRecallDecision?: boolean
   currentRoshForPartA?: boolean
@@ -64,7 +63,7 @@ export type RecommendationOptions = {
   revocationOrderRecipients?: boolean
   ppcsQueryEmails?: boolean
   bookRecallToPpud?: BookRecallToPpudOptions
-  nomisOffenceIndex?: NoneOrOption<NomisIndexOffenceOptions>
+  nomisIndexOffence?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: NoneOrOption<PpudOffenderOptions>
   bookingMemento?: NoneOrOption<BookingMementoOptions>
   isUnder18?: boolean
@@ -74,79 +73,73 @@ export type RecommendationOptions = {
   isRecalledOnNewChargedOffence?: boolean
   isServingFTSentenceForTerroristOffence?: boolean
   hasBeenChargedWithTerroristOrStateThreatOffence?: boolean
+  wasReferredToParoleBoard244ZB?: boolean
+  wasRepatriatedForMurder?: boolean
+  isServingSOPCSentence?: boolean
+  isServingDCRSentence?: boolean
+  isChargedWithOffence?: boolean
+  isServingTerroristOrNationalSecurityOffence?: boolean
+  isAtRiskOfInvolvedInForeignPowerThreat?: boolean
+  isYouthSentenceOver12Months?: boolean
+  isYouthChargedWithSeriousOffence?: boolean
 }
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
   generate: options => ({
-    id: faker.number.int({ min: 1, max: 99 }),
+    id: options?.id ?? faker.number.int({ min: 1, max: 99 }),
     status: RecommendationResponse.status.DRAFT,
     crn: options?.crn ?? faker.helpers.replaceSymbols('?######'),
     createdByUserFullName: 'Integration test data generator',
     createdBy: 'INTEGRATION_TEST_DATA_GENERATOR',
     activeCustodialConvictionCount: faker.number.int({ min: 1, max: 9 }),
     alternativesToRecallTried:
-      options?.alternativesToRecallTried ?? true
+      (options?.alternativesToRecallTried ?? true)
         ? {
-            selected: [{ value: faker.lorem.word(), details: faker.lorem.sentence() }],
-            allOptions: [{ value: faker.lorem.word(), details: faker.lorem.sentence() }],
+            selected: [{ value: 'WARNINGS_LETTER', details: faker.lorem.sentence() }],
+            allOptions: [{ value: 'WARNINGS_LETTER', text: faker.lorem.sentence() }],
           }
         : undefined,
     custodyStatus:
-      options?.custodyStatus ?? true
-        ? {
-            selected: CustodyStatus.selected.YES_POLICE,
-            details: faker.location.streetAddress(),
-            allOptions: [],
-          }
-        : undefined,
+      options?.custodyStatus !== 'none' ? CustodyStatusGenerator.generate(options?.custodyStatus) : undefined,
     dateVloInformed: faker.date.future().toDateString(),
     fixedTermAdditionalLicenceConditions:
-      options?.fixedTermAdditionalLicenceConditions ?? true
+      (options?.fixedTermAdditionalLicenceConditions ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.fixedTermAdditionalLicenceConditions)
         : undefined,
     hasArrestIssues:
-      options?.hasArrestIssues ?? true ? SelectedWithDetailsGenerator.generate(options?.hasArrestIssues) : undefined,
+      options?.hasArrestIssues === 'none' ? undefined : SelectedWithDetailsGenerator.generate(options?.hasArrestIssues),
     hasContrabandRisk:
-      options?.hasContrabandRisk ?? true
+      (options?.hasContrabandRisk ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.hasContrabandRisk)
         : undefined,
     hasVictimsInContactScheme:
-      options?.hasVictimsInContactScheme ?? true
+      (options?.hasVictimsInContactScheme ?? true)
         ? {
             selected: VictimsInContactScheme.selected.YES,
             allOptions: [],
           }
         : undefined,
     indeterminateOrExtendedSentenceDetails:
-      options?.indeterminateOrExtendedSentenceDetails ?? true
+      (options?.indeterminateOrExtendedSentenceDetails ?? true)
         ? {
             selected: [],
             allOptions: [],
           }
         : undefined,
     indeterminateSentenceType:
-      options?.indeterminateSentenceType ?? true
+      (options?.indeterminateSentenceType ?? true)
         ? {
             selected: IndeterminateSentenceType.selected.LIFE,
             allOptions: [],
           }
         : undefined,
-    isExtendedSentence: options?.isExtendedSentence ?? faker.datatype.boolean(),
-    isIndeterminateSentence: options?.isIndeterminateSentence ?? faker.datatype.boolean(),
     isMainAddressWherePersonCanBeFound:
-      options?.isMainAddressWherePersonCanBeFound ?? true
+      (options?.isMainAddressWherePersonCanBeFound ?? true)
         ? SelectedWithDetailsGenerator.generate(options?.isMainAddressWherePersonCanBeFound)
         : undefined,
     isThisAnEmergencyRecall: options?.isThisAnEmergencyRecall ?? faker.datatype.boolean(),
-    isUnderIntegratedOffenderManagement:
-      options?.isUnderIntegratedOffenderManagement ?? true
-        ? {
-            selected: 'YES',
-            allOptions: [],
-          }
-        : undefined,
     licenceConditionsBreached:
-      options?.licenceConditionsBreached ?? true
+      (options?.licenceConditionsBreached ?? true)
         ? {
             standardLicenceConditions: {
               selected: [faker.lorem.sentence()],
@@ -159,7 +152,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     localPoliceContact:
-      options?.localPoliceContact ?? true
+      (options?.localPoliceContact ?? true)
         ? {
             contactName: faker.person.fullName(),
             phoneNumber: faker.phone.number(),
@@ -169,11 +162,11 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
         : undefined,
     personOnProbation: PersonOnProbationGenerator.generate(options?.personOnProbation ?? 'any'),
     convictionDetail:
-      options?.convictionDetail ?? true ? ConvictionDetailGenerator.generate(options?.convictionDetail) : undefined,
-    indexOffenceDetails: options?.indexOffenceDetails ?? true ? faker.lorem.sentence() : undefined,
-    offenceAnalysis: options?.offenceAnalysis ?? true ? faker.lorem.sentence() : undefined,
+      (options?.convictionDetail ?? true) ? ConvictionDetailGenerator.generate(options?.convictionDetail) : undefined,
+    indexOffenceDetails: (options?.indexOffenceDetails ?? true) ? faker.lorem.sentence() : undefined,
+    offenceAnalysis: (options?.offenceAnalysis ?? true) ? faker.lorem.sentence() : undefined,
     previousReleases:
-      options?.previousReleases ?? true
+      (options?.previousReleases ?? true)
         ? {
             lastReleaseDate: faker.date.past().toDateString(),
             lastReleasingPrisonOrCustodialEstablishment: `${faker.location.city()} UT Prison`,
@@ -181,29 +174,24 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
             previousReleaseDates: [faker.date.past().toDateString()],
           }
         : undefined,
-    previousRecalls:
-      options?.previousRecalls ?? true
-        ? {
-            lastRecallDate: faker.date.past().toDateString(),
-            hasBeenRecalledPreviously: faker.datatype.boolean(),
-            previousRecallDates: [faker.date.past().toDateString()],
-          }
-        : undefined,
     recallType: RecallTypeGenerator.generate(options?.recallType ?? 'none'),
-    decisionDateTime: options?.decisionDateTime ?? true ? faker.date.past().toISOString() : undefined,
-    responseToProbation: options?.responseToProbation ?? true ? faker.lorem.sentence() : undefined,
+    decisionDateTime: (options?.decisionDateTime ?? true) ? faker.date.past().toISOString() : undefined,
     vulnerabilities: VulnerabilitiesGenerator.generate(options?.vulnerabilities ?? 'any'),
-    triggerLeadingToRecall: options?.triggerLeadingToRecall ?? true ? faker.lorem.word() : undefined,
-    whatLedToRecall: options?.whatLedToRecall ?? true ? faker.lorem.sentence() : undefined,
-    recallConsideredList: options?.recallConsideredList ?? true ? [] : undefined,
+    triggerLeadingToRecall: (options?.triggerLeadingToRecall ?? true) ? faker.lorem.word() : undefined,
+    whatLedToRecall: (options?.whatLedToRecall ?? true) ? faker.lorem.sentence() : undefined,
+    sentenceGroup:
+      options?.sentenceGroup === 'none'
+        ? undefined
+        : (options?.sentenceGroup ?? faker.helpers.enumValue(SentenceGroup)),
+    recallConsideredList: (options?.recallConsideredList ?? true) ? [] : undefined,
     managerRecallDecision:
-      options?.managerRecallDecision ?? true
+      (options?.managerRecallDecision ?? true)
         ? {
             isSentToDelius: faker.datatype.boolean(),
           }
         : undefined,
     currentRoshForPartA:
-      options?.currentRoshForPartA ?? true
+      (options?.currentRoshForPartA ?? true)
         ? {
             riskToChildren: faker.helpers.enumValue(RoshEnum),
             riskToPublic: faker.helpers.enumValue(RoshEnum),
@@ -213,7 +201,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     roshSummary:
-      options?.roshSummary ?? true
+      (options?.roshSummary ?? true)
         ? {
             lastUpdatedDate: faker.date.past().toISOString(),
             natureOfRisk: faker.lorem.sentence(),
@@ -241,26 +229,26 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
           }
         : undefined,
     spoCancelRecommendationRationale:
-      options?.spoCancelRecommendationRationale ?? true ? faker.lorem.sentence() : undefined,
+      (options?.spoCancelRecommendationRationale ?? true) ? faker.lorem.sentence() : undefined,
     spoDeleteRecommendationRationale:
-      options?.spoDeleteRecommendationRationale ?? true ? faker.lorem.sentence() : undefined,
-    spoRecallType: options?.spoRecallType ?? true ? faker.lorem.sentence() : undefined,
+      (options?.spoDeleteRecommendationRationale ?? true) ? faker.lorem.sentence() : undefined,
+    spoRecallType: (options?.spoRecallType ?? true) ? faker.lorem.sentence() : undefined,
     whoCompletedPartA: WhoCompletedPartAGenerator.generate(options?.whoCompletedPartA ?? 'any'),
     practitionerForPartA:
-      options?.practitionerForPartA ?? true
+      (options?.practitionerForPartA ?? true)
         ? {
             name: faker.person.fullName(),
             email: faker.internet.email(),
             telephone: faker.phone.number(),
-            region: faker.location.county(),
+            region: faker.helpers.arrayElement(regionEnum).value,
             localDeliveryUnit: faker.location.city(),
           }
         : undefined,
-    revocationOrderRecipients: options?.revocationOrderRecipients ?? true ? [faker.internet.email()] : undefined,
-    ppcsQueryEmails: options?.ppcsQueryEmails ?? true ? [faker.internet.email()] : undefined,
+    revocationOrderRecipients: (options?.revocationOrderRecipients ?? true) ? [faker.internet.email()] : undefined,
+    ppcsQueryEmails: (options?.ppcsQueryEmails ?? true) ? [faker.internet.email()] : undefined,
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
     nomisIndexOffence:
-      options?.nomisOffenceIndex === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisOffenceIndex),
+      options?.nomisIndexOffence === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisIndexOffence),
     ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),
     bookingMemento:
       options?.bookingMemento === 'none' ? undefined : BookingMementoGenerator.generate(options?.bookingMemento),
@@ -271,5 +259,14 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     isRecalledOnNewChargedOffence: options?.isRecalledOnNewChargedOffence,
     isServingFTSentenceForTerroristOffence: options?.isServingFTSentenceForTerroristOffence,
     hasBeenChargedWithTerroristOrStateThreatOffence: options?.hasBeenChargedWithTerroristOrStateThreatOffence,
+    wasReferredToParoleBoard244ZB: options?.wasReferredToParoleBoard244ZB,
+    wasRepatriatedForMurder: options?.wasRepatriatedForMurder,
+    isServingSOPCSentence: options?.isServingSOPCSentence,
+    isServingDCRSentence: options?.isServingDCRSentence,
+    isChargedWithOffence: options?.isChargedWithOffence,
+    isServingTerroristOrNationalSecurityOffence: options?.isServingTerroristOrNationalSecurityOffence,
+    isAtRiskOfInvolvedInForeignPowerThreat: options?.isAtRiskOfInvolvedInForeignPowerThreat,
+    isYouthSentenceOver12Months: options?.isYouthSentenceOver12Months,
+    isYouthChargedWithSeriousOffence: options?.isYouthChargedWithSeriousOffence,
   }),
 }

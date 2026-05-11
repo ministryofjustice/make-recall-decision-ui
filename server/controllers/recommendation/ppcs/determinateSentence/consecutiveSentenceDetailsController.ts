@@ -3,7 +3,7 @@ import { prisonSentences } from '../../../../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { PrisonSentence } from '../../../../@types/make-recall-decision-api/models/PrisonSentence'
 import { Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { ppcsPaths } from '../../../../routes/paths/ppcs.paths'
+import ppcsPaths from '../../../../routes/paths/ppcs.paths'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 
 async function get(_: Request, res: Response, next: NextFunction) {
@@ -27,7 +27,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       (seq.sentencesInSequence != null &&
         Array.from(new Map(Object.entries(seq.sentencesInSequence)).values())
           .flatMap(x => x)
-          .some(s => s.offences.some(o => o.offenderChargeId === recommendation.nomisIndexOffence.selected)))
+          .some(s => s.offences.some(o => o.offenderChargeId === recommendation.nomisIndexOffence.selected))),
   )
 
   const resolveTerm = (term: Term) => {
@@ -42,15 +42,16 @@ async function get(_: Request, res: Response, next: NextFunction) {
   }
   const prisonSentenceToInfo = (sentence: PrisonSentence) => ({
     lineSequence: sentence.lineSequence,
-    offence: sentence.offences.at(0).offenceDescription,
+    offence: sentence.offences?.[0].offenceDescription,
     sentenceType: sentence.sentenceTypeDescription,
     court: sentence.courtDescription,
     dateOfSentence: sentence.sentenceDate,
     startDate: sentence.sentenceStartDate,
-    sentenceExpiryDate: sentence.sentenceEndDate,
+    sentenceEndDate: sentence.sentenceEndDate,
+    sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
     sentenceLength:
       sentence.terms && sentence.terms.length < 2
-        ? [{ key: 'Sentence length', value: sentence.terms.at(0) ?? {} }]
+        ? [{ key: 'Sentence length', value: sentence.terms?.[0] ?? {} }]
         : sentence.terms.map(t => resolveTerm(t)),
   })
 
@@ -62,18 +63,21 @@ async function get(_: Request, res: Response, next: NextFunction) {
               Array.from(new Map(Object.entries(sentenceForSelectedOffence.sentencesInSequence)), ([k, v]) => [
                 k,
                 v.map(s => prisonSentenceToInfo(s)),
-              ])
+              ]),
             )
           : null,
       }
     : null
+
+  const offenderExistsAndHasSentences = recommendation.ppudOffender && recommendation.ppudOffender.sentences.length > 0
+  const nextPageId = offenderExistsAndHasSentences ? ppcsPaths.selectPpudSentence : ppcsPaths.matchIndexOffence
 
   res.locals = {
     ...res.locals,
     pageData: {
       nomisError,
       sentenceInfo,
-      nextPagePath: nextPageLinkUrl({ nextPageId: ppcsPaths.matchIndexOffence, urlInfo }),
+      nextPagePath: nextPageLinkUrl({ nextPageId, urlInfo }),
     },
   }
 

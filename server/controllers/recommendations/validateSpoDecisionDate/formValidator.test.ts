@@ -1,4 +1,4 @@
-import { validateDateTime } from './formValidator'
+import validateDateTime from './formValidator'
 
 describe('validateDateTime', () => {
   const recommendationId = '34'

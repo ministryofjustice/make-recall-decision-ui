@@ -1,4 +1,4 @@
-export const standardLicenceConditions = [
+const standardLicenceConditions = [
   {
     id: 1,
     value: 'GOOD_BEHAVIOUR',
@@ -45,3 +45,5 @@ export const standardLicenceConditions = [
     text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
   },
 ]
+
+export default standardLicenceConditions

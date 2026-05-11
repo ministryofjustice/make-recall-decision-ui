@@ -1,13 +1,13 @@
 import type { RouteDefinition } from '../standardRouter'
 import { isPreprodOrProd } from '../../utils/utils'
 import { startPage } from '../../controllers/startPage/startPage'
-import { personSearchByCRN } from '../../controllers/personSearch/personSearchByCRN'
-import { personSearchByName } from '../../controllers/personSearch/personSearchByName'
-import { personSearchResults } from '../../controllers/personSearch/personSearchResults'
-import { personSearchResultsByName } from '../../controllers/personSearch/personSearchResultsByName'
-import { getFeatureFlags } from '../../controllers/featureFlags'
-import { downloadDocument } from '../../controllers/downloadDocument'
-import { getCreateRecommendationWarning } from '../../controllers/recommendations/getCreateRecommendationWarning'
+import personSearchByCRN from '../../controllers/personSearch/personSearchByCRN'
+import personSearchByName from '../../controllers/personSearch/personSearchByName'
+import personSearchResults from '../../controllers/personSearch/personSearchResults'
+import personSearchResultsByName from '../../controllers/personSearch/personSearchResultsByName'
+import getFeatureFlags from '../../controllers/featureFlags'
+import downloadDocument from '../../controllers/downloadDocument'
+import getCreateRecommendationWarning from '../../controllers/recommendations/getCreateRecommendationWarning'
 import outOfHoursWarningController from '../../controllers/recommendations/outOfHoursWarningController'
 import caseSummaryController from '../../controllers/caseSummary/caseSummaryController'
 import replaceCurrentRecommendationController from '../../controllers/recommendations/replaceCurrentRecommendationController'
@@ -17,10 +17,10 @@ import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../recommendations'
 import redirectController from '../../controllers/recommendation/redirectController'
 import taskListController from '../../controllers/recommendation/taskListController'
-import { createRecommendationController } from '../../controllers/recommendations/createRecommendation'
-import { createAndDownloadDocument } from '../../controllers/recommendations/createAndDownloadDocument'
-import { DOCUMENT_TYPE } from '../../@types/make-recall-decision-api/models/DocumentType'
-import { updateRecommendationStatus } from '../../controllers/recommendations/updateRecommendationStatus'
+import createRecommendationController from '../../controllers/recommendations/createRecommendation'
+import createAndDownloadDocument from '../../controllers/recommendations/createAndDownloadDocument'
+import DOCUMENT_TYPE from '../../@types/make-recall-decision-api/models/DocumentType'
+import updateRecommendationStatus from '../../controllers/recommendations/updateRecommendationStatus'
 import { sharedPaths, casePaths } from '../paths/shared.paths'
 
 const allEnvsRoutes: RouteDefinition[] = [
@@ -50,14 +50,14 @@ const allEnvsRoutes: RouteDefinition[] = [
             and(not(hasRole(HMPPS_AUTH_ROLE.SPO)), not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED))),
             and(
               hasRole(HMPPS_AUTH_ROLE.SPO),
-              or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL))
-            )
-          )
+              or(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_CONSIDER_RECALL)),
+            ),
+          ),
         ),
       ],
       {
         allow: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
-      }
+      },
     ),
     path: `${RECOMMENDATION_PREFIX}`,
     method: 'get',
@@ -83,16 +83,16 @@ const allEnvsRoutes: RouteDefinition[] = [
                   statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED),
                   statusIsActive(STATUSES.SPO_SIGNED),
                   statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED),
-                  statusIsActive(STATUSES.ACO_SIGNED)
-                )
-              )
-            )
-          )
+                  statusIsActive(STATUSES.ACO_SIGNED),
+                ),
+              ),
+            ),
+          ),
         ),
       ],
       {
         allow: [HMPPS_AUTH_ROLE.SPO, HMPPS_AUTH_ROLE.PO],
-      }
+      },
     ),
     path: `${RECOMMENDATION_PREFIX}/${sharedPaths.taskList}`,
     method: 'get',
@@ -132,3 +132,5 @@ export const sharedRoutes: RouteDefinition[] = [
   ...allEnvsRoutes,
   ...(!isPreprodOrProd(process.env.ENVIRONMENT) ? devOnlyRoutes : []),
 ]
+
+export default sharedRoutes

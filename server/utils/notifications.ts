@@ -1,5 +1,5 @@
 import { Notification } from '../@types/notification'
-import { notifications } from '../content/notifications'
+import notifications from '../content/notifications'
 
 /**
  * Returns the first active notification banner
@@ -11,7 +11,7 @@ import { notifications } from '../content/notifications'
  * @param userRoles - An array of roles for the current user.
  * @returns The first matching notification, or null if none match.
  */
-export function getActiveNotificationBanner(userRoles: string[]): Notification | null {
+export default function getActiveNotificationBanner(userRoles: string[]): Notification | null {
   const now = new Date()
   return (
     notifications.find(notification => {

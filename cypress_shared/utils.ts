@@ -4,7 +4,7 @@ export const exactMatchIgnoreWhitespace = (str: string): RegExp => new RegExp(`^
 
 export const addToNow = (
   adjustment: { year?: number; month?: number; day?: number; hour?: number; minute?: number },
-  { includeTime }: { includeTime?: boolean } = {}
+  { includeTime }: { includeTime?: boolean } = {},
 ): { year: string; month: string; day: string; hour?: string; minute?: string } => {
   const futureDateParts = DateTime.now().plus(adjustment).toObject()
   return Object.entries(futureDateParts).reduce(
@@ -18,7 +18,7 @@ export const addToNow = (
       year: undefined,
       month: undefined,
       day: undefined,
-    }
+    },
   )
 }
 
@@ -30,9 +30,9 @@ export const longDateMatchPattern = (isoDate: string | null) => {
   return isoDate !== null ? new RegExp(formatIsoDate(isoDate)) : /\d{1,2} [a-zA-Z]* \d{4}/
 }
 
-export const replaceMissingNDeliusInfoWithBlank = function (text: string) {
+export const replaceMissingNDeliusInfoWithBlank = (text: string) => {
   return text === '-This is information missing from NDelius.' ? '' : text
 }
-export const replaceMissingNDeliusInfoWithNotSpecified = function (text: string) {
+export const replaceMissingNDeliusInfoWithNotSpecified = (text: string) => {
   return text === '-This is information missing from NDelius.' ? 'Not specified' : text
 }

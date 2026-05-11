@@ -1,6 +1,6 @@
-import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
-export function getRoute(custodyGroup: CUSTODY_GROUP): string {
+function getRoute(custodyGroup: CUSTODY_GROUP): string {
   switch (custodyGroup) {
     case CUSTODY_GROUP.DETERMINATE:
       return 'select-index-offence'
@@ -10,3 +10,5 @@ export function getRoute(custodyGroup: CUSTODY_GROUP): string {
       throw new Error('Unexpected custody group found')
   }
 }
+
+export default getRoute

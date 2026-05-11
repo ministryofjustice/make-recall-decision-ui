@@ -1,11 +1,11 @@
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { STATUSES } from '../middleware/recommendationStatusCheck'
 import { getStatuses, ppudUpdateRelease, updateRecommendation } from '../data/makeDecisionApiClient'
 import BookingMemento from './BookingMemento'
-import { StageEnum } from './StageEnum'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import StageEnum from './StageEnum'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 function calculateReleaseDate(recommendation: RecommendationResponse) {
   const { custodyGroup } = recommendation.bookRecallToPpud
@@ -13,13 +13,14 @@ function calculateReleaseDate(recommendation: RecommendationResponse) {
     case CUSTODY_GROUP.DETERMINATE:
       // eslint-disable-next-line no-case-declarations
       const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
-        o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+        o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
       )
       return nomisOffence.releaseDate
     case CUSTODY_GROUP.INDETERMINATE:
       return recommendation.bookRecallToPpud.ppudIndeterminateSentenceData.releaseDate
     default:
       custodyGroup satisfies never
+      return null
   }
 }
 
@@ -27,7 +28,7 @@ export default async function updateRelease(
   bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) {
   const memento = { ...bookingMemento }
 

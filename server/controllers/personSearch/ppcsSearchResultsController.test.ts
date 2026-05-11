@@ -1,7 +1,7 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, ppcsSearch } from '../../data/makeDecisionApiClient'
 import ppcsSearchResultsController from './ppcsSearchResultsController'
-import { StageEnum } from '../../booking/StageEnum'
+import StageEnum from '../../booking/StageEnum'
 
 jest.mock('../../data/makeDecisionApiClient')
 

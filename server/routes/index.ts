@@ -1,18 +1,19 @@
 import { Router } from 'express'
 import bodyParser from 'body-parser'
+
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import { getStoredSessionData } from '../middleware/getStoredSessionData'
-import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
-import { parseUrl } from '../middleware/parseUrl'
-import { nothingMore } from './nothing-more'
-import setUpMaintenance from '../middleware/setUpMaintenance'
 import { authorisationCheck, hasRole, not, or } from '../middleware/check'
+import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
+import getStoredSessionData from '../middleware/getStoredSessionData'
+import parseUrl from '../middleware/parseUrl'
+import setUpMaintenance from '../middleware/setUpMaintenance'
+import nothingMore from './nothing-more'
 import type { RouteDefinition } from './standardRouter'
-import { spoRoutes } from './routeDefinitions/spo.routes'
-import { sharedRoutes } from './routeDefinitions/shared.routes'
-import { ppcsRoutes } from './routeDefinitions/ppcs.routes'
+import apRoutes from './routeDefinitions/ap.routes'
+import ppcsRoutes from './routeDefinitions/ppcs.routes'
 import { ppRoutes } from './routeDefinitions/pp.routes'
-import { apRoutes } from './routeDefinitions/ap.routes'
+import { sharedRoutes } from './routeDefinitions/shared.routes'
+import spoRoutes from './routeDefinitions/spo.routes'
 
 export default function routes(router: Router): Router {
   router.use(setUpMaintenance())
@@ -45,7 +46,7 @@ export default function routes(router: Router): Router {
       ...additionalMiddleware.map(callback => asyncMiddleware(callback)),
       asyncMiddleware(handler),
       ...(afterMiddleware?.map(callback => asyncMiddleware(callback)) || []),
-      nothingMore
+      nothingMore,
     )
   }
 

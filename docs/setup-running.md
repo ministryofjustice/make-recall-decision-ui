@@ -1,13 +1,16 @@
 # Running the app locally
 
+The app can be run locally in two ways: entirely locally, with other services our API service depends on mocked out, or
+connecting to the relevant services in dev. Both approaches have some setup in common.
+
 ## Setup
 
-Use the version of Node specified in the package.json 'engines' property.
-Install dependencies using `npm run setup`.
+Use the version of Node specified in [the .nvmrc file](../.nvmrc). Install dependencies using `npm run setup`.
 
 Take a copy of the .env.dev.sample file in the root of this repo.
-Name the copy as .env, then set API_CLIENT_ID to your client ID and API_CLIENT_SECRET to your client secret.  NOTE - don't wrap client secrets in quotes.
-[How to request client ID and secret](https://github.com/ministryofjustice/hmpps-auth#how-do-i-get-client-credentials)).
+Name the copy as .env, then set API_CLIENT_ID to your client ID and API_CLIENT_SECRET to your client secret (or ask a
+team member for said values). NOTE - don't wrap client secrets in quotes.
+[How to request client ID and secret](https://github.com/ministryofjustice/hmpps-auth#how-do-i-get-client-credentials).
 
 Next, in your shell config eg ~/.zshrc, set:
 ```
@@ -15,7 +18,7 @@ export SYSTEM_CLIENT_ID=<the value of API_CLIENT_ID>
 export SYSTEM_CLIENT_SECRET='the value of API_CLIENT_SECRET, in single quotes'
 ```
 
-You will also need a [NDelius user login](./user-access.md) to sign in to the app.
+If you're looking to run the service against dev, you will also need a [NDelius user login](./user-access.md) to sign in to the app.
 
 ## Run against dev env services
 

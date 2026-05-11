@@ -1,0 +1,35 @@
+/* Remove border/background from flex container */
+.predictor-timeline__item .flex {
+  border: none !important;
+  background: none !important;
+  outline: none !important;
+}
+
+.predictor-timeline__item .flex.flex--align-center {
+  display: block !important;
+}
+
+.predictor-timeline__item .flex .predictor-timeline-item--very-high,
+.predictor-timeline__item .flex .predictor-timeline-item--high,
+.predictor-timeline__item .flex .predictor-timeline-item--medium,
+.predictor-timeline__item .flex .predictor-timeline-item--low,
+.predictor-timeline__item .flex .predictor-timeline-item--default {
+  width: auto !important;
+  max-width: fit-content !important;
+}
+
+.predictor-timeline__description .predictor-timeline-item {
+  display: inline-block;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.predictor-timeline__description .govuk-\!-padding-left-2 {
+  display: inline;
+  padding-left: 0 !important;
+  vertical-align: middle;
+}
+
+.predictor-timeline__item .predictor-timeline-item__level strong {
+  margin-right: 0.25rem;
+}

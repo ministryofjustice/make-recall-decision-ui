@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { validateArrestIssues } from '../recommendations/arrestIssues/formValidator'
-import { inputDisplayValuesArrestIssues } from '../recommendations/arrestIssues/inputDisplayValues'
+import validateArrestIssues from '../recommendations/arrestIssues/formValidator'
+import inputDisplayValuesArrestIssues from '../recommendations/arrestIssues/inputDisplayValues'
 import { sharedPaths } from '../../routes/paths/shared.paths'
 
 function get(req: Request, res: Response, next: NextFunction) {
@@ -54,7 +54,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-custody`
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

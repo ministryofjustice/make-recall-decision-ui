@@ -1,10 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { YesNoValues } from '../formOptions/yesNo'
 
-export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -22,7 +23,7 @@ export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormVali
   }
   if (!errors) {
     valuesToSave = {
-      isThisAnEmergencyRecall: isThisAnEmergencyRecall === 'YES',
+      isThisAnEmergencyRecall: isThisAnEmergencyRecall === YesNoValues.YES,
     }
     const nextPageId = recallType === 'FIXED_TERM' ? 'fixed-licence' : 'sensitive-info'
     nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
@@ -33,3 +34,5 @@ export const validateEmergencyRecall = async ({ requestBody, urlInfo }: FormVali
     nextPagePath,
   }
 }
+
+export default validateEmergencyRecall

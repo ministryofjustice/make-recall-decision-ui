@@ -6,6 +6,7 @@ import createError from 'http-errors'
 import cookieParser from 'cookie-parser'
 
 import multer from 'multer'
+import pdsComponents from '@ministryofjustice/hmpps-probation-frontend-components'
 import indexRoutes from './routes'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -21,10 +22,12 @@ import setUpSentry from './middleware/setUpSentry'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import authorisationMiddleware, { HMPPS_AUTH_ROLE } from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
-import { appInsightsOperationId } from './middleware/appInsightsOperationId'
+import appInsightsOperationId from './middleware/appInsightsOperationId'
 import setUpCsrf from './middleware/setUpCsrf'
 import { setupRecommendationStatusCheck } from './middleware/recommendationStatusCheck'
-import { authorisationCheck, hasRole } from './middleware/check'
+import { hasRole, authorisationCheck } from './middleware/check'
+import config from './config'
+import logger from '../logger'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
@@ -50,6 +53,16 @@ export default function createApp(userService: UserService): express.Application
   app.use(authorisationMiddleware)
   app.use(authorisationCheck(hasRole(HMPPS_AUTH_ROLE.PO)))
   app.use(setupRecommendationStatusCheck())
+
+  app.get(
+    '*',
+    pdsComponents.getPageComponents({
+      pdsUrl: config.apis.probationApi.url,
+      logger,
+      useFallbacksByDefault:
+        ['local', 'test'].includes(process.env.ENVIRONMENT) || process.env.USE_LOCAL_HEADER_FALLBACKS === 'true',
+    }),
+  )
 
   // setup mime multipart file support - before csrf
   app.use(multer().single('file'))

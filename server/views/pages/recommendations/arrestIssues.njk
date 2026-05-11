@@ -14,9 +14,8 @@
                 {{ govukTextarea({
                     name: "hasArrestIssuesDetailsYes",
                     id: "hasArrestIssuesDetailsYes",
-                    label: {
-                        text: "Give details. Include information about any vulnerable children and adults.",
-                        classes: "govuk-label--s"
+                    hint: {
+                        text: "Give details about any potential risk to staff. Include information on any children or vulnerable adults."
                     },
                     value: inputDisplayValues.details,
                     errorMessage: errorMessage(errors.hasArrestIssuesDetailsYes)

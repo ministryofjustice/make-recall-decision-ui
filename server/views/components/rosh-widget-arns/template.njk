@@ -1,0 +1,106 @@
+{% macro getOverallRiskLevelClass(level) %}
+    {% if level == 'VERY_HIGH' %}
+    rosh-widget--very-high
+    {% elif level == 'HIGH' %}
+    rosh-widget--high
+    {% elif level == 'MEDIUM' %}
+    rosh-widget--medium
+    {% elif level == 'LOW' %}
+    rosh-widget--low
+  {% endif %}
+{% endmacro %}
+
+{% macro getRiskLevelText(level) %}
+    {% if level == 'VERY_HIGH' %}
+    Very high
+    {% elif level == 'HIGH' %}
+    High
+    {% elif level == 'MEDIUM' %}
+    Medium
+    {% elif level == 'LOW' %}
+    Low
+    {% else %}
+    N/A
+  {% endif %}
+{% endmacro %}
+
+{% macro getRiskLevelClass(level) %}
+  {% if level == 'VERY_HIGH' %}
+    rosh-widget__risk--very-high
+    {% elif level == 'HIGH' %}
+    rosh-widget__risk--high
+    {% elif level == 'MEDIUM' %}
+    rosh-widget__risk--medium
+    {% elif level == 'LOW' %}
+    rosh-widget__risk--low
+  {% endif %}
+{% endmacro %}
+
+{% set hideCommunityColumn = true %}
+{% set hideCustodyColumn = true %}
+
+{% for item in roshSummary.risks %}
+  {% if item.community != 'N/A' %}
+    {% set hideCommunityColumn = false %}
+  {% endif %}
+  {% if item.custody != 'N/A' %}
+    {% set hideCustodyColumn = false %}
+  {% endif %}
+{% endfor %}
+
+{% if roshSummary and roshSummary.hasBeenCompleted %}
+  <aside class="rosh-widget {{ getOverallRiskLevelClass(roshSummary.overallRisk) }}"
+         aria-label="Risk of serious harm summary">
+    <h3 class="govuk-heading-m"><strong>{{ getRiskLevelText(roshSummary.overallRisk) | upper }}</strong> ROSH</h3>
+    <p class="govuk-body-m">Risk of serious harm</p>
+    <p class="govuk-hint govuk-body-m">Last updated: {{ roshSummary.lastUpdated | default("Not known") }}</p>
+    <div class="moj-scrollable-pane" tabindex="0">
+      <table class="govuk-table rosh-widget__table">
+        <caption class="govuk-visually-hidden">Risk of serious harm in Community</caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header">Risk to</th>
+          {% if not hideCommunityColumn %}
+            <th class="govuk-table__header">Community</th>
+          {% endif %}
+          {% if not hideCustodyColumn %}
+            <th class="govuk-table__header">Custody</th>
+          {% endif %}
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        {% for risk in roshSummary.risks %}
+          <tr class="govuk-table__row">
+            <th data-qa='riskToLabelValue{{ loop.index }}'
+                class="govuk-table__header">{{ risk.riskTo | capitalize }}</th>
+            {% if not hideCommunityColumn %}
+              <td data-qa='riskToCommunityValue{{ loop.index }}'
+                  class="govuk-table__cell {{ getRiskLevelClass(risk.community) }}">{{ getRiskLevelText(risk.community) or "N/A" }}</td>
+            {% endif %}
+            {% if not hideCustodyColumn %}
+              <td data-qa='riskToCustodyValue{{ loop.index }}'
+                  class="govuk-table__cell {{ getRiskLevelClass(risk.custody) }}">{{ getRiskLevelText(risk.custody) or "N/A" }}</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </aside>
+  {% elif roshSummary and not roshSummary.hasBeenCompleted %}
+  <aside class="rosh-widget rosh-widget--unknown" aria-label="Risk of serious harm summary">
+    <h3 class="govuk-heading-m">
+      <strong>UNKNOWN LEVEL</strong> ROSH</h3>
+    <p class="govuk-body-m">Risk of serious harm</p>
+    <p class="govuk-hint govuk-body-m">A ROSH summary has not been completed for this individual. Check OASys for this
+      person's current assessment status.</p>
+  </aside>
+{% else %}
+  <aside class="rosh-widget" aria-label="Risk of serious harm summary">
+    <h3 class="govuk-heading-m">
+      <strong>UNKNOWN LEVEL</strong> ROSH</h3>
+    <p class="govuk-body-m">Risk of serious harm</p>
+    <p class="govuk-hint govuk-body-m">Something went wrong. We are unable to show ROSH information at this time. Try
+      again later.</p>
+  </aside>
+{% endif %}

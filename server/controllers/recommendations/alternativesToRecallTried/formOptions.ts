@@ -1,4 +1,4 @@
-export const alternativesToRecallTried = [
+const alternativesToRecallTried = [
   {
     text: 'None',
     value: 'NONE',
@@ -45,3 +45,5 @@ export const alternativesToRecallTried = [
     detailsLabel: 'Give details',
   },
 ]
+
+export default alternativesToRecallTried

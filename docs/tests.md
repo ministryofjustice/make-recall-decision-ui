@@ -14,7 +14,7 @@ Coverage stats will be output to stdout and /coverage
 
 ## Run integration tests
 
-For local running, start a test db, redis, and wiremock instance by:
+For local running, start redis and wiremock instances with:
 
 ```
 docker compose -f docker-compose-test.yml up -d

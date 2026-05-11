@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { inputDisplayValuesCustodyStatus } from '../recommendations/custodyStatus/inputDisplayValues'
-import { validateCustodyStatus } from '../recommendations/custodyStatus/formValidator'
+import validateCustodyStatus from '../recommendations/custodyStatus/formValidator'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -37,6 +37,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     urlInfo,
     token,
+    ftr56Enabled: flags.flagFTR56Enabled,
   })
 
   if (errors) {
@@ -52,7 +53,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'share-case-with-admin', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'share-case-with-admin', urlInfo }))
 }
 
 export default { get, post }

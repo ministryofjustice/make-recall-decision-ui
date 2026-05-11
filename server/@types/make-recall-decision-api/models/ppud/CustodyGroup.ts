@@ -1,6 +1,7 @@
 /* istanbul ignore file */
-
-export enum CUSTODY_GROUP {
+enum CUSTODY_GROUP {
   DETERMINATE = 'Determinate',
   INDETERMINATE = 'Indeterminate',
 }
+
+export default CUSTODY_GROUP

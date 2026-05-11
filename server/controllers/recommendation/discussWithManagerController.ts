@@ -1,14 +1,21 @@
 import { NextFunction, Request, Response } from 'express'
+import ppPaths from '../../routes/paths/pp.paths'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
   let nextPageId = 'suitability-for-fixed-term-recall'
 
-  if (recommendation.isIndeterminateSentence) {
+  const isIndeterminateSentence = recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
+  const isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED
+
+  if (isIndeterminateSentence) {
     nextPageId = 'recall-type-indeterminate'
-  } else if (recommendation.isExtendedSentence) {
+  } else if (isExtendedSentence) {
     nextPageId = 'recall-type-extended'
+  } else if (recommendation?.sentenceGroup === SentenceGroup.ADULT_SDS) {
+    nextPageId = ppPaths.checkMappaInformation
   }
 
   res.locals = {

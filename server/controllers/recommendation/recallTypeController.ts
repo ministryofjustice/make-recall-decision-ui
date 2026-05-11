@@ -1,18 +1,29 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { validateRecallType } from '../recommendations/recallType/formValidator'
-import { inputDisplayValuesRecallType } from '../recommendations/recallType/inputDisplayValues'
+import validateRecallType from '../recommendations/recallType/formValidator'
+import inputDisplayValuesRecallType from '../recommendations/recallType/inputDisplayValues'
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
+import {
+  availableRecallTypesForRecommendation,
+  availableRecallTypesForRecommendationFTR56,
+} from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
+import {
+  isFixedTermRecallMandatoryForRecommendation,
+  isStandardRecallMandatoryForRecommendationFTR56,
+} from '../../utils/fixedTermRecallUtils'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { FeatureFlags } from '../../@types/featureFlags'
 
 function get(_: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals as {
+  const {
+    recommendation,
+    flags: { flagFTR56Enabled },
+  } = res.locals as {
     recommendation: RecommendationResponse
+    flags: FeatureFlags
   }
 
   res.locals = {
@@ -25,9 +36,13 @@ function get(_: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: availableRecallTypesForRecommendation(recommendation),
+    availableRecallTypes: flagFTR56Enabled
+      ? availableRecallTypesForRecommendationFTR56(recommendation)
+      : availableRecallTypesForRecommendation(recommendation),
     personOnProbationName: recommendation.personOnProbation.fullName,
-    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation),
+    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation, flagFTR56Enabled),
+    standardMandatory: flagFTR56Enabled ? isStandardRecallMandatoryForRecommendationFTR56(recommendation) : undefined,
+    isAdultSentence: flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.ADULT_SDS,
   }
 
   res.render(`pages/recommendations/recallType`)
@@ -43,11 +58,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const { errors, valuesToSave, unsavedValues, monitoringEvent } = await validateRecallType({
+  const { errors, valuesToSave, nextPagePath, unsavedValues, monitoringEvent } = await validateRecallType({
     requestBody: req.body,
     recommendationId,
     urlInfo,
     token,
+    flagFTR56Enabled: flags.flagFTR56Enabled,
   })
 
   if (errors) {
@@ -90,13 +106,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
 
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
-
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(303, nextPagePath)
 }
 
 export default { get, post }

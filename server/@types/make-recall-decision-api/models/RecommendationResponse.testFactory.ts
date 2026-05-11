@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import { randomInt } from 'crypto'
-import { CUSTODY_GROUP } from './ppud/CustodyGroup'
+import CUSTODY_GROUP from './ppud/CustodyGroup'
 import { BookRecallToPpud, NomisIndexOffence, OfferedOffence, Term } from './RecommendationResponse'
-import { randomEnum } from '../../enum.testFactory'
+import randomEnum from '../../enum.testFactory'
 
 export function nomisIndexOffence(
   {
@@ -29,6 +29,7 @@ export function offeredOffence(
     courtDescription = randomUUID(),
     sentenceStartDate = randomUUID(),
     sentenceEndDate = randomUUID(),
+    sentenceSequenceExpiryDate = randomUUID(),
     bookingId = randomInt(10000),
     terms = [term()],
     releaseDate = randomUUID(),
@@ -44,6 +45,7 @@ export function offeredOffence(
     courtDescription?: string;
     sentenceStartDate?: string;
     sentenceEndDate?: string;
+    sentenceSequenceExpiryDate?: string;
     bookingId?: number;
     terms?: Term[];
     releaseDate?: string;
@@ -60,6 +62,7 @@ export function offeredOffence(
     courtDescription,
     sentenceStartDate,
     sentenceEndDate,
+    sentenceSequenceExpiryDate,
     bookingId,
     terms,
     releaseDate,

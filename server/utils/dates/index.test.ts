@@ -1,4 +1,4 @@
-import { sortListByDateField } from './index'
+import { parseDatePartsAsNumbers, sortListByDateField } from './index'
 
 describe('sortListByDateField', () => {
   it('sorts by a deeply nested key, oldest first', () => {
@@ -36,5 +36,27 @@ describe('sortListByDateField', () => {
     const list = [{ a: null }, { a: '2021-02-13' }, { a: undefined }, { a: '2022-02-11' }]
     const sorted = sortListByDateField({ list, dateKey: 'a', newestFirst: true, undefinedValuesLast: false })
     expect(sorted).toEqual([{ a: null }, { a: undefined }, { a: '2022-02-11' }, { a: '2021-02-13' }])
+  })
+})
+
+describe('parseDatePartsAsNumbers', () => {
+  it('returns the correct numbers', () => {
+    const parts = { day: '1', month: '2', year: '2026' }
+    const result = parseDatePartsAsNumbers(parts)
+    expect(result).toEqual({
+      day: 1,
+      month: 2,
+      year: 2026,
+    })
+  })
+
+  it('returns a blank string if the number is 0 or "0"', () => {
+    const parts = { day: 0, month: '0', year: 0 }
+    const result = parseDatePartsAsNumbers(parts)
+    expect(result).toEqual({
+      day: '',
+      month: '',
+      year: '',
+    })
   })
 })

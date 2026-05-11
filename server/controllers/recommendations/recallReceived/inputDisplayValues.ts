@@ -3,7 +3,7 @@ import { splitIsoDateToParts } from '../../../utils/dates/conversion'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesRecallReceived = ({ errors, unsavedValues, apiValues }: InputDisplayValuesArgs) => {
+const inputDisplayValuesRecallReceived = ({ errors, unsavedValues, apiValues }: InputDisplayValuesArgs) => {
   if (isDefined(errors)) {
     return {
       dateTime: {
@@ -19,3 +19,5 @@ export const inputDisplayValuesRecallReceived = ({ errors, unsavedValues, apiVal
     },
   }
 }
+
+export default inputDisplayValuesRecallReceived

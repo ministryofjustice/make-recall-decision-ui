@@ -4,6 +4,7 @@ export default function asyncMiddleware(fn: RequestHandler) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       await fn(req, res, next)
+      return next()
     } catch (err) {
       return next(err)
     }

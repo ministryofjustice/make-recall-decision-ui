@@ -43,7 +43,7 @@ export const logMessage = (info: any) => {
 }
 
 export function wait(time: number) {
-  return new Promise<void>(function (resolve) {
+  return new Promise<void>(resolve => {
     setTimeout(() => {
       resolve()
     }, time)
@@ -179,12 +179,6 @@ export const normalizeCrn = (crn: string) => {
 
 export const isPreprodOrProd = (env?: string) => {
   return ['preprod', 'prod'].includes(env)
-}
-
-export const booleanToYesNo = (val: boolean) => {
-  if (val === true) return 'YES'
-  if (val === false) return 'NO'
-  return undefined
 }
 
 export function isMandatoryTextValue(val: unknown): boolean {

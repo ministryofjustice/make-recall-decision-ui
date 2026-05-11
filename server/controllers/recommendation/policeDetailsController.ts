@@ -1,18 +1,19 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { validateLocalPoliceContactDetails } from '../recommendations/localPoliceContactDetails/formValidator'
-import { inputDisplayValuesLocalPoliceContactDetails } from '../recommendations/localPoliceContactDetails/inputDisplayValues'
 import { sharedPaths } from '../../routes/paths/shared.paths'
+import validateLocalPoliceContactDetails from '../recommendations/localPoliceContactDetails/formValidator'
+import inputDisplayValuesLocalPoliceContactDetails from '../recommendations/localPoliceContactDetails/inputDisplayValues'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const { recommendation, flags } = res.locals
 
   res.locals = {
     ...res.locals,
     page: {
       id: 'localPoliceContactDetails',
     },
+    ftr56Enabled: flags.flagFTR56Enabled,
   }
 
   res.locals.inputDisplayValues = inputDisplayValuesLocalPoliceContactDetails({
@@ -55,7 +56,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-custody`
 
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

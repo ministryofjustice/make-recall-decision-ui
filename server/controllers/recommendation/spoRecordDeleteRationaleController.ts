@@ -4,7 +4,7 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { RecommendationDecorated } from '../../@types/api'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params

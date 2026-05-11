@@ -23,9 +23,6 @@
     ]
   },
   "decisionDateTime": "2022-04-24T20:39:00.000Z",
-  "responseToProbation": "Missed appointments\nRe-offending ",
-  "isIndeterminateSentence": true,
-  "isExtendedSentence": true,
   "indeterminateSentenceType": {
     "selected": "LIFE",
     "allOptions": [

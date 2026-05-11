@@ -5,9 +5,10 @@ import { prisonSentences } from '../../../../data/makeDecisionApiClient'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import consecutiveSentenceDetailsController from './consecutiveSentenceDetailsController'
 import { PrisonSentence } from '../../../../@types/make-recall-decision-api/models/PrisonSentence'
-import { Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { RecommendationResponse, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { PrisonSentenceSequence } from '../../../../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
 import { TermGenerator } from '../../../../../data/common/termGenerator'
+import ppcsPaths from '../../../../routes/paths/ppcs.paths'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 
@@ -20,14 +21,14 @@ type SentenceInfo = {
   court: string
   dateOfSentence: string
   startDate: string
-  sentenceExpiryDate: string
+  sentenceSequenceExpiryDate?: string
   sentenceLength?: { key: string; value: Term }[]
 }
 
 describe('Consecutive Sentence Details Controller', () => {
   describe('get', () => {
     const defaultGetRecommendation = RecommendationResponseGenerator.generate({
-      nomisOffenceIndex: {
+      nomisIndexOffence: {
         selectedIndex: 0,
       },
     })
@@ -64,19 +65,19 @@ describe('Consecutive Sentence Details Controller', () => {
       const expectedInfoForSentence = (sentence: PrisonSentence) =>
         ({
           lineSequence: sentence.lineSequence,
-          offence: sentence.offences.at(0).offenceDescription,
+          offence: sentence.offences?.[0].offenceDescription,
           sentenceType: sentence.sentenceTypeDescription,
           court: sentence.courtDescription,
           dateOfSentence: sentence.sentenceDate,
           startDate: sentence.sentenceStartDate,
-          sentenceExpiryDate: sentence.sentenceEndDate,
+          sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
         }) as SentenceInfo
 
       it('- Prison Sentences correctly called', async () =>
         expect(prisonSentences).toHaveBeenCalledWith('token', defaultGetRecommendation.personOnProbation.nomsNumber))
       it('- Calls render for the expected page', async () =>
         expect(res.render).toHaveBeenCalledWith(
-          `pages/recommendations/ppcs/determinateSentence/consecutiveSentences/consecutiveSentenceDetails`
+          `pages/recommendations/ppcs/determinateSentence/consecutiveSentences/consecutiveSentenceDetails`,
         ))
       it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
 
@@ -91,9 +92,9 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Sentence type', async () => expect(actual(res).sentenceType).toEqual(expected.sentenceType))
               it('- Court', async () => expect(actual(res).court).toEqual(expected.court))
               it('- Date of sentence', async () => expect(actual(res).dateOfSentence).toEqual(expected.dateOfSentence))
-              it('- Date of sentence', async () => expect(actual(res).startDate).toEqual(expected.startDate))
+              it('- Start date', async () => expect(actual(res).startDate).toEqual(expected.startDate))
               it('- Sentence expiry date', async () =>
-                expect(actual(res).sentenceExpiryDate).toEqual(expected.sentenceExpiryDate))
+                expect(actual(res).sentenceSequenceExpiryDate).toEqual(expected.sentenceSequenceExpiryDate))
               it('- Sentence length (to be defined, conditional)', async () =>
                 expect(actual(res).sentenceLength).toBeDefined())
             }
@@ -101,7 +102,7 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Is provided', async () => expect(res.locals.pageData.sentenceInfo.indexSentence).toBeDefined())
               describe('Maps non-conditiomal as expected:', () => {
                 describe('Index offence:', () => {
-                  const expectedIndexInfo = expectedInfoForSentence(defaultGetSentenceSequence.at(0).indexSentence)
+                  const expectedIndexInfo = expectedInfoForSentence(defaultGetSentenceSequence?.[0].indexSentence)
                   const actualIndexInfo = (response: Response) => response.locals.pageData.sentenceInfo.indexSentence
                   testSentenceInfo(expectedIndexInfo, actualIndexInfo)
                 })
@@ -111,29 +112,24 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Is provided', async () =>
                 expect(res.locals.pageData.sentenceInfo.sentencesInSequence).toBeDefined())
               describe('Maps non-conditiomal as expected:', () => {
-                new Map(Object.entries(defaultGetSentenceSequence.at(0).sentencesInSequence)).forEach(
+                new Map(Object.entries(defaultGetSentenceSequence?.[0].sentencesInSequence)).forEach(
                   (sentences, consecTo) => {
                     describe(`Consecutive to group: ${consecTo}`, () => {
                       sentences.forEach((sentence, i) => {
                         describe(`Sentence ${i + 1}`, () => {
                           const expectedSentenceInfo = expectedInfoForSentence(sentence)
                           const actualSentenceInfo = (response: Response) =>
-                            (response.locals.pageData.sentenceInfo.sentencesInSequence as Map<string, SentenceInfo[]>)
-                              .get(consecTo)
-                              .at(i)
+                            (
+                              response.locals.pageData.sentenceInfo.sentencesInSequence as Map<string, SentenceInfo[]>
+                            ).get(consecTo)?.[i]
                           testSentenceInfo(expectedSentenceInfo, actualSentenceInfo)
                         })
                       })
                     })
-                  }
+                  },
                 )
               })
             })
-          })
-          describe('Next Page Path:', () => {
-            it('- Is provided', async () => expect(res.locals.pageData.nextPagePath).toBeDefined())
-            it('- Is the expected path', async () =>
-              expect(res.locals.pageData.nextPagePath).toEqual('/recommendations/123/match-index-offence'))
           })
         })
       })
@@ -208,7 +204,7 @@ describe('Consecutive Sentence Details Controller', () => {
             },
           ])
         })
-        it('- No terms, lists ket as "Sentence length" with an empty value', async () => {
+        it('- No terms, lists key as "Sentence length" with an empty value', async () => {
           const sentenceWithNoTerms = PrisonSentenceSequenceGenerator.generate({
             indexSentence: {
               offences: [
@@ -294,6 +290,65 @@ describe('Consecutive Sentence Details Controller', () => {
             const term = res.locals.pageData.sentenceInfo.indexSentence.sentenceLength[1]
             expect(term.key).toEqual('Extended term')
             expect(term.value).toEqual(termLIC)
+          })
+        })
+      })
+      describe('Res locals', () => {
+        describe('Page Data:', () => {
+          describe('Next Page Path:', () => {
+            const testCases: {
+              useCaseDescription: string
+              recommendation: RecommendationResponse
+              redirectionPageId: string
+            }[] = [
+              {
+                useCaseDescription: 'When no PPUD offender was selected',
+                recommendation: RecommendationResponseGenerator.generate({
+                  nomisIndexOffence: {
+                    selectedIndex: 0,
+                  },
+                  ppudOffender: 'none',
+                }),
+                redirectionPageId: ppcsPaths.matchIndexOffence,
+              },
+              {
+                useCaseDescription: 'When a PPUD offender with no sentences was selected',
+                recommendation: RecommendationResponseGenerator.generate({
+                  nomisIndexOffence: {
+                    selectedIndex: 0,
+                  },
+                  ppudOffender: {
+                    sentences: [],
+                  },
+                }),
+                redirectionPageId: ppcsPaths.matchIndexOffence,
+              },
+              {
+                useCaseDescription: 'When a PPUD offender with sentences was selected',
+                recommendation: RecommendationResponseGenerator.generate({
+                  nomisIndexOffence: {
+                    selectedIndex: 0,
+                  },
+                }),
+                redirectionPageId: ppcsPaths.selectPpudSentence,
+              },
+            ]
+            const basePath = '/recommendations/123/'
+            it.each(testCases)('$useCaseDescription', async ({ recommendation, redirectionPageId }) => {
+              ;(prisonSentences as jest.Mock).mockResolvedValue(defaultGetSentenceSequence)
+              const resForTestCase = mockRes({
+                locals: {
+                  recommendation,
+                  urlInfo: {
+                    basePath,
+                  },
+                },
+              })
+              await consecutiveSentenceDetailsController.get(req, resForTestCase, next)
+
+              expect(resForTestCase.locals.pageData.nextPagePath).toBeDefined()
+              expect(resForTestCase.locals.pageData.nextPagePath).toEqual(`${basePath}${redirectionPageId}`)
+            })
           })
         })
       })

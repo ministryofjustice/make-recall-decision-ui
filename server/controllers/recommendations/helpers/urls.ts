@@ -1,10 +1,22 @@
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
-import { isDefined } from '../../../utils/utils'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { FeatureFlags } from '../../../@types/featureFlags'
+import type { FeatureFlags } from '../../../@types/featureFlags'
 import { UrlInfo } from '../../../@types/pagesForms'
 import { sharedPaths } from '../../../routes/paths/shared.paths'
 
+/**
+ * Determines the URL for the next page.
+ *
+ * The following priority is followed to determine the URL:
+ *  1. If URL info with fromPageId is present, use that.
+ *  2. If nextPagePath is provided, use that.
+ *  3. Otherwise, construct the URL using the basePath and nextPageId.
+ *
+ * @param nextPageId - the URL slug for the next page, which will be appended to the basePath to construct the URL if
+ *                     relevant
+ * @param nextPagePath - an optional URL path for the next page, which takes precedence over nextPageId if provided
+ * @param urlInfo - the URL information, including fromPageId (if any), fromHeading (if any) and basePath
+ */
 export const nextPageLinkUrl = ({
   nextPageId,
   nextPagePath,
@@ -22,6 +34,13 @@ export const nextPageLinkUrl = ({
   return nextPagePath || `${urlInfo.basePath}${nextPageId}`
 }
 
+/**
+ * Determines the URL using the fromPageId and fromAnchor query parameters, if they exist (null otherwise).
+ *
+ * This is used to return the user to the page they came from, rather than the next page in the sequence.
+ *
+ * @param urlInfo The URL information, including fromPageId (if any), fromAnchor (if any), and basePath.
+ */
 export const makeUrlForFromPage = ({ urlInfo }: { urlInfo: UrlInfo }) => {
   const { fromPageId, fromAnchor, basePath } = urlInfo
   if (fromPageId) {
@@ -78,10 +97,9 @@ export const checkForRedirectPath = ({
   // task lists / confirmation pages
   const recallType = recommendation?.recallType?.selected?.value
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
-    recallType
+    recallType,
   )
   const isNoRecall = RecallTypeSelectedValue.value.NO_RECALL === recallType
-  const isNotSet = !isDefined(recallType)
   const isCompletedRecommendation = recommendationStatus === RecommendationResponse.status.DOCUMENT_DOWNLOADED
   const isConfirmationPage = ['confirmation-part-a', 'confirmation-no-recall'].includes(requestedPageId)
   if (isCompletedRecommendation && !isConfirmationPage) {
@@ -93,13 +111,12 @@ export const checkForRedirectPath = ({
   if ((isRecallTaskListRequested && isRecall) || (isNoRecallTaskListRequested && isNoRecall)) {
     return null
   }
-  if ((isRecallTaskListRequested || isNoRecallTaskListRequested) && isNotSet) {
-    return `${basePathRecFlow}response-to-probation`
-  }
   if (isRecallTaskListRequested && isNoRecall) {
     return `${basePathRecFlow}task-list-no-recall`
   }
   if (isNoRecallTaskListRequested && isRecall) {
     return `${basePathRecFlow}task-list`
   }
+
+  return null
 }

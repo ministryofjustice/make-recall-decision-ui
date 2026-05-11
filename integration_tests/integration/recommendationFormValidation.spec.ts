@@ -1,9 +1,11 @@
 import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
-import { setResponsePropertiesToNull } from '../support/commands'
+import setResponsePropertiesToNull from '../support/commands'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
+import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
+import ppPaths from '../../server/routes/paths/pp.paths'
 
 context('Make a recommendation - form validation', () => {
   const crn = 'X34983'
@@ -29,79 +31,88 @@ context('Make a recommendation - form validation', () => {
     },
   }
 
-  it('Response to probation', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/response-to-probation`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'responseToProbation',
-      errorText: 'Explain how Jane Bloggs has responded to probation',
+  describe('Licence conditions', () => {
+    ;[true, false].forEach(ftr56Enabled => {
+      describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
+        ;[true, false].forEach(hasFromPageId => {
+          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+            cy.signIn()
+            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+            cy.task(
+              'getCaseV2',
+              caseTemplate()
+                .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+                .withAllConvictionsReleasedOnLicence()
+                .build(),
+            )
+
+            cy.task('getStatuses', { statusCode: 200, response: [] })
+            cy.visit(
+              `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+            )
+
+            // Back link
+            if (ftr56Enabled && !hasFromPageId) {
+              testBackLink(
+                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                'Back to Consider a recall questions',
+                false,
+              )
+            } else {
+              testStandardBackLink()
+            }
+
+            cy.clickButton('Continue')
+            cy.assertErrorMessage({
+              fieldName: 'licenceConditionsBreached',
+              errorText: 'Select one or more licence conditions',
+            })
+          })
+        })
+      })
     })
   })
 
-  it('Licence conditions', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task(
-      'getCaseV2',
-      caseTemplate()
-        .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-        .withAllConvictionsReleasedOnLicence()
-        .build()
-    )
+  describe('Alternatives tried', () => {
+    ;[true, false].forEach(ftr56Enabled => {
+      describe(`FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
+        ;[true, false].forEach(hasFromPageId => {
+          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+            cy.signIn()
+            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+            cy.task('getStatuses', { statusCode: 200, response: [] })
 
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/licence-conditions`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'licenceConditionsBreached',
-      errorText: 'Select one or more licence conditions',
-    })
-  })
+            cy.visit(
+              `${sharedPaths.recommendations}/${recommendationId}/alternatives-tried?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+            )
 
-  it('Alternatives tried', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/alternatives-tried`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'alternativesToRecallTried',
-      errorText: 'Select which alternatives to recall have been tried already',
-    })
-    cy.selectCheckboxes('What alternatives to recall have been tried already?', [
-      'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-    ])
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
-      errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-    })
-  })
+            // Back link
+            if (ftr56Enabled && !hasFromPageId) {
+              testBackLink(
+                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+                'Back to Consider a recall questions',
+                false,
+              )
+            } else {
+              testStandardBackLink()
+            }
 
-  it('Indeterminate sentence', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/is-indeterminate`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'isIndeterminateSentence',
-      errorText: 'Select whether Jane Bloggs is on an indeterminate sentence or not',
-    })
-  })
-
-  it('Extended sentence', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/is-extended`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'isExtendedSentence',
-      errorText: 'Select whether Jane Bloggs is on an extended sentence or not',
+            cy.clickButton('Continue')
+            cy.assertErrorMessage({
+              fieldName: 'alternativesToRecallTried',
+              errorText: 'Select which alternatives to recall have been tried already',
+            })
+            cy.selectCheckboxes('What alternatives to recall have been tried already?', [
+              'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
+            ])
+            cy.clickButton('Continue')
+            cy.assertErrorMessage({
+              fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
+              errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
+            })
+          })
+        })
+      })
     })
   })
 
@@ -117,6 +128,21 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
+  it('Ftr56: Indeterminate sentence type', () => {
+    cy.signIn()
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, sentenceGroup: 'INDETERMINATE' },
+    })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-type?flagFTR56Enabled=1`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateSentenceType',
+      errorText: 'Select whether Jane Bloggs is on a life, IPP, DPP or DHMP sentence',
+    })
+  })
+
   it('Indeterminate or extended sentence details', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
@@ -124,6 +150,7 @@ context('Make a recommendation - form validation', () => {
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-details`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
+      fieldGroupId: 'option-1',
       fieldName: 'indeterminateOrExtendedSentenceDetails',
       errorText: 'Select at least one of the criteria',
     })
@@ -147,9 +174,49 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
+  it('Ftr56: Indeterminate or extended sentence details', () => {
+    cy.signIn()
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-details?flagFTR56Enabled=1`)
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldGroupId: 'option-1',
+      fieldName: 'indeterminateOrExtendedSentenceDetails',
+      errorText: 'Select all the criteria that apply to Jane Bloggs',
+    })
+
+    cy.selectCheckboxes('Indeterminate and extended sentences', [
+      'Jane Bloggs has shown behaviour similar to the circumstances surrounding the index offence',
+      'Jane Bloggs has shown behaviour that has caused, or will cause, a sexual or violent offence',
+      'Jane Bloggs has shown behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
+      'Jane Bloggs is either out of touch with probation, or their current location is not known',
+    ])
+    cy.clickButton('Continue')
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
+      errorText: 'Enter details about the behaviour similar to the circumstances surrounding the index offence',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
+      errorText: 'Enter details about the behaviour that has caused, or will cause, a sexual or violent offence',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+      errorText: 'Enter details about the behaviour likely to result in a sexual or violent offence',
+    })
+    cy.assertErrorMessage({
+      fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
+      errorText: 'Enter details about Jane Bloggs being out of touch',
+    })
+  })
+
   it('Recall type', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, recallType: undefined },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type`)
     cy.clickButton('Continue')
@@ -161,7 +228,10 @@ context('Make a recommendation - form validation', () => {
 
   it('Recall type (indeterminate)', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, recallType: undefined },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type-indeterminate`)
     cy.clickButton('Continue')
@@ -173,7 +243,10 @@ context('Make a recommendation - form validation', () => {
 
   it('fixed term additional licence conditions', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: { ...recommendationResponse, recallType: undefined } })
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...recommendationResponse, recallType: undefined },
+    })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/fixed-licence`)
     cy.clickButton('Continue')
@@ -189,44 +262,11 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Custody status', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/custody-status`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'custodyStatus',
-      errorText: 'Select whether the person is in custody or not',
-    })
-  })
-
   it('Vulnerabilities', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/vulnerabilities`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'vulnerabilities',
-      errorText: 'Select if there are vulnerabilities or additional needs',
-    })
-    cy.selectCheckboxes('Consider vulnerability and additional needs. Which of these would recall affect?', [
-      'Relationship breakdown',
-      'Physical disabilities',
-    ])
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'vulnerabilitiesDetail-PHYSICAL_DISABILITIES',
-      errorText: 'Enter more detail for physical disabilities',
-    })
-  })
-
-  it('Vulnerabilities with RiskToSelf enabled', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/vulnerabilities?flagRiskToSelfEnabled=1`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldGroupId: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
@@ -263,23 +303,11 @@ context('Make a recommendation - form validation', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/vulnerabilities-details?flagRiskToSelfEnabled=1`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/vulnerabilities-details`)
     cy.clickButton('Save and continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
-      errorText: 'Enter more detail for risk of suicide or self-harm',
-    })
-  })
-
-  it('IOM', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/iom`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'isUnderIntegratedOffenderManagement',
-      errorText: 'Select whether Jane Bloggs is under Integrated Offender Management',
+      errorText: 'Enter more detail for at risk of suicide or self-harm',
     })
   })
 
@@ -334,24 +362,6 @@ context('Make a recommendation - form validation', () => {
     cy.assertErrorMessage({
       fieldName: 'whatLedToRecall',
       errorText: 'Enter details of what has led to this recall',
-    })
-  })
-
-  it('Arrest issues', () => {
-    cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/arrest-issues`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'hasArrestIssues',
-      errorText: "Select whether there's anything the police should know",
-    })
-    cy.selectRadio('Is there anything the police should know before they arrest Jane Bloggs?', 'Yes')
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'hasArrestIssuesDetailsYes',
-      errorText: 'Enter details of the arrest issues',
     })
   })
 
@@ -423,22 +433,6 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Add a previous recall', () => {
-    cy.signIn()
-    cy.task('updateRecommendation', {
-      statusCode: 200,
-      response: { ...completeRecommendationResponse, previousRecalls: null },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/add-previous-recall`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'previousRecallDate',
-      fieldGroupId: 'previousRecallDate-day',
-      errorText: 'Enter the previous recall date',
-    })
-  })
-
   it('Current risk of serious harm', () => {
     cy.signIn()
     cy.task('updateRecommendation', {
@@ -467,17 +461,6 @@ context('Make a recommendation - form validation', () => {
     cy.assertErrorMessage({
       fieldName: 'riskToPrisoners',
       errorText: 'Select a RoSH level for the risk to prisoners',
-    })
-  })
-  it('Trigger leading to recall', () => {
-    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/trigger-leading-to-recall`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'triggerLeadingToRecall',
-      errorText: 'Explain what has made you consider recalling Jane Bloggs',
     })
   })
   it('Rationale Check', () => {

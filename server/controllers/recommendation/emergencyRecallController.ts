@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesEmergencyRecall } from '../recommendations/emergencyRecall/inputDisplayValues'
-import { validateEmergencyRecall } from '../recommendations/emergencyRecall/formValidator'
+import inputDisplayValuesEmergencyRecall from '../recommendations/emergencyRecall/inputDisplayValues'
+import validateEmergencyRecall from '../recommendations/emergencyRecall/formValidator'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -22,6 +23,8 @@ function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
+  res.locals.isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED
+
   res.render(`pages/recommendations/emergencyRecall`)
   next()
 }
@@ -29,12 +32,13 @@ function get(req: Request, res: Response, next: NextFunction) {
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const {
+    recommendation,
     flags,
     user: { token, username, region },
     urlInfo,
   } = res.locals
 
-  const { recallType, crn, isExtendedSentence } = req.body
+  const { recallType, crn } = req.body
   const { errors, valuesToSave, unsavedValues } = await validateEmergencyRecall({
     requestBody: req.body,
     recommendationId,
@@ -61,13 +65,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageId = 'fixed-licence'
   }
 
-  if (recallType === 'STANDARD' && isExtendedSentence === 'true') {
+  if (!flags.flagFTR56Enabled && recallType === 'STANDARD' && recommendation.sentenceGroup === SentenceGroup.EXTENDED) {
     nextPageId = 'indeterminate-details'
   }
-
-  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
-
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
   if (valuesToSave.isThisAnEmergencyRecall) {
     appInsightsEvent(
@@ -79,9 +79,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
+
+  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

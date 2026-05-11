@@ -1,4 +1,4 @@
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { getExistingReleaseDates } from '../addPreviousRelease/formValidator'
 import { isDefined, isNumber } from '../../../utils/utils'
@@ -8,11 +8,9 @@ import { dateHasError } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { ValidationError } from '../../../@types/dates'
 import { sharedPaths } from '../../../routes/paths/shared.paths'
+import { YesNoValues } from '../formOptions/yesNo'
 
-export const validatePreviousReleases = async ({
-  requestBody,
-  recommendationId,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validatePreviousReleases = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
   let nextPagePath
@@ -72,7 +70,7 @@ export const validatePreviousReleases = async ({
         id: 'releaseUnderECSL',
         text: strings.errors.noReleaseUnderECSLSelected,
         errorId: 'noReleaseUnderECSLSelected',
-      })
+      }),
     )
   } else if (releaseUnderECSL === 'YES') {
     const dateOfRelease = extractDateFieldsToDateParts('dateOfRelease', requestBody)
@@ -91,7 +89,7 @@ export const validatePreviousReleases = async ({
           text: formatValidationErrorMessage(dateOfReleaseIso, 'date of release'),
           errorId: dateOfReleaseIso.errorId,
           values: dateOfRelease as Record<string, string>,
-        })
+        }),
       )
     }
 
@@ -111,7 +109,7 @@ export const validatePreviousReleases = async ({
           text: formatValidationErrorMessage(conditionalReleaseDateIso, 'conditional release date'),
           errorId: conditionalReleaseDateIso.errorId,
           values: conditionalReleaseDate as Record<string, string>,
-        })
+        }),
       )
     }
 
@@ -129,7 +127,7 @@ export const validatePreviousReleases = async ({
     }
   }
 
-  const isReleaseUnderECSL = releaseUnderECSL === 'YES'
+  const isReleaseUnderECSL = releaseUnderECSL === YesNoValues.YES
 
   return {
     valuesToSave: {
@@ -143,3 +141,5 @@ export const validatePreviousReleases = async ({
     nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-person-details`,
   }
 }
+
+export default validatePreviousReleases

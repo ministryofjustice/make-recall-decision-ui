@@ -5,9 +5,9 @@ import checkBookingDetailsController from './checkBookingDetailsController'
 import recommendationApiResponse from '../../../../api/responses/get-recommendation.json'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
-import { randomEnum } from '../../../@types/enum.testFactory'
-import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { getRoute } from './custodyGroupRouter'
+import randomEnum from '../../../@types/enum.testFactory'
+import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import getRoute from './custodyGroupRouter'
 
 jest.mock('../../../data/makeDecisionApiClient')
 jest.mock('../../../utils/dates/formatting')
@@ -94,11 +94,6 @@ const PO_RECALL_CONSULT_SPO_STATUS_TEMPLATE = {
   active: true,
   created: '2023-11-13T09:49:31.361Z',
 }
-const SENT_TO_PPCS_STATUS_TEMPLATE = {
-  name: 'SENT_TO_PPCS',
-  active: true,
-  created: '2023-11-13T09:49:31.371Z',
-}
 const AP_RECORDED_RATIONALE = {
   name: 'AP_RECORDED_RATIONALE',
   active: true,
@@ -108,7 +103,6 @@ const STATUSES_TEMPLATE = [
   SPO_SIGNED_STATUS_TEMPLATE,
   ACO_SIGNED_STATUS_TEMPLATE,
   PO_RECALL_CONSULT_SPO_STATUS_TEMPLATE,
-  SENT_TO_PPCS_STATUS_TEMPLATE,
 ]
 
 describe('get', () => {
@@ -176,11 +170,11 @@ describe('get', () => {
           firstNames: 'Jane C',
           lastName: 'Doe',
           prisonNumber: '1234',
-          receivedDateTime: '2023-11-13T09:49:31.371Z',
+          receivedDateTime: null,
         },
         prisonOffender: expectedPrisonOffender,
       },
-      'token'
+      'token',
     )
 
     expect(updateRecommendation).toHaveBeenCalledWith({
@@ -195,7 +189,7 @@ describe('get', () => {
           lastName: convertedLastName,
           cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
           prisonNumber: PRISON_OFFENDER_TEMPLATE.bookingNo,
-          receivedDateTime: SENT_TO_PPCS_STATUS_TEMPLATE.created,
+          receivedDateTime: null,
           currentEstablishment: expectedCurrentEstablishment,
           image: undefined,
         },
@@ -459,7 +453,7 @@ describe('get', () => {
             receivedDateTime: '2026-01-01T08:00:00',
           }),
         }),
-      })
+      }),
     )
   })
 })

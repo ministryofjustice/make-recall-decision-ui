@@ -1,10 +1,10 @@
 import { ContactHistoryFilters } from '../../../../@types/contacts'
-import { listSelectedContactTypeCodes } from './listSelectedContactTypeCodes'
+import listSelectedContactTypeCodes from './listSelectedContactTypeCodes'
 
 describe('listSelectedContactTypeCodes', () => {
   it('return undefined if given undefined contactTypes', () => {
     expect(
-      listSelectedContactTypeCodes({ filters: { contactTypes: undefined } as ContactHistoryFilters })
+      listSelectedContactTypeCodes({ filters: { contactTypes: undefined } as ContactHistoryFilters }),
     ).toBeUndefined()
   })
 

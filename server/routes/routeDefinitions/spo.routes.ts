@@ -18,7 +18,7 @@ import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import { and, not, or, statusIsActive } from '../../middleware/check'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../recommendations'
-import { spoPaths } from '../paths/spo.paths'
+import spoPaths from '../paths/spo.paths'
 
 const roles = {
   allow: [HMPPS_AUTH_ROLE.SPO],
@@ -96,7 +96,7 @@ const spoRationaleRoutes: RouteDefinition[] = [
     ...createRecommendationRouteTemplate(
       'get',
       [recommendationStatusCheck(statusIsActive(STATUSES.SPO_RECORDED_RATIONALE))],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoRationaleConfirmation}`,
     handler: spoRationaleConfirmationController.get,
@@ -113,10 +113,10 @@ const spoCounterSigningCheckRoutes: RouteDefinition[] = [
       'get',
       [
         recommendationStatusCheck(
-          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
+          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED)),
         ),
       ],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${spoPaths.rationaleCheck}`,
     handler: rationaleCheckController.get,
@@ -126,10 +126,10 @@ const spoCounterSigningCheckRoutes: RouteDefinition[] = [
       'post',
       [
         recommendationStatusCheck(
-          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
+          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED)),
         ),
       ],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${spoPaths.rationaleCheck}`,
     handler: rationaleCheckController.post,
@@ -140,8 +140,8 @@ const spoCounterSigningMiddleware = [
   recommendationStatusCheck(
     and(
       not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)),
-      or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
-    )
+      or(statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED)),
+    ),
   ),
 ]
 
@@ -164,10 +164,10 @@ const spoCounterSigningRoutes: RouteDefinition[] = [
       'get',
       [
         recommendationStatusCheck(
-          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED))
+          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.SPO_SIGNATURE_REQUESTED)),
         ),
       ],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoCountersignature}`,
     handler: managerCountersignatureController.get,
@@ -182,10 +182,10 @@ const spoCounterSigningRoutes: RouteDefinition[] = [
       'get',
       [
         recommendationStatusCheck(
-          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED))
+          and(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)), statusIsActive(STATUSES.ACO_SIGNATURE_REQUESTED)),
         ),
       ],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${spoPaths.acoCountersignature}`,
     handler: managerCountersignatureController.get,
@@ -199,7 +199,7 @@ const spoCounterSigningRoutes: RouteDefinition[] = [
     ...createRecommendationRouteTemplate(
       'get',
       [recommendationStatusCheck(or(statusIsActive(STATUSES.SPO_SIGNED), statusIsActive(STATUSES.ACO_SIGNED)))],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${spoPaths.countersignConfirmation}`,
     handler: countersignConfirmationController.get,
@@ -242,16 +242,18 @@ const spoDeleteRoutes: RouteDefinition[] = [
     ...createRecommendationRouteTemplate(
       'get',
       [recommendationStatusCheck(or(statusIsActive(STATUSES.REC_DELETED), statusIsActive(STATUSES.REC_CLOSED)))],
-      roles
+      roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${spoPaths.spoDeleteConfirmation}`,
     handler: spoDeleteConfirmationController.get,
   },
 ]
 
-export const spoRoutes: RouteDefinition[] = [
+const spoRoutes: RouteDefinition[] = [
   ...spoRationaleRoutes,
   ...spoCounterSigningCheckRoutes,
   ...spoCounterSigningRoutes,
   ...spoDeleteRoutes,
 ]
+
+export default spoRoutes

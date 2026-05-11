@@ -63,12 +63,13 @@ pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 export SPRING_PROFILES_ACTIVE=dev,seed-test-data
 export POSTGRES_OPTIONS=sslmode=disable
-docker compose build 
+docker compose build
 docker compose up -d
 popd
 
 pushd "${UI_DIR}"
 printf "\n\nBuilding/starting UI components...\n\n"
+export USE_LOCAL_HEADER_FALLBACKS=true
 docker compose build
 docker compose up -d
 popd

@@ -6,8 +6,8 @@ import completeRecommendationResponse from '../../api/responses/get-recommendati
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
-import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import { ppcsPaths } from '../../server/routes/paths/ppcs.paths'
+import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import ppcsPaths from '../../server/routes/paths/ppcs.paths'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
@@ -40,12 +40,9 @@ const urls = [
   recommendationEndpoint('already-existing', [], true),
   recommendationEndpoint('task-list-consider-recall'),
   recommendationEndpoint('trigger-leading-to-recall'),
-  recommendationEndpoint('response-to-probation'),
   recommendationEndpoint('licence-conditions'),
   recommendationEndpoint('alternatives-tried'),
   recommendationEndpoint('indeterminate-type'),
-  recommendationEndpoint('is-indeterminate'),
-  recommendationEndpoint('is-extended'),
   recommendationEndpoint('share-case-with-manager'),
   recommendationEndpoint('share-case-with-admin'),
   recommendationEndpoint('discuss-with-manager'),
@@ -67,7 +64,6 @@ const urls = [
   recommendationEndpoint('appointment-no-recall'),
   recommendationEndpoint('contraband'),
   recommendationEndpoint('address-details'),
-  recommendationEndpoint('iom'),
   recommendationEndpoint('police-details'),
   recommendationEndpoint('victim-contact-scheme'),
   recommendationEndpoint('victim-liaison-officer'),
@@ -81,8 +77,6 @@ const urls = [
   recommendationEndpoint('ppcs-query-emails'),
   recommendationEndpoint('arrest-issues'),
   recommendationEndpoint('add-previous-release'),
-  recommendationEndpoint('add-previous-recall'),
-  recommendationEndpoint('previous-recalls'),
   recommendationEndpoint('previous-releases'),
   recommendationEndpoint('offence-analysis'),
   recommendationEndpoint('rosh'),
@@ -147,25 +141,28 @@ const ppcsUrls = [
   recommendationEndpoint('edit-recall-received-date-and-time', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-probation-area', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-mappa-level', ['SENT_TO_PPCS']),
-  recommendationEndpoint('select-index-offence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectIndexOffence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('match-index-offence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectPpudSentence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.areOffenceChangesNeeded, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('custody-type', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.matchIndexOffence, ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint(ppcsPaths.editCustodyType, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
   recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('sentence-to-commit-existing-offender', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.sentenceToCommitExistingOffender, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('select-indeterminate-ppud-sentence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectIndeterminatePpudSentence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.INDETERMINATE,
   }),
   recommendationEndpoint('supporting-documents', ['SENT_TO_PPCS']),
@@ -193,7 +190,7 @@ function recommendationEndpoint(
   resource: string,
   statuses = [],
   fullRecommendationData: boolean = false,
-  bookRecallToPpud = {}
+  bookRecallToPpud = {},
 ) {
   return {
     url: `${sharedPaths.recommendations}/456/${resource}`,
@@ -225,6 +222,13 @@ const TEMPLATE = {
   paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
 }
 
+// Ignore the Probation Components API fallback header as it shouldn't
+// ever be presented to the end user
+const A11Y_ELEMENTS_TO_CHECK = {
+  include: [['body']],
+  exclude: [['.probation-common-fallback-header']],
+}
+
 context('Accessibility (a11y) Checks', () => {
   beforeEach(() => {
     cy.signIn()
@@ -239,10 +243,10 @@ context('Accessibility (a11y) Checks', () => {
         .withActiveConviction(
           standardActiveConvictionTemplate()
             .withDescription('Robbery - 05714')
-            .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+            .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
         )
         .withAllConvictionsReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('updateStatuses', { statusCode: 200, response: [] })
     cy.mockCaseSummaryData()
@@ -264,7 +268,7 @@ context('Accessibility (a11y) Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -302,7 +306,7 @@ context('Accessibility (a11y) SPO Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -341,7 +345,7 @@ context('Accessibility (a11y) AP Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -531,7 +535,7 @@ context('Accessibility (a11y) PPCS Checks', () => {
 
       cy.visit(item.url)
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },

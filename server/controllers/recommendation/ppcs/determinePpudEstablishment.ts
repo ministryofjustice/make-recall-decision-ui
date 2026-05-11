@@ -13,7 +13,7 @@ export const PPUD_ESTABLISHMENT_NOT_APPLICABLE = 'Not Applicable'
  */
 export const determinePpudEstablishment = async (
   recommendation: RecommendationResponse,
-  token: string
+  token: string,
 ): Promise<string> => {
   const nomisAgencyId = recommendation.prisonOffender.agencyId
   if (!hasValue(nomisAgencyId) || nomisAgencyId.length === 0) {
@@ -63,7 +63,7 @@ async function getTransferAgencyId(recommendation: RecommendationResponse, token
 async function getLatestMovement(nomisId: string, token: string) {
   const movements = await offenderMovements(token, nomisId)
   if (movements === undefined || movements.length === 0) {
-    return
+    return undefined
   }
 
   movements.sort((movementA, movementB) => (movementA.movementDateTime < movementB.movementDateTime ? -1 : 1))

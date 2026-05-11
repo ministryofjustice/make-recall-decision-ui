@@ -1,18 +1,16 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { YesNoValues } from '../formOptions/yesNo'
 
-export const validateFixedTermLicenceConditions = async ({
-  requestBody,
-  urlInfo,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validateFixedTermLicenceConditions = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { hasFixedTermLicenceConditions, hasFixedTermLicenceConditionsDetails } = requestBody
   const invalid = !isValueValid(hasFixedTermLicenceConditions as string, 'yesNo')
   const missingYesDetail =
-    hasFixedTermLicenceConditions === 'YES' && isEmptyStringOrWhitespace(hasFixedTermLicenceConditionsDetails)
+    hasFixedTermLicenceConditions === YesNoValues.YES && isEmptyStringOrWhitespace(hasFixedTermLicenceConditionsDetails)
   const hasError = !hasFixedTermLicenceConditions || invalid || missingYesDetail
   if (hasError) {
     const errors = []
@@ -24,7 +22,7 @@ export const validateFixedTermLicenceConditions = async ({
           id: 'hasFixedTermLicenceConditions',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingYesDetail) {
@@ -34,7 +32,7 @@ export const validateFixedTermLicenceConditions = async ({
           id: 'hasFixedTermLicenceConditionsDetails',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -49,9 +47,11 @@ export const validateFixedTermLicenceConditions = async ({
   // valid
   const valuesToSave = {
     fixedTermAdditionalLicenceConditions: {
-      selected: hasFixedTermLicenceConditions === 'YES',
+      selected: hasFixedTermLicenceConditions === YesNoValues.YES,
       details:
-        hasFixedTermLicenceConditions === 'YES' ? stripHtmlTags(hasFixedTermLicenceConditionsDetails as string) : null,
+        hasFixedTermLicenceConditions === YesNoValues.YES
+          ? stripHtmlTags(hasFixedTermLicenceConditionsDetails as string)
+          : null,
     },
   }
   return {
@@ -59,3 +59,5 @@ export const validateFixedTermLicenceConditions = async ({
     nextPagePath: nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo }),
   }
 }
+
+export default validateFixedTermLicenceConditions

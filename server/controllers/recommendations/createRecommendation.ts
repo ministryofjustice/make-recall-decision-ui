@@ -7,11 +7,11 @@ import {
 } from '../../data/makeDecisionApiClient'
 import { validateCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { sharedPaths } from '../../routes/paths/shared.paths'
 
-export const createRecommendationController = async (req: Request, res: Response): Promise<Response | void> => {
+const createRecommendationController = async (req: Request, res: Response): Promise<Response | void> => {
   const normalizedCrn = validateCrn(req.body.crn)
   try {
     const { user, flags } = res.locals
@@ -49,7 +49,7 @@ export const createRecommendationController = async (req: Request, res: Response
         recommendationId: recommendation.id.toString(),
         region: user.region,
       },
-      flags
+      flags,
     )
   } catch (err) {
     req.session.errors = [
@@ -61,3 +61,5 @@ export const createRecommendationController = async (req: Request, res: Response
     res.redirect(303, `${sharedPaths.cases}/${normalizedCrn}/overview`)
   }
 }
+
+export default createRecommendationController

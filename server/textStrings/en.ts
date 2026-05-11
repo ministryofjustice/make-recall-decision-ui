@@ -1,4 +1,4 @@
-export const strings: Record<string, Record<string, string>> = {
+const strings: Record<string, Record<string, string>> = {
   errors: {
     noSpoRecallTypeSelected: 'Select whether you have decided to recall or made a decision not to recall',
     missingDeleteDntrRationale: "Explain why you're deleting this decision not to recall",
@@ -8,6 +8,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingOdmName: 'Provide an out-of-hours manager name',
     missingRationaleCheck: 'Choose an option',
     missingCustodyType: 'Enter custody type',
+    missingReceivedDateTime: 'Enter recall received date and time',
     missingCurrentEstablishment: 'Select an establishment from the list',
     missingPoliceForce: 'Enter police force',
     missingMappaLevel: 'Enter MAPPA level',
@@ -16,7 +17,7 @@ export const strings: Record<string, Record<string, string>> = {
     missingLegislationReleasedUnder: 'Enter legislation',
     missingReleasingPrison: 'Select a releasing prison from the list',
     missingProbationArea: 'Enter probation area',
-    missingIndexOffence: 'Select a matching index offence from the list',
+    missingIndexOffence: 'Select the nearest matching offence from the list in PPUD',
     missingSpoNoRecallRationale: 'Explain your decision',
     missingLastName: 'Enter a last name',
     missingFirstName: 'Enter a first name',
@@ -30,15 +31,16 @@ export const strings: Record<string, Record<string, string>> = {
     noRecallTypeSelectedDiscretionary:
       "Select if you're recommending a fixed term recall, standard recall or no recall",
     noRecallTypeSelectedMandatory: "Select if you're recommending a fixed term recall or no recall",
+    noRecallTypeSelected: 'Select a recall recommendation',
     noRecallTypeExtendedSelected: 'Select whether you recommend a recall or not',
+    noRecallTypeExtendedSelectedFTR56: 'Select a recall recommendation',
     noRecallTypeIndeterminateSelected: 'Select whether you recommend a recall or not',
+    noRecallTypeIndeterminateSelectedFTR56: 'Select a recall recommendation',
     missingRecallTypeDetail: 'Explain why you recommend this recall type',
     missingCustodyPoliceAddressDetail: 'Enter the custody address',
     missingOffenceAnalysis: 'Enter the offence analysis',
     noCustodyStatusSelected: 'Select whether the person is in custody or not',
     noEmergencyRecallSelected: 'Select whether this is an emergency recall or not',
-    noIsIndeterminateSelected: 'Select whether {{ fullName }} is on an indeterminate sentence or not',
-    noIsExtendedSelected: 'Select whether {{ fullName }} is on an extended sentence or not',
     noIsUnder18: 'Select whether {{ fullName }} is under 18',
     noIsSentence48MonthsOrOver: "Select whether {{ fullName }}'s sentence is 48 months or over",
     noIsMappaCategory4: 'Select whether {{ fullName }} is in MAPPA category 4',
@@ -48,20 +50,42 @@ export const strings: Record<string, Record<string, string>> = {
       'Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence',
     noHasBeenChargedWithTerroristOrStateThreatOffence:
       'Select whether {{ fullName }} has been charged with a terrorist or state threat offence',
+    noIsChargedWithOffence: 'Select whether {{ fullName }} is being recalled because of being charged with an offence',
+    noIsServingTerroristOrNationalSecurityOffence:
+      'Select whether {{ fullName }} is serving a sentence for a terrorist or national security offence',
+    noIsAtRiskOfInvolvedInForeignPowerThreat:
+      'Select whether {{ fullName }} is considered to be a person at risk of being involved in foreign power threat activity',
+    noWasReferredToParoleBoard244ZB:
+      'Select whether {{ fullName }} was referred to the Parole Board under section 244ZB (power to detain) on this sentence',
+    noWasRepatriatedForMurder:
+      'Select whether {{ fullName }} has been repatriated to the UK following a sentence for murder',
+    noIsServingSOPCSentence:
+      'Select whether {{ fullName }} is serving a Sentence for offenders of particular concern (SOPC)',
+    noIsServingDCRSentence:
+      'Select whether {{ fullName }} is serving a Discretionary conditional release (DCR) sentence',
+    noIsYouthSentenceOver12Months: "Select whether {{ fullName }}'s sentence is 12 months or over",
+    noIsYouthChargedWithSeriousOffence:
+      'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
     noIsSentence12MonthsOrOver: 'Select whether the sentence is 12 months or over',
     noIsMappaLevelAbove1: 'Select whether the MAPPA level is above 1',
     noHasBeenConvictedOfSeriousOffence: 'Select whether {{ fullName }} has been charged with a serious offence',
     noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+    noIndeterminateSentenceTypeSelectedFtr56: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
     noVictimContactSchemeSelected: 'Select whether there are any victims in the victim contact scheme',
-    noIntegratedOffenderManagementSelected: 'Select whether {{ fullName }} is under Integrated Offender Management',
     noAlternativesTriedSelected: 'Select which alternatives to recall have been tried already',
     noIndeterminateDetailsSelected: 'Select at least one of the criteria',
+    noIndeterminateDetailsSelectedFtr56: 'Select all the criteria that apply to {{ fullName }}',
     missingIndeterminateDetailIndexOffence: 'Enter details about the behaviour similar to the index offence',
+    missingIndeterminateDetailIndexOffenceFtr56:
+      'Enter details about the behaviour similar to the circumstances surrounding the index offence',
     missingIndeterminateDetailSexualViolent:
       'Enter details about the behaviour that could lead to a sexual or violent offence',
+    missingIndeterminateDetailSexualViolentFtr56:
+      'Enter details about the behaviour that has caused, or will cause, a sexual or violent offence',
+    missingIndeterminateDetailLikelyResultSexualViolent:
+      'Enter details about the behaviour likely to result in a sexual or violent offence',
     missingIndeterminateDetailContact: 'Enter details about {{ fullName }} being out of touch',
-    noVulnerabilitiesSelected: 'Select if there are vulnerabilities or additional needs',
-    noVulnerabilitiesSelectedRiskToSelf:
+    noVulnerabilitiesSelected:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
     normalAndExclusiveSelected:
       'Select the vulnerabilities or needs {{ fullName }} may have, or ‘No concerns or do not know’',
@@ -69,8 +93,8 @@ export const strings: Record<string, Record<string, string>> = {
     missingExclusive:
       'Select ‘No concerns about vulnerabilities or needs’, or ‘Do not know about vulnerabilities or needs’',
     missingTriggerLeadingToRecall: 'Explain what has made you consider recalling {{ fullName }}',
-    missingResponseToProbation: 'Explain how {{ fullName }} has responded to probation',
     missingWhatLedToRecall: 'Enter details of what has led to this recall',
+    missingSentenceGroup: 'Select a sentence group',
     noArrestIssuesSelected: "Select whether there's anything the police should know",
     missingArrestIssuesDetail: 'Enter details of the arrest issues',
     noFixedTermLicenceConditionsSelected: 'Select whether there are additional licence conditions',
@@ -103,16 +127,18 @@ export const strings: Record<string, Record<string, string>> = {
     missingManagerRecallTypeDetail: 'Explain your decision',
     missingRosh: 'Select a RoSH level for the risk to',
     noDeletePreviousReleaseIndex: 'Select a previous release to delete',
-    noDeletePreviousRecallIndex: 'Select a previous recall to delete',
     missingManagerCountersignatureExposition: 'Add a comment to confirm your countersignature',
     missingWhoCompletedPartAName: 'Enter the name of the person who completed the Part A',
-    missingWhoCompletedPartAEmail: 'Enter the email of the person who completed the Part A',
-    invalidWhoCompletedPartAEmail: 'Enter an email address in the correct format, like name@example.com',
+    missingWhoCompletedPartAEmail: 'Enter the GOV.UK email of the person who completed the Part A',
+    invalidWhoCompletedPartAEmail: 'Enter the email in the correct format, like name@justice.gov.uk',
+    nonGovUkWhoCompletedPartAEmail: 'You can only use an email ending in ‘GOV.UK’ for the person completing the Part A',
     missingIsPersonProbationPractitionerForOffender:
       'Select whether this person is the probation practitioner for {{ fullName }}',
     missingPractitionerForPartAName: 'Enter the name of the probation practitioner for {{ fullName }}',
-    missingPractitionerForPartAEmail: 'Enter the email of the probation practitioner for {{ fullName }}',
-    invalidPractitionerForPartAEmail: 'Enter an email address in the correct format, like name@example.com',
+    missingPractitionerForPartAEmail: 'Enter the GOV.UK email for the probation practitioner for {{ fullName }}',
+    invalidPractitionerForPartAEmail: 'Enter the email in the correct format, like name@justice.gov.uk',
+    nonGovUkPractitionerForPartAEmail:
+      'You can only use an email ending in ‘GOV.UK’ for the probation practitioner for {{ fullName }}',
     invalidRecipientEmail: 'Enter an email address in a correct format, like name@example.com',
     missingRecipientEmail: 'Enter an email address',
     missingPPCSEmail: 'Enter an email address',
@@ -136,6 +162,7 @@ export const strings: Record<string, Record<string, string>> = {
     invalidIndeterminatePpudSentenceSelected:
       "Something went wrong. PPUD does not recognise the indeterminate sentence you've selected. Refresh the page and try again. If the problem continues, contact the support team.",
     missingSentencingCourt: 'Select a sentencing court from the list',
+    missingChangeOffenceOrAddComment: 'Select an option',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -150,7 +177,6 @@ export const strings: Record<string, Record<string, string>> = {
   },
   confirmations: {
     previousReleaseDeleted: 'The previous release has been deleted',
-    previousRecallDeleted: 'The previous recall has been deleted',
   },
   pageHeadings: {
     rationaleCheck: 'You must record your rationale',
@@ -181,12 +207,10 @@ export const strings: Record<string, Record<string, string>> = {
     managerRecordDecision: 'Record your decision',
     managerRecordDecisionDelius: 'Record your decision in NDelius',
     managerViewDecision: 'Your decision',
-    responseToProbation: 'How has {{ fullName }} responded to probation so far?',
     licenceConditions: 'What licence conditions has {{ fullName }} breached?',
     alternativesToRecallTried: 'What alternatives to recall have been tried already?',
     managerReview: 'Stop and think',
-    isIndeterminateSentence: 'Is {{ fullName }} on an indeterminate sentence?',
-    isExtendedSentence: 'Is {{ fullName }} on an extended sentence?',
+    checkMappaInformation: "Check {{ fullName }}'s MAPPA information to begin assessing recall type suitability",
     suitabilityForFixedTermRecall: "Check {{ fullName }}'s suitability for a standard or fixed term recall ",
     indeterminateSentenceType: 'What type of sentence is {{ fullName }} on?',
     indeterminateOrExtendedSentenceDetails: 'Indeterminate and extended sentences',
@@ -194,22 +218,22 @@ export const strings: Record<string, Record<string, string>> = {
     sensitiveInformation: 'Sensitive information',
     emergencyRecall: 'Is this an emergency recall?',
     custodyStatus: 'Is {{ fullName }} in custody now?',
-    vulnerabilities: 'Consider vulnerability and additional needs. Which of these would recall affect?',
+    vulnerabilities: 'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
-    vulnerabilitiesRiskToSelf:
-      'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     taskList: 'Create a Part A form',
+    taskListFTR56: 'Part A for {{ fullName }}',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
-    integratedOffenderManagement: 'Is {{ fullName }} under Integrated Offender Management (IOM)?',
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
-    practitionerForPartA: 'Practitioner for {{ fullName }}?',
+    practitionerForPartA: 'Practitioner for {{ fullName }}',
+    practitionerForPartAFTR56: 'Practitioner for {{ fullName }}',
     revocationOrderRecipients: 'Where should the revocation order be sent?',
     ppcsQueryEmails: 'Where should PPCS respond with questions?',
     revocationContact: 'Where should the revocation order be sent?',
     victimContactScheme: 'Are there any victims in the victim contact scheme?',
     victimLiaisonOfficer: 'Victim Liaison Officer (VLO)',
     whatLedToRecall: 'What has led to this recall?',
+    sentenceInformation: "{{ fullName }}'s sentence information",
     personalDetails: 'Personal details',
     offenceDetails: 'Offence details',
     offenceAnalysis: 'Offence analysis',
@@ -221,9 +245,8 @@ export const strings: Record<string, Record<string, string>> = {
     lineManagerCounterSignature: 'Line manager countersignature',
     seniorManagerCounterSignature: 'Senior manager countersignature',
     previousReleases: 'Previous releases',
-    previousRecalls: 'Previous recalls',
+    releaseDetails: 'Release details',
     addPreviousRelease: 'Add previous release',
-    addPreviousRecall: 'Add previous recall',
     arrestIssues: 'Is there anything the police should know before they arrest {{ fullName }}?',
     contraband: 'Do you think {{ fullName }} is using recall to bring contraband into prison?',
     confirmationPartA: 'Part A created',
@@ -259,6 +282,7 @@ export const strings: Record<string, Record<string, string>> = {
     editReleasingPrison: 'Edit releasing prison',
     editProbationArea: 'Edit probation area',
     matchIndexOffence: 'Select a matching index offence in PPUD',
+    changeIndexOffence: 'Change index offence or add a comment',
     deleteRecommendationRationale: 'Delete recommendation for {{ fullName }}',
     deletePartARationale: 'Delete Part A for {{ fullName }}',
     deleteDntrRationale: 'Delete decision not to recall for {{ fullName }}',
@@ -282,16 +306,27 @@ export const strings: Record<string, Record<string, string>> = {
     // indeterminate sentence selection
     selectIndeterminatePpudSentence: 'Select a sentence for your booking',
     determinatePpudSentences: 'Determinate sentences in PPUD',
+    areOffenceChangesNeeded: 'Do you need to change the index offence or add a comment?',
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
   },
+  labels: {
+    yes: 'Yes',
+    no: 'No',
+    yesOffenceChanges: 'Yes, change index offence or add a comment',
+  },
   taskListLinkTexts: {
-    vulnerabilities: 'Would recall affect vulnerability or additional needs?',
-    vulnerabilitiesWithRiskToSelfFlagEnabled: 'Consider if recall could affect vulnerabilities or needs',
-    vulnerabilitiesDetailsWithRiskToSelfFlagEnabled: 'Add more details about vulnerabilities or needs',
+    vulnerabilities: 'Consider if recall could affect vulnerabilities or needs',
+    vulnerabilitiesDetails: 'Add more details about vulnerabilities or needs',
   },
   automatedFieldValues: {
     mandatoryFTRRationale:
       '{{ personOnProbationName }} must get an automatic fixed term recall as they do not meet the exemption criteria.',
+    mandatoryFTRRationaleFTR56:
+      '{{ personOnProbationName }} must get a fixed term recall as they do not meet the exclusion criteria.',
+    mandatoryStandardRationaleFTR56:
+      '{{ personOnProbationName }} must get a standard recall as they are excluded from getting a fixed term.',
   },
 }
+
+export default strings

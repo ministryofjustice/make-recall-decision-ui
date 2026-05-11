@@ -15,7 +15,7 @@ export const PpudSentenceDataGenerator: DataGenerator<PpudSentenceData, AnyNoneO
     if (options === 'any') {
       return {
         offenceDescription: faker.lorem.sentence(),
-        offenceDescriptionComment: null,
+        offenceDescriptionComment: faker.lorem.sentences(),
         releaseDate: faker.date.future().toISOString(),
         sentencingCourt: `${faker.location.city()} Court`,
         dateOfSentence: faker.date.past().toISOString(),

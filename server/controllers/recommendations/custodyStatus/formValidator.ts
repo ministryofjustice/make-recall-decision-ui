@@ -1,17 +1,23 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateCustodyStatus = async ({
+  requestBody,
+  urlInfo,
+  ftr56Enabled,
+}: FormValidatorArgs & {
+  ftr56Enabled?: boolean
+}): FormValidatorReturn => {
   let errors
 
   const { custodyStatus, custodyStatusDetailsYesPolice } = requestBody
   const invalidStatus = !custodyStatus || !isValueValid(custodyStatus as string, 'custodyStatus')
   const missingPoliceCustodyAddress =
-    custodyStatus === 'YES_POLICE' && isEmptyStringOrWhitespace(custodyStatusDetailsYesPolice)
+    !ftr56Enabled && custodyStatus === 'YES_POLICE' && isEmptyStringOrWhitespace(custodyStatusDetailsYesPolice)
   if (invalidStatus || missingPoliceCustodyAddress) {
     errors = []
     if (invalidStatus) {
@@ -21,7 +27,7 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
           id: 'custodyStatus',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingPoliceCustodyAddress) {
@@ -31,7 +37,7 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
           id: 'custodyStatusDetailsYesPolice',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     return {
@@ -44,7 +50,8 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
   const valuesToSave = {
     custodyStatus: {
       selected: custodyStatus,
-      details: custodyStatus === 'YES_POLICE' ? stripHtmlTags(custodyStatusDetailsYesPolice as string) : null,
+      details:
+        !ftr56Enabled && custodyStatus === 'YES_POLICE' ? stripHtmlTags(custodyStatusDetailsYesPolice as string) : null,
       allOptions: formOptions.custodyStatus,
     },
   }
@@ -54,3 +61,5 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
     nextPagePath,
   }
 }
+
+export default validateCustodyStatus

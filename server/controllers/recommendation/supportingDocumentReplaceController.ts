@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { getSupportingDocuments, replaceSupportingDocument } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId, type, id } = req.params
@@ -48,7 +48,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
 
@@ -59,7 +59,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: 'file',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
 
@@ -93,7 +93,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       return res.redirect(303, req.originalUrl)
     }
   }
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo }))
 }
 
 export default { get, post }

@@ -1,4 +1,4 @@
-export const spoPaths = {
+export default {
   spoTaskListConsiderRecall: 'spo-task-list-consider-recall',
   reviewCase: 'review-case/:crn/:sectionId',
   reviewPractitionersConcerns: 'review-practitioners-concerns',

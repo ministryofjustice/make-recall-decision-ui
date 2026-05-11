@@ -1,4 +1,4 @@
-export const apPaths = {
+export default {
   apLicenceConditions: 'ap-licence-conditions',
   apRecallRationale: 'ap-recall-rationale',
   apRecordDecision: 'ap-record-decision',

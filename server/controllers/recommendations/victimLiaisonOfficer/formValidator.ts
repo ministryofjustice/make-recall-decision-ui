@@ -5,7 +5,7 @@ import { convertGmtDatePartsToUtc } from '../../../utils/dates/conversion'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { sharedPaths } from '../../../routes/paths/shared.paths'
 
-export const validateVictimLiaisonOfficer = async ({
+const validateVictimLiaisonOfficer = async ({
   requestBody,
   recommendationId,
 }: FormValidatorArgs): FormValidatorReturn => {
@@ -34,7 +34,7 @@ export const validateVictimLiaisonOfficer = async ({
         text: formatValidationErrorMessage(dateVloInformedIso as ValidationError, 'date you told the VLO'),
         errorId: (dateVloInformedIso as ValidationError).errorId,
         values: dateVloInformedParts as Record<string, string>,
-      })
+      }),
     )
     const unsavedValues = {
       dateVloInformedParts,
@@ -55,4 +55,8 @@ export const validateVictimLiaisonOfficer = async ({
       nextPagePath,
     }
   }
+
+  return { errors }
 }
+
+export default validateVictimLiaisonOfficer

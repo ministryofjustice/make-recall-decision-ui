@@ -4,10 +4,10 @@ import { getRecommendation, prisonSentences, updateRecommendation } from '../../
 import { NamedFormError } from '../../../../@types/pagesForms'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../../../utils/errors'
-import { strings } from '../../../../textStrings/en'
+import strings from '../../../../textStrings/en'
 import { isDefined, isEmptyStringOrWhitespace } from '../../../../utils/utils'
 import { OfferedOffence, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import { ppcsPaths } from '../../../../routes/paths/ppcs.paths'
+import ppcsPaths from '../../../../routes/paths/ppcs.paths'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -37,7 +37,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const nomisOffenceData = sentenceSequences?.flatMap(seq => {
     const { indexSentence } = seq
-    const indexOffence = indexSentence.offences.at(0)
+    const indexOffence = indexSentence.offences?.[0]
     return {
       id: indexOffence.offenderChargeId,
       description: indexOffence.offenceDescription,
@@ -46,9 +46,10 @@ async function get(req: Request, res: Response, next: NextFunction) {
       dateOfSentence: indexSentence.sentenceDate,
       startDate: indexSentence.sentenceStartDate,
       endDate: indexSentence.sentenceEndDate,
+      sentenceSequenceExpiryDate: indexSentence.sentenceSequenceExpiryDate,
       terms:
         indexSentence.terms.length < 2
-          ? [{ key: 'Sentence length', value: seq.indexSentence.terms.at(0) ?? {} }]
+          ? [{ key: 'Sentence length', value: seq.indexSentence.terms?.[0] ?? {} }]
           : seq.indexSentence.terms.map(t => resolveTerm(t)),
       consecutiveCount: seq.sentencesInSequence
         ? Array.from(new Map(Object.entries(seq.sentencesInSequence)).values()).flatMap(x => x).length
@@ -108,6 +109,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
             courtDescription: seq.indexSentence.courtDescription,
             sentenceStartDate: seq.indexSentence.sentenceStartDate,
             sentenceEndDate: seq.indexSentence.sentenceEndDate,
+            sentenceSequenceExpiryDate: seq.indexSentence.sentenceSequenceExpiryDate,
             bookingId: seq.indexSentence.bookingId,
             terms: seq.indexSentence.terms,
             sentenceTypeDescription: seq.indexSentence.sentenceTypeDescription,
@@ -154,10 +156,11 @@ async function post(req: Request, res: Response, next: NextFunction) {
     const errorId = 'noIndexOffenceSelected'
     errors.push(
       makeErrorObject({
-        id: 'indexOffence',
+        id: 'indexOffence-1-input', // error summary links should point to the first radio item
+        name: 'indexOffence',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -168,11 +171,11 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
   const indexOffenceData = recommendation.nomisIndexOffence.allOptions.find(
-    option => option.offenderChargeId === Number(indexOffence)
+    option => option.offenderChargeId === Number(indexOffence),
   )
   const sentences = (await prisonSentences(token, recommendation.personOnProbation.nomsNumber)) || []
   const sentenceForOffence = sentences.find(
-    s => s.indexSentence.offences?.at(0)?.offenderChargeId === indexOffenceData.offenderChargeId
+    s => s.indexSentence.offences?.[0]?.offenderChargeId === indexOffenceData.offenderChargeId,
   )
   const sentenceHasConsecutive = sentenceForOffence.sentencesInSequence != null
 
@@ -192,12 +195,21 @@ async function post(req: Request, res: Response, next: NextFunction) {
     featureFlags: flags,
   })
 
+  const offenderExistsAndHasSentences = recommendation.ppudOffender && recommendation.ppudOffender.sentences.length > 0
+  let nextPageId: string
+  if (sentenceHasConsecutive) {
+    nextPageId = ppcsPaths.consecutiveSentenceDetails
+  } else if (offenderExistsAndHasSentences) {
+    nextPageId = ppcsPaths.selectPpudSentence
+  } else {
+    nextPageId = ppcsPaths.matchIndexOffence
+  }
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: sentenceHasConsecutive ? ppcsPaths.consecutiveSentenceDetails : ppcsPaths.matchIndexOffence,
+    nextPageId,
     urlInfo,
   })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
-  next()
+  return next()
 }
 
 export default { get, post }

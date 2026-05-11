@@ -1,4 +1,4 @@
-import { EVENTS } from '../utils/constants'
+import EVENTS from '../utils/constants'
 import { RecommendationResponse } from './make-recall-decision-api'
 
 export interface FormError {
@@ -58,13 +58,10 @@ export type PageId =
   | 'managerRecordDecisionDelius'
   | 'managerDecisionConfirmation'
   | 'createRecommendationWarning'
-  | 'responseToProbation'
   | 'licenceConditions'
   | 'alternativesToRecallTried'
   | 'indeterminateOrExtendedSentenceDetails'
   | 'managerReview'
-  | 'isIndeterminateSentence'
-  | 'isExtendedSentence'
   | 'indeterminateSentenceType'
   | 'recallType'
   | 'recallTypeIndeterminate'
@@ -74,7 +71,6 @@ export type PageId =
   | 'vulnerabilities'
   | 'taskList'
   | 'fixedTermLicenceConditions'
-  | 'integratedOffenderManagement'
   | 'localPoliceContactDetails'
   | 'victimContactScheme'
   | 'whatLedToRecall'
@@ -89,8 +85,6 @@ export type PageId =
   | 'addressDetails'
   | 'previousReleases'
   | 'addPreviousRelease'
-  | 'previousRecalls'
-  | 'addPreviousRecall'
   | 'confirmationPartA'
   | 'taskListNoRecall'
   | 'whyConsideredRecall'
@@ -140,6 +134,7 @@ export type InputDisplayValues = (args: InputDisplayValuesArgs) => unknown
 export interface UiListItem {
   value: string
   text: string
+  hint?: string
   active?: boolean
   selected?: boolean
 }
