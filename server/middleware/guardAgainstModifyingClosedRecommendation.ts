@@ -18,6 +18,7 @@ function guardAgainstModifyingClosedRecommendation(req: Request, res: Response, 
   if (recommendation.status === 'DOCUMENT_DOWNLOADED') {
     res.redirect(301, `${sharedPaths.cases}/${recommendation.crn}/overview`)
   }
+
   return next()
 }
 
