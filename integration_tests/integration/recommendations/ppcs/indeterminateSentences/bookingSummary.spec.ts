@@ -213,17 +213,16 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
           })
 
           const { bookRecallToPpud } = recWithPersonalDetails
-
+          const { personOnProbation } = recWithPersonalDetails
           if (bookRecallToPpud) {
             bookRecallToPpud.gender = 'Male'
             bookRecallToPpud.cro = 'C23456'
-            bookRecallToPpud.pncNumber = 'PN23456'
             bookRecallToPpud.prisonNumber = 'P001111'
             bookRecallToPpud.releasingPrison = 'Birmingham'
             bookRecallToPpud.legislationReleasedUnder = 'Birmingham'
             bookRecallToPpud.releasingPrison = 'Birmingham'
           }
-
+          personOnProbation.pncNumber = 'PN23456'
           cy.task('getRecommendation', { statusCode: 200, response: recWithPersonalDetails })
           cy.visit(testPageUrl)
 
@@ -345,7 +344,7 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
         it('displays offender image when present', () => {
           const recWithPrisonOffender = {
             ...recommendation,
-            prisonOffender: { image: 'https://recall.gov.uk/prisoner888.jpg' },
+            prisonOffender: { image: 'prisoner888.jpg' },
           }
           cy.task('getRecommendation', { statusCode: 200, response: recWithPrisonOffender })
           cy.visit(testPageUrl)
