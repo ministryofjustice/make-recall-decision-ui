@@ -265,7 +265,7 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
 
             cy.contains('.govuk-summary-list__key', 'PNC')
               .siblings('.govuk-summary-list__value')
-              .should('contain.text', recWithPersonalDetails.bookRecallToPpud?.pncNumber)
+              .should('contain.text', recWithPersonalDetails.personOnProbation?.pncNumber)
 
             cy.contains('.govuk-summary-list__key', 'Prison booking number')
               .siblings('.govuk-summary-list__value')
