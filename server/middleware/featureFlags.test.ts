@@ -113,7 +113,7 @@ describe('readFeatureFlags', () => {
           })
         })
 
-        it('Overrides a default of false if flag is "1" in request query', async () => {
+        it('Still allows query parameter to override a default of false to true', async () => {
           await readFeatureFlags()(queryReq(true), resultRes, next)
           expect(resultRes.locals.flags).toEqual({
             testFlag: true,
