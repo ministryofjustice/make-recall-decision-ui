@@ -5,7 +5,7 @@ import inputDisplayValuesVulnerabilities from '../recommendations/vulnerabilitie
 import validateVulnerabilities from '../recommendations/vulnerabilities/formValidator'
 import { vulnerabilities, VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { ValueWithDetails, VulnerabilitiesRecommendation } from '../../@types/make-recall-decision-api'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals

@@ -1,9 +1,9 @@
 import { makeErrorObject } from '../../../utils/errors'
-import routeUrls from '../../../routes/routeUrls'
 import { isValueValid } from '../formOptions/formOptions'
 import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 import { YesNoValues } from '../formOptions/yesNo'
 
 const validateAddress = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
@@ -58,7 +58,7 @@ const validateAddress = async ({ requestBody, recommendationId }: FormValidatorA
   }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`,
+    nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-person-details`,
   }
 }
 

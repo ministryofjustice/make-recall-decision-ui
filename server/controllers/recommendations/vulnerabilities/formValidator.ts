@@ -1,11 +1,11 @@
 import { makeErrorObject } from '../../../utils/errors'
-import routeUrls from '../../../routes/routeUrls'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
 import strings from '../../../textStrings/en'
 import { cleanseUiList } from '../../../utils/lists'
 import { isString, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { VULNERABILITY } from './formOptions'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 const validateVulnerabilities = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   const { vulnerabilities } = requestBody
@@ -106,7 +106,7 @@ const validateVulnerabilities = async ({ requestBody, recommendationId }: FormVa
   }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
+    nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-vulnerability`,
   }
 }
 

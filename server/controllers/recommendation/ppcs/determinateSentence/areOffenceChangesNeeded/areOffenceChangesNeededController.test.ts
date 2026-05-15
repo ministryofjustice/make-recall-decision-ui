@@ -4,7 +4,7 @@ import { RecommendationResponseGenerator } from '../../../../../../data/recommen
 import areOffenceChangesNeededController from './areOffenceChangesNeededController'
 import { yesNoOptions, yesNoToBoolean, YesNoValues } from '../../../../recommendations/formOptions/yesNo'
 import { isDefined } from '../../../../../utils/utils'
-import ppcsPaths from '../../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../../routes/paths/ppcs.paths'
 import { getRecommendation, updateRecommendation } from '../../../../../data/makeDecisionApiClient'
 import strings from '../../../../../textStrings/en'
 

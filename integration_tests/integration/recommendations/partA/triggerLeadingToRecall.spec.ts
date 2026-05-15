@@ -2,7 +2,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
 import { testBackLink, testStandardBackLink } from '../../../componentTests/backLink.tests'
-import ppPaths from '../../../../server/routes/paths/pp'
+import ppPaths from '../../../../server/routes/paths/pp.paths'
 import config from '../../../../server/config'
 
 context('Trigger leading to recall Page', () => {

@@ -1,4 +1,4 @@
-import routeUrls from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import getRecommendationsResponse from '../../api/responses/get-case-recommendations.json'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
 
@@ -90,7 +90,7 @@ context('Recommendations tab in case summary', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
+    cy.visit(`${sharedPaths.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
     cy.pageHeading().should('equal', 'Recommendations for Jane Bloggs')
 
     checkValuesInTable([
@@ -137,7 +137,7 @@ context('Recommendations tab in case summary', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
+    cy.visit(`${sharedPaths.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
     cy.pageHeading().should('equal', 'Recommendations for Jane Bloggs')
 
     checkValuesInTable([
@@ -163,7 +163,7 @@ context('Recommendations tab in case summary', () => {
         recommendations,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
+    cy.visit(`${sharedPaths.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
     cy.pageHeading().should('equal', 'Recommendations for Jane Bloggs')
 
     checkValuesInTable([
@@ -195,7 +195,7 @@ context('Recommendations tab in case summary', () => {
         recommendations: [],
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
+    cy.visit(`${sharedPaths.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
     cy.getElement('No recommendations to display.').should('exist')
   })
 })
