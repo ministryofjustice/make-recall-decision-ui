@@ -79,7 +79,9 @@ POSTGRES_HOST=localhost:5432 \
 POSTGRES_DBNAME=make_recall_decision \
 POSTGRES_USERNAME=mrd_user \
 POSTGRES_PASSWORD=secret \
-SPRING_PROFILES_ACTIVE=dev,seed-test-data ./gradlew bootRun
+SPRING_PROFILES_ACTIVE=dev,seed-test-data
+
+./gradlew bootRun
 
 popd
 

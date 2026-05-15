@@ -1,5 +1,56 @@
 version: 2.1
 
+--------------------------------------------------------------------------------------------------------------------
+ The following is the output of running the migration script
+--------------------------------------------------------------------------------------------------------------------
+
+pablo.glenn@MJ004118 make-recall-decision-ui % /bin/bash -c "$(curl -fsSL https://github.com/ministryofjustice/hmpps-github-actions/raw/refs/heads/main/migrate-repo.sh)"
+
+Migration script for CircleCI -> Github Actions
+===============================================
+
+This script will migrate elements of CircleCI workflows to Github Actions.
+Please pick one of the following options by typing the corresponding number and hitting Enter:
+
+1. Migrate security workflows only
+2. Migrate deployment workflows only
+3. Migrate security and deployment workflows
+4. Get information about this migration script
+Any other selection will exit
+Enter your selection: 2
+Migrating deployment workflows only
+Migrating using hmpps-template-typescript template
+[WARNING] 16:18:00 --yaml-fix-merge-anchor-to-spec is false; causing merge anchors to override the existing values which isn't to the yaml spec. This flag will default to true in late 2025.
+Migrating deployment job for: dev .. preprod .. prod ..
+
+INFO: Enabled redis service in node_integration_tests
+INFO: Found node_redis executor job accessibility_test but no matching workflow in hmpps-github-actions
+----  Creating a placeholder workflow for accessibility_test in .github/workflows/node_accessibility_test_redis.yml
+         This will require manual modification to match the executor within .circleci/config.yml
+         It will also need a reference to this workflow to be added in .github/workflows/pipeline.yml
+INFO: quay.io -> ghcr.io migration complete.
+
+Summary of deployment migration:
+===============================
+  - A pipeline.yml file has been created in .github/workflows based on build-test-deploy in .circleci/config.yml
+  - Please refer to the backup file to identify the jobs that still require migration
+  - See above for warnings about executor jobs that will require configuration/manual migration
+  - Also see above for warnings about duplicate environments in the CircleCI config
+  - Finally, please review the pipeline and modify as required to ensure that it will behave as expected
+
+Backup file: .circleci/config.yml.bak.20251120_161755
+
+Please contact the SRE team (#ask-prisons-sre) for assistance with any tasks that need to be migrateed.
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+version: 2.1
+
 orbs:
   browser-tools: circleci/browser-tools@2.4.1
   hmpps: ministryofjustice/hmpps@11
@@ -79,11 +130,6 @@ jobs:
       - run:
           command: |
             npm run build
-            DATE=$(date '+%Y-%m-%d')
-            export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
-            export GIT_REF="$CIRCLE_SHA1"
-            export GIT_BRANCH="$CIRCLE_BRANCH"
-            npm run record-build-info
       - run:
           # Run linter after build because the integration test code depend on compiled typescript...
           name: Linter check
@@ -92,7 +138,6 @@ jobs:
           root: .
           paths:
             - node_modules
-            - build-info.json
             - build
             - dist
             - .cache/Cypress
@@ -128,8 +173,7 @@ jobs:
       tag: << pipeline.parameters.node-version >>
     resource_class: xlarge
     steps:
-      - checkout:
-          method: full # needed for sonar scan to pick up all the files
+      - checkout
       - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages:
           override-ci-command: npm run setup
@@ -154,8 +198,9 @@ jobs:
 
     steps:
       - checkout
-      - browser-tools/install_chrome
-      - browser-tools/install_chromedriver
+      - run: sudo apt-get update
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages:
           override-ci-command: npm run setup
@@ -169,7 +214,7 @@ jobs:
           command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
       - run:
           name: Run wiremock
-          command: java -jar wiremock.jar --port 9999 --verbose
+          command: java -jar wiremock.jar --port 9091 --verbose
           background: true
       - run:
           name: Build the node app.
@@ -206,8 +251,8 @@ jobs:
     steps:
       - checkout
       - run: sudo apt-get update
-      - browser-tools/install_chrome
-      - browser-tools/install_chromedriver
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - node/install # this way we make sure we are aligned with the version used for the build
       - node/install-packages:
           override-ci-command: npm run setup
@@ -221,7 +266,7 @@ jobs:
           command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
       - run:
           name: Run wiremock
-          command: java -jar wiremock.jar --port 9999 --root-dir fake-manage-recalls-api/stubs
+          command: java -jar wiremock.jar --port 9091 --root-dir fake-manage-recalls-api/stubs
           background: true
       - run:
           name: Build the node app.
@@ -241,7 +286,6 @@ jobs:
           name: accessibility tests
           command: |
             npx cypress run \
-              --env USERNAME=${CYPRESS_USERNAME_local},PASSWORD=${CYPRESS_PASSWORD_local},CRN=${CRN_local} \
               --config-file integration_tests/cypress.config.ts \
               --config specPattern=integration_tests/accessibility/*.spec.ts \
               --browser chrome \
@@ -256,7 +300,7 @@ jobs:
   e2e_environment_test:
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
-      - image: cypress/browsers:node-24.14.1-chrome-146.0.7680.177-1-ff-149.0.2-edge-146.0.3856.97-1
+      - image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
 
     parallelism: << pipeline.parameters.e2e-parallelism-env >>
     resource_class: large
@@ -283,7 +327,7 @@ jobs:
           name: Install curl
           command: 'apt-get update && apt-get install curl -y'
       - node/install:
-          node-version: '24' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
+          node-version: '20' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
                              # sub-directory (make-recall-decision-e2e-tests), so we need to set the node version here
       - run:
           working_directory: make-recall-decision-e2e-tests
@@ -345,7 +389,7 @@ jobs:
           name: Checkout/clone make-recall-decision-ui
           command: git clone https://github.com/ministryofjustice/make-recall-decision-ui.git
       - node/install:
-          node-version: '24' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
+          node-version: '20' # node/install doesn't have a working_directory parameter, but the .nvmrc file is in a
                              # sub-directory (make-recall-decision-e2e-tests), so we need to set the node version here
       - run:
           name: Start components
@@ -365,7 +409,7 @@ jobs:
             set +e
 
             npx cypress run \
-              --env TAGS='not @E2E and not @smoke',USERNAME_PO=${local_CYPRESS_USERNAME_PO},PASSWORD_PO=${local_CYPRESS_PASSWORD_PO},USERNAME_SPO=${local_CYPRESS_USERNAME_SPO},PASSWORD_SPO=${local_CYPRESS_PASSWORD_SPO},USERNAME_ACO=${local_CYPRESS_USERNAME_ACO},PASSWORD_ACO=${local_CYPRESS_PASSWORD_ACO},USERNAME_PPCS=${local_CYPRESS_USERNAME_PPCS},PASSWORD_PPCS=${local_CYPRESS_PASSWORD_PPCS},API_CLIENT_ID=${local_CYPRESS_API_CLIENT_ID},API_CLIENT_SECRET=${local_CYPRESS_API_CLIENT_SECRET},MAKE_RECALL_DECISION_API_URL=${local_CYPRESS_MAKE_RECALL_DECISION_API_URL},HMPPS_AUTH_EXTERNAL_URL=${local_CYPRESS_HMPPS_AUTH_EXTERNAL_URL},INTEGRATION_TEST=true \
+              --env TAGS='not @E2E and not @smoke',USERNAME_PO=${local_CYPRESS_USERNAME_PO},PASSWORD_PO=${local_CYPRESS_PASSWORD_PO},USERNAME_SPO=${local_CYPRESS_USERNAME_SPO},PASSWORD_SPO=${local_CYPRESS_PASSWORD_SPO},USERNAME_ACO=${local_CYPRESS_USERNAME_ACO},PASSWORD_ACO=${local_CYPRESS_PASSWORD_ACO},USERNAME_PPCS=${local_CYPRESS_USERNAME_PPCS},PASSWORD_PPCS=${local_CYPRESS_PASSWORD_PPCS},API_CLIENT_ID=${local_CYPRESS_API_CLIENT_ID},API_CLIENT_SECRET=${local_CYPRESS_API_CLIENT_SECRET},MAKE_RECALL_DECISION_API_URL=${local_CYPRESS_MAKE_RECALL_DECISION_API_URL},HMPPS_AUTH_EXTERNAL_URL=${local_CYPRESS_HMPPS_AUTH_EXTERNAL_URL} \
               --config-file e2e_tests/cypress.config.ts \
               --browser chrome \
               --record false \

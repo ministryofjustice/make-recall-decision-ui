@@ -1,0 +1,9 @@
+name: Daily service validation
+on:
+  schedule:
+    - cron: "10 8 * * 1-5"
+jobs:
+  validate:
+    name: e2e tests against dev
+    secrets: inherit
+    uses: ./.github/workflows/e2e_dev_tests.yml
