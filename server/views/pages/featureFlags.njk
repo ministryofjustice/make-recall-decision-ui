@@ -1,55 +1,75 @@
 {% extends "../partials/layout.njk" %}
 
-
-{% set pageTitle = makePageTitle({ pageHeading: "Feature flags" }) %}
+{% set pageTitle = makePageTitle({pageHeading: "Feature flags"}) %}
 
 {% block content %}
-    <h1 class="govuk-heading-xl">Feature flags</h1>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <p class='govuk-body'>Each flag turns a feature on or off, <strong>for yourself only, in this browser only (using cookies)</strong>.</p>
-            <p class='govuk-body'>All other users will continue to get the default values (unless they've overridden them using this page).</p>
-            <hr />
-            <form class='govuk-!-margin-top-6'>
-                {% for flag in flagsList %}
-                    <div>
-                        {{ govukRadios({
-                            classes: "govuk-radios--inline govuk-radios--small",
-                            idPrefix: flag.id,
-                            name: flag.id,
-                            fieldset: {
-                                legend: {
-                                    text: flag.label,
-                                    classes: "govuk-fieldset__legend--m"
-                                }
-                            },
-                            hint: {
-                                html: "<div class='govuk-body'>" +
-                                        flag.description
-                                        + (bodyParagraph('Feature enabled globally by environment settings', 'govuk-hint') if flag.globalyEnabled) + 
-                                      "</div>"
-                            },
-                            items: [
-                                {
-                                    value: "1",
-                                    text: "On" + (" (default)" if flag.default == true else ""),
-                                    checked: flag.override == true,
-                                    disabled: flag.globalyEnabled
-                                },
-                                {
-                                    value: "0",
-                                    text: "Off" + (" (default)" if flag.default == false else ""),
-                                    checked: flag.override == false,
-                                    disabled: flag.globalyEnabled
-                                }
-                            ]
-                        }) }}
-                    </div>
-                {% endfor %}
-                <button class="govuk-button" data-module="govuk-button">
-                    Save
-                </button>
-            </form>
+  <h1 class="govuk-heading-xl">Feature flags</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <p class='govuk-body'>Each flag turns a feature on or off, <strong>for yourself only, in this browser only (using cookies)</strong>.</p>
+      <p class='govuk-body'>All other users will continue to get the default values (unless they've overridden them using this page).</p>
+      <hr/>
+      <form class='govuk-!-margin-top-6'>
+        {% set summaryRows = [] %}
+        {% for flag in flagsList %}
+
+          {% set flagActions %}
+            {{ govukRadios({
+                  classes: "govuk-radios--inline govuk-radios--small govuk-!-text-align-left",
+                  idPrefix: flag.id,
+                  name: flag.id,
+                  items: [
+                      {
+                          value: "1",
+                          text: "On" + ("*" if flag.default == true else ""),
+                          checked: flag.override == true,
+                          disabled: flag.globallyEnabled
+                      },
+                      {
+                          value: "0",
+                          text: "Off" + ("*" if flag.default == false else ""),
+                          checked: flag.override == false,
+                          disabled: flag.globallyEnabled
+                      }
+                  ]
+              }) }}
+          {% endset %}
+
+          {% set summaryRows = (summaryRows.push({
+            key: {
+              text: flag.label
+            },
+            value: {
+              classes: 'car-v-align-top',
+              text: flag.description if flag.description else
+                "(No Description)"
+            },
+            actions: {
+              classes: 'govuk-!-width-one-third',
+              items: [
+                {
+                  html: flagActions,
+                  href: "#"
+                }
+              ]
+            }
+          }), summaryRows) %}
+        {% endfor %}
+
+        {{ govukSummaryList({ id: 'flagsSummaryList', rows: summaryRows }) }}
+
+        <div class="govuk-width-container">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">&nbsp;</div>
+            <div class="govuk-grid-column-one-third">
+              <p class="govuk-body">* indicates the default value for this flag</p>
+            </div>
+          </div>
         </div>
+        <button class="govuk-button" data-module="govuk-button">
+          Save
+        </button>
+      </form>
     </div>
+  </div>
 {% endblock %}
