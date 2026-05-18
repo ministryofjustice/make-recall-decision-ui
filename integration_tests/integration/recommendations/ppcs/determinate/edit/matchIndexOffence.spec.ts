@@ -285,7 +285,7 @@ function testPageContent(
     .should('exist')
     .should('have.class', 'govuk-label')
     .should('contain.attr', 'for', textAreaId)
-    .should('contain.text', 'Add comments, including any additional offences (optional)')
+    .should('contain.text', 'Add or amend a comment, including any additional offences (optional)')
 
   cy.get('@offenceDescriptionCommentWrapper')
     .find('textarea')
