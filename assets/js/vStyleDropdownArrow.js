@@ -1,4 +1,4 @@
-function vStyleDropdownArrow(config) {
+export function vStyleDropdownArrow(config) {
   return (
     `<svg class="${config.className}" viewBox="0 0 512 512" >` +
     `<path d="M 256,298.3` +
@@ -18,4 +18,8 @@ function vStyleDropdownArrow(config) {
     `L 256,298.3` +
     `z"/></svg>`
   )
+}
+
+if (typeof window !== 'undefined') {
+  window.vStyleDropdownArrow = vStyleDropdownArrow
 }

@@ -78,5 +78,5 @@
 
 {% block bodyEnd %}
     {{ super() }}
-    <script src="/assets/disableSubmitButtonOnClick.js" defer></script>
+    <script src="{{ '/assets/js/disableSubmitButtonOnClick.js' | assetMap }}" defer></script>
 {% endblock %}

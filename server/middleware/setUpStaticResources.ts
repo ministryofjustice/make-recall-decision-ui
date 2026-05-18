@@ -11,12 +11,10 @@ export default function setUpStaticResources(): Router {
   router.use(compression())
 
   //  Static Resources Configuration
-  const cacheControl = { maxAge: config.staticResourceCacheDuration * 1000 }
+  const cacheControl = { maxAge: config.staticResourceCacheDuration }
 
   Array.of(
-    '/assets',
-    '/assets/stylesheets',
-    '/assets/js',
+    '/dist/assets',
     '/node_modules/govuk-frontend/dist/govuk/assets',
     '/node_modules/govuk-frontend/dist',
     '/node_modules/@ministryofjustice/frontend/moj/assets',
