@@ -214,6 +214,7 @@
     "diff": "8.0.3",
     "mocha": {
       "serialize-javascript": "7.0.5"
-    }
+    },
+    "systeminformation": "^5.31.6"
   }
 }
