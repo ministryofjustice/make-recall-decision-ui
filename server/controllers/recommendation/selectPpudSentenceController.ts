@@ -6,20 +6,21 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
 import ppcsPaths from '../../routes/paths/ppcs'
+import { getDeterminateSentences } from '../../helpers/ppudSentence/ppudSentenceHelper'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
-
+  const determinateSentences = getDeterminateSentences(recommendation.ppudOffender?.sentences)
   const offence = (recommendation as RecommendationResponse).nomisIndexOffence.allOptions.find(
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
-
   res.locals = {
     ...res.locals,
     page: {
       id: 'selectPpudSentence',
     },
     offence,
+    determinateSentences,
   }
 
   res.render(`pages/recommendations/selectPpudSentence`)
@@ -42,7 +43,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     const errorId = 'noPpudSentenceSelected'
     errors.push(
       makeErrorObject({
-        id: 'ppudSentenceId',
+        id: 'indexOffence',
         text: strings.errors[errorId],
         errorId,
       }),

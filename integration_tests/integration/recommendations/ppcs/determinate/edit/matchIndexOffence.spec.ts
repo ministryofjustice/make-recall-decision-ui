@@ -11,6 +11,7 @@ import {
   PpudSentence,
 } from '../../../../../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import setUpSessionForPpcs from '../../util'
+import { OfferedOffenceOptions } from '../../../../../../data/recommendations/offeredOffenceGenerator'
 
 context('Determinate sentence - match index offence page', () => {
   const recommendationId = faker.number.int({ min: 1 })
@@ -28,6 +29,21 @@ context('Determinate sentence - match index offence page', () => {
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
 
   describe('Page Data', () => {
+    const newSentenceTestCases: { description: string; offeredOffenceOptions: OfferedOffenceOptions[] }[] = [
+      {
+        description: 'single-sentence sequence (sentenceEndDate set)',
+        offeredOffenceOptions: [{ sentenceEndDate: faker.date.future().toISOString() }],
+      },
+      {
+        description: 'multiple-sentence sequence (sentenceEndDate not set)',
+        offeredOffenceOptions: [
+          {
+            sentenceEndDate: 'none',
+          },
+        ],
+      },
+    ]
+
     beforeEach(() => {
       cy.task('getReferenceList', {
         name: 'index-offences',
@@ -36,60 +52,72 @@ context('Determinate sentence - match index offence page', () => {
       })
     })
     describe('Initial page load', () => {
-      // We only test the ADD_NEW case here, as for existing PPUD sentences the offence details in
-      // bookRecallToPpud are pre-populated from the selected PPUD sentence, so there is no scenario
-      const recommendationWithNoMatchingDone = RecommendationResponseGenerator.generate({
-        id: recommendationId,
-        bookRecallToPpud: {
-          custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          ppudSentenceId: 'ADD_NEW',
-        },
-      })
-      const selectedNomisOffence = recommendationWithNoMatchingDone.nomisIndexOffence.allOptions.find(
-        o => o.offenderChargeId === recommendationWithNoMatchingDone.nomisIndexOffence.selected,
-      )
-      beforeEach(() => {
-        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoMatchingDone })
-        cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
-      })
-
-      it('Loads the correct page data with empty inputs', () => {
-        cy.visit(testPageUrl)
-        testPageContent(autocompleteId, textAreaId, ppudIndexOffenceReferenceListResponse.values, selectedNomisOffence)
-      })
-    })
-
-    describe('Page load after offence details have been set', () => {
-      describe('New sentence being added to PPUD', () => {
-        const updatedPpudOffenceDescription = faker.helpers.arrayElement(ppudIndexOffenceReferenceListResponse.values)
-        const updatedPpudOffenceDescriptionComment = faker.lorem.sentences()
-        const recommendationWithMatchingDone = RecommendationResponseGenerator.generate({
+      newSentenceTestCases.forEach(testCase => {
+        // We only test the ADD_NEW case here. For existing PPUD sentences the offence details in
+        // bookRecallToPpud are pre-populated from the selected PPUD sentence, so there is no scenario
+        // where the inputs on the page should be empty (which is what the test below checks).
+        const recommendationWithNoMatchingDone = RecommendationResponseGenerator.generate({
           id: recommendationId,
+          nomisIndexOffence: {
+            offeredOffenceOptions: testCase.offeredOffenceOptions,
+          },
           bookRecallToPpud: {
             custodyGroup: CUSTODY_GROUP.DETERMINATE,
             ppudSentenceId: 'ADD_NEW',
-            indexOffence: updatedPpudOffenceDescription,
-            indexOffenceComment: updatedPpudOffenceDescriptionComment,
           },
         })
-        const selectedNomisOffence = recommendationWithMatchingDone.nomisIndexOffence.allOptions.find(
-          o => o.offenderChargeId === recommendationWithMatchingDone.nomisIndexOffence.selected,
+        const selectedNomisOffence = recommendationWithNoMatchingDone.nomisIndexOffence.allOptions.find(
+          o => o.offenderChargeId === recommendationWithNoMatchingDone.nomisIndexOffence.selected,
         )
-        beforeEach(() => {
-          cy.task('getRecommendation', { statusCode: 200, response: recommendationWithMatchingDone })
+
+        it(`Loads the correct page data with empty inputs - ${testCase.description}`, () => {
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoMatchingDone })
           cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
-        })
-        it('Loads the correct page data with the correct input selected', () => {
           cy.visit(testPageUrl)
           testPageContent(
             autocompleteId,
             textAreaId,
             ppudIndexOffenceReferenceListResponse.values,
             selectedNomisOffence,
-            null,
-            updatedPpudOffenceDescription,
-            updatedPpudOffenceDescriptionComment,
           )
+        })
+      })
+    })
+
+    describe('Page load after offence details have been set', () => {
+      describe('New sentence being added to PPUD', () => {
+        newSentenceTestCases.forEach(testCase => {
+          const updatedPpudOffenceDescription = faker.helpers.arrayElement(ppudIndexOffenceReferenceListResponse.values)
+          const updatedPpudOffenceDescriptionComment = faker.lorem.sentences()
+          const recommendationWithMatchingDone = RecommendationResponseGenerator.generate({
+            id: recommendationId,
+            nomisIndexOffence: {
+              offeredOffenceOptions: testCase.offeredOffenceOptions,
+            },
+            bookRecallToPpud: {
+              custodyGroup: CUSTODY_GROUP.DETERMINATE,
+              ppudSentenceId: 'ADD_NEW',
+              indexOffence: updatedPpudOffenceDescription,
+              indexOffenceComment: updatedPpudOffenceDescriptionComment,
+            },
+          })
+          const selectedNomisOffence = recommendationWithMatchingDone.nomisIndexOffence.allOptions.find(
+            o => o.offenderChargeId === recommendationWithMatchingDone.nomisIndexOffence.selected,
+          )
+          it(`Loads the correct page data with the correct input selected - ${testCase.description}`, () => {
+            cy.task('getRecommendation', { statusCode: 200, response: recommendationWithMatchingDone })
+            cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
+            cy.visit(testPageUrl)
+            testPageContent(
+              autocompleteId,
+              textAreaId,
+              ppudIndexOffenceReferenceListResponse.values,
+              selectedNomisOffence,
+              null,
+              updatedPpudOffenceDescription,
+              updatedPpudOffenceDescriptionComment,
+            )
+          })
         })
       })
       describe('Existing PPUD sentence being updated', () => {
@@ -106,8 +134,8 @@ context('Determinate sentence - match index offence page', () => {
         const selectedNomisOffence = recommendationWithMatchingDone.nomisIndexOffence.allOptions.find(
           o => o.offenderChargeId === recommendationWithMatchingDone.nomisIndexOffence.selected,
         )
-        const selectedPpudOffence = faker.helpers.arrayElement(recommendationWithMatchingDone.ppudOffender.sentences)
-        recommendationWithMatchingDone.bookRecallToPpud.ppudSentenceId = selectedPpudOffence.id
+        const selectedPpudSentence = faker.helpers.arrayElement(recommendationWithMatchingDone.ppudOffender.sentences)
+        recommendationWithMatchingDone.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
 
         beforeEach(() => {
           cy.task('getRecommendation', { statusCode: 200, response: recommendationWithMatchingDone })
@@ -120,7 +148,7 @@ context('Determinate sentence - match index offence page', () => {
             textAreaId,
             ppudIndexOffenceReferenceListResponse.values,
             selectedNomisOffence,
-            selectedPpudOffence,
+            selectedPpudSentence,
             updatedPpudOffenceDescription,
             updatedPpudOffenceDescriptionComment,
           )
@@ -198,11 +226,18 @@ function testPageContent(
           dateOnly: true,
         }),
       )
-      .should('contain.text', 'Sentence expiry date')
+      .should(
+        'contain.text',
+        selectedNomisOffence.sentenceEndDate ? 'Sentence expiry date' : 'Latest sentence expiry date',
+      )
+      .should(
+        'not.contain.text',
+        selectedNomisOffence.sentenceEndDate ? 'Latest sentence expiry date' : 'Sentence expiry date',
+      )
       .should(
         'contain.text',
         formatDateTimeFromIsoString({
-          isoDate: selectedNomisOffence.sentenceEndDate,
+          isoDate: selectedNomisOffence.sentenceEndDate ?? selectedNomisOffence.sentenceSequenceExpiryDate,
           dateOnly: true,
         }),
       )
@@ -250,7 +285,7 @@ function testPageContent(
     .should('exist')
     .should('have.class', 'govuk-label')
     .should('contain.attr', 'for', textAreaId)
-    .should('contain.text', 'Add comments, including any additional offences (optional)')
+    .should('contain.text', 'Add or amend a comment, including any additional offences (optional)')
 
   cy.get('@offenceDescriptionCommentWrapper')
     .find('textarea')

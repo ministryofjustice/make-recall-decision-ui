@@ -8,6 +8,7 @@ const strings: Record<string, Record<string, string>> = {
     missingOdmName: 'Provide an out-of-hours manager name',
     missingRationaleCheck: 'Choose an option',
     missingCustodyType: 'Enter custody type',
+    missingReceivedDateTime: 'Enter recall received date and time',
     missingCurrentEstablishment: 'Select an establishment from the list',
     missingPoliceForce: 'Enter police force',
     missingMappaLevel: 'Enter MAPPA level',

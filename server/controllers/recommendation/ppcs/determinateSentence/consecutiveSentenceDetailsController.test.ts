@@ -21,7 +21,7 @@ type SentenceInfo = {
   court: string
   dateOfSentence: string
   startDate: string
-  sentenceExpiryDate: string
+  sentenceSequenceExpiryDate?: string
   sentenceLength?: { key: string; value: Term }[]
 }
 
@@ -65,12 +65,12 @@ describe('Consecutive Sentence Details Controller', () => {
       const expectedInfoForSentence = (sentence: PrisonSentence) =>
         ({
           lineSequence: sentence.lineSequence,
-          offence: sentence.offences.at(0).offenceDescription,
+          offence: sentence.offences?.[0].offenceDescription,
           sentenceType: sentence.sentenceTypeDescription,
           court: sentence.courtDescription,
           dateOfSentence: sentence.sentenceDate,
           startDate: sentence.sentenceStartDate,
-          sentenceExpiryDate: sentence.sentenceEndDate,
+          sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
         }) as SentenceInfo
 
       it('- Prison Sentences correctly called', async () =>
@@ -92,9 +92,9 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Sentence type', async () => expect(actual(res).sentenceType).toEqual(expected.sentenceType))
               it('- Court', async () => expect(actual(res).court).toEqual(expected.court))
               it('- Date of sentence', async () => expect(actual(res).dateOfSentence).toEqual(expected.dateOfSentence))
-              it('- Date of sentence', async () => expect(actual(res).startDate).toEqual(expected.startDate))
+              it('- Start date', async () => expect(actual(res).startDate).toEqual(expected.startDate))
               it('- Sentence expiry date', async () =>
-                expect(actual(res).sentenceExpiryDate).toEqual(expected.sentenceExpiryDate))
+                expect(actual(res).sentenceSequenceExpiryDate).toEqual(expected.sentenceSequenceExpiryDate))
               it('- Sentence length (to be defined, conditional)', async () =>
                 expect(actual(res).sentenceLength).toBeDefined())
             }
@@ -102,7 +102,7 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Is provided', async () => expect(res.locals.pageData.sentenceInfo.indexSentence).toBeDefined())
               describe('Maps non-conditiomal as expected:', () => {
                 describe('Index offence:', () => {
-                  const expectedIndexInfo = expectedInfoForSentence(defaultGetSentenceSequence.at(0).indexSentence)
+                  const expectedIndexInfo = expectedInfoForSentence(defaultGetSentenceSequence?.[0].indexSentence)
                   const actualIndexInfo = (response: Response) => response.locals.pageData.sentenceInfo.indexSentence
                   testSentenceInfo(expectedIndexInfo, actualIndexInfo)
                 })
@@ -112,16 +112,16 @@ describe('Consecutive Sentence Details Controller', () => {
               it('- Is provided', async () =>
                 expect(res.locals.pageData.sentenceInfo.sentencesInSequence).toBeDefined())
               describe('Maps non-conditiomal as expected:', () => {
-                new Map(Object.entries(defaultGetSentenceSequence.at(0).sentencesInSequence)).forEach(
+                new Map(Object.entries(defaultGetSentenceSequence?.[0].sentencesInSequence)).forEach(
                   (sentences, consecTo) => {
                     describe(`Consecutive to group: ${consecTo}`, () => {
                       sentences.forEach((sentence, i) => {
                         describe(`Sentence ${i + 1}`, () => {
                           const expectedSentenceInfo = expectedInfoForSentence(sentence)
                           const actualSentenceInfo = (response: Response) =>
-                            (response.locals.pageData.sentenceInfo.sentencesInSequence as Map<string, SentenceInfo[]>)
-                              .get(consecTo)
-                              .at(i)
+                            (
+                              response.locals.pageData.sentenceInfo.sentencesInSequence as Map<string, SentenceInfo[]>
+                            ).get(consecTo)?.[i]
                           testSentenceInfo(expectedSentenceInfo, actualSentenceInfo)
                         })
                       })
@@ -204,7 +204,7 @@ describe('Consecutive Sentence Details Controller', () => {
             },
           ])
         })
-        it('- No terms, lists ket as "Sentence length" with an empty value', async () => {
+        it('- No terms, lists key as "Sentence length" with an empty value', async () => {
           const sentenceWithNoTerms = PrisonSentenceSequenceGenerator.generate({
             indexSentence: {
               offences: [

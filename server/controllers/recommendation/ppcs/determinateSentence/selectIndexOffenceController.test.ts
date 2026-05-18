@@ -24,14 +24,15 @@ const expectedOptionForSentence = (sentence: PrisonSentence, expectedConsecutive
     bookingId: sentence.bookingId,
     consecutiveCount: expectedConsecutiveCount,
     courtDescription: sentence.courtDescription,
-    offenceCode: sentence.offences.at(0).offenceCode,
-    offenceDate: sentence.offences.at(0).offenceStartDate,
-    offenceDescription: sentence.offences.at(0).offenceDescription,
-    offenceStatute: sentence.offences.at(0).offenceStatute,
-    offenderChargeId: sentence.offences.at(0).offenderChargeId,
+    offenceCode: sentence.offences?.[0].offenceCode,
+    offenceDate: sentence.offences?.[0].offenceStartDate,
+    offenceDescription: sentence.offences?.[0].offenceDescription,
+    offenceStatute: sentence.offences?.[0].offenceStatute,
+    offenderChargeId: sentence.offences?.[0].offenderChargeId,
     sentenceDate: sentence.sentenceDate,
-    sentenceEndDate: sentence.sentenceEndDate,
     sentenceStartDate: sentence.sentenceStartDate,
+    sentenceEndDate: sentence.sentenceEndDate,
+    sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
     sentenceTypeDescription: sentence.sentenceTypeDescription,
     terms: sentence.terms,
     releaseDate: sentence.releaseDate,
@@ -47,6 +48,7 @@ const expectedNomisOffenceForSentence = (sentence: PrisonSentence) => ({
   dateOfSentence: sentence.sentenceDate,
   startDate: sentence.sentenceStartDate,
   endDate: sentence.sentenceEndDate,
+  sentenceSequenceExpiryDate: sentence.sentenceSequenceExpiryDate,
 })
 
 const expectedConvictionDataForRecommendation = (recommendation: RecommendationResponse) => ({
@@ -103,9 +105,9 @@ describe('Select Index Offence Controller', () => {
             nomisIndexOffence: {
               selected: undefined,
               allOptions: [
-                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(0).indexSentence, undefined),
-                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(1).indexSentence, 1),
-                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives.at(2).indexSentence, 3),
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives?.[0].indexSentence, undefined),
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives?.[1].indexSentence, 1),
+                expectedOptionForSentence(multipleSentenceSequencesWithConsecutives?.[2].indexSentence, 3),
               ],
             },
           },
@@ -148,6 +150,10 @@ describe('Select Index Offence Controller', () => {
               expect(offenceData().dateOfSentence).toEqual(expectedNomisOffenceData.dateOfSentence))
             it(' - startDate', async () => expect(offenceData().startDate).toEqual(expectedNomisOffenceData.startDate))
             it(' - endDate', async () => expect(offenceData().endDate).toEqual(expectedNomisOffenceData.endDate))
+            it(' - sentenceSequenceExpiryDate', async () =>
+              expect(offenceData().sentenceSequenceExpiryDate).toEqual(
+                expectedNomisOffenceData.sentenceSequenceExpiryDate,
+              ))
             it(' - terms (to be defined, conditional)', async () => expect(offenceData().terms).toBeDefined())
             it(' - consecutiveCount (to be undefined, conditional)', async () =>
               expect(offenceData().consecutiveCount).toBeUndefined())
@@ -432,7 +438,7 @@ describe('Select Index Offence Controller', () => {
     const defaultPostRecommendation = RecommendationResponseGenerator.generate({
       nomisIndexOffence: { selectedIndex: 'none' },
     })
-    const expectedSelectedOffence = defaultPostRecommendation.nomisIndexOffence.allOptions.at(0)
+    const expectedSelectedOffence = defaultPostRecommendation.nomisIndexOffence.allOptions?.[0]
     const expectedSelectedOffenceIndex = expectedSelectedOffence.offenderChargeId
     const defaultPostSentence = PrisonSentenceGenerator.generate({
       offences: [{ offenderChargeId: expectedSelectedOffenceIndex }, {}, {}],

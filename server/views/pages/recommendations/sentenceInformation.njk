@@ -7,7 +7,11 @@
   {% if pageData.backLinkUrl is not undefined %}
     {{ backLink({ text: 'Back to Consider a recall questions', href: pageData.backLinkUrl, doBrowserBack: false }) }}
   {% else %}
-    {{ backLink() }}
+    {% if pageData.isOutOfHoursRecall %}
+      {{ backLink({ text: 'Back to overview of ' + pageData.fullName, doBrowserBack: true }) }}
+    {% else %}
+      {{ backLink() }}
+    {% endif %}
   {% endif %}
 {% endblock %}
 

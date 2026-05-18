@@ -39,9 +39,18 @@
                                 { key: "Sentence type", value: hyphenForBlank(offence.sentenceType) },
                                 { key: "Court", value: offence.court },
                                 { key: "Date of sentence", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.dateOfSentence })) },
-                                { key: "Start date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.startDate })) },
-                                { key: "Sentence expiry date", value: hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.endDate })) }
+                                { key: "Start date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.startDate })) }
                             ] %}
+                            {% if offence.endDate %}
+                                {% set _ = sentenceRows.push(
+                                    { key: "Sentence expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.endDate})) }
+                                ) %}
+                            {% else %}
+                                {% set _ = sentenceRows.push(
+                                    { key: "Latest sentence expiry date", value: hyphenForBlank(formatDateTimeFromIsoString({ isoDate: offence.sentenceSequenceExpiryDate})) }
+                                ) %}
+                            {% endif %}
+
                             {% for term in offence.terms %}
                                 {% set sentenceRows = (sentenceRows.push({ key: term.key, value: hyphenForBlank(formatTerm(term.value)) }), sentenceRows) %}
                             {% endfor %}
@@ -54,14 +63,14 @@
                                 {% if offence.consecutiveCount %}
                                     {% set consecutiveHtml %}
                                         <div id="{{ ['indexOffence', loop.index, 'consecutive'] | join('-') }}">
-                                            <span>{{ offence.consecutiveCount}} consecutive sentences</span>
+                                            <span>{{ offence.consecutiveCount }} consecutive sentences</span>
                                             <p class="govuk-body-s govuk-!-margin-0">More details on next page</p>
                                         </div>
                                     {% endset %}
                                     {{ govukInsetText({
                                         id: (["indexOffence", loop.index, "inset"] | join("-")),
                                         html: consecutiveHtml
-                                    })}}
+                                    }) }}
                                 {% endif %}
                             {% endset %}
 
@@ -95,7 +104,7 @@
                     </form>
                 </div>
 
-                
+
                 <div class="govuk-grid-column-one-half">
                     <div id="part-A-details">
                         <h2 class='govuk-heading-m'>Part A</h2>
@@ -111,13 +120,13 @@
                         ] %}
                         {% for term in pageData.convictionData.terms %}
                             {% set offenceRows = (offenceRows.push({ key: term.key, value: hyphenForBlank(term.value) }), offenceRows) %}
-                        {%  endfor %}
+                        {% endfor %}
                         {{ summaryList({
                             id: "partAOffence",
                             rows: offenceRows
-                        })}}
+                        }) }}
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>

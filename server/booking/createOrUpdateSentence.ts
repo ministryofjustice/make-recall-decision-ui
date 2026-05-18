@@ -29,7 +29,10 @@ function buildDeterminateSentenceRequest(recommendation: RecommendationResponse)
     licenceExpiryDate: nomisOffence.licenceExpiryDate,
     releaseDate: nomisOffence.releaseDate,
     sentenceLength,
-    sentenceExpiryDate: nomisOffence.sentenceEndDate,
+    // Although PPCS calculates the sequence expiry date slightly differently, this is close enough for now. Support
+    // for editing this date or for sourcing/calculating it differently may be added in the future. There is no sequence
+    // expiry date in PPUD, but they have told us it is OK to use the sentence expiry date field here, as they do it too
+    sentenceExpiryDate: nomisOffence.sentenceSequenceExpiryDate,
     sentencingCourt: nomisOffence.courtDescription,
     sentencedUnder: recommendation.bookRecallToPpud?.legislationSentencedUnder,
   }
