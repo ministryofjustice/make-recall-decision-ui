@@ -11,7 +11,7 @@
     "start:dev": "node esbuild/esbuild --watch",
     "start-feature": "node $NODE_DEBUG_OPTION --env-file=feature.env dist/server.js | bunyan -o short",
     "start-feature:dev": "node esbuild/esbuild --watch --env feature.env",
-    "start:e2e": "node $NODE_DEBUG_OPTION --env-file=e2e.env dist/server.js | bunyan -o short",
+    "start:e2e": "node esbuild/esbuild --watch --env e2e.env",
     "record-build-info": "node ./bin/record-build-info",
     "lint": "eslint . --cache --max-warnings 0",
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
