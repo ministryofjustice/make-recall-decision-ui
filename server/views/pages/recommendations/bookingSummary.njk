@@ -152,25 +152,14 @@
                         {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.licenceExpiryDate }) ) }}
                     </dd>
                 </div>
-                {% if offence.sentenceEndDate %}
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Sentence expiry date
-                        </dt>
-                        <dd class="govuk-summary-list__value" data-qa="sentenceEndDate">
-                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceEndDate }) ) }}
-                        </dd>
-                    </div>
-                {% else %}
-                    <div class="govuk-summary-list__row">
+                <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Full punishment
                         </dt>
                         <dd class="govuk-summary-list__value" data-qa="sentenceSequenceExpiryDate">
                             {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceSequenceExpiryDate }) ) }}
                         </dd>
-                    </div>
-                {% endif %}
+                </div>
             </dl>
 
             <h2 class='govuk-heading-m govuk-!-margin-top-8'>

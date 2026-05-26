@@ -134,8 +134,8 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
                   value: formatDateTimeFromIsoString({ isoDate: offence.licenceExpiryDate }),
                 },
                 {
-                  key: 'Sentence expiry date',
-                  value: formatDateTimeFromIsoString({ isoDate: offence.sentenceEndDate }),
+                  key: 'Full punishment',
+                  value: formatDateTimeFromIsoString({ isoDate: offence.sentenceSequenceExpiryDate }),
                 },
               ],
             })
