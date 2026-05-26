@@ -10,7 +10,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
     urlInfo: { basePath },
-    user: { token, roles }
+    user: { token, roles },
   } = res.locals
 
   const statuses = (

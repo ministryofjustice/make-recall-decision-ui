@@ -1,8 +1,6 @@
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { randomiseCriteria } from '../../../../data/utils'
-import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
-import config from '../../../../server/config'
 
 context('Recall Type Page', () => {
   const testPageUrl = `/recommendations/123456789/recall-type`

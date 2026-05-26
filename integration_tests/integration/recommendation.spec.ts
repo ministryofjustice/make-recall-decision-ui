@@ -88,9 +88,7 @@ context('Make a recommendation', () => {
           response: { ...recommendationResponse },
         })
         cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(
-          `${routeUrls.cases}/${crn}/create-recommendation-warning`,
-        )
+        cy.visit(`${routeUrls.cases}/${crn}/create-recommendation-warning`)
         cy.clickButton('Continue')
         cy.pageHeading().should('equal', 'There is already a recommendation for Jane Bloggs')
         cy.getElement('Mr Anderson started this recommendation on 31 October 2000.').should('exist')
@@ -284,9 +282,7 @@ context('Make a recommendation', () => {
           })
           cy.task('getStatuses', { statusCode: 200, response: [] })
 
-          cy.visit(
-            `${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`,
-          )
+          cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`)
 
           cy.clickLink('Continue to make a recommendation')
 
@@ -1064,9 +1060,7 @@ context('Make a recommendation', () => {
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
         cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
-        cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/address-details`,
-        )
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
         cy.fillInput('Where can the police find Jane Bloggs?', '35 Oak Rise, Carshalton, Surrey S12 345')
         cy.task('getStatuses', {
           statusCode: 200,
@@ -1952,9 +1946,7 @@ context('Make a recommendation', () => {
 
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-        cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/who-completed-part-a`,
-        )
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/who-completed-part-a`)
 
         cy.pageHeading().should('contain', 'Who completed this Part A?')
 
@@ -1979,9 +1971,7 @@ context('Make a recommendation', () => {
 
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-        cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a`,
-        )
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a`)
 
         cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
 
@@ -2006,9 +1996,7 @@ context('Make a recommendation', () => {
 
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-        cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients`,
-        )
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients`)
 
         cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
 
@@ -2032,9 +2020,7 @@ context('Make a recommendation', () => {
 
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-        cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails`,
-        )
+        cy.visit(`${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails`)
 
         cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
 
@@ -3224,9 +3210,7 @@ context('Make a recommendation', () => {
             response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
           })
 
-          cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence`,
-          )
+          cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
           cy.pageHeading().should('contain', 'Select a sentence for your booking')
 
           cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
@@ -3316,9 +3300,7 @@ context('Make a recommendation', () => {
             response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
           })
 
-          cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence`,
-          )
+          cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
           cy.pageHeading().should('contain', 'Select a sentence for your booking')
           cy.get('#determinateSentencesDetails')
             .find('.govuk-details__summary-text')
@@ -3356,9 +3338,7 @@ context('Make a recommendation', () => {
             response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
           })
 
-          cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence`,
-          )
+          cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
           cy.pageHeading().should('contain', 'Select a sentence for your booking')
 
           cy.get('#govuk-notification-banner-title').should('contain.text', 'No indeterminate sentences found in PPUD')

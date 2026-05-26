@@ -56,10 +56,9 @@ describe('update recall', () => {
           },
         } as unknown as RecommendationResponse
 
-
         ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
 
-        const result = await updateRecall(bookingMemento, recommendation, 'token')
+        const result = await updateRecall(bookingMemento, recommendation, 'token', {})
 
         expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
           decisionDateTime: '2024-01-29T16:15:39',

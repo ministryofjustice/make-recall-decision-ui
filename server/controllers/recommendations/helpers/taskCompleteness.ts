@@ -71,21 +71,9 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
   }
 
-  let triggerLeadingToRecall = true
+  const triggerLeadingToRecall = true
 
-  const isAdultSDSSuitabilityCriteriaSet =
-    statuses.isChargedWithOffence &&
-    statuses.isServingTerroristOrNationalSecurityOffence &&
-    statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
-    statuses.wasReferredToParoleBoard244ZB &&
-    statuses.wasRepatriatedForMurder &&
-    statuses.isServingSOPCSentence &&
-    statuses.isServingDCRSentence
-
-  const isYouthSDSSuitabilityCriteriaSet =
-    statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence
-
-  let suitabilityForRecallValidation = true
+  const suitabilityForRecallValidation = true
 
   const indeterminateSentenceValidation =
     recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
@@ -115,10 +103,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         triggerLeadingToRecall &&
         suitabilityForRecallValidation &&
         mappaReviewed &&
-        (statuses.decisionDateTime) &&
+        statuses.decisionDateTime &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
-        (statuses.sentenceGroup) &&
+        statuses.sentenceGroup &&
         statuses.licenceConditionsBreached &&
         indeterminateSentenceValidation &&
         whyConsideredRecall &&
@@ -167,7 +155,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isReadyForCounterSignature:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
-      (statuses.sentenceGroup) &&
+      statuses.sentenceGroup &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&
@@ -194,7 +182,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
       statuses.decisionDateTime &&
-      (statuses.sentenceGroup) &&
+      statuses.sentenceGroup &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&

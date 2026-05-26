@@ -949,9 +949,7 @@ describe('taskCompleteness', () => {
         'isServingSOPCSentence',
         'isServingDCRSentence',
       ] as const)('returns areAllComplete false when %s is missing', missingField => {
-        const { areAllComplete } = taskCompleteness(
-          { ...adultSDSBase, [missingField]: undefined },
-        )
+        const { areAllComplete } = taskCompleteness({ ...adultSDSBase, [missingField]: undefined })
         expect(areAllComplete).toEqual(false)
       })
     })
@@ -991,9 +989,7 @@ describe('taskCompleteness', () => {
       })
 
       it('returns areAllComplete false when isYouthSentenceOver12Months is missing', () => {
-        const { areAllComplete } = taskCompleteness(
-          { ...youthSDSBase, isYouthSentenceOver12Months: undefined },
-        )
+        const { areAllComplete } = taskCompleteness({ ...youthSDSBase, isYouthSentenceOver12Months: undefined })
         expect(areAllComplete).toEqual(false)
       })
 
@@ -1029,19 +1025,18 @@ describe('taskCompleteness', () => {
           // suitabilityForRecallValidation stays true for these groups
           // areAllComplete may still be false for other unrelated reasons (indeterminate type etc)
           // so we only check that suitability is NOT the blocker by asserting the status directly
-          const { statuses } = taskCompleteness(
-            {
-              ...baseRecall,
-              sentenceGroup: group,
-              isChargedWithOffence: undefined,
-              isYouthSentenceOver12Months: undefined,
-            } as RecommendationResponse,
-          )
+          const { statuses } = taskCompleteness({
+            ...baseRecall,
+            sentenceGroup: group,
+            isChargedWithOffence: undefined,
+            isYouthSentenceOver12Months: undefined,
+          } as RecommendationResponse)
           expect(statuses.isChargedWithOffence).toEqual(false) // raw status is false
           // but suitabilityForRecallValidation should not block — tested via a complete rec
-          const { areAllComplete: completeResult } = taskCompleteness(
-            { ...baseRecall, sentenceGroup: SentenceGroup.EXTENDED },
-          )
+          const { areAllComplete: completeResult } = taskCompleteness({
+            ...baseRecall,
+            sentenceGroup: SentenceGroup.EXTENDED,
+          })
           expect(completeResult).toEqual(true)
         },
       )
@@ -1051,46 +1046,39 @@ describe('taskCompleteness', () => {
   describe('indeterminateSentenceValidation', () => {
     describe('indeterminateSentenceValidation', () => {
       it('blocks areAllComplete when sentenceGroup is INDETERMINATE and indeterminateSentenceType is missing', () => {
-        const { areAllComplete } = taskCompleteness(
-          {
-            ...baseRecall,
-            sentenceGroup: SentenceGroup.INDETERMINATE,
-            indeterminateSentenceType: undefined,
-          } as RecommendationResponse,
-        )
+        const { areAllComplete } = taskCompleteness({
+          ...baseRecall,
+          sentenceGroup: SentenceGroup.INDETERMINATE,
+          indeterminateSentenceType: undefined,
+        } as RecommendationResponse)
         expect(areAllComplete).toEqual(false)
       })
 
       it('does not block areAllComplete for EXTENDED sentenceGroup even without indeterminateSentenceType', () => {
-        const { areAllComplete } = taskCompleteness(
-          {
-            ...baseRecall,
-            sentenceGroup: SentenceGroup.EXTENDED,
-            indeterminateSentenceType: undefined,
-          } as RecommendationResponse,
-        )
+        const { areAllComplete } = taskCompleteness({
+          ...baseRecall,
+          sentenceGroup: SentenceGroup.EXTENDED,
+          indeterminateSentenceType: undefined,
+        } as RecommendationResponse)
         expect(areAllComplete).toEqual(true)
       })
 
       it('does not block areAllComplete for ADULT_SDS sentenceGroup even without indeterminateSentenceType', () => {
-        const { areAllComplete } = taskCompleteness(
-          {
-            ...baseRecall,
-            sentenceGroup: SentenceGroup.ADULT_SDS,
-            indeterminateSentenceType: undefined,
-            // all adult SDS criteria must be set for the other validation to pass
-            isChargedWithOffence: true,
-            isServingTerroristOrNationalSecurityOffence: true,
-            isAtRiskOfInvolvedInForeignPowerThreat: true,
-            wasReferredToParoleBoard244ZB: true,
-            wasRepatriatedForMurder: true,
-            isServingSOPCSentence: true,
-            isServingDCRSentence: true,
-          } as RecommendationResponse,
-        )
+        const { areAllComplete } = taskCompleteness({
+          ...baseRecall,
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+          indeterminateSentenceType: undefined,
+          // all adult SDS criteria must be set for the other validation to pass
+          isChargedWithOffence: true,
+          isServingTerroristOrNationalSecurityOffence: true,
+          isAtRiskOfInvolvedInForeignPowerThreat: true,
+          wasReferredToParoleBoard244ZB: true,
+          wasRepatriatedForMurder: true,
+          isServingSOPCSentence: true,
+          isServingDCRSentence: true,
+        } as RecommendationResponse)
         expect(areAllComplete).toEqual(true)
       })
     })
   })
-
 })

@@ -11,8 +11,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     urlInfo: { basePath, fromPageId },
   } = res.locals
 
-  const backLinkUrl =
-    !fromPageId ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
+  const backLinkUrl = !fromPageId ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
 
   res.locals = {
     ...res.locals,

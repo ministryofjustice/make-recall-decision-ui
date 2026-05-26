@@ -5,38 +5,35 @@ import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../uti
 import EVENTS from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import bindPlaceholderValues from '../../../utils/automatedFieldValues/binding'
-import { availableRecallTypes, availableRecallTypesFTR56 } from './availableRecallTypes'
+import { availableRecallTypes } from './availableRecallTypes'
 
-const validateRecallType = async ({
-  requestBody,
-  urlInfo,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, originalRecallType, ftrMandatory, standardMandatory, personOnProbationName } = requestBody
   const ftrMandatoryResolved = ftrMandatory === 'true'
   const standardMandatoryResolved = standardMandatory === 'true'
   const invalidRecallType =
     !isValueValid(recallType as string, 'recallType') ||
     (ftrMandatoryResolved && recallType === 'STANDARD') ||
-    standardMandatoryResolved && recallType === 'FIXED_TERM'
+    (standardMandatoryResolved && recallType === 'FIXED_TERM')
 
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
   const isChanged = recallType !== originalRecallType
 
-  const mandatoryFTRRationale = strings.automatedFieldValues.mandatoryFTRRationale
+  const { mandatoryFTRRationale } = strings.automatedFieldValues
   const recallTypeDetailsFixedTerm =
     ftrMandatoryResolved && isFixedTerm
       ? bindPlaceholderValues(mandatoryFTRRationale, { personOnProbationName: personOnProbationName as string })
       : requestBody.recallTypeDetailsFixedTerm
 
   const recallTypeDetailsStandard =
-      standardMandatoryResolved && isStandard
+    standardMandatoryResolved && isStandard
       ? bindPlaceholderValues(strings.automatedFieldValues.mandatoryStandardRationaleFTR56, {
-        personOnProbationName: personOnProbationName as string,
-      })
+          personOnProbationName: personOnProbationName as string,
+        })
       : requestBody.recallTypeDetailsStandard
 
-  const isDiscretionary = !ftrMandatoryResolved && (!standardMandatoryResolved)
+  const isDiscretionary = !ftrMandatoryResolved && !standardMandatoryResolved
   const missingDetailFixedTerm = isDiscretionary && isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
   const missingDetailStandard = isDiscretionary && isStandard && isEmptyStringOrWhitespace(recallTypeDetailsStandard)
 
@@ -46,7 +43,6 @@ const validateRecallType = async ({
     const errors = []
     let errorId
     if (!recallType || invalidRecallType) {
-
       errorId = ftrMandatoryResolved ? 'noRecallTypeSelectedMandatory' : 'noRecallTypeSelectedDiscretionary'
       errors.push(
         makeErrorObject({

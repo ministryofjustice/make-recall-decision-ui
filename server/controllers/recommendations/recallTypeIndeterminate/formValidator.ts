@@ -4,10 +4,7 @@ import strings from '../../../textStrings/en'
 import EVENTS from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-const validateRecallTypeIndeterminate = async ({
-  requestBody,
-  urlInfo,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validateRecallTypeIndeterminate = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType } = requestBody
   const invalidRecallTypeIndeterminate = !isValueValid(recallType as string, 'recallTypeIndeterminate')
   const hasError = !recallType || invalidRecallTypeIndeterminate

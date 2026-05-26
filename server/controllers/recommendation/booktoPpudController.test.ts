@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, getSupportingDocuments, updateStatuses } from '../../data/makeDecisionApiClient'
 import bookToPpudController from './bookToPpudController'
@@ -320,16 +319,15 @@ describe('post', () => {
       token: 'token',
     })
 
-    expect(bookOffender).toHaveBeenCalledWith({ stage: StageEnum.STARTED }, recommendation, 'token', flags)
+    expect(bookOffender).toHaveBeenCalledWith({ stage: StageEnum.STARTED }, recommendation, 'token')
     expect(createOrUpdateSentence).toHaveBeenCalledWith(
       { stage: StageEnum.OFFENDER_BOOKED },
       recommendation,
       'token',
-      flags,
     )
-    expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
-    expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
-    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+    expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token')
+    expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token')
+    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token')
 
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { stage: 'RECALL_BOOKED' },
@@ -337,7 +335,6 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
       'PPUDPartA',
       'token',
-      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1'] },
@@ -345,7 +342,6 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dff',
       'PPUDLicenceDocument',
       'token',
-      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2'] },
@@ -353,7 +349,6 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
       'PPUDProbationEmail',
       'token',
-      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2', '3'] },
@@ -361,7 +356,6 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
       'PPUDOASys',
       'token',
-      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2', '3', '4'] },
@@ -369,7 +363,6 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dbb',
       'PPUDPrecons',
       'token',
-      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2', '3', '4', '5'] },
@@ -377,7 +370,6 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491dcc',
       'PPUDPSR',
       'token',
-      flags,
     )
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { uploaded: ['1', '2', '3', '4', '5', '6'] },
@@ -385,7 +377,6 @@ describe('post', () => {
       'e0cc157d-5c31-4c2f-984f-4bc7b5491ddd',
       'PPUDChargeSheet',
       'token',
-      flags,
     )
     expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
       1,
@@ -393,7 +384,6 @@ describe('post', () => {
       '1',
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d11',
       'token',
-      flags,
     )
     expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
       2,
@@ -401,7 +391,6 @@ describe('post', () => {
       '1',
       'e0cc157d-5c31-4c2f-984f-4bc7b5491d22',
       'token',
-      flags,
     )
 
     expect(createMinute).toHaveBeenCalledWith(
@@ -410,7 +399,6 @@ describe('post', () => {
       'BACKGROUND INFO...',
       'a minute',
       'token',
-      flags,
     )
 
     expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation)
