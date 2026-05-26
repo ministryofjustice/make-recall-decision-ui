@@ -57,7 +57,7 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
             'contain.text',
             'Check the information you tried to send to PPUD against what’s there. You may have to add some information directly into PPUD.',
           )
-        cy.get('a.govuk-link').should('contain.text', 'Go to PPUD(opens in new tab)')
+        cy.get('a.govuk-link').should('contain.text', 'Go to PPUD (opens in new tab)')
       })
 
       describe('Sentence section', () => {
