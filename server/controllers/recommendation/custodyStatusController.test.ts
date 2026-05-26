@@ -122,7 +122,6 @@ describe('post', () => {
           locals: {
             recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
             urlInfo: { basePath },
-            flags: { flagFTR56Enabled: ftr56Enabled },
           },
         })
         const next = mockNext()
@@ -143,7 +142,6 @@ describe('post', () => {
               ],
             },
           },
-          featureFlags: { flagFTR56Enabled: ftr56Enabled },
         })
 
         expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/share-case-with-admin`)

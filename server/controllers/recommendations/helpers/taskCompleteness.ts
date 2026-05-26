@@ -73,10 +73,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
 
   let triggerLeadingToRecall = true
 
-  if (_featureFlags?.flagFTR56Enabled) {
-    triggerLeadingToRecall = statuses.triggerLeadingToRecall
-  }
-
   const isAdultSDSSuitabilityCriteriaSet =
     statuses.isChargedWithOffence &&
     statuses.isServingTerroristOrNationalSecurityOffence &&
@@ -91,14 +87,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
 
   let suitabilityForRecallValidation = true
 
-  if (_featureFlags?.flagFTR56Enabled) {
-    if (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
-      suitabilityForRecallValidation = isAdultSDSSuitabilityCriteriaSet
-    } else if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
-      suitabilityForRecallValidation = isYouthSDSSuitabilityCriteriaSet
-    }
-  }
-
   const indeterminateSentenceValidation =
     recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || hasValue(recommendation.indeterminateSentenceType)
 
@@ -111,7 +99,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
 
     let mappaReviewed = true
 
-    if (_featureFlags?.flagFTR56Enabled && isAdultSDS) {
+    if (isAdultSDS) {
       mappaReviewed = recommendation.personOnProbation.ftr56MappaReviewed
     }
 
@@ -127,10 +115,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         triggerLeadingToRecall &&
         suitabilityForRecallValidation &&
         mappaReviewed &&
-        (!_featureFlags?.flagFTR56Enabled || statuses.decisionDateTime) &&
+        (statuses.decisionDateTime) &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
-        (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
+        (statuses.sentenceGroup) &&
         statuses.licenceConditionsBreached &&
         indeterminateSentenceValidation &&
         whyConsideredRecall &&
@@ -179,7 +167,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isReadyForCounterSignature:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
-      (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
+      (statuses.sentenceGroup) &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&
@@ -206,7 +194,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
       statuses.decisionDateTime &&
-      (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
+      (statuses.sentenceGroup) &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&

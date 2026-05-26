@@ -54,13 +54,12 @@ describe('get', () => {
       locals: {
         recommendation,
         urlInfo: { basePath: `/recommendations/123/` },
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
     await taskListNoRecallController.get(mockReq(), res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.taskListConsiderRecall}`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list`)
   })
 
   it('present - redirect to task-list-consider-recall if selected recall type is undefined and FTR56 enabled', async () => {
@@ -76,7 +75,6 @@ describe('get', () => {
       locals: {
         recommendation,
         urlInfo: { basePath: `/recommendations/123/` },
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -167,7 +165,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -186,7 +183,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()

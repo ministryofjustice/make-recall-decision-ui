@@ -24,7 +24,6 @@ function get(req: Request, res: Response, next: NextFunction) {
       id: 'taskListNoRecall',
     },
     recommendation,
-    ftr56Enabled: featureFlags.flagFTR56Enabled,
     recallType,
   }
 

@@ -89,7 +89,7 @@ context('Make a recommendation', () => {
         })
         cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.visit(
-          `${routeUrls.cases}/${crn}/create-recommendation-warning?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+          `${routeUrls.cases}/${crn}/create-recommendation-warning`,
         )
         cy.clickButton('Continue')
         cy.pageHeading().should('equal', 'There is already a recommendation for Jane Bloggs')
@@ -113,7 +113,7 @@ context('Make a recommendation', () => {
           response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
         })
         cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(`${routeUrls.cases}/${crn}/overview?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`)
+        cy.visit(`${routeUrls.cases}/${crn}/overview`)
         cy.clickLink('Update recommendation')
         cy.pageHeading().should(
           'equal',
@@ -285,7 +285,7 @@ context('Make a recommendation', () => {
           cy.task('getStatuses', { statusCode: 200, response: [] })
 
           cy.visit(
-            `${routeUrls.recommendations}/${recommendationId}/share-case-with-manager?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+            `${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`,
           )
 
           cy.clickLink('Continue to make a recommendation')
@@ -320,7 +320,7 @@ context('Make a recommendation', () => {
 
           cy.task('getStatuses', { statusCode: 200, response: [] })
 
-          cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-extended?flagFTR56Enabled=0`)
+          cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-extended`)
 
           cy.pageHeading().should('equal', 'What do you recommend?')
 
@@ -480,7 +480,7 @@ context('Make a recommendation', () => {
               )
 
               cy.visit(
-                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
               )
 
               // Back link
@@ -556,7 +556,7 @@ context('Make a recommendation', () => {
 
               cy.task('getStatuses', { statusCode: 200, response: [] })
               cy.visit(
-                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
               )
 
               // Back link
@@ -603,7 +603,7 @@ context('Make a recommendation', () => {
 
               cy.task('getStatuses', { statusCode: 200, response: [] })
               cy.visit(
-                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
               )
 
               // Back link
@@ -646,7 +646,7 @@ context('Make a recommendation', () => {
 
               cy.task('getStatuses', { statusCode: 200, response: [] })
               cy.visit(
-                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
               )
 
               // Back link
@@ -689,7 +689,7 @@ context('Make a recommendation', () => {
               )
 
               cy.visit(
-                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
               )
 
               // Back link
@@ -711,7 +711,7 @@ context('Make a recommendation', () => {
 
             it('licence conditions - shows message if person has no active custodial convictions', () => {
               cy.visit(
-                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
               )
               cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
               cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
@@ -731,7 +731,7 @@ context('Make a recommendation', () => {
 
               cy.task('getStatuses', { statusCode: 200, response: [] })
               cy.visit(
-                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+                `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
               )
 
               // Back link
@@ -1065,7 +1065,7 @@ context('Make a recommendation', () => {
         cy.task('getStatuses', { statusCode: 200, response: [] })
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
         cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/address-details?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+          `${routeUrls.recommendations}/${recommendationId}/address-details`,
         )
         cy.fillInput('Where can the police find Jane Bloggs?', '35 Oak Rise, Carshalton, Surrey S12 345')
         cy.task('getStatuses', {
@@ -1953,7 +1953,7 @@ context('Make a recommendation', () => {
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
         cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/who-completed-part-a/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+          `${routeUrls.recommendations}/${recommendationId}/who-completed-part-a`,
         )
 
         cy.pageHeading().should('contain', 'Who completed this Part A?')
@@ -1980,7 +1980,7 @@ context('Make a recommendation', () => {
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
         cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+          `${routeUrls.recommendations}/${recommendationId}/practitioner-for-part-a`,
         )
 
         cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
@@ -2007,7 +2007,7 @@ context('Make a recommendation', () => {
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
         cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+          `${routeUrls.recommendations}/${recommendationId}/revocation-order-recipients`,
         )
 
         cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
@@ -2033,7 +2033,7 @@ context('Make a recommendation', () => {
         cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
         cy.visit(
-          `${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
+          `${routeUrls.recommendations}/${recommendationId}/ppcs-query-emails`,
         )
 
         cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
@@ -3225,7 +3225,7 @@ context('Make a recommendation', () => {
           })
 
           cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+            `/recommendations/252523937/select-indeterminate-ppud-sentence`,
           )
           cy.pageHeading().should('contain', 'Select a sentence for your booking')
 
@@ -3317,7 +3317,7 @@ context('Make a recommendation', () => {
           })
 
           cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+            `/recommendations/252523937/select-indeterminate-ppud-sentence`,
           )
           cy.pageHeading().should('contain', 'Select a sentence for your booking')
           cy.get('#determinateSentencesDetails')
@@ -3357,7 +3357,7 @@ context('Make a recommendation', () => {
           })
 
           cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
+            `/recommendations/252523937/select-indeterminate-ppud-sentence`,
           )
           cy.pageHeading().should('contain', 'Select a sentence for your booking')
 
@@ -3788,7 +3788,7 @@ context('Make a recommendation', () => {
     })
 
     it('present licence condition breaches page for AP - FTR56 enabled', () => {
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions?flagFTR56Enabled=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/ap-licence-conditions`)
 
       cy.pageHeading().should('contain', 'What licence conditions has Jane Bloggs breached?')
 

@@ -7,8 +7,7 @@ import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesFor
 const validateRecallTypeIndeterminate = async ({
   requestBody,
   urlInfo,
-  flagFTR56Enabled = false,
-}: FormValidatorArgs & { flagFTR56Enabled?: boolean }): FormValidatorReturn => {
+}: FormValidatorArgs): FormValidatorReturn => {
   const { recallType } = requestBody
   const invalidRecallTypeIndeterminate = !isValueValid(recallType as string, 'recallTypeIndeterminate')
   const hasError = !recallType || invalidRecallTypeIndeterminate
@@ -16,7 +15,7 @@ const validateRecallTypeIndeterminate = async ({
     const errors = []
     let errorId
     if (!recallType || invalidRecallTypeIndeterminate) {
-      errorId = flagFTR56Enabled ? 'noRecallTypeIndeterminateSelectedFTR56' : 'noRecallTypeIndeterminateSelected'
+      errorId = 'noRecallTypeIndeterminateSelected'
       errors.push(
         makeErrorObject({
           id: 'recallType',

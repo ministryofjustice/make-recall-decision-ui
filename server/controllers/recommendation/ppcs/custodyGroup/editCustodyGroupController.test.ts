@@ -36,7 +36,6 @@ describe('get', () => {
         recommendation: {
           bookRecallToPpud: initialBookRecallToPpud,
         },
-        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const next = mockNext()

@@ -234,7 +234,7 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: true,
+      isReadyForCounterSignature: false,
       areAllComplete: false,
     })
 
@@ -265,7 +265,7 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: true,
+      isReadyForCounterSignature: false,
       areAllComplete: false,
     })
 

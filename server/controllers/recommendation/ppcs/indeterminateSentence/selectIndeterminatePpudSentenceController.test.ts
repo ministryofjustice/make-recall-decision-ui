@@ -39,7 +39,6 @@ describe('get', () => {
           token: randomUUID(),
         },
         recommendation,
-        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const req = mockReq({

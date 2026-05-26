@@ -199,7 +199,6 @@ describe('post', () => {
     const recommendation = {
       id: '12345',
     }
-    const flags = { flagFTR56Enabled: faker.datatype.boolean() }
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -211,7 +210,6 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         urlInfo: { basePath },
-        flags,
       },
     })
     const next = mockNext()

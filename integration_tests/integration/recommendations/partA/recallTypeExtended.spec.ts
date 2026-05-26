@@ -72,7 +72,7 @@ describe('recall type extended', () => {
   })
 
   describe('with FTR56 flag enabled', () => {
-    const testPageUrlFTR56 = `${testPageUrl}?flagFTR56Enabled=1`
+    const testPageUrlFTR56 = `${testPageUrl}`
 
     it('should display correctly with no data', () => {
       cy.visit(testPageUrlFTR56)

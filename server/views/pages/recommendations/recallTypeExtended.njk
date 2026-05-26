@@ -23,33 +23,6 @@
       <form novalidate method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         <input type="hidden" name="crn" value="{{ recommendation.crn }}" />
-
-        {% if flags.flagFTR56Enabled %}
-          {{ heading(pageHeadings.recallType) }}
-
-          {{ mojTicketPanel({
-            items: [{
-              html: ticketPanelHtml,
-              classes: "moj-ticket-panel__content--blue"
-            }]
-          }) }}
-
-          {{ govukRadios({
-            idPrefix: "recallType",
-            name: "recallType",
-            fieldset: {
-              legend: {
-                text: "Select your recommendation",
-                classes: "govuk-!-font-weight-bold"
-              }
-            },
-            items: radioCheckboxItems({
-              items: formOptions.recallTypeExtendedFTR56,
-              currentValues: inputDisplayValues.value
-            }),
-            errorMessage: errorMessage(errors.recallType)
-          }) }}
-        {% else %}
           {{ govukRadios({
             idPrefix: "recallType",
             name: "recallType",
@@ -70,7 +43,6 @@
             errorMessage: errorMessage(errors.recallType)
           }) }}
 
-        {% endif %}
         {{ formSubmitButton() }}
       </form>
     </div>

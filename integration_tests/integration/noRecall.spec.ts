@@ -140,7 +140,7 @@ context('No recall', () => {
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('MAPPA information to assess recall type To review').should('exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
@@ -166,7 +166,7 @@ context('No recall', () => {
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
@@ -192,7 +192,7 @@ context('No recall', () => {
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('not.exist')
       cy.getElement('What you recommend Completed').should('exist')
@@ -221,7 +221,7 @@ context('No recall', () => {
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('not.exist')
       cy.getElement('What you recommend Completed').should('exist')
@@ -260,7 +260,7 @@ context('No recall', () => {
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
 
       cy.getElement('MAPPA information to assess recall type Reviewed').should('exist')
       cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
@@ -295,7 +295,7 @@ context('No recall', () => {
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
 
       cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
@@ -351,7 +351,7 @@ context('No recall', () => {
 
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall?flagFTR56Enabled=1`)
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
 
       const recallTypeSlug = getRecallTypeSlug(recommendation)
       // Base links for all sentence groups

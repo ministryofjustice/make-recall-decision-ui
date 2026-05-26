@@ -48,7 +48,7 @@ context('Make a recommendation - form validation', () => {
 
             cy.task('getStatuses', { statusCode: 200, response: [] })
             cy.visit(
-              `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
             )
 
             // Back link
@@ -83,7 +83,7 @@ context('Make a recommendation - form validation', () => {
             cy.task('getStatuses', { statusCode: 200, response: [] })
 
             cy.visit(
-              `${routeUrls.recommendations}/${recommendationId}/alternatives-tried?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+              `${routeUrls.recommendations}/${recommendationId}/alternatives-tried?${hasFromPageId ? '&fromPageId=task-list' : ''}`,
             )
 
             // Back link
@@ -135,7 +135,7 @@ context('Make a recommendation - form validation', () => {
       response: { ...recommendationResponse, sentenceGroup: 'INDETERMINATE' },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type?flagFTR56Enabled=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateSentenceType',
@@ -178,7 +178,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-details?flagFTR56Enabled=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-details`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldGroupId: 'option-1',

@@ -35,14 +35,7 @@ describe('Trigger Leading to Recall Controller', () => {
           describe('Res locals', () => {
             describe('Page Data is provided:', () => {
               it('Page ID', () => expect(res.locals.pageData.page).toEqual({ id: 'triggerLeadingToRecall' }))
-              it('Recommendation', () => expect(res.locals.pageData.recommendation).toEqual(recommendation))
-              it('FTR56 flag value', () => expect(res.locals.pageData.flagFTR56Enabled).toEqual(flagFTR56Enabled))
-              if (flagFTR56Enabled) {
-                it('Back link URL', () =>
-                  expect(res.locals.pageData.backLinkUrl).toEqual(
-                    `${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`,
-                  ))
-              }
+              it('Recommendation', () => expect(res.locals.pageData.recommendation).toEqual(recommendation))              
             })
           })
 
