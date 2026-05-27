@@ -605,9 +605,11 @@ context('Recommendation - task list', () => {
                     },
                   },
                 })
+
                 beforeEach(() => {
                   setUp(recommendation)
                 })
+
                 if (!isIndeterminateSentence && !isExtendedSentence) {
                   it('shows suitability link', () => {
                     checkSuitabilityLink()
@@ -617,12 +619,16 @@ context('Recommendation - task list', () => {
                     checkElementDoesntExist(suitabilityLinkText)
                   })
                 }
+
                 it('shows recall type link', () => {
                   checkRecallTypeLink(expectedRecallTypeLink)
                 })
-                it('shows SPO agreement link', () => {
-                  checkSpoAgreementLink()
-                })
+
+                if (recallTypeValue !== RecallTypeSelectedValue.value.NO_RECALL) {
+                  it('shows SPO agreement link', () => {
+                    checkSpoAgreementLink()
+                  })
+                }
               },
             )
           })
