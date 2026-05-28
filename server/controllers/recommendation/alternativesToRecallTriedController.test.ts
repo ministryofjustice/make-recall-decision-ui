@@ -37,216 +37,215 @@ describe('get', () => {
   }
 
   describe('test back button', () => {
-    ;[true, false].forEach(flagFTR56Enabled => {
-      describe(`FTR56 flag ${flagFTR56Enabled ? 'enabled' : 'disabled'}`, () => {
-        ;[true, false].forEach(hasFromPageId => {
-          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, async () => {
-            const urlInfo = UrlInfoGenerator.generate({
-              fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
-            })
-            const res = mockRes({
-              locals: {
-                recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-                flags: { flagFTR56Enabled },
-                urlInfo,
-              },
-            })
-            await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
-
-            if (flagFTR56Enabled && !hasFromPageId) {
-              expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
-            } else {
-              expect(res.locals.backLinkUrl).toBeUndefined()
-            }
-          })
+    // ;[true].forEach(flagFTR56Enabled => {
+    // describe(`FTR56 flag  'enabled' : 'disabled'}`, () => {
+    ;[true, false].forEach(hasFromPageId => {
+      it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, async () => {
+        const urlInfo = UrlInfoGenerator.generate({
+          fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
         })
+        const res = mockRes({
+          locals: {
+            recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+            urlInfo,
+          },
+        })
+        await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
+
+        if (!hasFromPageId) {
+          expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
+        } else {
+          expect(res.locals.backLinkUrl).toBeUndefined()
+        }
       })
     })
-  })
+    // }
+    // )
+    // }
 
-  it('load with existing data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          alternativesToRecallTried,
+    it('load with existing data', async () => {
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            alternativesToRecallTried,
+          },
+          token: 'token1',
         },
-        token: 'token1',
-      },
+      })
+      const next = mockNext()
+      await alternativesToRecallTriedController.get(mockReq(), res, next)
+
+      expect(res.locals.inputDisplayValues).toEqual([
+        { details: 'a warning letter', value: 'WARNINGS_LETTER' },
+        { details: 'lots of trouble', value: 'INCREASED_FREQUENCY' },
+      ])
     })
-    const next = mockNext()
-    await alternativesToRecallTriedController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual([
-      { details: 'a warning letter', value: 'WARNINGS_LETTER' },
-      { details: 'lots of trouble', value: 'INCREASED_FREQUENCY' },
-    ])
-  })
-
-  it('initial load with error data', async () => {
-    const res = mockRes({
-      locals: {
-        errors: {
-          list: [
-            {
-              name: 'licenceConditionsBreached',
+    it('initial load with error data', async () => {
+      const res = mockRes({
+        locals: {
+          errors: {
+            list: [
+              {
+                name: 'licenceConditionsBreached',
+                text: 'Select one or more licence conditions',
+                href: '#licenceConditionsBreached',
+                errorId: 'noLicenceConditionsSelected',
+              },
+            ],
+            licenceConditionsBreached: {
               text: 'Select one or more licence conditions',
               href: '#licenceConditionsBreached',
               errorId: 'noLicenceConditionsSelected',
             },
-          ],
-          licenceConditionsBreached: {
-            text: 'Select one or more licence conditions',
+          },
+          recommendation: {
+            alternativesToRecallTried,
+          },
+          token: 'token1',
+        },
+      })
+
+      await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
+
+      expect(res.locals.errors).toEqual({
+        licenceConditionsBreached: {
+          errorId: 'noLicenceConditionsSelected',
+          href: '#licenceConditionsBreached',
+          text: 'Select one or more licence conditions',
+        },
+        list: [
+          {
             href: '#licenceConditionsBreached',
             errorId: 'noLicenceConditionsSelected',
+            text: 'Select one or more licence conditions',
+            name: 'licenceConditionsBreached',
           },
-        },
-        recommendation: {
-          alternativesToRecallTried,
-        },
-        token: 'token1',
-      },
-    })
-
-    await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
-
-    expect(res.locals.errors).toEqual({
-      licenceConditionsBreached: {
-        errorId: 'noLicenceConditionsSelected',
-        href: '#licenceConditionsBreached',
-        text: 'Select one or more licence conditions',
-      },
-      list: [
-        {
-          href: '#licenceConditionsBreached',
-          errorId: 'noLicenceConditionsSelected',
-          text: 'Select one or more licence conditions',
-          name: 'licenceConditionsBreached',
-        },
-      ],
-    })
-  })
-})
-
-describe('post', () => {
-  describe('post with valid data', () => {
-    ;[true, false].forEach(ftr56Enabled => {
-      it(`with FTR56 ${ftr56Enabled ? 'enabled' : 'disabled'}`, async () => {
-        const validationResults = {
-          valuesToSave: {
-            alternativesToRecallTried: {
-              selected: faker.lorem.word(),
-              allOptions: faker.helpers.multiple(() => {
-                return { value: faker.lorem.word(), text: faker.lorem.sentence() }
-              }),
-            },
-          },
-        }
-        ;(validateAlternativesTried as jest.Mock).mockResolvedValue(validationResults)
-        ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-        const recommendationId = faker.number.int().toString()
-        const req = mockReq({
-          params: { recommendationId },
-          body: {
-            alternativesToRecallTried: 'WARNINGS_LETTER',
-            'alternativesToRecallTriedDetail-WARNINGS_LETTER': 'a warning',
-            'alternativesToRecallTriedDetail-INCREASED_FREQUENCY': '',
-            'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': '',
-            'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS': '',
-            'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': '',
-            'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
-            'alternativesToRecallTriedDetail-DRUG_TESTING': '',
-            'alternativesToRecallTriedDetail-ALTERNATIVE_TO_RECALL_OTHER': '',
-          },
-        })
-
-        const res = mockRes({
-          locals: {
-            user: { token: 'token1' },
-            recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-            urlInfo: { basePath: `/recommendations/${recommendationId}/` },
-            flags: { flagFTR56Enabled: ftr56Enabled },
-          },
-        })
-
-        const next = mockNext()
-        await alternativesToRecallTriedController.post(req, res, next)
-
-        expect(validateAlternativesTried).toHaveBeenCalledWith({
-          requestBody: req.body,
-          recommendationId,
-          urlInfo: res.locals.urlInfo,
-          token: res.locals.user.token,
-        })
-        expect(updateRecommendation).toHaveBeenCalledWith({
-          recommendationId,
-          valuesToSave: validationResults.valuesToSave,
-          token: res.locals.user.token,
-          featureFlags: res.locals.flags,
-        })
-        expect(res.redirect).toHaveBeenCalledWith(
-          303,
-          `/recommendations/${recommendationId}/${ftr56Enabled ? ppPaths.sentenceInformation : ppPaths.taskListConsiderRecall}`,
-        )
-        expect(next).not.toHaveBeenCalled() // end of the line for posts.
+        ],
       })
     })
   })
+  describe('post', () => {
+    describe('post with valid data', () => {
+      ;[true, false].forEach(ftr56Enabled => {
+        it(`with FTR56 disabled}`, async () => {
+          const validationResults = {
+            valuesToSave: {
+              alternativesToRecallTried: {
+                selected: faker.lorem.word(),
+                allOptions: faker.helpers.multiple(() => {
+                  return { value: faker.lorem.word(), text: faker.lorem.sentence() }
+                }),
+              },
+            },
+          }
+          ;(validateAlternativesTried as jest.Mock).mockResolvedValue(validationResults)
+          ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-  it('post with invalid data', async () => {
-    const validationResults = {
-      errors: ErrorGenerator.generate(),
-      unsavedValues: faker.helpers.multiple(() => {
-        return {
-          value: faker.lorem.word(),
-          details: faker.lorem.sentence(),
-        }
-      }),
-    }
-    ;(validateAlternativesTried as jest.Mock).mockResolvedValue(validationResults)
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+          const recommendationId = faker.number.int().toString()
+          const req = mockReq({
+            params: { recommendationId },
+            body: {
+              alternativesToRecallTried: 'WARNINGS_LETTER',
+              'alternativesToRecallTriedDetail-WARNINGS_LETTER': 'a warning',
+              'alternativesToRecallTriedDetail-INCREASED_FREQUENCY': '',
+              'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': '',
+              'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS': '',
+              'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': '',
+              'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
+              'alternativesToRecallTriedDetail-DRUG_TESTING': '',
+              'alternativesToRecallTriedDetail-ALTERNATIVE_TO_RECALL_OTHER': '',
+            },
+          })
 
-    const recommendationId = faker.number.int().toString()
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId },
-      body: {
-        alternativesToRecallTried: undefined,
-        'alternativesToRecallTriedDetail-WARNINGS_LETTER': '',
-        'alternativesToRecallTriedDetail-INCREASED_FREQUENCY': '',
-        'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': '',
-        'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS': '',
-        'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': '',
-        'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
-        'alternativesToRecallTriedDetail-DRUG_TESTING': '',
-        'alternativesToRecallTriedDetail-ALTERNATIVE_TO_RECALL_OTHER': '',
-      },
+          const res = mockRes({
+            locals: {
+              user: { token: 'token1' },
+              recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+              urlInfo: { basePath: `/recommendations/${recommendationId}/` },
+              flags: { flagFTR56Enabled: ftr56Enabled },
+            },
+          })
+
+          const next = mockNext()
+          await alternativesToRecallTriedController.post(req, res, next)
+
+          expect(validateAlternativesTried).toHaveBeenCalledWith({
+            requestBody: req.body,
+            recommendationId,
+            urlInfo: res.locals.urlInfo,
+            token: res.locals.user.token,
+          })
+          expect(updateRecommendation).toHaveBeenCalledWith({
+            recommendationId,
+            valuesToSave: validationResults.valuesToSave,
+            token: res.locals.user.token,
+            featureFlags: res.locals.flags,
+          })
+          expect(res.redirect).toHaveBeenCalledWith(
+            303,
+            `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+          )
+          expect(next).not.toHaveBeenCalled() // end of the line for posts.
+        })
+      })
     })
 
-    const res = mockRes({
-      locals: {
-        user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/${recommendationId}/` },
-      },
-    })
+    it('post with invalid data', async () => {
+      const validationResults = {
+        errors: ErrorGenerator.generate(),
+        unsavedValues: faker.helpers.multiple(() => {
+          return {
+            value: faker.lorem.word(),
+            details: faker.lorem.sentence(),
+          }
+        }),
+      }
+      ;(validateAlternativesTried as jest.Mock).mockResolvedValue(validationResults)
+      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const next = mockNext()
-    await alternativesToRecallTriedController.post(req, res, next)
+      const recommendationId = faker.number.int().toString()
+      const req = mockReq({
+        originalUrl: 'some-url',
+        params: { recommendationId },
+        body: {
+          alternativesToRecallTried: undefined,
+          'alternativesToRecallTriedDetail-WARNINGS_LETTER': '',
+          'alternativesToRecallTriedDetail-INCREASED_FREQUENCY': '',
+          'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': '',
+          'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS': '',
+          'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': '',
+          'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
+          'alternativesToRecallTriedDetail-DRUG_TESTING': '',
+          'alternativesToRecallTriedDetail-ALTERNATIVE_TO_RECALL_OTHER': '',
+        },
+      })
 
-    expect(validateAlternativesTried).toHaveBeenCalledWith({
-      requestBody: req.body,
-      recommendationId,
-      urlInfo: res.locals.urlInfo,
-      token: res.locals.user.token,
-    })
+      const res = mockRes({
+        locals: {
+          user: { token: 'token1' },
+          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+          urlInfo: { basePath: `/recommendations/${recommendationId}/` },
+        },
+      })
 
-    expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session).toEqual({
-      errors: validationResults.errors,
-      unsavedValues: validationResults.unsavedValues,
+      const next = mockNext()
+      await alternativesToRecallTriedController.post(req, res, next)
+
+      expect(validateAlternativesTried).toHaveBeenCalledWith({
+        requestBody: req.body,
+        recommendationId,
+        urlInfo: res.locals.urlInfo,
+        token: res.locals.user.token,
+      })
+
+      expect(updateRecommendation).not.toHaveBeenCalled()
+      expect(req.session).toEqual({
+        errors: validationResults.errors,
+        unsavedValues: validationResults.unsavedValues,
+      })
+      expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+      expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

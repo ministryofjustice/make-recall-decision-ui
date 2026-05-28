@@ -10,7 +10,6 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import {
   isFixedTermRecallMandatoryForRecommendation,
   isFixedTermRecallMandatoryForValueKeys,
-  isRecommendationDiscretionaryRecall,
 } from '../../utils/fixedTermRecallUtils'
 import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
 import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'

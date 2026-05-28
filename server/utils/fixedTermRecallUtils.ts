@@ -91,4 +91,4 @@ export const isRecommendationDiscretionaryRecall = ({
 export const isStandardRecallMandatoryForRecommendationFTR56 = (recommendation: RecommendationResponse) =>
   [SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
   (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS &&
-    !isFixedTermRecallMandatoryForRecommendation(recommendation, true))
+    !isFixedTermRecallMandatoryForRecommendation(recommendation))

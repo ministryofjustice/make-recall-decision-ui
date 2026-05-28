@@ -5,23 +5,14 @@ import inputDisplayValuesRecallType from '../recommendations/recallType/inputDis
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import {
-  availableRecallTypesForRecommendation,
-  availableRecallTypesForRecommendationFTR56,
-} from '../recommendations/recallType/availableRecallTypes'
+import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import {
-  isFixedTermRecallMandatoryForRecommendation,
-  isStandardRecallMandatoryForRecommendationFTR56,
-} from '../../utils/fixedTermRecallUtils'
+import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import { FeatureFlags } from '../../@types/featureFlags'
 
 function get(_: Request, res: Response, next: NextFunction) {
-  const {
-    recommendation,
-    flags: { flagFTR56Enabled },
-  } = res.locals as {
+  const { recommendation } = res.locals as {
     recommendation: RecommendationResponse
     flags: FeatureFlags
   }

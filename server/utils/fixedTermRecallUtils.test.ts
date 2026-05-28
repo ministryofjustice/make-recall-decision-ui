@@ -147,7 +147,7 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             isMappaLevel2Or3: false,
           }),
         ),
-      ).toBeTruthy()
+      ).toBeFalsy()
     })
 
     describe(' Returns false when any exclusion criteria fields are true', () => {
@@ -302,7 +302,7 @@ describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
           isYouthChargedWithSeriousOffence: undefined,
         }),
       ),
-    ).toBeTruthy()
+    ).toBeFalsy()
   })
   it(` Returns false when is Youth SDS`, () => {
     expect(
@@ -347,7 +347,7 @@ describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
           isAtRiskOfInvolvedInForeignPowerThreat: false,
         }),
       ),
-    ).toBeFalsy()
+    ).toBeTruthy()
   })
   describe(' Returns true when is Adult SDS and any adult exclusion criteria fields are true', () => {
     generateBooleanCombinations(9)

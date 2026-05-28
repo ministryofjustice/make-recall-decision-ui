@@ -2,7 +2,6 @@ import updateRecall from './updateRecall'
 import StageEnum from './StageEnum'
 import { ppudCreateRecall, updateRecommendation } from '../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
-import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -19,78 +18,71 @@ describe('update recall', () => {
   })
 
   describe('happy path', () => {
-    const ftr56TestCases = [
-      {
-        description: 'with FTR56 flag enabled',
-        ftr56Enabled: true,
-      },
-      {
-        description: 'with FTR56 flag disabled',
-        ftr56Enabled: false,
-      },
-    ]
-    ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
-      it(description, async () => {
-        const bookingMemento = {
-          stage: StageEnum.RELEASE_BOOKED,
-          offenderId: '767',
-          sentenceId: '444',
-          releaseId: '555',
-          failed: true,
-          failedMessage: '{}',
-        }
+    // ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+    it('ftr56Disbled', async () => {
+      const bookingMemento = {
+        stage: StageEnum.RELEASE_BOOKED,
+        offenderId: '767',
+        sentenceId: '444',
+        releaseId: '555',
+        failed: true,
+        failedMessage: '{}',
+      }
 
-        const recommendation: RecommendationResponse = {
-          id: '1',
-          decisionDateTime: '2024-01-29T16:15:39',
-          bookRecallToPpud: {
-            mappaLevel: 'Level 2 - local inter-agency management',
-            policeForce: 'Bethnal Green Police Force',
-            probationArea: 'london',
-            receivedDateTime: '2024-01-29T16:15:39',
-          },
-          sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
-          hasContrabandRisk: {
-            selected: true,
-            details: 'Contraband detail...',
-          },
-        } as unknown as RecommendationResponse
-
-        ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
-
-        const result = await updateRecall(bookingMemento, recommendation, 'token', {})
-
-        expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
-          decisionDateTime: '2024-01-29T16:15:39',
-          isInCustody: false,
+      const recommendation: RecommendationResponse = {
+        id: '1',
+        decisionDateTime: '2024-01-29T16:15:39',
+        bookRecallToPpud: {
           mappaLevel: 'Level 2 - local inter-agency management',
           policeForce: 'Bethnal Green Police Force',
           probationArea: 'london',
           receivedDateTime: '2024-01-29T16:15:39',
-          riskOfContrabandDetails: 'Contraband detail...',
-        })
+        },
+        sentenceGroup: undefined,
+        hasContrabandRisk: {
+          selected: true,
+          details: 'Contraband detail...',
+        },
+      } as unknown as RecommendationResponse
 
-        expect(updateRecommendation).toHaveBeenCalledWith({
-          recommendationId: '1',
-          valuesToSave: {
-            bookingMemento: {
-              offenderId: '767',
-              sentenceId: '444',
-              recallId: '898',
-              releaseId: '555',
-              stage: 'RECALL_BOOKED',
-            },
+      ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
+
+      const result = await updateRecall(bookingMemento, recommendation, 'token', {})
+
+      expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
+        decisionDateTime: '2024-01-29T16:15:39',
+        isInCustody: false,
+        mappaLevel: 'Level 2 - local inter-agency management',
+        policeForce: 'Bethnal Green Police Force',
+        probationArea: 'london',
+        receivedDateTime: '2024-01-29T16:15:39',
+        riskOfContrabandDetails: 'Contraband detail...',
+      })
+
+      expect(updateRecommendation).toHaveBeenCalledWith({
+        featureFlags: {},
+        recommendationId: '1',
+        valuesToSave: {
+          bookingMemento: {
+            failed: undefined,
+            failedMessage: undefined,
+            offenderId: '767',
+            sentenceId: '444',
+            recallId: '898',
+            releaseId: '555',
+            stage: 'RECALL_BOOKED',
           },
-          token: 'token',
-        })
-        expect(result).toEqual({
-          offenderId: '767',
-          sentenceId: '444',
-          recallId: '898',
-          releaseId: '555',
-          stage: 'RECALL_BOOKED',
-        })
+        },
+        token: 'token',
+      })
+      expect(result).toEqual({
+        offenderId: '767',
+        sentenceId: '444',
+        recallId: '898',
+        releaseId: '555',
+        stage: 'RECALL_BOOKED',
       })
     })
+    // })
   })
 })

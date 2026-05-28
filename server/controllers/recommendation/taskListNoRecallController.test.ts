@@ -1,7 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import taskListNoRecallController from './taskListNoRecallController'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import ppPaths from '../../routes/paths/pp'
 import { recallTypeFTR56 } from '../recommendations/recallType/formOptions'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
@@ -80,7 +79,7 @@ describe('get', () => {
     const next = mockNext()
     await taskListNoRecallController.get(mockReq(), res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.taskListConsiderRecall}`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list`)
   })
 
   it('present for indeterminate', async () => {

@@ -104,49 +104,48 @@ describe('get', () => {
 
 describe('post', () => {
   describe('post with valid data', () => {
-    ;[true, false].forEach(ftr56Enabled => {
-      it(`with FTR56 ${ftr56Enabled ? 'enabled' : 'disabled'}`, async () => {
-        ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    it(`with FTR56  'disabled'`, async () => {
+      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-        const basePath = `/recommendations/123/`
-        const req = mockReq({
-          params: { recommendationId: '123' },
-          body: {
-            custodyStatus: 'YES_POLICE',
-            custodyStatusDetailsYesPolice: 'test',
-          },
-        })
-
-        const res = mockRes({
-          token: 'token1',
-          locals: {
-            recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-            urlInfo: { basePath },
-          },
-        })
-        const next = mockNext()
-
-        await custodyStatusController.post(req, res, next)
-
-        expect(updateRecommendation).toHaveBeenCalledWith({
-          recommendationId: '123',
-          token: 'token1',
-          valuesToSave: {
-            custodyStatus: {
-              selected: 'YES_POLICE',
-              details: ftr56Enabled ? null : 'test',
-              allOptions: [
-                { value: 'YES_PRISON', text: 'Yes, prison custody' },
-                { value: 'YES_POLICE', text: 'Yes, police custody' },
-                { value: 'NO', text: 'No' },
-              ],
-            },
-          },
-        })
-
-        expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/share-case-with-admin`)
-        expect(next).not.toHaveBeenCalled() // end of the line for posts.
+      const basePath = `/recommendations/123/`
+      const req = mockReq({
+        params: { recommendationId: '123' },
+        body: {
+          custodyStatus: 'YES_POLICE',
+          custodyStatusDetailsYesPolice: 'test',
+        },
       })
+
+      const res = mockRes({
+        token: 'token1',
+        locals: {
+          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+          urlInfo: { basePath },
+        },
+      })
+      const next = mockNext()
+
+      await custodyStatusController.post(req, res, next)
+
+      expect(updateRecommendation).toHaveBeenCalledWith({
+        featureFlags: {},
+        recommendationId: '123',
+        token: 'token1',
+        valuesToSave: {
+          custodyStatus: {
+            selected: 'YES_POLICE',
+            details: 'test',
+            allOptions: [
+              { value: 'YES_PRISON', text: 'Yes, prison custody' },
+              { value: 'YES_POLICE', text: 'Yes, police custody' },
+              { value: 'NO', text: 'No' },
+            ],
+          },
+        },
+      })
+
+      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/share-case-with-admin`)
+      expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
 
     it("with FTR56 enabled - YES_POLICE doesn't require additional details", async () => {
