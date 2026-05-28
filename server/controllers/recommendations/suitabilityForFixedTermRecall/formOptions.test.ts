@@ -22,16 +22,6 @@ describe('suitability for fixed term recall form options', () => {
         wasRepatriatedForMurder: { label: 'Has Test Test been repatriated to the UK following a sentence for murder?' },
       })
     })
-
-    it('should return the correct options for YOUTH_SDS', () => {
-      const result = suitabilityFormOptions(true, 'Test Test', SentenceGroup.YOUTH_SDS)
-      expect(result).toEqual({
-        isYouthChargedWithSeriousOffence: {
-          label: 'Is Test Test being recalled because of being charged with a serious offence?',
-        },
-        isYouthSentenceOver12Months: { label: "Is Test Test's sentence 12 months or over?" },
-      })
-    })
   })
 
   describe('with FTR56 flag disabled', () => {

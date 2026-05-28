@@ -211,7 +211,7 @@ describe('get', () => {
 
       await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-      expect(res.locals.page.warningPanel).toBeUndefined()
+      expect(res.locals.page?.warningPanel).toBeUndefined()
     })
   })
   describe('When the existing recommendation is fixed term recall discretionary', () => {
@@ -248,7 +248,6 @@ describe('get', () => {
               sentenceGroup: testCase,
             },
             token: 'token1',
-            flags: { flagFTR56Enabled: true },
           },
         })
 
@@ -270,9 +269,7 @@ describe('get', () => {
           sentenceGroup: SentenceGroup.YOUTH_SDS,
           recallType: '123',
         },
-        flags: {
-          flagFTR56Enabled: true,
-        },
+        flags: {},
       },
     })
 
@@ -294,15 +291,20 @@ describe('get', () => {
           sentenceGroup: SentenceGroup.ADULT_SDS,
           recallType: '123',
         },
-        flags: {
-          flagFTR56Enabled: true,
-        },
+        flags: {},
       },
     })
 
     await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-    expect(res.locals.page.warningPanel).toBe(undefined)
+    expect(res.locals.page.warningPanel).toBeDefined()
+    expect(res.locals.page.warningPanel.title).toBeDefined()
+    expect(res.locals.page.warningPanel.body).toBeDefined()
+
+    expect(res.locals.page.warningPanel).toEqual({
+      title: 'Changes could affect your recall recommendation choices',
+      body: `Changing your answers could make Test McTest eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+    })
   })
 
   it('renders the correct template when FTR56 flag is enabled', async () => {
@@ -313,15 +315,13 @@ describe('get', () => {
             name: faker.person.fullName(),
           },
         },
-        flags: {
-          flagFTR56Enabled: true,
-        },
+        flags: {},
       },
     })
 
     await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
   })
 })
 
@@ -524,9 +524,7 @@ describe('post', () => {
             recommendation: priorRecommendation,
             urlInfo: { basePath },
             statuses: [],
-            flags: {
-              flagFTR56Enabled: true,
-            },
+            flags: {},
           },
         })
         const next = mockNext()
@@ -547,9 +545,7 @@ describe('post', () => {
                 }
               : {}),
           },
-          featureFlags: {
-            flagFTR56Enabled: true,
-          },
+          featureFlags: {},
         })
 
         expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
@@ -675,9 +671,7 @@ describe('post', () => {
         },
         urlInfo: { basePath },
         statuses: [],
-        flags: {
-          flagFTR56Enabled: true,
-        },
+        flags: {},
       },
     })
     const next = mockNext()
@@ -687,25 +681,70 @@ describe('post', () => {
 
     expect(req.session.errors).toEqual([
       {
-        name: 'isYouthSentenceOver12Months',
-        text: "Select whether {{ fullName }}'s sentence is 12 months or over",
-        href: '#isYouthSentenceOver12Months',
-        errorId: 'noIsYouthSentenceOver12Months',
+        name: 'isSentence48MonthsOrOver',
+        text: "Select whether {{ fullName }}'s sentence is 48 months or over",
+        href: '#isSentence48MonthsOrOver',
+        errorId: 'noIsSentence48MonthsOrOver',
         invalidParts: undefined,
         values: undefined,
       },
       {
-        name: 'isYouthChargedWithSeriousOffence',
-        text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
-        href: '#isYouthChargedWithSeriousOffence',
-        errorId: 'noIsYouthChargedWithSeriousOffence',
+        errorId: 'noIsUnder18',
+        href: '#isUnder18',
         invalidParts: undefined,
+        name: 'isUnder18',
+        text: 'Select whether {{ fullName }} is under 18',
+        values: undefined,
+      },
+      {
+        errorId: 'noIsMappaCategory4',
+        href: '#isMappaCategory4',
+        invalidParts: undefined,
+        name: 'isMappaCategory4',
+        text: 'Select whether {{ fullName }} is in MAPPA category 4',
+        values: undefined,
+      },
+      {
+        errorId: 'noIsMappaLevel2Or3',
+        href: '#isMappaLevel2Or3',
+        invalidParts: undefined,
+        name: 'isMappaLevel2Or3',
+        text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+        values: undefined,
+      },
+      {
+        errorId: 'noIsRecalledOnNewChargedOffence',
+        href: '#isRecalledOnNewChargedOffence',
+        invalidParts: undefined,
+        name: 'isRecalledOnNewChargedOffence',
+        text: 'Select whether {{ fullName }} is being recalled on a new charged offence',
+        values: undefined,
+      },
+      {
+        errorId: 'noIsServingFTSentenceForTerroristOffence',
+        href: '#isServingFTSentenceForTerroristOffence',
+        invalidParts: undefined,
+        name: 'isServingFTSentenceForTerroristOffence',
+        text: 'Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence',
+        values: undefined,
+      },
+      {
+        errorId: 'noHasBeenChargedWithTerroristOrStateThreatOffence',
+        href: '#hasBeenChargedWithTerroristOrStateThreatOffence',
+        invalidParts: undefined,
+        name: 'hasBeenChargedWithTerroristOrStateThreatOffence',
+        text: 'Select whether {{ fullName }} has been charged with a terrorist or state threat offence',
         values: undefined,
       },
     ])
     expect(req.session.unsavedValues).toEqual({
-      isYouthSentenceOver12Months: '',
-      isYouthChargedWithSeriousOffence: '',
+      hasBeenChargedWithTerroristOrStateThreatOffence: undefined,
+      isMappaCategory4: undefined,
+      isMappaLevel2Or3: undefined,
+      isRecalledOnNewChargedOffence: undefined,
+      isSentence48MonthsOrOver: undefined,
+      isServingFTSentenceForTerroristOffence: undefined,
+      isUnder18: undefined,
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })

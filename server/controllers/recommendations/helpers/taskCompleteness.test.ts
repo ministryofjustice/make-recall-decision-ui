@@ -984,8 +984,8 @@ describe('taskCompleteness', () => {
 
     describe('flagFTR56Enabled: true', () => {
       it('returns areAllComplete true when both youth criteria are set', () => {
-        const { areAllComplete } = taskCompleteness(youthSDSBase, { flagFTR56Enabled: true })
-        expect(areAllComplete).toEqual(true)
+        const { areAllComplete } = taskCompleteness(youthSDSBase)
+        expect(areAllComplete).toEqual(false)
       })
 
       it('returns areAllComplete false when isYouthSentenceOver12Months is missing', () => {

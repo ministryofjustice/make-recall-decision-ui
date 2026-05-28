@@ -36,13 +36,11 @@ function get(_: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: flagFTR56Enabled
-      ? availableRecallTypesForRecommendationFTR56(recommendation)
-      : availableRecallTypesForRecommendation(recommendation),
+    availableRecallTypes: availableRecallTypesForRecommendation(recommendation),
     personOnProbationName: recommendation.personOnProbation.fullName,
-    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation, flagFTR56Enabled),
-    standardMandatory: flagFTR56Enabled ? isStandardRecallMandatoryForRecommendationFTR56(recommendation) : undefined,
-    isAdultSentence: flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.ADULT_SDS,
+    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation),
+    standardMandatory: undefined,
+    isAdultSentence: recommendation.sentenceGroup === SentenceGroup.ADULT_SDS,
   }
 
   res.render(`pages/recommendations/recallType`)

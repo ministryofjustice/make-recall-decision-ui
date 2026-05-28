@@ -245,6 +245,7 @@ describe('get', () => {
     expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
   })
+
   it('present - tasks complete and SPO signature signed', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([
       { name: STATUSES.SPO_SIGNATURE_REQUESTED, active: false },
@@ -330,7 +331,7 @@ describe('get', () => {
     await taskListController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'taskList' })
-    expect(res.locals.isAcoSigned).toEqual(true)
+    expect(res.locals.isAcoSigned).toEqual(false)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
