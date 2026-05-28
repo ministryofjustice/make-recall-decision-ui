@@ -144,7 +144,7 @@ context('No recall', () => {
       cy.getElement('MAPPA information to assess recall type To review').should('exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
-      cy.getElement('When did the SPO agree this recall? To do').should('exist')
+      cy.getElement('When did the SPO agree this recall? To do').should('not.exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
@@ -170,7 +170,7 @@ context('No recall', () => {
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
-      cy.getElement('When did the SPO agree this recall? To do').should('exist')
+      cy.getElement('When did the SPO agree this recall? To do').should('not.exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
@@ -196,7 +196,7 @@ context('No recall', () => {
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('not.exist')
       cy.getElement('What you recommend Completed').should('exist')
-      cy.getElement('When did the SPO agree this recall? To do').should('exist')
+      cy.getElement('When did the SPO agree this recall? To do').should('not.exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
@@ -225,7 +225,7 @@ context('No recall', () => {
       cy.getElement('MAPPA information to assess recall type').should('not.exist')
       cy.getElement('Suitability for standard or fixed term recall To do').should('not.exist')
       cy.getElement('What you recommend Completed').should('exist')
-      cy.getElement('When did the SPO agree this recall? To do').should('exist')
+      cy.getElement('When did the SPO agree this recall? To do').should('not.exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
@@ -265,7 +265,7 @@ context('No recall', () => {
       cy.getElement('MAPPA information to assess recall type Reviewed').should('exist')
       cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
-      cy.getElement('When did the SPO agree this recall? Completed').should('exist')
+      cy.getElement('When did the SPO agree this recall? Completed').should('not.exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? Completed').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
@@ -299,7 +299,7 @@ context('No recall', () => {
 
       cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
-      cy.getElement('When did the SPO agree this recall? Completed').should('exist')
+      cy.getElement('When did the SPO agree this recall? Completed').should('not.exist')
 
       cy.getElement('What has made you consider recalling Jane Bloggs? Completed').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
@@ -359,10 +359,6 @@ context('No recall', () => {
         {
           text: 'What you recommend',
           href: `/recommendations/123/${recallTypeSlug}?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation`,
-        },
-        {
-          text: 'When did the SPO agree this recall',
-          href: '/recommendations/123/spo-agree-to-recall?fromPageId=task-list-no-recall&fromAnchor=heading-recommendation',
         },
         {
           text: 'What has made you consider recalling Jane Bloggs?',
