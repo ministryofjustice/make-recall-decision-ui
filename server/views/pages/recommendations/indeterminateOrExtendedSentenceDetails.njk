@@ -24,7 +24,6 @@
                   <p id="indeterminateOrExtendedSentenceDetails-error" class="govuk-error-message">
                       <span class="govuk-visually-hidden">Error:</span> {{ errors.indeterminateOrExtendedSentenceDetails.text }}
                   </p>
-                   {% if flags.flagFTR56Enabled %}
                        <div class='govuk-!-margin-bottom-2'>
                             <p class="govuk-body">
                                 At least one of the following criteria must be met by law. Select all that apply and provide evidence in the ‘give details’ section that there’s:
@@ -34,11 +33,6 @@
                                 <li>an increased risk of serious harm to the public</li>
                             </ul>
                        </div>
-                     {% else %}
-                       <div id="contact-hint" class="govuk-hint">
-                            At least one of the following criteria must be met by law. Select all that apply and give details.
-                       </div>
-                     {% endif %}
                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         {% for item in indeterminateOrExtendedSentenceDetails %}
                             {% set itemText = renderString(item.text, { fullName: fullName }) %}

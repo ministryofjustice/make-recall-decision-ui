@@ -8,10 +8,6 @@ describe('get', () => {
       description: 'with FTR56 flag enabled',
       ftr56Enabled: true,
     },
-    {
-      description: 'with FTR56 flag disabled',
-      ftr56Enabled: false,
-    },
   ]
   ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
     describe(description, () => {
@@ -19,7 +15,7 @@ describe('get', () => {
         const res = mockRes({
           locals: {
             recommendation: {
-              sentenceGroup: ftr56Enabled ? SentenceGroup.YOUTH_SDS : undefined,
+              sentenceGroup: SentenceGroup.YOUTH_SDS,
             },
             flags: { flagFTR56Enabled: ftr56Enabled },
           },
@@ -43,9 +39,7 @@ describe('get', () => {
           },
         })
         await discussWithManagerController.get(mockReq(), res, mockNext())
-        expect(res.locals.nextPageId).toEqual(
-          ftr56Enabled ? 'check-mappa-information' : 'suitability-for-fixed-term-recall',
-        )
+        expect(res.locals.nextPageId).toEqual('check-mappa-information')
       })
 
       it('present with indeterminate', async () => {

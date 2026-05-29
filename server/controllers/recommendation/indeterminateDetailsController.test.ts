@@ -166,6 +166,7 @@ describe('post', () => {
     await indeterminateDetailsController.post(req, res, next)
 
     expect(updateRecommendation).toHaveBeenCalledWith({
+      featureFlags: {},
       recommendationId: '123',
       valuesToSave: {
         indeterminateOrExtendedSentenceDetails: {
@@ -176,18 +177,24 @@ describe('post', () => {
           allOptions: [
             {
               value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-              text: '{{ fullName }} has shown behaviour similar to the index offence',
+              text: '{{ fullName }} has shown behaviour similar to the circumstances surrounding the <strong>index offence</strong>',
             },
             {
               value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-              text: '{{ fullName }} has shown behaviour that could lead to a sexual or violent offence',
+              text: '{{ fullName }} has shown behaviour that <strong>has caused, or will cause, a sexual or violent offence</strong>',
             },
-            { value: 'OUT_OF_TOUCH', text: '{{ fullName }} is out of touch' },
+            {
+              value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+              text: '{{ fullName }} has shown behaviour <strong>likely to result in a sexual or violent offence</strong>, or that could be associated with committing one',
+            },
+            {
+              value: 'OUT_OF_TOUCH',
+              text: '{{ fullName }} is either <strong>out of touch</strong> with probation, or their current location is not known',
+            },
           ],
         },
       },
       token: 'token1',
-      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
@@ -218,9 +225,6 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
-        flags: {
-          flagFTR56Enabled: true,
-        },
       },
     })
     const next = mockNext()
@@ -257,7 +261,7 @@ describe('post', () => {
         },
       },
       token: 'token1',
-      featureFlags: { flagFTR56Enabled: true },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
@@ -281,9 +285,6 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: SentenceGroup.EXTENDED },
         urlInfo: { basePath },
-        flags: {
-          flagFTR56Enabled: true,
-        },
       },
     })
     const next = mockNext()
@@ -319,9 +320,9 @@ describe('post', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
       {
-        errorId: 'noIndeterminateDetailsSelected',
+        errorId: 'noIndeterminateDetailsSelectedFtr56',
         href: '#option-1',
-        text: 'Select at least one of the criteria',
+        text: 'Select all the criteria that apply to {{ fullName }}',
         name: 'indeterminateOrExtendedSentenceDetails',
         invalidParts: undefined,
         values: undefined,
@@ -347,9 +348,6 @@ describe('post', () => {
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
-        flags: {
-          flagFTR56Enabled: true,
-        },
       },
     })
 

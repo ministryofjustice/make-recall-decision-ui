@@ -11,8 +11,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     urlInfo: { basePath, fromPageId },
   } = res.locals
 
-  const backLinkUrl =
-    res.locals.flags.flagFTR56Enabled && !fromPageId ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
+  const backLinkUrl = !fromPageId ? `${basePath}${ppPaths.taskListConsiderRecall}` : undefined
 
   res.locals = {
     ...res.locals,
@@ -63,7 +62,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   return res.redirect(
     303,
     nextPageLinkUrl({
-      nextPageId: flags.flagFTR56Enabled ? ppPaths.sentenceInformation : ppPaths.taskListConsiderRecall,
+      nextPageId: ppPaths.sentenceInformation,
       urlInfo,
     }),
   )

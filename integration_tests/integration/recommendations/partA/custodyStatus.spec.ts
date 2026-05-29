@@ -95,25 +95,7 @@ context('Custody status', () => {
               ],
             })
 
-            // if (ftr56Enabled) {
             cy.get('.govuk-radios__conditional').should('not.exist')
-            // }
-            // else if (!testCase.custodyStatusDetails) {
-            //   cy.get('.govuk-radios__conditional')
-            //     .should('exist')
-            //     .should('have.class', 'govuk-radios__conditional--hidden')
-            //     .find('label')
-            //     .should('exist')
-            //     .should('have.attr', 'for', 'custodyStatusDetailsYesPolice')
-            // } else if (testCase.custodyStatusDetails) {
-            //   cy.get('.govuk-radios__conditional')
-            //     .should('exist')
-            //     .should('not.have.class', 'govuk-radios__conditional--hidden')
-            //     .should('contain.text', testCase.custodyStatusDetails)
-            //     .find('label')
-            //     .should('exist')
-            //     .should('have.attr', 'for', 'custodyStatusDetailsYesPolice')
-            // }
 
             cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
           })

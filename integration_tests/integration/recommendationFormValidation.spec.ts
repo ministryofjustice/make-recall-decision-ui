@@ -32,41 +32,39 @@ context('Make a recommendation - form validation', () => {
   }
 
   describe('Licence conditions', () => {
-    ;[true, false].forEach(ftr56Enabled => {
-      describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
-        ;[true, false].forEach(hasFromPageId => {
-          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-            cy.signIn()
-            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-            cy.task(
-              'getCaseV2',
-              caseTemplate()
-                .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-                .withAllConvictionsReleasedOnLicence()
-                .build(),
+    describe(`with FTR56 flag 'enabled'`, () => {
+      ;[true, false].forEach(hasFromPageId => {
+        it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+          cy.signIn()
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+          cy.task(
+            'getCaseV2',
+            caseTemplate()
+              .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+              .withAllConvictionsReleasedOnLicence()
+              .build(),
+          )
+
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.visit(
+            `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled='1'${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
             )
+          } else {
+            testStandardBackLink()
+          }
 
-            cy.task('getStatuses', { statusCode: 200, response: [] })
-            cy.visit(
-              `${routeUrls.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-            )
-
-            // Back link
-            if (ftr56Enabled && !hasFromPageId) {
-              testBackLink(
-                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                'Back to Consider a recall questions',
-                false,
-              )
-            } else {
-              testStandardBackLink()
-            }
-
-            cy.clickButton('Continue')
-            cy.assertErrorMessage({
-              fieldName: 'licenceConditionsBreached',
-              errorText: 'Select one or more licence conditions',
-            })
+          cy.clickButton('Continue')
+          cy.assertErrorMessage({
+            fieldName: 'licenceConditionsBreached',
+            errorText: 'Select one or more licence conditions',
           })
         })
       })
@@ -74,42 +72,40 @@ context('Make a recommendation - form validation', () => {
   })
 
   describe('Alternatives tried', () => {
-    ;[true, false].forEach(ftr56Enabled => {
-      describe(`FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
-        ;[true, false].forEach(hasFromPageId => {
-          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-            cy.signIn()
-            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-            cy.task('getStatuses', { statusCode: 200, response: [] })
+    describe(`FTR56 flag 'enabled'`, () => {
+      ;[true, false].forEach(hasFromPageId => {
+        it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+          cy.signIn()
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
 
-            cy.visit(
-              `${routeUrls.recommendations}/${recommendationId}/alternatives-tried?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+          cy.visit(
+            `${routeUrls.recommendations}/${recommendationId}/alternatives-tried?flagFTR56Enabled='1'${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
             )
+          } else {
+            testStandardBackLink()
+          }
 
-            // Back link
-            if (ftr56Enabled && !hasFromPageId) {
-              testBackLink(
-                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                'Back to Consider a recall questions',
-                false,
-              )
-            } else {
-              testStandardBackLink()
-            }
-
-            cy.clickButton('Continue')
-            cy.assertErrorMessage({
-              fieldName: 'alternativesToRecallTried',
-              errorText: 'Select which alternatives to recall have been tried already',
-            })
-            cy.selectCheckboxes('What alternatives to recall have been tried already?', [
-              'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-            ])
-            cy.clickButton('Continue')
-            cy.assertErrorMessage({
-              fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
-              errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-            })
+          cy.clickButton('Continue')
+          cy.assertErrorMessage({
+            fieldName: 'alternativesToRecallTried',
+            errorText: 'Select which alternatives to recall have been tried already',
+          })
+          cy.selectCheckboxes('What alternatives to recall have been tried already?', [
+            'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
+          ])
+          cy.clickButton('Continue')
+          cy.assertErrorMessage({
+            fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
+            errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
           })
         })
       })

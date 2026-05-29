@@ -9,25 +9,6 @@ import ppPaths from '../../routes/paths/pp'
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('load with no data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        token: 'token1',
-      },
-    })
-    const next = mockNext()
-    await indeterminateTypeController.get(mockReq(), res, next)
-
-    expect(res.locals.page).toEqual({ id: 'indeterminateSentenceType' })
-    expect(res.locals.pageHeadings.indeterminateSentenceType).toEqual('What type of sentence is Joe Bloggs on?')
-    expect(res.locals.pageTitles.indeterminateSentenceType).toEqual('What type of sentence is the person on?')
-    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/indeterminateSentenceType')
-
-    expect(next).toHaveBeenCalled()
-  })
-
   it('load with existing data', async () => {
     const res = mockRes({
       locals: {
@@ -39,7 +20,7 @@ describe('get', () => {
               { value: 'LIFE', text: 'Life sentence' },
               {
                 value: 'IPP',
-                text: 'Imprisonment for Public Protection (IPP) sentence',
+                text: 'Imprisonment for Public Protection (IPP)',
               },
               { value: 'DPP', text: 'Detention for Public Protection (DPP) sentence' },
             ],
@@ -51,7 +32,7 @@ describe('get', () => {
     const next = mockNext()
     await indeterminateTypeController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual({ value: 'IPP' })
+    expect(res.locals.inputDisplayValues).toBeUndefined()
   })
 
   it('Ftr56: load with existing data', async () => {
@@ -203,9 +184,13 @@ describe('post', () => {
             { value: 'LIFE', text: 'Life sentence' },
             {
               value: 'IPP',
-              text: 'Imprisonment for Public Protection (IPP) sentence',
+              text: 'Imprisonment for public protection (IPP)',
             },
-            { value: 'DPP', text: 'Detention for Public Protection (DPP) sentence' },
+            {
+              value: 'DPP',
+              text: 'Detention for public protection (DPP)',
+            },
+            { value: 'DHMP', text: 'Detention at His Majesty’s pleasure (DHMP)' },
           ],
         },
       },
@@ -311,9 +296,9 @@ describe('post', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
       {
-        errorId: 'noIndeterminateSentenceTypeSelected',
+        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
         href: '#indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         name: 'indeterminateSentenceType',
         invalidParts: undefined,
         values: undefined,

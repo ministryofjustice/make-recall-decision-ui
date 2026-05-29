@@ -26,14 +26,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   let backLinkUrl
   let backLinkText
-  if (!res.locals.flags.flagFTR56Enabled) {
-    backLinkUrl = undefined
-
-    // We can't rely on checking the user's role for this, as some AP/OOH users also work as POs and might access the
-    // licence conditions page while processing a recommendation as a PO.
-    // We use .includes instead of .endsWith as the URL can contain the query parameter for the FTR56 flag at the end.
-    // Can be replaced with .endsWith once the flag is permanently enabled.
-  } else if (req.originalUrl?.includes('/ap-licence-conditions')) {
+  if (req.originalUrl?.includes('/ap-licence-conditions')) {
     backLinkUrl = `/cases/${recommendation.crn}/overview`
     backLinkText = `Back to overview for ${recommendation.personOnProbation.name}`
   } else if (!fromPageId) {
@@ -245,7 +238,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   return res.redirect(
     303,
     nextPageLinkUrl({
-      nextPageId: flags.flagFTR56Enabled ? ppPaths.alternativesTried : ppPaths.taskListConsiderRecall,
+      nextPageId: ppPaths.alternativesTried,
       urlInfo,
     }),
   )

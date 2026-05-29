@@ -19,10 +19,6 @@ const ftr56TestCases = [
     description: 'with FTR56 flag enabled',
     ftr56Enabled: true,
   },
-  {
-    description: 'with FTR56 flag disabled',
-    ftr56Enabled: false,
-  },
 ]
 
 context('Recommendation - task list', () => {

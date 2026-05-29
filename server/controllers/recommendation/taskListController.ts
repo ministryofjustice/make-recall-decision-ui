@@ -108,7 +108,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     shareLink: `${config.domain}/recommendations/${recommendationId}/task-list`,
     countersignSpoExposition: recommendation.countersignSpoExposition,
-    ftr56Enabled: featureFlags.flagFTR56Enabled,
     recallType,
   }
 
