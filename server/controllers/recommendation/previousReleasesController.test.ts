@@ -29,20 +29,7 @@ describe('get', () => {
         dateOfRelease: '2001-01-02',
         releaseUnderECSL: true,
       })
-      expect(res.locals.page.id).toEqual('previousReleases')
-      expect(res.locals.inputDisplayValues).toEqual({
-        conditionalReleaseDate: {
-          day: '05',
-          month: '04',
-          year: '2003',
-        },
-        dateOfRelease: {
-          day: '02',
-          month: '01',
-          year: '2001',
-        },
-        releaseUnderECSL: 'YES',
-      })
+      expect(res.locals.page.id).toEqual('releaseDetails')
     })
     it('load with errors', async () => {
       ;(updateRecommendation as jest.Mock).mockResolvedValue({
@@ -75,20 +62,7 @@ describe('get', () => {
         dateOfRelease: '2001-01-02',
         releaseUnderECSL: true,
       })
-      expect(res.locals.page.id).toEqual('previousReleases')
-      expect(res.locals.inputDisplayValues).toEqual({
-        conditionalReleaseDate: {
-          day: '06',
-          month: '05',
-          year: '2004',
-        },
-        dateOfRelease: {
-          day: '03',
-          month: '04',
-          year: '2002',
-        },
-        releaseUnderECSL: 'YES',
-      })
+      expect(res.locals.page.id).toEqual('releaseDetails')
     })
   })
 
@@ -163,12 +137,10 @@ describe('post', () => {
         recommendationId: '123',
         token: 'token1',
         valuesToSave: {
-          releaseUnderECSL: true,
+          dateOfRelease: undefined,
           previousReleases: {
             hasBeenReleasedPreviously: true,
           },
-          dateOfRelease: '2012-11-12',
-          conditionalReleaseDate: '2121-06-23',
         },
         featureFlags: {},
       })
@@ -202,15 +174,16 @@ describe('post', () => {
       expect(updateRecommendation).toHaveBeenCalledWith({
         recommendationId: '123',
         token: 'token1',
+        dateOfRelease: undefined,
         valuesToSave: {
           previousReleases: {
-            previousReleaseDates: [],
+            hasBeenReleasedPreviously: false,
           },
         },
         featureFlags: {},
       })
 
-      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/previous-releases`)
+      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list#heading-person-details`)
       expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
   })

@@ -10,7 +10,7 @@ export function availableRecallTypes(isFtrMandatory: boolean): FormOption[] {
 }
 
 export function availableRecallTypesForRecommendation(recommendation: RecommendationResponse): FormOption[] {
-  return availableRecallTypes(isFixedTermRecallMandatoryForRecommendation(recommendation, false))
+  return availableRecallTypes(isFixedTermRecallMandatoryForRecommendation(recommendation))
 }
 
 export function availableRecallTypesFTR56(isFtrMandatory: boolean, isStandardMandatory: boolean): FormOption[] {
@@ -26,7 +26,7 @@ export function availableRecallTypesFTR56(isFtrMandatory: boolean, isStandardMan
 }
 
 export function availableRecallTypesForRecommendationFTR56(recommendation: RecommendationResponse): FormOption[] {
-  const isFtrMandatory = isFixedTermRecallMandatoryForRecommendation(recommendation, true)
+  const isFtrMandatory = isFixedTermRecallMandatoryForRecommendation(recommendation)
 
   return availableRecallTypesFTR56(
     isFtrMandatory,

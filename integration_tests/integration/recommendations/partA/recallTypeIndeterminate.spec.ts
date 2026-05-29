@@ -14,63 +14,63 @@ describe('recall type indeterminate', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendation })
   })
 
-  describe('with FTR56 flag disabled', () => {
-    it('should display correctly with no data', () => {
-      cy.visit(testPageUrl)
+  // describe('with FTR56 flag disabled', () => {
+  //   it('should display correctly with no data', () => {
+  //     cy.visit(testPageUrl)
 
-      testRadioButtons(cy.get('.govuk-form-group'), {
-        legend: { text: 'What do you recommend?' },
-        options: [
-          {
-            input: {
-              id: 'recallType',
-              value: 'EMERGENCY',
-            },
-            label: { text: 'Emergency recall' },
-          },
-          {
-            input: {
-              id: 'recallType-2',
-              value: 'NO_RECALL',
-            },
-            label: { text: 'No recall' },
-          },
-        ],
-      })
+  //     testRadioButtons(cy.get('.govuk-form-group'), {
+  //       legend: { text: 'What do you recommend?' },
+  //       options: [
+  //         {
+  //           input: {
+  //             id: 'recallType',
+  //             value: 'EMERGENCY',
+  //           },
+  //           label: { text: 'Emergency recall' },
+  //         },
+  //         {
+  //           input: {
+  //             id: 'recallType-2',
+  //             value: 'NO_RECALL',
+  //           },
+  //           label: { text: 'No recall' },
+  //         },
+  //       ],
+  //     })
 
-      cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
-    })
+  //     cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
+  //   })
 
-    it('should show form validation errors', () => {
-      cy.visit(testPageUrl)
-      cy.get('button').click()
+  //   it('should show form validation errors', () => {
+  //     cy.visit(testPageUrl)
+  //     cy.get('button').click()
 
-      testForErrorSummary([
-        {
-          href: 'recallType',
-          message: 'Select whether you recommend a recall or not',
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-      ])
-    })
+  //     testForErrorSummary([
+  //       {
+  //         href: 'recallType',
+  //         message: 'Select whether you recommend a recall or not',
+  //         checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+  //       },
+  //     ])
+  //   })
 
-    it('should remember the selected recall type', () => {
-      const recommendationWithRecallTypeSelected = RecommendationResponseGenerator.generate({
-        recallType: {
-          selected: {
-            value: RecallTypeSelectedValue.value.STANDARD,
-            details: null,
-          },
-        },
-        isThisAnEmergencyRecall: true,
-      })
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationWithRecallTypeSelected })
+  //   it('should remember the selected recall type', () => {
+  //     const recommendationWithRecallTypeSelected = RecommendationResponseGenerator.generate({
+  //       recallType: {
+  //         selected: {
+  //           value: RecallTypeSelectedValue.value.STANDARD,
+  //           details: null,
+  //         },
+  //       },
+  //       isThisAnEmergencyRecall: true,
+  //     })
+  //     cy.task('getRecommendation', { statusCode: 200, response: recommendationWithRecallTypeSelected })
 
-      cy.visit(testPageUrl)
+  //     cy.visit(testPageUrl)
 
-      cy.get('input[name="recallType"][value="EMERGENCY"]').should('be.checked')
-    })
-  })
+  //     cy.get('input[name="recallType"][value="EMERGENCY"]').should('be.checked')
+  //   })
+  // })
 
   describe('with FTR56 flag enabled', () => {
     const testPageUrlFTR56 = `${testPageUrl}?flagFTR56Enabled=1`

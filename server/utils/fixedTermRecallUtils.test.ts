@@ -22,7 +22,6 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
           isServingFTSentenceForTerroristOffence: undefined,
           hasBeenChargedWithTerroristOrStateThreatOffence: undefined,
         }),
-        false,
       ),
     ).toBeFalsy()
   })
@@ -38,9 +37,8 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
           isServingFTSentenceForTerroristOffence: false,
           hasBeenChargedWithTerroristOrStateThreatOffence: false,
         }),
-        false,
       ),
-    ).toBeTruthy()
+    ).toBeFalsy()
   })
   describe(' Returns false when any exclusion criteria fields are true', () => {
     generateBooleanCombinations(7)
@@ -58,7 +56,6 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
                 isServingFTSentenceForTerroristOffence: combination[5],
                 hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
               }),
-              false,
             ),
           ).toBeFalsy()
         })
@@ -77,7 +74,6 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             isYouthChargedWithSeriousOffence: undefined,
             isMappaLevel2Or3: undefined,
           }),
-          true,
         ),
       ).toBeFalsy()
     })
@@ -91,7 +87,6 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             isYouthChargedWithSeriousOffence: false,
             isMappaLevel2Or3: false,
           }),
-          true,
         ),
       ).toBeTruthy()
     })
@@ -109,7 +104,6 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
                   isYouthChargedWithSeriousOffence: combination[1],
                   isMappaLevel2Or3: combination[2],
                 }),
-                true,
               ),
             ).toBeFalsy()
           })
@@ -133,7 +127,6 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             isMappaCategory4: undefined,
             isMappaLevel2Or3: undefined,
           }),
-          true,
         ),
       ).toBeFalsy()
     })
@@ -153,7 +146,6 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
             isMappaCategory4: false,
             isMappaLevel2Or3: false,
           }),
-          true,
         ),
       ).toBeTruthy()
     })
@@ -177,7 +169,6 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
                   isMappaCategory4: combination[7],
                   isMappaLevel2Or3: combination[8],
                 }),
-                true,
               ),
             ).toBeFalsy()
           })
@@ -220,18 +211,15 @@ describe('isFixedTermMandatoryForValueKeys', () => {
       .forEach(combination => {
         it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
           expect(
-            isFixedTermRecallMandatoryForRecommendation(
-              {
-                isSentence48MonthsOrOver: combination[0],
-                isUnder18: combination[1],
-                isMappaCategory4: combination[2],
-                isMappaLevel2Or3: combination[3],
-                isRecalledOnNewChargedOffence: combination[4],
-                isServingFTSentenceForTerroristOffence: combination[5],
-                hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
-              },
-              false,
-            ),
+            isFixedTermRecallMandatoryForRecommendation({
+              isSentence48MonthsOrOver: combination[0],
+              isUnder18: combination[1],
+              isMappaCategory4: combination[2],
+              isMappaLevel2Or3: combination[3],
+              isRecalledOnNewChargedOffence: combination[4],
+              isServingFTSentenceForTerroristOffence: combination[5],
+              hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
+            }),
           ).toBeFalsy()
         })
       })

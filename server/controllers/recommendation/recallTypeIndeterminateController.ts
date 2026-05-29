@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import validateRecallTypeIndeterminate from '../recommendations/recallTypeIndeterminate/formValidator'
 import inputDisplayValuesRecallTypeIndeterminate from '../recommendations/recallTypeIndeterminate/inputDisplayValues'
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
@@ -41,7 +40,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     urlInfo,
     token,
-    flagFTR56Enabled: flags.flagFTR56Enabled,
+    flagFTR56Enabled: true,
   })
 
   if (errors) {
@@ -88,15 +87,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
     )
   }
 
-  if (flags.flagFTR56Enabled) {
-    return res.redirect(
-      303,
-      `${urlInfo.basePath}${recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'}`,
-    )
-  }
-
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'
-  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(
+    303,
+    `${urlInfo.basePath}${recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'}`,
+  )
 }
 
 export default { get, post }

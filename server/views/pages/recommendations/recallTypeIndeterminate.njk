@@ -24,8 +24,7 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
                 <input type="hidden" name="crn" value="{{ recommendation.crn }}"/>
 
-                {% if flags.flagFTR56Enabled %}
-                    {{ heading(pageHeadings.recallType) }}
+                {{ heading(pageHeadings.recallType) }}
 
                     {{
                         mojTicketPanel({
@@ -52,29 +51,7 @@
                             errorMessage: errorMessage(errors.recallType)
                         })
                     }}
-                {% else %}
-                    {{
-                        govukRadios({
-                            idPrefix: "recallType",
-                            name: "recallType",
-                            fieldset: {
-                                legend: {
-                                    text: pageHeadings.recallType,
-                                    classes: "govuk-fieldset__legend--l",
-                                    isPageHeading: true
-                                }
-                            },
-                            hint: {
-                                text: 'You’ll complete a Part A or write a decision not to recall letter after you’ve confirmed your recommendation.'
-                            },
-                            items: radioCheckboxItems({
-                                items: formOptions.recallTypeIndeterminate,
-                                currentValues: inputDisplayValues.value
-                            }),
-                            errorMessage: errorMessage(errors.recallType)
-                        })
-                    }}
-                {% endif %}
+               
                 {{ formSubmitButton() }}
             </form>
         </div>

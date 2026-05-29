@@ -1,33 +1,20 @@
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
-export const isFixedTermRecallMandatoryForRecommendation = (
-  recommendation: RecommendationResponse,
-  ftr56Enabled: boolean,
-) =>
-  ftr56Enabled
-    ? isFixedTermRecallMandatoryFTR56(recommendation.sentenceGroup, {
-        wasReferredToParoleBoard244ZB: recommendation?.wasReferredToParoleBoard244ZB,
-        wasRepatriatedForMurder: recommendation?.wasRepatriatedForMurder,
-        isServingSOPCSentence: recommendation?.isServingSOPCSentence,
-        isServingDCRSentence: recommendation?.isServingDCRSentence,
-        isChargedWithOffence: recommendation?.isChargedWithOffence,
-        isServingTerroristOrNationalSecurityOffence: recommendation?.isServingTerroristOrNationalSecurityOffence,
-        isAtRiskOfInvolvedInForeignPowerThreat: recommendation?.isAtRiskOfInvolvedInForeignPowerThreat,
-        isYouthSentenceOver12Months: recommendation?.isYouthSentenceOver12Months,
-        isYouthChargedWithSeriousOffence: recommendation?.isYouthChargedWithSeriousOffence,
-        isMappaCategory4: recommendation?.isMappaCategory4,
-        isMappaLevel2Or3: recommendation?.isMappaLevel2Or3,
-      })
-    : isFixedTermRecallMandatory(
-        recommendation?.isSentence48MonthsOrOver,
-        recommendation?.isUnder18,
-        recommendation?.isMappaCategory4,
-        recommendation?.isMappaLevel2Or3,
-        recommendation?.isRecalledOnNewChargedOffence,
-        recommendation?.isServingFTSentenceForTerroristOffence,
-        recommendation?.hasBeenChargedWithTerroristOrStateThreatOffence,
-      )
+export const isFixedTermRecallMandatoryForRecommendation = (recommendation: RecommendationResponse) =>
+  isFixedTermRecallMandatoryFTR56(recommendation.sentenceGroup, {
+    wasReferredToParoleBoard244ZB: recommendation?.wasReferredToParoleBoard244ZB,
+    wasRepatriatedForMurder: recommendation?.wasRepatriatedForMurder,
+    isServingSOPCSentence: recommendation?.isServingSOPCSentence,
+    isServingDCRSentence: recommendation?.isServingDCRSentence,
+    isChargedWithOffence: recommendation?.isChargedWithOffence,
+    isServingTerroristOrNationalSecurityOffence: recommendation?.isServingTerroristOrNationalSecurityOffence,
+    isAtRiskOfInvolvedInForeignPowerThreat: recommendation?.isAtRiskOfInvolvedInForeignPowerThreat,
+    isYouthSentenceOver12Months: recommendation?.isYouthSentenceOver12Months,
+    isYouthChargedWithSeriousOffence: recommendation?.isYouthChargedWithSeriousOffence,
+    isMappaCategory4: recommendation?.isMappaCategory4,
+    isMappaLevel2Or3: recommendation?.isMappaLevel2Or3,
+  })
 
 export const isFixedTermRecallMandatoryForValueKeys = (values: Record<string, boolean>) =>
   isFixedTermRecallMandatory(
@@ -108,4 +95,4 @@ export const isRecommendationDiscretionaryRecall = ({
 export const isStandardRecallMandatoryForRecommendationFTR56 = (recommendation: RecommendationResponse) =>
   [SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].includes(recommendation.sentenceGroup) ||
   (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS &&
-    !isFixedTermRecallMandatoryForRecommendation(recommendation, true))
+    !isFixedTermRecallMandatoryForRecommendation(recommendation))

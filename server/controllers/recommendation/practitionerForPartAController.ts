@@ -10,45 +10,29 @@ import { isEmailValid, isGovUkEmail } from '../../utils/validate-formats'
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  const {
-    errors,
-    unsavedValues,
-    flags: { flagFTR56Enabled },
-  } = res.locals
+  const { errors, unsavedValues } = res.locals
 
   res.locals = {
     ...res.locals,
 
     page: {
-      id: flagFTR56Enabled ? 'practitionerForPartAFTR56' : 'practitionerForPartA',
+      id: 'practitionerForPartAFTR56',
     },
-    inputDisplayValues: flagFTR56Enabled
-      ? {
-          name: isDefined(errors) ? unsavedValues?.name : recommendation.practitionerForPartA?.name,
-          email: isDefined(errors) ? unsavedValues?.email : recommendation.practitionerForPartA?.email,
-          telephone: isDefined(errors) ? unsavedValues?.telephone : recommendation.practitionerForPartA?.telephone,
-        }
-      : {
-          name: isDefined(errors) ? unsavedValues?.name : recommendation.practitionerForPartA?.name,
-          email: isDefined(errors) ? unsavedValues?.email : recommendation.practitionerForPartA?.email,
-          telephone: isDefined(errors) ? unsavedValues?.telephone : recommendation.practitionerForPartA?.telephone,
-          region: isDefined(errors) ? unsavedValues?.region : recommendation.practitionerForPartA?.region,
-          localDeliveryUnit: isDefined(errors)
-            ? unsavedValues?.localDeliveryUnit
-            : recommendation.practitionerForPartA?.localDeliveryUnit,
-        },
+    inputDisplayValues: {
+      name: isDefined(errors) ? unsavedValues?.name : recommendation.practitionerForPartA?.name,
+      email: isDefined(errors) ? unsavedValues?.email : recommendation.practitionerForPartA?.email,
+      telephone: isDefined(errors) ? unsavedValues?.telephone : recommendation.practitionerForPartA?.telephone,
+    },
     regions: regionEnum,
   }
 
-  res.render(
-    flagFTR56Enabled ? `pages/recommendations/practitionerForPartAFTR56` : `pages/recommendations/practitionerForPartA`,
-  )
+  res.render(`pages/recommendations/practitionerForPartAFTR56`)
   next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { name, email, telephone, region, localDeliveryUnit } = req.body
+  const { name, email, telephone } = req.body
 
   const {
     flags,
@@ -104,8 +88,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
       name,
       email,
       telephone,
-      region: flags.flagFTR56Enabled ? undefined : region,
-      localDeliveryUnit: flags.flagFTR56Enabled ? undefined : localDeliveryUnit,
+      region: undefined,
+      localDeliveryUnit: undefined,
     }
     return res.redirect(303, req.originalUrl)
   }
@@ -117,8 +101,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
         name,
         email,
         telephone,
-        region: flags.flagFTR56Enabled ? undefined : region,
-        localDeliveryUnit: flags.flagFTR56Enabled ? undefined : localDeliveryUnit,
+        region: undefined,
+        localDeliveryUnit: undefined,
       },
     },
     token,

@@ -83,8 +83,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
         : undefined
   } else {
     warningPanel =
-      recommendation.recallType !== null &&
-      !isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
+      recommendation.recallType !== null && !isFixedTermRecallMandatoryForRecommendation(recommendation)
         ? warningPanelDetails
         : undefined
   }
@@ -158,7 +157,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave.isMappaCategory4 = req.body.isMappaCategory4 === 'YES'
   }
 
-  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
+  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation)
   const ftrIsMandatoryUpdated = isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
 
   if (!flags.flagFTR56Enabled && ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
