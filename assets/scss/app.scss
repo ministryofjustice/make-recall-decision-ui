@@ -1,0 +1,22 @@
+$govuk-global-styles: true;
+$path: "/assets/images/";
+
+$moj-page-width: 1170px;
+$govuk-page-width: $moj-page-width;
+
+
+@import "govuk-frontend/dist/govuk/index";
+@import "@ministryofjustice/frontend/moj/all";
+
+
+@import './components/header-bar';
+@import './components/collapsible';
+@import './components/notification-banner';
+@import './components/autocomplete';
+
+
+/**
+* Any custom CSS that we're adding should go in the below file
+* rather than being imported in this file
+*/
+@import './overrides/local.scss'

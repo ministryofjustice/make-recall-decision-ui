@@ -21,13 +21,17 @@ import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
 import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 async function get(req: Request, res: Response, next: NextFunction) {
+  const { recommendation } = res.locals
+  const isInDeterminateSentences = recommendation.bookRecallToPpud?.custodyGroup === CUSTODY_GROUP.INDETERMINATE
   res.locals = {
     ...res.locals,
     page: {
       id: 'bookToPpud',
     },
+    isInDeterminateSentences,
   }
 
   res.render(`pages/recommendations/bookToPpud`)

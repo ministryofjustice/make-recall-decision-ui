@@ -1,7 +1,10 @@
 /* eslint-disable no-param-reassign */
 import nunjucks from 'nunjucks'
 import express from 'express'
+import fs from 'node:fs'
 import * as pathModule from 'path'
+
+import logger from '../../logger'
 import { makePageTitle, errorMessage, countLabel, isNotNull, isDefined, hasData, logMessage } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString, formatJSDate, formatSentenceLength, formatTerm } from './dates/formatting'
@@ -39,6 +42,16 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   app.locals.applicationInsightsConnectionString = config.applicationInsights.connectionString
   app.locals.applicationInsightsRoleName = defaultName()
+
+  // Read the asset manifest to find the built versions of our assets
+  let assetManifest: Record<string, string> = {}
+
+  try {
+    const assetMetadataPath = path.resolve(__dirname, '../../assets/manifest.json')
+    assetManifest = JSON.parse(fs.readFileSync(assetMetadataPath, 'utf8'))
+  } catch (err) {
+    logger.error('Could not read assest manifest file')
+  }
 
   // Cachebusting version string
   if (production) {
@@ -109,4 +122,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('formatSentenceLength', formatSentenceLength)
   njkEnv.addGlobal('renderString', renderString)
   njkEnv.addFilter('isBefore', isBeforeDate)
+  njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
 }

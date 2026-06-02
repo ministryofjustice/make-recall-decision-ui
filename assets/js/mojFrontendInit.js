@@ -1,4 +1,4 @@
-import * as MOJFrontend from '../../../../../../assets/moj/moj-frontend.min.js'
+import * as MOJFrontend from '@ministryofjustice/frontend'
 
 MOJFrontend.initAll()
 

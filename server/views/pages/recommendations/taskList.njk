@@ -121,5 +121,5 @@
 
 {% block bodyEnd %}
     {{ super() }}
-    <script src="/assets/copyToClipboard.js" defer></script>
+    <script src="{{ '/assets/js/copyToClipboard.js' | assetMap }}" defer></script>
 {% endblock %}
