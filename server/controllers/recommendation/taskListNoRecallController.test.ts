@@ -41,8 +41,8 @@ describe('get', () => {
     })
     const next = mockNext()
     await taskListNoRecallController.get(mockReq(), res, next)
-
-    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/task-list')
+    // FTR56 is by default enabled
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.taskListConsiderRecall}`)
   })
 
   it('present - redirect to task-list-consider-recall if recall type is undefined and FTR56 enabled', async () => {
