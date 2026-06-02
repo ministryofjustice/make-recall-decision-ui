@@ -98,7 +98,7 @@ jobs:
           CYPRESS_MAKE_RECALL_DECISION_API_URL: ${{secrets.LOCAL_MAKE_RECALL_DECISION_API_URL}}
           CYPRESS_HMPPS_AUTH_EXTERNAL_URL: ${{secrets.LOCAL_HMPPS_AUTH_EXTERNAL_URL}}
       - name: Output updated timings
-        if: success() || failure()
+        if: success() # failure timings could skew the results; they should happen infrequently, so best left out
         id: timings
         run: echo "t${{ matrix.container }}=$(jq -c . < timings.json)" >> $GITHUB_OUTPUT
       - name: Record API docker logs
@@ -148,7 +148,7 @@ jobs:
             core.setFailed('e2e tests failed')
 
   save-timings:
-    if: success() || failure()
+    if: success() # failure timings could skew the results; they should happen infrequently, so best left out
     uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/workflows/cypress_save_timings.yml@v1
     permissions:
       actions: write
