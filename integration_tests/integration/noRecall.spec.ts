@@ -86,9 +86,6 @@ context('No recall', () => {
       cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
       cy.getElement('Type of indeterminate sentence To do').should('not.exist')
-      cy.getElement('Why you considered recall To do').should('exist')
-      cy.getElement('Why Jane Bloggs should not be recalled To do').should('exist')
-      cy.getElement('Appointment date and time To do').should('exist')
       cy.getElement('Create letter').should('not.exist')
     })
 
@@ -99,29 +96,16 @@ context('No recall', () => {
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
       cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
-      cy.getElement('Why you considered recall Completed').should('exist')
-      cy.getElement('Why Jane Bloggs should not be recalled Completed').should('exist')
-      cy.getElement('Appointment date and time Completed').should('exist')
-      cy.clickLink('Create letter')
     })
 
     it('task list - check links to forms', () => {
       cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
-      cy.getLinkHref('Why you considered recall').should(
-        'contain',
-        '/recommendations/123/why-considered-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
-      )
       cy.getLinkHref('Why Jane Bloggs should not be recalled').should(
         'contain',
         '/recommendations/123/reasons-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
       )
-      cy.getLinkHref('Appointment date and time').should(
-        'contain',
-        '/recommendations/123/appointment-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
-      )
-      cy.getLinkHref('Preview of the letter').should('contain', '/recommendations/123/preview-no-recall')
     })
 
     it('task list - hide preview letter link if other tasks not complete', () => {

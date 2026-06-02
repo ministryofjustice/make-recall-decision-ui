@@ -126,28 +126,5 @@ context('Custody status', () => {
         ])
       })
     })
-
-    // it('Displays error message when custody status details are not provided for YES_POLICE option', () => {
-    //   const recommendation = RecommendationResponseGenerator.generate({
-    //     custodyStatus: {
-    //       selected: CustodyStatus.selected.YES_POLICE,
-    //       details: '',
-    //     },
-    //   })
-    //   cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-
-    //   cy.visit(testPageUrl)
-
-    //   cy.get('button').click()
-
-    //   testForErrorPageTitle()
-    //   testForErrorSummary([
-    //     {
-    //       href: 'custodyStatusDetailsYesPolice',
-    //       message: 'Enter the custody address',
-    //       errorStyleClass: 'govuk-textarea--error',
-    //     },
-    //   ])
-    // })
   })
 })
