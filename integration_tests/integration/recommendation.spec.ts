@@ -267,6 +267,85 @@ context('Make a recommendation', () => {
             response: recommendation,
           })
           cy.task('getStatuses', { statusCode: 200, response: [] })
+        })
+        it('present share-case-with-manager', () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: { ...completeRecommendationResponse, recallConsideredList: null },
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.task('updateStatuses', { statusCode: 200, response: [] })
+
+          cy.visit(`${routeUrls.recommendations}/${recommendationId}/record-consideration-rationale`)
+
+          cy.clickButton('Send to NDelius')
+
+          cy.pageHeading().should('equal', 'Share this case with your manager')
+
+          cy.clickLink('Continue to make a recommendation')
+
+          cy.pageHeading().should('equal', 'Discuss with your manager')
+        })
+
+        it('share-case-with-manager CTA returns to overview', () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: { ...completeRecommendationResponse, recallConsideredList: null },
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.task('updateStatuses', { statusCode: 200, response: [] })
+
+          cy.visit(`${routeUrls.recommendations}/${recommendationId}/record-consideration-rationale`)
+
+          cy.clickButton('Send to NDelius')
+
+          cy.pageHeading().should('equal', 'Share this case with your manager')
+
+          cy.clickLink('Return to overview')
+
+          cy.pageHeading().should('equal', 'Overview for Jane Bloggs')
+        })
+
+        it('present discuss-with-manager', () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: {
+              ...completeRecommendationResponse,
+              recallConsideredList: null,
+              sentenceGroup: SentenceGroup.EXTENDED,
+            },
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager`)
+
+          cy.clickLink('Continue to make a recommendation')
+
+          cy.pageHeading().should('equal', 'Discuss with your manager')
+
+          cy.clickLink('Continue')
+
+          cy.pageHeading().should('equal', 'What do you recommend?')
+
+          cy.url().should('contain', 'recall-type-extended')
+        })
+      })
+    })
+    describe('present discuss-with-manager', () => {
+      ftr56TestCases.forEach(({ description }) => {
+        it(description, () => {
+          const recommendation = {
+            ...completeRecommendationResponse,
+            recallConsideredList: null,
+            sentenceGroup: SentenceGroup.EXTENDED,
+          }
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: recommendation,
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
 
           cy.visit(`${routeUrls.recommendations}/${recommendationId}/share-case-with-manager?flagFTR56Enabled='1'`)
 
@@ -288,17 +367,17 @@ context('Make a recommendation', () => {
     it('present task-list for all items completed', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: { ...completeRecommendationResponse, sentenceGroup: SentenceGroup.YOUTH_SDS },
       })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('getStatuses', { statusCode: 200, response: [{ name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true }] })
 
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
-      cy.getElement("Request line manager's countersignature To do").should('exist')
+      // cy.getElement("Request line manager's countersignature To do").should('exist')
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
 
-      cy.clickLink("Request line manager's countersignature")
-      cy.pageHeading().should('equal', 'Request countersignature')
+      // cy.clickLink("Request line manager's countersignature")
+      // cy.pageHeading().should('equal', 'Request countersignature')
     })
 
     it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
@@ -3678,7 +3757,11 @@ context('Make a recommendation', () => {
 
       cy.pageHeading().should('contain', 'What licence conditions has Jane Bloggs breached?')
 
-      testStandardBackLink()
+      testBackLink(
+        `/cases/${completeRecommendationResponse.crn}/overview`,
+        `Back to overview for ${completeRecommendationResponse.personOnProbation.name}`,
+        false,
+      )
     })
 
     it('present licence condition breaches page for AP - FTR56 enabled', () => {

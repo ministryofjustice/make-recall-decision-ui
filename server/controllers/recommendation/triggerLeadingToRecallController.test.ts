@@ -14,43 +14,35 @@ jest.mock('../recommendations/helpers/urls')
 
 describe('Trigger Leading to Recall Controller', () => {
   describe('get', () => {
-    ;[true, false].forEach(flagFTR56Enabled => {
-      describe(`FTR56 flag ${flagFTR56Enabled ? 'enabled' : 'disabled'}`, () => {
-        describe('Non-conditional logic:', () => {
-          const recommendation = RecommendationResponseGenerator.generate()
-          const urlInfo = UrlInfoGenerator.generate()
-          const next = mockNext()
-          let res: Response
-          beforeEach(() => {
-            res = mockRes({
-              locals: {
-                recommendation,
-                flags: { flagFTR56Enabled },
-                urlInfo,
-              },
-            })
-            triggerLeadingToRecallController.get(mockReq(), res, next)
+    describe(`FTR56 flag 'enabled'`, () => {
+      describe('Non-conditional logic:', () => {
+        const recommendation = RecommendationResponseGenerator.generate()
+        const urlInfo = UrlInfoGenerator.generate()
+        const next = mockNext()
+        let res: Response
+        beforeEach(() => {
+          res = mockRes({
+            locals: {
+              recommendation,
+              urlInfo,
+            },
           })
-
-          describe('Res locals', () => {
-            describe('Page Data is provided:', () => {
-              it('Page ID', () => expect(res.locals.pageData.page).toEqual({ id: 'triggerLeadingToRecall' }))
-              it('Recommendation', () => expect(res.locals.pageData.recommendation).toEqual(recommendation))
-              it('FTR56 flag value', () => expect(res.locals.pageData.flagFTR56Enabled).toEqual(flagFTR56Enabled))
-              if (flagFTR56Enabled) {
-                it('Back link URL', () =>
-                  expect(res.locals.pageData.backLinkUrl).toEqual(
-                    `${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`,
-                  ))
-              }
-            })
-          })
-
-          it('- Calls render for the expected page', async () =>
-            expect(res.render).toHaveBeenCalledWith(`pages/recommendations/triggerLeadingToRecall`))
-
-          it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
+          triggerLeadingToRecallController.get(mockReq(), res, next)
         })
+
+        describe('Res locals', () => {
+          describe('Page Data is provided:', () => {
+            it('Page ID', () => expect(res.locals.pageData.page).toEqual({ id: 'triggerLeadingToRecall' }))
+            it('Recommendation', () => expect(res.locals.pageData.recommendation).toEqual(recommendation))
+            it('Back link URL', () =>
+              expect(res.locals.pageData.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`))
+          })
+        })
+
+        it('- Calls render for the expected page', async () =>
+          expect(res.render).toHaveBeenCalledWith(`pages/recommendations/triggerLeadingToRecall`))
+
+        it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
       })
     })
 
@@ -145,53 +137,50 @@ describe('Trigger Leading to Recall Controller', () => {
 })
 
 describe('post', () => {
-  ;[true, false].forEach(flagFTR56Enabled => {
-    describe(`FTR56 flag ${flagFTR56Enabled ? 'enabled' : 'disabled'}`, () => {
-      describe('Valid trigger text provided:', () => {
-        const recommendationId = faker.number.int().toString()
-        const triggerLeadingToRecall = faker.lorem.paragraph()
-        const req = mockReq({
-          params: { recommendationId },
-          body: { triggerLeadingToRecall },
-        })
-
-        const urlInfo = UrlInfoGenerator.generate()
-        const nextPageUrl = faker.internet.url()
-        const next = mockNext()
-        let res: Response
-        beforeEach(async () => {
-          res = mockRes({
-            token: 'token1',
-            locals: {
-              urlInfo,
-              flags: { flagFTR56Enabled },
-            },
-          })
-          ;(updateRecommendation as jest.Mock).mockResolvedValue({})
-          ;(nextPageLinkUrl as jest.Mock).mockReturnValue(nextPageUrl)
-
-          await triggerLeadingToRecallController.post(req, res, next)
-        })
-
-        it('No errors logged', () => expect(req.session.errors).toBeUndefined())
-        it('Recommendation updated', () => {
-          expect(updateRecommendation).toHaveBeenCalledWith({
-            recommendationId,
-            token: res.locals.user.token,
-            valuesToSave: {
-              triggerLeadingToRecall,
-            },
-            featureFlags: res.locals.flags,
-          })
-        })
-        it('Next page URL retrieved', () =>
-          expect(nextPageLinkUrl).toHaveBeenCalledWith({
-            nextPageId: flagFTR56Enabled ? ppPaths.licenceConditions : ppPaths.taskListConsiderRecall,
-            urlInfo,
-          }))
-        it(`Redirected to ${nextPageUrl} page`, () => expect(res.redirect).toHaveBeenCalledWith(303, nextPageUrl))
-        expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  describe(`FTR56 flag 'enabled'`, () => {
+    describe('Valid trigger text provided:', () => {
+      const recommendationId = faker.number.int().toString()
+      const triggerLeadingToRecall = faker.lorem.paragraph()
+      const req = mockReq({
+        params: { recommendationId },
+        body: { triggerLeadingToRecall },
       })
+
+      const urlInfo = UrlInfoGenerator.generate()
+      const nextPageUrl = faker.internet.url()
+      const next = mockNext()
+      let res: Response
+      beforeEach(async () => {
+        res = mockRes({
+          token: 'token1',
+          locals: {
+            urlInfo,
+          },
+        })
+        ;(updateRecommendation as jest.Mock).mockResolvedValue({})
+        ;(nextPageLinkUrl as jest.Mock).mockReturnValue(nextPageUrl)
+
+        await triggerLeadingToRecallController.post(req, res, next)
+      })
+
+      it('No errors logged', () => expect(req.session.errors).toBeUndefined())
+      it('Recommendation updated', () => {
+        expect(updateRecommendation).toHaveBeenCalledWith({
+          recommendationId,
+          token: res.locals.user.token,
+          valuesToSave: {
+            triggerLeadingToRecall,
+          },
+          featureFlags: res.locals.flags,
+        })
+      })
+      it('Next page URL retrieved', () =>
+        expect(nextPageLinkUrl).toHaveBeenCalledWith({
+          nextPageId: ppPaths.taskListConsiderRecall,
+          urlInfo,
+        }))
+      it(`Redirected to ${nextPageUrl} page`, () => expect(res.redirect).toHaveBeenCalledWith(303, nextPageUrl))
+      expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
   })
 

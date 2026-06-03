@@ -49,7 +49,7 @@ function checkTestCaseCombination(
     await taskListConsiderRecallController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'taskListConsiderRecall' })
-    expect(res.locals.flagFTR56Enabled).toEqual(ftr56Enabled)
+    expect(res.locals.flagFTR56Enabled).toEqual(true)
     expect(res.locals.isIndeterminateSentence).toEqual(
       recommendationWithNoTasksCompleted.sentenceGroup === SentenceGroup.INDETERMINATE,
     )

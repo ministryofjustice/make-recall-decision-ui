@@ -102,9 +102,9 @@ context('No recall', () => {
       cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list-no-recall`)
-      cy.getLinkHref('Why Jane Bloggs should not be recalled').should(
+      cy.getLinkHref('What has made you consider recalling Jane Bloggs?').should(
         'contain',
-        '/recommendations/123/reasons-no-recall?fromPageId=task-list-no-recall&fromAnchor=heading-create-letter',
+        '/recommendations/123/trigger-leading-to-recall?fromPageId=task-list-no-recall&fromAnchor=heading-circumstances',
       )
     })
 
