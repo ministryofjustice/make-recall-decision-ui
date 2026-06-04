@@ -2724,7 +2724,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/select-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Add your booking to PPUD - Joseph Bluggs')
+      cy.pageHeading().should('contain', 'Select or add a sentence for your booking - Joseph Bluggs')
 
       cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
       cy.getText('sentenceDate').should('contain', '16 November 2023')
@@ -2779,7 +2779,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/select-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Add your booking to PPUD - Joseph Bluggs')
+      cy.pageHeading().should('contain', 'Select or add a sentence for your booking - Joseph Bluggs')
 
       cy.getText('offenceDescription').should('contain', 'Attack / assault / batter a member of the public')
       cy.getElement('sentenceDate').should('not.exist')
@@ -3392,7 +3392,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Create new PPUD record for Joseph Bluggs')
+      cy.pageHeading().should('contain', 'Record created and booked on to PPUD')
     })
     it('book to ppud - update offender', () => {
       cy.task('getRecommendation', {
@@ -3409,7 +3409,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Book Joseph Bluggs onto PPUD')
+      cy.pageHeading().should('contain', 'Booked on to PPUD')
     })
 
     it('booked to ppud', () => {

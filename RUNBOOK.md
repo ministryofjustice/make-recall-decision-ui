@@ -145,9 +145,9 @@ started up and is ready to process work. A HTTP 200 response code indicates that
 
 ### Deployment
 
-We use CircleCI to manage deployments (see [.circleci/config.yml](.circleci/config.yml) for the full configuration):
+We use GitHub Actions to manage deployments (see [.github/workflows](.github/workflows) for the full configuration):
 
-- Built docker images are pushed to [quay.io](https://quay.io/repository/hmpps/make-recall-decision-ui).
+- Built docker images are pushed to [ghcr.io](https://ghcr.io/ministryofjustice/make-recall-decision-ui).
 - Deployment to kubernetes uses helm.
 
 ### Troubleshooting

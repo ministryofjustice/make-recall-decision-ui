@@ -39,9 +39,11 @@ export interface PpudApiConfig extends ApiConfig {
 }
 
 export default {
+  buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
+  gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   https: production,
   applicationName: 'Consider a recall',
-  staticResourceCacheDuration: 20,
+  staticResourceCacheDuration: '1h',
   redis: {
     host: get('REDIS_HOST', 'localhost', requiredInProduction),
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,

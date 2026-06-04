@@ -14,6 +14,7 @@ import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
 import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -45,6 +46,7 @@ describe('get', () => {
   it('load', async () => {
     const recommendation = {
       crn: 'X1213',
+      bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
     }
 
     const res = mockRes({
