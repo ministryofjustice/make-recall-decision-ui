@@ -10,8 +10,8 @@ There's a HMPPS dev 'community of practice' talk on [how the E2E tests are set u
 All dependencies will be mocked, including upstream APIs used by make-recall-decision-api, and HMPPS Auth.
 
 Set the `CYPRESS_PASSWORD_PO`, `CYPRESS_PASSWORD_SPO` and `CYPRESS_PASSWORD_ACO` env vars in the [.env.local.sample](./.env.local.sample)
-file and copy it as `.env`. The passwords can be obtained from the `local_CYPRESS_PASSWORD_PO`, `local_CYPRESS_PASSWORD_SPO`
-and `local_CYPRESS_PASSWORD_ACO` env vars in [CircleCi](https://app.circleci.com/settings/project/github/ministryofjustice/make-recall-decision-ui/environment-variables)
+file and copy it as `.env`. The passwords can be obtained from the `LOCAL_CYPRESS_PASSWORD_PO`, `LOCAL_CYPRESS_PASSWORD_SPO`
+and `LOCAL_CYPRESS_PASSWORD_ACO` values in [the project's GitHub Actions repository secrets](https://github.com/ministryofjustice/make-recall-decision-ui/settings/secrets/actions)
 
 Run the following command in the root of the project. It will start `make-recall-decision-api` and other dependencies:
 
