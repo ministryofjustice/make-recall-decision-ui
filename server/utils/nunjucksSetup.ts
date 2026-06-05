@@ -34,7 +34,11 @@ import { hasAllRequiredVulnerabilityDetails } from '../controllers/recommendatio
 
 const production = process.env.NODE_ENV === 'production'
 
-export default function nunjucksSetup(app: express.Express, path: pathModule.PlatformPath): void {
+export default function nunjucksSetup(
+  app: express.Express,
+  path: pathModule.PlatformPath,
+  modulePaths: string[],
+): void {
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
@@ -65,9 +69,12 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     })
   }
 
+  const moduleViewPaths = modulePaths.map(modulePath => path.join(modulePath, 'views'))
+
   const njkEnv = nunjucks.configure(
     [
       path.join(__dirname, '../../server/views'),
+      ...moduleViewPaths,
       'node_modules/govuk-frontend/dist',
       'node_modules/@ministryofjustice/frontend/',
       'node_modules/@ministryofjustice/frontend/moj/components/',

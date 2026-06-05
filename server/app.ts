@@ -28,6 +28,7 @@ import { setupRecommendationStatusCheck } from './middleware/recommendationStatu
 import { hasRole, authorisationCheck } from './middleware/check'
 import config from './config'
 import logger from '../logger'
+import ModuleLoader from './services/moduleLoader'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
@@ -48,7 +49,9 @@ export default function createApp(userService: UserService): express.Application
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
-  nunjucksSetup(app, path)
+  // Setup modules goes here
+  const { routes: moduleRoutes, paths: modulePaths } = ModuleLoader()
+  nunjucksSetup(app, path, modulePaths)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware)
   app.use(authorisationCheck(hasRole(HMPPS_AUTH_ROLE.PO)))
@@ -69,7 +72,7 @@ export default function createApp(userService: UserService): express.Application
 
   app.use(setUpCsrf())
 
-  app.use('/', indexRoutes(standardRouter(userService)))
+  app.use('/', indexRoutes(standardRouter(userService), moduleRoutes))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
 
