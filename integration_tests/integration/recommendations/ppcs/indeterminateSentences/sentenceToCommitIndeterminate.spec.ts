@@ -33,7 +33,7 @@ context('Indeterminate Sentence - Sentence to Commit Page', () => {
               return {
                 custodyType: indeterminateCustodyType,
                 sentenceLength: {
-                  partYears: faker.number.int({ min: 0, max: 10 }),
+                  partYears: faker.number.int({ min: 1, max: 10 }),
                 },
               }
             }),
