@@ -54,7 +54,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     urlInfo,
     token,
-    flagFTR56Enabled: true,
   })
 
   if (errors) {

@@ -27,6 +27,10 @@ describe('get', () => {
       propertyToRefresh: 'mappa',
       recommendationId: '123',
       token: 'token',
+      valuesToSave: {
+        isMappaCategory4: false,
+        isMappaLevel2Or3: false,
+      },
     })
 
     expect(updatePageReviewedStatus).toHaveBeenCalledWith({

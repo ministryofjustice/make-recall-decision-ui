@@ -71,9 +71,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
   }
 
-  let triggerLeadingToRecall = true
-
-  triggerLeadingToRecall = statuses.triggerLeadingToRecall
+  const { triggerLeadingToRecall } = statuses
 
   const isAdultSDSSuitabilityCriteriaSet =
     statuses.isChargedWithOffence &&

@@ -185,10 +185,6 @@ describe('get', () => {
       description: 'with FTR56 flag enabled',
       ftr56Enabled: true,
     },
-    {
-      description: 'with FTR56 flag disabled',
-      ftr56Enabled: false,
-    },
   ]
   ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
     describe(description, () => {
@@ -208,7 +204,7 @@ describe('get', () => {
             const res = mockRes({
               locals: {
                 recommendation: {
-                  indeterminateSentenceType: ftr56Enabled && isIndeterminateSentence ? { selected: 'LIFE' } : undefined,
+                  indeterminateSentenceType: isIndeterminateSentence ? { selected: 'LIFE' } : undefined,
                   sentenceGroup,
                   triggerLeadingToRecall: 'some reason 1',
                   personOnProbation: { name: 'Joe Bloggs' },
@@ -258,21 +254,17 @@ describe('get', () => {
               },
             ])
             expect(res.locals.alternativesToRecallTried).toEqual([])
-            if (ftr56Enabled) {
-              expect(res.locals.sentenceGroupHumanReadable).toBe(
-                sentenceGroupDetails.find(group => group.value === sentenceGroup)?.text,
-              )
-              expect(res.locals.isIndeterminateSentence).toEqual(
-                sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
-              )
-              expect(res.locals.isExtendedSentence).toEqual(sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No')
+            expect(res.locals.sentenceGroupHumanReadable).toBe(
+              sentenceGroupDetails.find(group => group.value === sentenceGroup)?.text,
+            )
+            expect(res.locals.isIndeterminateSentence).toEqual(
+              sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
+            )
+            expect(res.locals.isExtendedSentence).toEqual(sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No')
 
-              expect(res.locals.indeterminateSentenceHumanReadable).toBe(
-                sentenceGroup === SentenceGroup.INDETERMINATE ? 'Life sentence' : undefined,
-              )
-            } else {
-              expect(res.locals.isExtendedSentence).toEqual(sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No')
-            }
+            expect(res.locals.indeterminateSentenceHumanReadable).toBe(
+              sentenceGroup === SentenceGroup.INDETERMINATE ? 'Life sentence' : undefined,
+            )
 
             expect(next).toHaveBeenCalled()
           })

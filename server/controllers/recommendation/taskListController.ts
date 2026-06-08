@@ -94,6 +94,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation,
     isSpo,
     isAcoSigned,
+    statuses,
     isSpoRationaleRecorded,
     lineManagerCountersignLink,
     seniorManagerCountersignLink,

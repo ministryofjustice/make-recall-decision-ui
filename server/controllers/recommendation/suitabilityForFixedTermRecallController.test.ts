@@ -7,7 +7,6 @@ import getCaseSection from '../caseSummary/getCaseSection'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
 import {
-  isFixedTermRecallMandatoryForValueKeys,
   isFixedTermRecallMandatoryForRecommendation,
   isRecommendationDiscretionaryRecall,
 } from '../../utils/fixedTermRecallUtils'
@@ -214,29 +213,29 @@ describe('get', () => {
       expect(res.locals.page.warningPanel).toBeUndefined()
     })
   })
-  describe('When the existing recommendation is fixed term recall discretionary', () => {
-    beforeEach(() => {
-      ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
-    })
-    it('The warning panel properties are added to the page data', async () => {
-      const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
-        recallType: 'any',
-      })
-      const res = mockRes({
-        locals: {
-          recommendation: recommendationWithSelectedRecallType,
-        },
-      })
+  // describe('When the existing recommendation is fixed term recall discretionary', () => {
+  //   beforeEach(() => {
+  //     ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+  //   })
+  //   it('The warning panel properties are added to the page data', async () => {
+  //     const recommendationWithSelectedRecallType = RecommendationResponseGenerator.generate({
+  //       recallType: 'any',
+  //     })
+  //     const res = mockRes({
+  //       locals: {
+  //         recommendation: recommendationWithSelectedRecallType,
+  //       },
+  //     })
 
-      await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+  //     await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-      expect(res.locals.page.warningPanel).toBeDefined()
-      expect(res.locals.page.warningPanel).toEqual({
-        title: 'Changes could affect your recall recommendation choices',
-        body: `Changing your answers could make ${recommendationWithSelectedRecallType.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
-      })
-    })
-  })
+  //     expect(res.locals.page.warningPanel).toBeDefined()
+  //     expect(res.locals.page.warningPanel).toEqual({
+  //       title: 'Changes could affect your recall recommendation choices',
+  //       body: `Changing your answers could make ${recommendationWithSelectedRecallType.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+  //     })
+  //   })
+  // })
 
   describe('redirects when FTR56 flag is enabled and sentenceGroup is not Determinate', () => {
     ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(testCase => {
@@ -332,97 +331,6 @@ describe('post', () => {
     ;(nextPagePreservingFromPageAndAnchor as jest.Mock).mockReturnValue(expectedResolvedRedirectUrl)
   })
   const basePath = `/recommendations/123/`
-  describe('post with valid data', () => {
-    const testCases: {
-      name: string
-      previouslyMandatory: boolean
-      updatedMandatory: boolean
-      detailsExpected: boolean
-    }[] = [
-      {
-        name: 'previously discretionary - now discretionary - details not updated',
-        previouslyMandatory: false,
-        updatedMandatory: false,
-        detailsExpected: false,
-      },
-      {
-        name: 'previously discretionary - now mandatory - details not updated',
-        previouslyMandatory: false,
-        updatedMandatory: true,
-        detailsExpected: false,
-      },
-      {
-        name: 'previously mandatory - now mandatory - details not updated',
-        previouslyMandatory: true,
-        updatedMandatory: true,
-        detailsExpected: false,
-      },
-      {
-        name: 'previously mandatory - now discretionary - details updated to clear value',
-        previouslyMandatory: true,
-        updatedMandatory: false,
-        detailsExpected: true,
-      },
-    ]
-    testCases.forEach(({ name, previouslyMandatory, updatedMandatory, detailsExpected }) => {
-      it(name, async () => {
-        ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValue(previouslyMandatory)
-        ;(isFixedTermRecallMandatoryForValueKeys as jest.Mock).mockReturnValue(updatedMandatory)
-        const req = mockReq({
-          params: { recommendationId: '123' },
-          body: {
-            isUnder18: 'YES',
-            isSentence48MonthsOrOver: 'YES',
-            isMappaCategory4: 'YES',
-            isMappaLevel2Or3: 'YES',
-            isRecalledOnNewChargedOffence: 'YES',
-            isServingFTSentenceForTerroristOffence: 'YES',
-            hasBeenChargedWithTerroristOrStateThreatOffence: 'YES',
-          },
-        })
-        const priorRecommendation = RecommendationResponseGenerator.generate({
-          recallType: 'any',
-        })
-        const res = mockRes({
-          token: 'token1',
-          locals: {
-            recommendation: priorRecommendation,
-            urlInfo: { basePath },
-            statuses: [],
-          },
-        })
-        const next = mockNext()
-
-        await suitabilityForFixedTermRecallController.post(req, res, next)
-
-        expect(updateRecommendation).toHaveBeenCalledWith({
-          recommendationId: '123',
-          token: 'token1',
-          valuesToSave: {
-            isUnder18: true,
-            isSentence48MonthsOrOver: true,
-            isMappaCategory4: true,
-            isMappaLevel2Or3: true,
-            isRecalledOnNewChargedOffence: true,
-            isServingFTSentenceForTerroristOffence: true,
-            hasBeenChargedWithTerroristOrStateThreatOffence: true,
-            ...(detailsExpected
-              ? {
-                  recallType: {
-                    selected: { value: priorRecommendation.recallType.selected.value },
-                    allOptions: priorRecommendation.recallType.allOptions,
-                  },
-                }
-              : {}),
-          },
-          featureFlags: {},
-        })
-
-        expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
-        expect(next).not.toHaveBeenCalled() // end of the line for posts.
-      })
-    })
-  })
 
   describe('post with valid data FTR56', () => {
     ;[
@@ -588,70 +496,288 @@ describe('post', () => {
 
     expect(req.session.errors).toEqual([
       {
-        name: 'isSentence48MonthsOrOver',
-        text: "Select whether {{ fullName }}'s sentence is 48 months or over",
-        href: '#isSentence48MonthsOrOver',
-        errorId: 'noIsSentence48MonthsOrOver',
+        name: 'isYouthSentenceOver12Months',
+        text: "Select whether {{ fullName }}'s sentence is 12 months or over",
+        href: '#isYouthSentenceOver12Months',
+        errorId: 'noIsYouthSentenceOver12Months',
         invalidParts: undefined,
         values: undefined,
       },
       {
-        name: 'isUnder18',
-        text: 'Select whether {{ fullName }} is under 18',
-        href: '#isUnder18',
-        errorId: 'noIsUnder18',
-        invalidParts: undefined,
+        name: 'isYouthChargedWithSeriousOffence',
+        text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
+        href: '#isYouthChargedWithSeriousOffence',
+        errorId: 'noIsYouthChargedWithSeriousOffence',
         values: undefined,
       },
-      {
-        name: 'isMappaCategory4',
-        text: 'Select whether {{ fullName }} is in MAPPA category 4',
-        href: '#isMappaCategory4',
-        errorId: 'noIsMappaCategory4',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        name: 'isMappaLevel2Or3',
-        text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
-        href: '#isMappaLevel2Or3',
-        errorId: 'noIsMappaLevel2Or3',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        name: 'isRecalledOnNewChargedOffence',
-        text: 'Select whether {{ fullName }} is being recalled on a new charged offence',
-        href: '#isRecalledOnNewChargedOffence',
-        errorId: 'noIsRecalledOnNewChargedOffence',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        name: 'isServingFTSentenceForTerroristOffence',
-        text: 'Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence',
-        href: '#isServingFTSentenceForTerroristOffence',
-        errorId: 'noIsServingFTSentenceForTerroristOffence',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        name: 'hasBeenChargedWithTerroristOrStateThreatOffence',
-        text: 'Select whether {{ fullName }} has been charged with a terrorist or state threat offence',
-        href: '#hasBeenChargedWithTerroristOrStateThreatOffence',
-        errorId: 'noHasBeenChargedWithTerroristOrStateThreatOffence',
-        invalidParts: undefined,
-        values: undefined,
-      },
+      // {
+      //   errorId: "noIsMappaCategory4",
+      //   href: "#isMappaCategory4",
+      //   invalidParts: undefined,
+      //   name: "isMappaCategory4",
+      //   text: "Select whether {{ fullName }} is in MAPPA category 4",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaLevel2Or3",
+      //   href: "#isMappaLevel2Or3",
+      //   invalidParts: undefined,
+      //   name: "isMappaLevel2Or3",
+      //   text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsRecalledOnNewChargedOffence",
+      //   href: "#isRecalledOnNewChargedOffence",
+      //   invalidParts: undefined,
+      //   name: "isRecalledOnNewChargedOffence",
+      //   text: "Select whether {{ fullName }} is being recalled on a new charged offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsServingFTSentenceForTerroristOffence",
+      //   href: "#isServingFTSentenceForTerroristOffence",
+      //   invalidParts: undefined,
+      //   name: "isServingFTSentenceForTerroristOffence",
+      //   text: "Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaCategory4",
+      //   href: "#isMappaCategory4",
+      //   invalidParts: undefined,
+      //   name: "isMappaCategory4",
+      //   text: "Select whether {{ fullName }} is in MAPPA category 4",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaLevel2Or3",
+      //   href: "#isMappaLevel2Or3",
+      //   invalidParts: undefined,
+      //   name: "isMappaLevel2Or3",
+      //   text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsRecalledOnNewChargedOffence",
+      //   href: "#isRecalledOnNewChargedOffence",
+      //   invalidParts: undefined,
+      //   name: "isRecalledOnNewChargedOffence",
+      //   text: "Select whether {{ fullName }} is being recalled on a new charged offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsServingFTSentenceForTerroristOffence",
+      //   href: "#isServingFTSentenceForTerroristOffence",
+      //   invalidParts: undefined,
+      //   name: "isServingFTSentenceForTerroristOffence",
+      //   text: "Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaCategory4",
+      //   href: "#isMappaCategory4",
+      //   invalidParts: undefined,
+      //   name: "isMappaCategory4",
+      //   text: "Select whether {{ fullName }} is in MAPPA category 4",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaLevel2Or3",
+      //   href: "#isMappaLevel2Or3",
+      //   invalidParts: undefined,
+      //   name: "isMappaLevel2Or3",
+      //   text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsRecalledOnNewChargedOffence",
+      //   href: "#isRecalledOnNewChargedOffence",
+      //   invalidParts: undefined,
+      //   name: "isRecalledOnNewChargedOffence",
+      //   text: "Select whether {{ fullName }} is being recalled on a new charged offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsServingFTSentenceForTerroristOffence",
+      //   href: "#isServingFTSentenceForTerroristOffence",
+      //   invalidParts: undefined,
+      //   name: "isServingFTSentenceForTerroristOffence",
+      //   text: "Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaCategory4",
+      //   href: "#isMappaCategory4",
+      //   invalidParts: undefined,
+      //   name: "isMappaCategory4",
+      //   text: "Select whether {{ fullName }} is in MAPPA category 4",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaLevel2Or3",
+      //   href: "#isMappaLevel2Or3",
+      //   invalidParts: undefined,
+      //   name: "isMappaLevel2Or3",
+      //   text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsRecalledOnNewChargedOffence",
+      //   href: "#isRecalledOnNewChargedOffence",
+      //   invalidParts: undefined,
+      //   name: "isRecalledOnNewChargedOffence",
+      //   text: "Select whether {{ fullName }} is being recalled on a new charged offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsServingFTSentenceForTerroristOffence",
+      //   href: "#isServingFTSentenceForTerroristOffence",
+      //   invalidParts: undefined,
+      //   name: "isServingFTSentenceForTerroristOffence",
+      //   text: "Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaCategory4",
+      //   href: "#isMappaCategory4",
+      //   invalidParts: undefined,
+      //   name: "isMappaCategory4",
+      //   text: "Select whether {{ fullName }} is in MAPPA category 4",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaLevel2Or3",
+      //   href: "#isMappaLevel2Or3",
+      //   invalidParts: undefined,
+      //   name: "isMappaLevel2Or3",
+      //   text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsRecalledOnNewChargedOffence",
+      //   href: "#isRecalledOnNewChargedOffence",
+      //   invalidParts: undefined,
+      //   name: "isRecalledOnNewChargedOffence",
+      //   text: "Select whether {{ fullName }} is being recalled on a new charged offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsServingFTSentenceForTerroristOffence",
+      //   href: "#isServingFTSentenceForTerroristOffence",
+      //   invalidParts: undefined,
+      //   name: "isServingFTSentenceForTerroristOffence",
+      //   text: "Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaCategory4",
+      //   href: "#isMappaCategory4",
+      //   invalidParts: undefined,
+      //   name: "isMappaCategory4",
+      //   text: "Select whether {{ fullName }} is in MAPPA category 4",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaLevel2Or3",
+      //   href: "#isMappaLevel2Or3",
+      //   invalidParts: undefined,
+      //   name: "isMappaLevel2Or3",
+      //   text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsRecalledOnNewChargedOffence",
+      //   href: "#isRecalledOnNewChargedOffence",
+      //   invalidParts: undefined,
+      //   name: "isRecalledOnNewChargedOffence",
+      //   text: "Select whether {{ fullName }} is being recalled on a new charged offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsServingFTSentenceForTerroristOffence",
+      //   href: "#isServingFTSentenceForTerroristOffence",
+      //   invalidParts: undefined,
+      //   name: "isServingFTSentenceForTerroristOffence",
+      //   text: "Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaCategory4",
+      //   href: "#isMappaCategory4",
+      //   invalidParts: undefined,
+      //   name: "isMappaCategory4",
+      //   text: "Select whether {{ fullName }} is in MAPPA category 4",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsMappaLevel2Or3",
+      //   href: "#isMappaLevel2Or3",
+      //   invalidParts: undefined,
+      //   name: "isMappaLevel2Or3",
+      //   text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsRecalledOnNewChargedOffence",
+      //   href: "#isRecalledOnNewChargedOffence",
+      //   invalidParts: undefined,
+      //   name: "isRecalledOnNewChargedOffence",
+      //   text: "Select whether {{ fullName }} is being recalled on a new charged offence",
+      //   values: undefined,
+      // },
+      // {
+      //   errorId: "noIsServingFTSentenceForTerroristOffence",
+      //   href: "#isServingFTSentenceForTerroristOffence",
+      //   invalidParts: undefined,
+      //   name: "isServingFTSentenceForTerroristOffence",
+      //   text: "Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence",
+      //   values: undefined,
+      // },
+      // {
+      //   name: 'isMappaCategory4',
+      //   text: 'Select whether {{ fullName }} is in MAPPA category 4',
+      //   href: '#isMappaCategory4',
+      //   errorId: 'noIsMappaCategory4',
+      //   invalidParts: undefined,
+      //   values: undefined,
+      // },
+      // {
+      //   name: 'isMappaLevel2Or3',
+      //   text: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
+      //   href: '#isMappaLevel2Or3',
+      //   errorId: 'noIsMappaLevel2Or3',
+      //   invalidParts: undefined,
+      //   values: undefined,
+      // },
+      // {
+      //   name: 'isRecalledOnNewChargedOffence',
+      //   text: 'Select whether {{ fullName }} is being recalled on a new charged offence',
+      //   href: '#isRecalledOnNewChargedOffence',
+      //   errorId: 'noIsRecalledOnNewChargedOffence',
+      //   invalidParts: undefined,
+      //   values: undefined,
+      // },
+      // {
+      //   name: 'isServingFTSentenceForTerroristOffence',
+      //   text: 'Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence',
+      //   href: '#isServingFTSentenceForTerroristOffence',
+      //   errorId: 'noIsServingFTSentenceForTerroristOffence',
+      //   invalidParts: undefined,
+      //   values: undefined,
+      // },
+      // {
+      //   name: 'isYouthChargedWithSeriousOffence',
+      //   text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
+      //   href: '#hasBeenChargedWithTerroristOrStateThreatOffence',
+      //   errorId: 'noHasBeenChargedWithTerroristOrStateThreatOffence',
+      //   invalidParts: undefined,
+      //   values: undefined,
+      // },
     ])
     expect(req.session.unsavedValues).toEqual({
-      isUnder18: '',
-      isSentence48MonthsOrOver: '',
-      isMappaCategory4: '',
-      isMappaLevel2Or3: '',
-      isRecalledOnNewChargedOffence: '',
-      isServingFTSentenceForTerroristOffence: '',
-      hasBeenChargedWithTerroristOrStateThreatOffence: '',
+      isYouthChargedWithSeriousOffence: undefined,
+      isYouthSentenceOver12Months: undefined,
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })

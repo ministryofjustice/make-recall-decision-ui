@@ -149,7 +149,7 @@ describe('getSentenceType', () => {
       const recommendation: RecommendationResponse = {
         sentenceGroup: randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE]),
       }
-      const actualSentenceType = calculatePartACustodyGroup(recommendation, true)
+      const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
       expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
     })
@@ -158,7 +158,7 @@ describe('getSentenceType', () => {
       const recommendation: RecommendationResponse = {
         sentenceGroup: SentenceGroup.INDETERMINATE,
       }
-      const actualSentenceType = calculatePartACustodyGroup(recommendation, true)
+      const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
       expect(actualSentenceType).toEqual(CUSTODY_GROUP.INDETERMINATE)
     })

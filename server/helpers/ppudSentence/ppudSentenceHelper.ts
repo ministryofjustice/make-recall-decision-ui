@@ -29,17 +29,10 @@ function getSentencesByCustodyType(sentences: PpudDetailsSentence[], custodyType
  * @param recommendation The relevant recommendation
  * @param ftr56Enabled Whether the FTR56 functionality is enabled
  */
-export function calculatePartACustodyGroup(
-  recommendation: RecommendationResponse,
-  ftr56Enabled: boolean,
-): CUSTODY_GROUP {
-  if (ftr56Enabled) {
-    return recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
-      ? CUSTODY_GROUP.INDETERMINATE
-      : CUSTODY_GROUP.DETERMINATE
-  }
-
-  return CUSTODY_GROUP.DETERMINATE
+export function calculatePartACustodyGroup(recommendation: RecommendationResponse): CUSTODY_GROUP {
+  return recommendation.sentenceGroup === SentenceGroup.INDETERMINATE
+    ? CUSTODY_GROUP.INDETERMINATE
+    : CUSTODY_GROUP.DETERMINATE
 }
 
 export type SentencesByDate = {

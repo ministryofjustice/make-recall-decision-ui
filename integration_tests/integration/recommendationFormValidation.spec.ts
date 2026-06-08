@@ -114,24 +114,12 @@ context('Make a recommendation - form validation', () => {
 
   it('Indeterminate sentence type', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'indeterminateSentenceType',
-      errorText: 'Select whether Jane Bloggs is on a life, IPP or DPP sentence',
-    })
-  })
-
-  it('Ftr56: Indeterminate sentence type', () => {
-    cy.signIn()
     cy.task('getRecommendation', {
       statusCode: 200,
       response: { ...recommendationResponse, sentenceGroup: 'INDETERMINATE' },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type?flagFTR56Enabled=1`)
+    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateSentenceType',
@@ -148,21 +136,22 @@ context('Make a recommendation - form validation', () => {
     cy.assertErrorMessage({
       fieldGroupId: 'option-1',
       fieldName: 'indeterminateOrExtendedSentenceDetails',
-      errorText: 'Select at least one of the criteria',
+      errorText: 'Select all the criteria that apply to Jane Bloggs',
     })
     cy.selectCheckboxes('Indeterminate and extended sentences', [
-      'Jane Bloggs has shown behaviour similar to the index offence',
-      'Jane Bloggs has shown behaviour that could lead to a sexual or violent offence',
-      'Jane Bloggs is out of touch',
+      'Jane Bloggs has shown behaviour similar to the circumstances surrounding the index offence',
+      'Jane Bloggs has shown behaviour that has caused, or will cause, a sexual or violent offence',
+      'Jane Bloggs has shown behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
+      'Jane Bloggs is either out of touch with probation, or their current location is not known',
     ])
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-      errorText: 'Enter details about the behaviour similar to the index offence',
+      errorText: 'Enter details about the behaviour similar to the circumstances surrounding the index offence',
     })
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-      errorText: 'Enter details about the behaviour that could lead to a sexual or violent offence',
+      errorText: 'Enter details about the behaviour that has caused, or will cause, a sexual or violent offence',
     })
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
@@ -218,7 +207,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
-      errorText: "Select if you're recommending a fixed term recall, standard recall or no recall",
+      errorText: 'Select a recall recommendation',
     })
   })
 
@@ -233,7 +222,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
-      errorText: 'Select whether you recommend a recall or not',
+      errorText: 'Select a recall recommendation',
     })
   })
 

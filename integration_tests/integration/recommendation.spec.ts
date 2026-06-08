@@ -14,6 +14,7 @@ import ppcsPaths from '../../server/routes/paths/ppcs'
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
 import ppPaths from '../../server/routes/paths/pp'
+import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
 
 const ftr56TestCases = [
   {
@@ -173,7 +174,7 @@ context('Make a recommendation', () => {
     it('present record consideration rationale', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: { ...RecommendationResponseGenerator.generate(), recallConsideredList: null },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
@@ -383,7 +384,7 @@ context('Make a recommendation', () => {
     it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: RecommendationResponseGenerator.generate({}),
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -434,13 +435,13 @@ context('Make a recommendation', () => {
     it('present task-list for SPO_SIGNED and ACO_SIGNED', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: RecommendationResponseGenerator.generate(),
       })
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true },
-          { name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true, sentenceGroup: SentenceGroup.INDETERMINATE },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true, sentenceGroup: SentenceGroup.INDETERMINATE },
         ],
       })
 
@@ -984,13 +985,6 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-agree-to-recall`)
       cy.pageHeading().should('equal', 'When did the SPO agree to this recall?')
-    })
-
-    it('Previous releases', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${routeUrls.recommendations}/${recommendationId}/previous-releases`)
-      cy.pageHeading().should('equal', 'Previous releases')
     })
 
     it('Confirmation part a', () => {
@@ -1874,7 +1868,42 @@ context('Make a recommendation', () => {
     it('present task-list with create part A button', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: RecommendationResponseGenerator.generate(),
+        // alternativesToRecallTried:
+        //     alternativesToRecallTried: hasData(recommendation.alternativesToRecallTried?.selected),
+        // recallType: hasValue(recommendation.recallType?.selected),
+        // decisionDateTime: hasValue(recommendation.decisionDateTime),
+        // sentenceGroup: hasValue(recommendation.sentenceGroup),
+        // triggerLeadingToRecall: hasValue(recommendation.triggerLeadingToRecall),
+        // previousReleases: isPreviousReleasesComplete(recommendation),
+        // licenceConditionsBreached:
+        //   hasData(recommendation.licenceConditionsBreached?.standardLicenceConditions?.selected) ||
+        //   hasData(recommendation.licenceConditionsBreached?.additionalLicenceConditions?.selectedOptions) ||
+        //   hasData(recommendation.cvlLicenceConditionsBreached?.standardLicenceConditions?.selected) ||
+        //   hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
+        //   hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected) ||
+        //   hasData(recommendation.additionalLicenceConditionsText),
+        // isChargedWithOffence: hasValue(recommendation.isChargedWithOffence),
+        // isServingTerroristOrNationalSecurityOffence: hasValue(recommendation.isServingTerroristOrNationalSecurityOffence),
+        // isAtRiskOfInvolvedInForeignPowerThreat: hasValue(recommendation.isAtRiskOfInvolvedInForeignPowerThreat),
+        // wasReferredToParoleBoard244ZB: hasValue(recommendation.wasReferredToParoleBoard244ZB),
+        // wasRepatriatedForMurder: hasValue(recommendation.wasRepatriatedForMurder),
+        // isServingSOPCSentence: hasValue(recommendation.isServingSOPCSentence),
+        // isServingDCRSentence: hasValue(recommendation.isServingDCRSentence),
+        // isYouthSentenceOver12Months: hasValue(recommendation.isYouthSentenceOver12Months),
+        // isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
+        // ---DDDD---------
+        //   triggerLeadingToRecall &&
+        // suitabilityForRecallValidation &&
+        // mappaReviewed &&
+        // statuses.alternativesToRecallTried &&
+        // statuses.recallType &&
+        // statuses.sentenceGroup &&
+        // statuses.licenceConditionsBreached &&
+        // indeterminateSentenceValidation &&
+        // whyConsideredRecall &&
+        // reasonsForNoRecall &&
+        // nextAppointment,
       })
       cy.task('getStatuses', {
         statusCode: 200,

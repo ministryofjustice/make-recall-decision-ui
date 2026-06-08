@@ -53,9 +53,7 @@ function checkTestCaseCombination(
     expect(res.locals.isIndeterminateSentence).toEqual(
       recommendationWithNoTasksCompleted.sentenceGroup === SentenceGroup.INDETERMINATE,
     )
-    if (ftr56Enabled) {
-      expect(res.locals.backLinkUrl).toEqual(`/cases/${recommendationWithNoTasksCompleted.crn}/overview`)
-    }
+    expect(res.locals.backLinkUrl).toEqual(`/cases/${recommendationWithNoTasksCompleted.crn}/overview`)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskListConsiderRecall')
 
     testCaseOptionsNames.forEach((optionName, index) => {

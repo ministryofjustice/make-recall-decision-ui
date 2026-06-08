@@ -21,7 +21,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendationId,
     token,
     featureFlags,
-    ...(featureFlags.flagFTR56Enabled ? { valuesToSave } : {}),
+    ...{ valuesToSave },
     propertyToRefresh: 'mappa',
   })
 
