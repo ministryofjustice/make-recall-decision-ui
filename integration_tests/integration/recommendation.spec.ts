@@ -3475,7 +3475,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/booking-summary`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
+      cy.pageHeading().should('contain', 'Booking summary for Joseph Bluggs')
       cy.getText('sentenceEndDate').should('contain', '15 November 3021')
       cy.getElement('sentenceSequenceExpiryDate').should('not.exist')
     })
@@ -3524,7 +3524,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/booking-summary`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
+      cy.pageHeading().should('contain', 'Booking summary for Joseph Bluggs')
       cy.getElement('sentenceEndDate').should('not.exist')
       cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
     })
