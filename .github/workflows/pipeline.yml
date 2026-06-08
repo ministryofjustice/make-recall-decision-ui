@@ -161,7 +161,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs:
       - build
-      - deploy_preprod
+      - deploy_prod
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/sentry_release_and_deploy.yml@v2
     secrets: inherit
     with:
