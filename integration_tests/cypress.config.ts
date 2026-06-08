@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress'
+import cypressSplit from 'cypress-split'
 import {
   createNoRecallLetter,
   createPartA,
@@ -47,7 +48,8 @@ export default defineConfig({
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
-    setupNodeEvents(on) {
+    setupNodeEvents(on, config) {
+      cypressSplit(on, config)
       on('task', {
         reset: resetStubs,
         getSignInUrl: auth.getSignInUrl,
@@ -85,6 +87,7 @@ export default defineConfig({
         ppudSearchActiveUsers,
         getFlags,
       })
+      return config
     },
     baseUrl: 'http://localhost:3007',
     excludeSpecPattern: '**/!(*.spec).ts',
