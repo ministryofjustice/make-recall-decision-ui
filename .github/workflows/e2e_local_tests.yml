@@ -97,6 +97,7 @@ jobs:
           CYPRESS_API_CLIENT_SECRET: ${{secrets.LOCAL_API_CLIENT_SECRET}}
           CYPRESS_MAKE_RECALL_DECISION_API_URL: ${{secrets.LOCAL_MAKE_RECALL_DECISION_API_URL}}
           CYPRESS_HMPPS_AUTH_EXTERNAL_URL: ${{secrets.LOCAL_HMPPS_AUTH_EXTERNAL_URL}}
+          CYPRESS_INTEGRATION_TEST: true
       - name: Output updated timings
         if: success() # failure timings could skew the results; they should happen infrequently, so best left out
         id: timings
