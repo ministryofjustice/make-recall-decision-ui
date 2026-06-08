@@ -211,7 +211,7 @@ const spoCounterSigningRoutes: RouteDefinition[] = [
  * Rationale journey.
  */
 const spoDeleteMiddleware = [
-  recommendationStatusCheck(or(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED)))),
+  recommendationStatusCheck(and(not(statusIsActive(STATUSES.DELETED)), not(statusIsActive(STATUSES.REC_CLOSED)))),
 ]
 
 const spoDeleteRouteGetTemplate = createRecommendationRouteTemplate('get', spoDeleteMiddleware, roles)
