@@ -1,4 +1,3 @@
-import routeUrls from '../../../routes/routeUrls'
 import strings from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import { getExistingReleaseDates } from '../addPreviousRelease/formValidator'
@@ -8,6 +7,7 @@ import { convertGmtDatePartsToUtc, extractDateFieldsToDateParts } from '../../..
 import { dateHasError } from '../../../utils/dates'
 import { formatValidationErrorMessage, invalidDateInputPart, makeErrorObject } from '../../../utils/errors'
 import { ValidationError } from '../../../@types/dates'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 import { YesNoValues } from '../formOptions/yesNo'
 
 const validatePreviousReleases = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
@@ -45,7 +45,7 @@ const validatePreviousReleases = async ({ requestBody, recommendationId }: FormV
         previousReleaseDates: newDates,
       },
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-releases`
+    nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/previous-releases`
     return {
       valuesToSave,
       nextPagePath,
@@ -138,7 +138,7 @@ const validatePreviousReleases = async ({ requestBody, recommendationId }: FormV
       dateOfRelease: isReleaseUnderECSL ? dateOfReleaseIso : '',
       conditionalReleaseDate: isReleaseUnderECSL ? conditionalReleaseDateIso : '',
     },
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`,
+    nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-person-details`,
   }
 }
 

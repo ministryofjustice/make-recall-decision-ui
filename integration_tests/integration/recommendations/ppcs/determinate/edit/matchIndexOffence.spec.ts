@@ -1,7 +1,7 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'
 import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import ppcsPaths from '../../../../../../server/routes/paths/ppcs'
+import ppcsPaths from '../../../../../../server/routes/paths/ppcs.paths'
 import routes from '../../../../../../api/routes'
 import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { formatDateTimeFromIsoString } from '../../../../../../server/utils/dates/formatting'

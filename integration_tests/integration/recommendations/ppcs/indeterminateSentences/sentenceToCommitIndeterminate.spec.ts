@@ -1,6 +1,6 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import routes from '../../../../../api/routes'
-import ppcsPaths from '../../../../../server/routes/paths/ppcs'
+import ppcsPaths from '../../../../../server/routes/paths/ppcs.paths'
 import setUpSessionForPpcs from '../util'
 import RECOMMENDATION_STATUS from '../../../../../server/middleware/recommendationStatus'
 import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'

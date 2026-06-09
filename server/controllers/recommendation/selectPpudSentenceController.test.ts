@@ -4,7 +4,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import selectPpudSentenceController from './selectPpudSentenceController'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import ppcsPaths from '../../routes/paths/ppcs'
+import ppcsPaths from '../../routes/paths/ppcs.paths'
 import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
 import { ppudDetailsSentence } from '../../@types/make-recall-decision-api/models/ppud/PpudDetailsResponse.testFactory'
 import { getDeterminateSentences } from '../../helpers/ppudSentence/ppudSentenceHelper'

@@ -1,8 +1,8 @@
 import { makeErrorObject } from '../../../utils/errors'
-import routeUrls from '../../../routes/routeUrls'
 import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags, validateCrn } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 const validateConsiderRecall = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -22,7 +22,7 @@ const validateConsiderRecall = async ({ requestBody }: FormValidatorArgs): FormV
   if (errors) {
     return {
       errors,
-      nextPagePath: `${routeUrls.cases}/${normalizedCrn}/consider-recall`,
+      nextPagePath: `${sharedPaths.cases}/${normalizedCrn}/consider-recall`,
     }
   }
   const sanitizedDetail = stripHtmlTags(recallConsideredDetail as string)
@@ -40,7 +40,7 @@ const validateConsiderRecall = async ({ requestBody }: FormValidatorArgs): FormV
       }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.cases}/${normalizedCrn}/overview`,
+    nextPagePath: `${sharedPaths.cases}/${normalizedCrn}/overview`,
   }
 }
 

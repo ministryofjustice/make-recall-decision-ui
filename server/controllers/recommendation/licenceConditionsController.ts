@@ -12,7 +12,7 @@ import { transformLicenceConditions } from '../caseSummary/licenceConditions/tra
 import { cleanseUiList } from '../../utils/lists'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import EVENTS from '../../utils/constants'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 const makeArray = (item: unknown) => (Array.isArray(item) ? item : [item])
 

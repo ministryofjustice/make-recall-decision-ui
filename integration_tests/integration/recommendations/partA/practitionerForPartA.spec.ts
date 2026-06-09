@@ -1,5 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import ppPaths from '../../../../server/routes/paths/pp'
+import ppPaths from '../../../../server/routes/paths/pp.paths'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import config from '../../../../server/config'
 import { testStandardBackLink } from '../../../componentTests/backLink.tests'
