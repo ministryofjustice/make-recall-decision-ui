@@ -12,13 +12,12 @@ jest.mock('../../monitoring/azureAppInsights')
 const ftr56TestCases = [
   {
     description: 'with FTR56 flag enabled',
-    ftr56Enabled: true,
   },
 ]
 
 describe('get', () => {
   describe('load with no data', () => {
-    ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+    ftr56TestCases.forEach(({ description }) => {
       describe(description, () => {
         ;[true, false].forEach(isExtendedSentence => {
           it(`isExtendedSentence: ${isExtendedSentence}`, async () => {
@@ -32,7 +31,7 @@ describe('get', () => {
                   sentenceGroup,
                 },
                 token: 'token1',
-                flags: { flagFTR56Enabled: ftr56Enabled },
+                flags: {},
               },
             })
             const next = mockNext()
@@ -248,7 +247,7 @@ describe('post', () => {
 
     await emergencyRecallController.post(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/indeterminate-details`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
   })
 
   it('post with valid data for extended sentence with FTR56 enabled', async () => {
@@ -270,9 +269,6 @@ describe('post', () => {
         user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
-        flags: {
-          flagFTR56Enabled: true,
-        },
       },
     })
     const next = mockNext()

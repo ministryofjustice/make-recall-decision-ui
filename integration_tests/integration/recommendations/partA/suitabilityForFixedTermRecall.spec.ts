@@ -52,7 +52,7 @@ context('Suitability for fixed term recall page', () => {
       })
 
       it('should display correctly', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
         cy.title().should(
           'equal',
           `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
@@ -129,7 +129,7 @@ context('Suitability for fixed term recall page', () => {
       })
 
       it('should handle form errors', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('button').click()
 
@@ -185,7 +185,7 @@ context('Suitability for fixed term recall page', () => {
       })
 
       it('should display correctly when sentence group is YOUTH_SDS', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
         cy.title().should(
           'equal',
           `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
@@ -274,7 +274,7 @@ context('Suitability for fixed term recall page', () => {
         })
 
         cy.task('getRecommendation', { statusCode: 200, response: nonMandatoryRecommendation })
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('.moj-banner--warning').should('not.exist')
       })
@@ -289,7 +289,7 @@ context('Suitability for fixed term recall page', () => {
         })
 
         cy.task('getRecommendation', { statusCode: 200, response: mandatoryRecommendation })
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('.moj-banner--warning')
           .should('exist')
@@ -303,7 +303,7 @@ context('Suitability for fixed term recall page', () => {
       })
 
       it('should handle form errors', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('button').click()
 

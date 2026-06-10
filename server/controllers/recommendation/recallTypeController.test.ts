@@ -54,7 +54,7 @@ describe('get', () => {
     const res = mockRes({ locals })
 
     const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
-    const isFTRMandatory = faker.datatype.boolean()
+    const isFTRMandatory = true
     const isStandardMandatory = faker.datatype.boolean()
     beforeEach(async () => {
       ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
@@ -123,7 +123,6 @@ describe('post', () => {
         locals: {
           user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
           urlInfo: { basePath },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -156,7 +155,6 @@ describe('post', () => {
         recommendationId: req.params.recommendationId,
         urlInfo: res.locals.urlInfo,
         token: res.locals.user.token,
-        flagFTR56Enabled: true,
       })
 
       expect(updateStatuses).toHaveBeenCalledWith({
@@ -206,7 +204,7 @@ describe('post', () => {
         locals: {
           user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
           urlInfo: { basePath },
-          flags: { flagFTR56Enabled: true },
+          flags: {},
         },
       })
       const next = mockNext()
@@ -239,7 +237,6 @@ describe('post', () => {
         recommendationId: req.params.recommendationId,
         urlInfo: res.locals.urlInfo,
         token: res.locals.user.token,
-        flagFTR56Enabled: true,
       })
 
       expect(updateStatuses).toHaveBeenCalledWith({
@@ -290,7 +287,6 @@ describe('post', () => {
           user: { token: 'token1' },
           recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
           urlInfo: { basePath: `/recommendations/123/` },
-          flags: { flagFTR56Enabled: true },
         },
       })
 
@@ -314,7 +310,6 @@ describe('post', () => {
         recommendationId: req.params.recommendationId,
         urlInfo: res.locals.urlInfo,
         token: res.locals.user.token,
-        flagFTR56Enabled: true,
       })
 
       expect(updateRecommendation).not.toHaveBeenCalled()

@@ -59,7 +59,6 @@ describe('get', () => {
           },
         },
         token: 'token1',
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -74,7 +73,6 @@ describe('get', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         token: 'token1',
-        flags: { flagFTR56Enabled: true },
         urlInfo: { basePath },
       },
     })
@@ -92,7 +90,6 @@ describe('get', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: 'DETERMINATE' },
         token: 'token1',
-        flags: { flagFTR56Enabled: true },
         urlInfo: { basePath },
       },
     })
@@ -238,9 +235,6 @@ describe('post', () => {
         },
         urlInfo: { basePath },
         statuses: [],
-        flags: {
-          flagFTR56Enabled: true,
-        },
       },
     })
     const next = mockNext()
@@ -264,7 +258,7 @@ describe('post', () => {
         },
       },
       token: 'token1',
-      featureFlags: { flagFTR56Enabled: true },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)

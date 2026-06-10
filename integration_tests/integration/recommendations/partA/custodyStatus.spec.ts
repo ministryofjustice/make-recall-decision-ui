@@ -50,7 +50,7 @@ context('Custody status', () => {
             })
             cy.task('getRecommendation', { statusCode: 200, response: recommendation })
 
-            cy.visit(`${testPageUrl}?flagFTR56Enabled='1'`)
+            cy.visit(`${testPageUrl}`)
 
             cy.title().should('equal', `Is the person in custody now? - ${config.applicationName}`)
             cy.pageHeading().should('equal', `Is ${recommendation.personOnProbation.name} in custody now?`)
@@ -112,7 +112,7 @@ context('Custody status', () => {
         })
         cy.task('getRecommendation', { statusCode: 200, response: recommendation })
 
-        cy.visit(`${testPageUrl}?flagFTR56Enabled='1'`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('button').click()
 

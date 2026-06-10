@@ -52,7 +52,6 @@ describe('Trigger Leading to Recall Controller', () => {
       const res = mockRes({
         locals: {
           recommendation,
-          flags: { flagFTR56Enabled: true },
           urlInfo,
         },
       })

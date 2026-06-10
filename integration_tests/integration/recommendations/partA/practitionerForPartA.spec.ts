@@ -15,7 +15,7 @@ context('Practitioner for Part A Page', () => {
 
   describe('Page Data', () => {
     describe('Feature flag FTR-56 enabled', () => {
-      const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}?flagFTR56Enabled=1`
+      const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}`
       it('Standard page load', () => {
         const recommendation = RecommendationResponseGenerator.generate()
         cy.task('getRecommendation', { statusCode: 200, response: recommendation })

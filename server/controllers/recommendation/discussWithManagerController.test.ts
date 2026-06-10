@@ -6,10 +6,9 @@ describe('get', () => {
   const ftr56TestCases = [
     {
       description: 'with FTR56 flag enabled',
-      ftr56Enabled: true,
     },
   ]
-  ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+  ftr56TestCases.forEach(({ description }) => {
     describe(description, () => {
       it('present with Youth SDS', async () => {
         const res = mockRes({
@@ -17,7 +16,7 @@ describe('get', () => {
             recommendation: {
               sentenceGroup: SentenceGroup.YOUTH_SDS,
             },
-            flags: { flagFTR56Enabled: ftr56Enabled },
+            flags: {},
           },
         })
         const next = mockNext()
@@ -33,9 +32,9 @@ describe('get', () => {
         const res = mockRes({
           locals: {
             recommendation: {
-              sentenceGroup: ftr56Enabled ? SentenceGroup.ADULT_SDS : undefined,
+              sentenceGroup: SentenceGroup.ADULT_SDS,
             },
-            flags: { flagFTR56Enabled: ftr56Enabled },
+            flags: {},
           },
         })
         await discussWithManagerController.get(mockReq(), res, mockNext())
@@ -48,7 +47,7 @@ describe('get', () => {
             recommendation: {
               sentenceGroup: SentenceGroup.INDETERMINATE,
             },
-            flags: { flagFTR56Enabled: ftr56Enabled },
+            flags: {},
           },
         })
         await discussWithManagerController.get(mockReq(), res, mockNext())
@@ -61,7 +60,7 @@ describe('get', () => {
             recommendation: {
               sentenceGroup: SentenceGroup.EXTENDED,
             },
-            flags: { flagFTR56Enabled: ftr56Enabled },
+            flags: {},
           },
         })
         await discussWithManagerController.get(mockReq(), res, mockNext())

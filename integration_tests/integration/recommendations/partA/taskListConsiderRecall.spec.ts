@@ -136,9 +136,7 @@ context('Task List Consider a Recall Page', () => {
         const popName = recommendationWithNoTasksCompleted.personOnProbation.name
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
 
-        cy.visit(
-          `${routeUrls.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall?flagFTR56Enabled=1`,
-        )
+        cy.visit(`${routeUrls.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
 
         testBackLink(
           `/cases/${recommendationWithNoTasksCompleted.crn}/overview`,
@@ -190,9 +188,7 @@ context('Task List Consider a Recall Page', () => {
             const popName = recommendationWithAllTasksCompleted.personOnProbation.name
             cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAllTasksCompleted })
 
-            cy.visit(
-              `${routeUrls.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall?flagFTR56Enabled=1`,
-            )
+            cy.visit(`${routeUrls.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`)
 
             testBackLink(
               `/cases/${recommendationWithAllTasksCompleted.crn}/overview`,

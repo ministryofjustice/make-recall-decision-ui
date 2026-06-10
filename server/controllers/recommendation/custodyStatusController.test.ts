@@ -133,7 +133,6 @@ describe('post', () => {
         valuesToSave: {
           custodyStatus: {
             selected: 'YES_POLICE',
-            details: null,
             allOptions: [
               { value: 'YES_PRISON', text: 'Yes, prison custody' },
               { value: 'YES_POLICE', text: 'Yes, police custody' },
@@ -178,7 +177,6 @@ describe('post', () => {
         valuesToSave: {
           custodyStatus: {
             selected: 'YES_POLICE',
-            details: null,
             allOptions: [
               { value: 'YES_PRISON', text: 'Yes, prison custody' },
               { value: 'YES_POLICE', text: 'Yes, police custody' },

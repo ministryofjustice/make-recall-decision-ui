@@ -80,7 +80,6 @@ describe('Sentence Information Controller', () => {
       locals: {
         recommendation,
         statuses: [],
-        flags: { flagFTR56Enabled: true },
         urlInfo,
       },
     })
@@ -109,7 +108,6 @@ describe('Sentence Information Controller', () => {
       locals: {
         recommendation,
         statuses: [{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }],
-        flags: { flagFTR56Enabled: true },
         urlInfo,
       },
     })

@@ -21,7 +21,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -47,7 +46,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -73,7 +71,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -92,7 +89,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -116,7 +112,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -140,7 +135,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -164,7 +158,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -188,7 +181,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -209,7 +201,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -237,7 +228,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.SPO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -265,7 +255,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.SPO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -287,7 +276,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -311,7 +299,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -335,7 +322,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -359,7 +345,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -388,7 +373,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()
@@ -417,7 +401,6 @@ describe('get', () => {
             token: 'token1',
             roles: [HMPPS_AUTH_ROLE.PO],
           },
-          flags: { flagFTR56Enabled: true },
         },
       })
       const next = mockNext()

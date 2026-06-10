@@ -28,7 +28,6 @@ function get(req: Request, res: Response, next: NextFunction) {
         errors: res.locals.errors,
         value: res.locals.errors?.triggerLeadingToRecall ? '' : recommendation.triggerLeadingToRecall,
       },
-      flagFTR56Enabled: true,
       backLinkUrl,
       recommendation,
     },

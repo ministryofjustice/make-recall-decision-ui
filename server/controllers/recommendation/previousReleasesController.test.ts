@@ -80,18 +80,14 @@ describe('get', () => {
 
       const res = mockRes({
         locals: {
-          flags: {
-            flagFTR56Enabled: true,
-          },
+          flags: {},
         },
       })
 
       await previousReleasesController.get(req, res, mockNext())
 
       expect(updateRecommendation).toHaveBeenCalledWith({
-        featureFlags: {
-          flagFTR56Enabled: true,
-        },
+        featureFlags: {},
         propertyToRefresh: 'previousReleases',
         recommendationId: '123',
         token: 'token',
@@ -205,9 +201,7 @@ describe('post', () => {
       const res = mockRes({
         token: 'token',
         locals: {
-          flags: {
-            flagFTR56Enabled: true,
-          },
+          flags: {},
         },
       })
 
@@ -216,9 +210,7 @@ describe('post', () => {
       expect(updateRecommendation).toHaveBeenCalledWith({
         recommendationId: '123',
         token: 'token',
-        featureFlags: {
-          flagFTR56Enabled: true,
-        },
+        featureFlags: {},
         valuesToSave: {
           previousReleases: {
             hasBeenReleasedPreviously: true,

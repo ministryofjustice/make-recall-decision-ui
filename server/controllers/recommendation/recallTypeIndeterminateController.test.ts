@@ -114,9 +114,6 @@ describe('post', () => {
         user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: UrlInfoGenerator.generate(),
-        flags: {
-          flagFTR56Enabled: true,
-        },
       },
     })
     const next = mockNext()
@@ -143,9 +140,7 @@ describe('post', () => {
         },
         isThisAnEmergencyRecall: true,
       },
-      featureFlags: {
-        flagFTR56Enabled: true,
-      },
+      featureFlags: {},
     })
 
     expect(appInsightsEvent).toHaveBeenCalledWith(
@@ -157,9 +152,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {
-        flagFTR56Enabled: true,
-      },
+      {},
     )
 
     // We want to ensure we are ignoring fromInfo from the url info
@@ -185,9 +178,7 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: UrlInfoGenerator.generate(),
-        flags: {
-          flagFTR56Enabled: true,
-        },
+        flags: {},
       },
     })
     const next = mockNext()
@@ -214,9 +205,7 @@ describe('post', () => {
         },
         isThisAnEmergencyRecall: null,
       },
-      featureFlags: {
-        flagFTR56Enabled: true,
-      },
+      featureFlags: {},
     })
 
     // We want to ensure we are ignoring fromInfo from the url info

@@ -22,7 +22,7 @@ context('Trigger leading to recall Page', () => {
       })
 
       it('Feature flag FTR-56 enabled', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.title().should('equal', `What has made you consider recalling the person? - ${config.applicationName}`)
 
@@ -126,7 +126,7 @@ context('Trigger leading to recall Page', () => {
       const testCases = [
         {
           description: 'Feature flag FTR-56 enabled',
-          url: `${testPageUrl}?flagFTR56Enabled=1`,
+          url: `${testPageUrl}`,
         },
         {
           description: 'Feature flag FTR-56 disabled',

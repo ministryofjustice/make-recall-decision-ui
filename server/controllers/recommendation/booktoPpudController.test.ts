@@ -198,7 +198,7 @@ describe('post', () => {
     const recommendation = {
       id: '12345',
     }
-    const flags = { flagFTR56Enabled: true }
+    const flags = {}
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 

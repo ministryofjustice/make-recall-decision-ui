@@ -170,7 +170,7 @@ describe("SPO review practitioner's concerns page", () => {
           },
         })
 
-        cy.visit(`${routeUrls.recommendations}/1/review-practitioners-concerns?flagFTR56Enabled=1`)
+        cy.visit(`${routeUrls.recommendations}/1/review-practitioners-concerns`)
 
         cy.pageHeading().should('equal', "Review practitioner's concerns")
         cy.getElement('Review these details and discuss the case with the practitioner.').should('exist')

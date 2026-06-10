@@ -54,7 +54,6 @@ describe('get', () => {
       locals: {
         recommendation,
         urlInfo: { basePath: `/recommendations/123/` },
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -76,7 +75,6 @@ describe('get', () => {
       locals: {
         recommendation,
         urlInfo: { basePath: `/recommendations/123/` },
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -167,7 +165,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -186,7 +183,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()

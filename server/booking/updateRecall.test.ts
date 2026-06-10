@@ -22,10 +22,9 @@ describe('update recall', () => {
     const ftr56TestCases = [
       {
         description: 'with FTR56 flag enabled',
-        ftr56Enabled: true,
       },
     ]
-    ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+    ftr56TestCases.forEach(({ description }) => {
       it(description, async () => {
         const bookingMemento = {
           stage: StageEnum.RELEASE_BOOKED,
@@ -52,7 +51,7 @@ describe('update recall', () => {
           },
         } as unknown as RecommendationResponse
 
-        const featureFlags = { flagFTR56Enabled: ftr56Enabled }
+        const featureFlags = {}
 
         ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
 

@@ -127,7 +127,6 @@ describe('validateCustodyStatus', () => {
           { value: 'NO', text: 'No' },
         ],
         selected: 'YES_POLICE',
-        details: null,
       },
     })
     expect(nextPagePath).toEqual('/recommendations/34/task-list')

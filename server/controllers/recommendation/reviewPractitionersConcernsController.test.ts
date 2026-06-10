@@ -183,10 +183,9 @@ describe('get', () => {
   const ftr56TestCases = [
     {
       description: 'with FTR56 flag enabled',
-      ftr56Enabled: true,
     },
   ]
-  ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
+  ftr56TestCases.forEach(({ description }) => {
     describe(description, () => {
       ;[true, false].forEach(isIndeterminateSentence => {
         ;[true, false].forEach(isExtendedSentence => {
@@ -233,7 +232,7 @@ describe('get', () => {
                     allOptions: [],
                   },
                 },
-                flags: { flagFTR56Enabled: ftr56Enabled },
+                flags: {},
               },
             })
             const next = mockNext()

@@ -510,9 +510,7 @@ context('Recommendation - task list', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(
-        `${routeUrls.recommendations}/${recommendationId}/task-list?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
-      )
+      cy.visit(`${routeUrls.recommendations}/${recommendationId}/task-list`)
 
       cy.clickLink('What has led to this recall?')
       cy.log('============= Back link')
