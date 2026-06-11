@@ -20,7 +20,7 @@ jobs:
       - name: Install npm
         working-directory: make-recall-decision-e2e-tests
         shell: bash
-        run: sudo npm install -g npm@11
+        run: npm install -g npm@11
       - name: Run the tests against dev
         id: e2e_tests
         uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
