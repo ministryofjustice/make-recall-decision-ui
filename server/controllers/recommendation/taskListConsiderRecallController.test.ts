@@ -76,59 +76,46 @@ function checkTestCaseCombination(
 
 describe('Task List Consider a Recall Controller', () => {
   describe('get', () => {
-    describe('with FTR56 flag enabled', () => {
-      describe('non-indeterminate sentence group', () => {
-        generateBooleanCombinations(5)
-          // we generate 2^5 and filter instead of generating 2^4 so that checkTestCaseCombination displays and
-          // considers indeterminateSentenceType in its logic too (it uses the combination array for this)
-          .filter(combination => !combination[4])
-          .forEach(testCaseBooleanCombination => {
-            const testCaseOptions: RecommendationOptions = {
-              triggerLeadingToRecall: testCaseBooleanCombination[0],
-              licenceConditionsBreached: testCaseBooleanCombination[1],
-              alternativesToRecallTried: testCaseBooleanCombination[2],
-              sentenceGroup: testCaseBooleanCombination[3]
-                ? randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE]) // deal with Indeterminate separately
-                : 'none',
-              indeterminateSentenceType: false,
-            }
-            checkTestCaseCombination(
-              testCaseOptions,
-              testCaseBooleanCombination,
-              true,
-              // the indeterminate sentence type boolean is irrelevant for non-indeterminate
-              // sentence groups, so only the first 4 tasks need to be completed
-              testCaseBooleanCombination.slice(0, 4).every(value => value),
-            )
-          })
-      })
-      describe('indeterminate sentence group', () => {
-        generateBooleanCombinations(5)
-          // we generate 2^5 and filter instead of generating 2^4 so that checkTestCaseCombination displays and
-          // considers indeterminateSentenceType in its logic too (it uses the combination array for this)
-          .filter(combination => combination[4])
-          .forEach(testCaseBooleanCombination => {
-            const testCaseOptions: RecommendationOptions = {
-              triggerLeadingToRecall: testCaseBooleanCombination[0],
-              licenceConditionsBreached: testCaseBooleanCombination[1],
-              alternativesToRecallTried: testCaseBooleanCombination[2],
-              indeterminateSentenceType: testCaseBooleanCombination[3],
-              sentenceGroup: SentenceGroup.INDETERMINATE,
-            }
-            checkTestCaseCombination(testCaseOptions, testCaseBooleanCombination, true)
-          })
-      })
+    describe('non-indeterminate sentence group', () => {
+      generateBooleanCombinations(5)
+        // we generate 2^5 and filter instead of generating 2^4 so that checkTestCaseCombination displays and
+        // considers indeterminateSentenceType in its logic too (it uses the combination array for this)
+        .filter(combination => !combination[4])
+        .forEach(testCaseBooleanCombination => {
+          const testCaseOptions: RecommendationOptions = {
+            triggerLeadingToRecall: testCaseBooleanCombination[0],
+            licenceConditionsBreached: testCaseBooleanCombination[1],
+            alternativesToRecallTried: testCaseBooleanCombination[2],
+            sentenceGroup: testCaseBooleanCombination[3]
+              ? randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE]) // deal with Indeterminate separately
+              : 'none',
+            indeterminateSentenceType: false,
+          }
+          checkTestCaseCombination(
+            testCaseOptions,
+            testCaseBooleanCombination,
+            true,
+            // the indeterminate sentence type boolean is irrelevant for non-indeterminate
+            // sentence groups, so only the first 4 tasks need to be completed
+            testCaseBooleanCombination.slice(0, 4).every(value => value),
+          )
+        })
     })
-
-    describe('with FTR56 flag disabled', () => {
-      generateBooleanCombinations(3).forEach(testCaseBooleanCombination => {
-        const testCaseOptions: RecommendationOptions = {
-          triggerLeadingToRecall: testCaseBooleanCombination[0],
-          licenceConditionsBreached: testCaseBooleanCombination[1],
-          alternativesToRecallTried: testCaseBooleanCombination[2],
-        }
-        checkTestCaseCombination(testCaseOptions, testCaseBooleanCombination, false)
-      })
+    describe('indeterminate sentence group', () => {
+      generateBooleanCombinations(5)
+        // we generate 2^5 and filter instead of generating 2^4 so that checkTestCaseCombination displays and
+        // considers indeterminateSentenceType in its logic too (it uses the combination array for this)
+        .filter(combination => combination[4])
+        .forEach(testCaseBooleanCombination => {
+          const testCaseOptions: RecommendationOptions = {
+            triggerLeadingToRecall: testCaseBooleanCombination[0],
+            licenceConditionsBreached: testCaseBooleanCombination[1],
+            alternativesToRecallTried: testCaseBooleanCombination[2],
+            indeterminateSentenceType: testCaseBooleanCombination[3],
+            sentenceGroup: SentenceGroup.INDETERMINATE,
+          }
+          checkTestCaseCombination(testCaseOptions, testCaseBooleanCombination, true)
+        })
     })
   })
 

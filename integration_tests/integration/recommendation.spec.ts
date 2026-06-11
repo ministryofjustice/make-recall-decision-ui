@@ -1116,13 +1116,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'When did the SPO agree to this recall?')
     })
 
-    it('Previous releases', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/previous-releases`)
-      cy.pageHeading().should('equal', 'Previous releases')
-    })
-
     it('Confirmation part a', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -3978,7 +3971,7 @@ context('Make a recommendation', () => {
       )
     })
 
-    it('present licence condition breaches page for AP - FTR56 enabled', () => {
+    it('present licence condition breaches page for AP', () => {
       cy.visit(`${sharedPaths.recommendations}/${recommendationId}/ap-licence-conditions`)
 
       cy.pageHeading().should('contain', 'What licence conditions has Jane Bloggs breached?')

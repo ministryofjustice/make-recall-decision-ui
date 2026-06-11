@@ -383,7 +383,7 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 
-  it('post with invalid data FTR56', async () => {
+  it('post with invalid data', async () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       originalUrl: 'some-url',

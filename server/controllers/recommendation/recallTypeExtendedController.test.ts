@@ -97,7 +97,7 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it(`post with valid data when FTR56 is 'enabled'`, async () => {
+  it(`post with valid data`, async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const req = mockReq({
@@ -161,7 +161,7 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  it(`post with valid data when FTR56 is 'enabled' - no recall`, async () => {
+  it(`post with valid data - no recall`, async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const req = mockReq({

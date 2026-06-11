@@ -119,7 +119,7 @@ describe('get', () => {
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type-extended')
   })
 
-  it('ftr56: present for Adult_SDS SentenceGroup', async () => {
+  it('present for Adult_SDS SentenceGroup', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
@@ -137,7 +137,7 @@ describe('get', () => {
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type')
   })
 
-  it('ftr56: present for Youth_SDS SentenceGroup', async () => {
+  it('present for Youth_SDS SentenceGroup', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
@@ -155,7 +155,7 @@ describe('get', () => {
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type')
   })
 
-  it('ftr56: present for Extended SentenceGroup', async () => {
+  it('present for Extended SentenceGroup', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
@@ -173,7 +173,7 @@ describe('get', () => {
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type-extended')
   })
 
-  it('ftr56: present for Indeterminate SentenceGroup', async () => {
+  it('present for Indeterminate SentenceGroup', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },

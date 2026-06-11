@@ -37,26 +37,24 @@ describe('get', () => {
   }
 
   describe('test back button', () => {
-    describe(`FTR56 flag 'enabled' `, () => {
-      ;[true, false].forEach(hasFromPageId => {
-        it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, async () => {
-          const urlInfo = UrlInfoGenerator.generate({
-            fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
-          })
-          const res = mockRes({
-            locals: {
-              recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-              urlInfo,
-            },
-          })
-          await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
-
-          if (!hasFromPageId) {
-            expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
-          } else {
-            expect(res.locals.backLinkUrl).toBeUndefined()
-          }
+    ;[true, false].forEach(hasFromPageId => {
+      it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, async () => {
+        const urlInfo = UrlInfoGenerator.generate({
+          fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
         })
+        const res = mockRes({
+          locals: {
+            recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+            urlInfo,
+          },
+        })
+        await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
+
+        if (!hasFromPageId) {
+          expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
+        } else {
+          expect(res.locals.backLinkUrl).toBeUndefined()
+        }
       })
     })
   })

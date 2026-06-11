@@ -144,23 +144,21 @@ describe('getIndeterminateSentences', () => {
 })
 
 describe('getSentenceType', () => {
-  describe('with FTR56 flag enabled', () => {
-    it('returns DETERMINATE when SDS sentence group selected', () => {
-      const recommendation: RecommendationResponse = {
-        sentenceGroup: randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE]),
-      }
-      const actualSentenceType = calculatePartACustodyGroup(recommendation)
+  it('returns DETERMINATE when SDS sentence group selected', () => {
+    const recommendation: RecommendationResponse = {
+      sentenceGroup: randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE]),
+    }
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
-      expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
-    })
+    expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
+  })
 
-    it('returns INDETERMINATE when Indeterminate sentence group selected', () => {
-      const recommendation: RecommendationResponse = {
-        sentenceGroup: SentenceGroup.INDETERMINATE,
-      }
-      const actualSentenceType = calculatePartACustodyGroup(recommendation)
+  it('returns INDETERMINATE when Indeterminate sentence group selected', () => {
+    const recommendation: RecommendationResponse = {
+      sentenceGroup: SentenceGroup.INDETERMINATE,
+    }
+    const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
-      expect(actualSentenceType).toEqual(CUSTODY_GROUP.INDETERMINATE)
-    })
+    expect(actualSentenceType).toEqual(CUSTODY_GROUP.INDETERMINATE)
   })
 })

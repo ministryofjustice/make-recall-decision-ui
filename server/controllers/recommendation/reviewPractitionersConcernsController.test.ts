@@ -180,93 +180,86 @@ describe('get', () => {
     expect(res.locals.alternativesToRecallTried).toEqual([])
   })
 
-  const ftr56TestCases = [
-    {
-      description: 'with FTR56 flag enabled',
-    },
-  ]
-  ftr56TestCases.forEach(({ description }) => {
-    describe(description, () => {
-      ;[true, false].forEach(isIndeterminateSentence => {
-        ;[true, false].forEach(isExtendedSentence => {
-          let sentenceGroup: SentenceGroup
-          if (isIndeterminateSentence) {
-            sentenceGroup = SentenceGroup.INDETERMINATE
-          } else if (isExtendedSentence) {
-            sentenceGroup = SentenceGroup.EXTENDED
-          } else {
-            sentenceGroup = randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED])
-          }
+  describe('Review Practitioners Concerns', () => {
+    ;[true, false].forEach(isIndeterminateSentence => {
+      ;[true, false].forEach(isExtendedSentence => {
+        let sentenceGroup: SentenceGroup
+        if (isIndeterminateSentence) {
+          sentenceGroup = SentenceGroup.INDETERMINATE
+        } else if (isExtendedSentence) {
+          sentenceGroup = SentenceGroup.EXTENDED
+        } else {
+          sentenceGroup = randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED])
+        }
 
-          const sentenceDescription = `sentence group ${sentenceGroup}`
-          it(`load 2, some variation of data - ${sentenceDescription}`, async () => {
-            const res = mockRes({
-              locals: {
-                recommendation: {
-                  indeterminateSentenceType: isIndeterminateSentence ? { selected: 'LIFE' } : undefined,
-                  sentenceGroup,
-                  triggerLeadingToRecall: 'some reason 1',
-                  personOnProbation: { name: 'Joe Bloggs' },
-                  crn: 'X123',
-                  licenceConditionsBreached: {
-                    standardLicenceConditions: {
-                      selected: [],
-                      allOptions: [],
-                    },
-                    additionalLicenceConditions: {
-                      selectedOptions: [{ mainCatCode: 'NLC8', subCatCode: 'NSTT8' }],
-                      allOptions: [
-                        {
-                          subCatCode: 'NSTT8',
-                          mainCatCode: 'NLC8',
-                          title: 'Freedom of movement',
-                          details:
-                            'To only attend places of worship which have been previously agreed with your supervising officer.',
-                          note: 'some note',
-                        },
-                      ],
-                    },
-                  },
-                  alternativesToRecallTried: {
+        const sentenceDescription = `sentence group ${sentenceGroup}`
+        it(`load 2, some variation of data - ${sentenceDescription}`, async () => {
+          const res = mockRes({
+            locals: {
+              recommendation: {
+                indeterminateSentenceType: isIndeterminateSentence ? { selected: 'LIFE' } : undefined,
+                sentenceGroup,
+                triggerLeadingToRecall: 'some reason 1',
+                personOnProbation: { name: 'Joe Bloggs' },
+                crn: 'X123',
+                licenceConditionsBreached: {
+                  standardLicenceConditions: {
                     selected: [],
                     allOptions: [],
                   },
+                  additionalLicenceConditions: {
+                    selectedOptions: [{ mainCatCode: 'NLC8', subCatCode: 'NSTT8' }],
+                    allOptions: [
+                      {
+                        subCatCode: 'NSTT8',
+                        mainCatCode: 'NLC8',
+                        title: 'Freedom of movement',
+                        details:
+                          'To only attend places of worship which have been previously agreed with your supervising officer.',
+                        note: 'some note',
+                      },
+                    ],
+                  },
                 },
-                flags: {},
+                alternativesToRecallTried: {
+                  selected: [],
+                  allOptions: [],
+                },
               },
-            })
-            const next = mockNext()
-            await reviewPractitionersConcernsController.get(mockReq(), res, next)
-
-            expect(res.locals.page).toEqual({ id: 'reviewPractitionersConcerns' })
-            expect(res.render).toHaveBeenCalledWith('pages/recommendations/reviewPractitionersConcerns')
-
-            expect(res.locals.offenderName).toEqual('Joe Bloggs')
-            expect(res.locals.triggerLeadingToRecall).toEqual('some reason 1')
-            expect(res.locals.standardLicenceConditions).toEqual([])
-            expect(res.locals.additionalLicenceConditions).toEqual([
-              {
-                details:
-                  'To only attend places of worship which have been previously agreed with your supervising officer.',
-                note: 'some note',
-                title: 'Freedom of movement',
-              },
-            ])
-            expect(res.locals.alternativesToRecallTried).toEqual([])
-            expect(res.locals.sentenceGroupHumanReadable).toBe(
-              sentenceGroupDetails.find(group => group.value === sentenceGroup)?.text,
-            )
-            expect(res.locals.isIndeterminateSentence).toEqual(
-              sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
-            )
-            expect(res.locals.isExtendedSentence).toEqual(sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No')
-
-            expect(res.locals.indeterminateSentenceHumanReadable).toBe(
-              sentenceGroup === SentenceGroup.INDETERMINATE ? 'Life sentence' : undefined,
-            )
-
-            expect(next).toHaveBeenCalled()
+              flags: {},
+            },
           })
+          const next = mockNext()
+          await reviewPractitionersConcernsController.get(mockReq(), res, next)
+
+          expect(res.locals.page).toEqual({ id: 'reviewPractitionersConcerns' })
+          expect(res.render).toHaveBeenCalledWith('pages/recommendations/reviewPractitionersConcerns')
+
+          expect(res.locals.offenderName).toEqual('Joe Bloggs')
+          expect(res.locals.triggerLeadingToRecall).toEqual('some reason 1')
+          expect(res.locals.standardLicenceConditions).toEqual([])
+          expect(res.locals.additionalLicenceConditions).toEqual([
+            {
+              details:
+                'To only attend places of worship which have been previously agreed with your supervising officer.',
+              note: 'some note',
+              title: 'Freedom of movement',
+            },
+          ])
+          expect(res.locals.alternativesToRecallTried).toEqual([])
+          expect(res.locals.sentenceGroupHumanReadable).toBe(
+            sentenceGroupDetails.find(group => group.value === sentenceGroup)?.text,
+          )
+          expect(res.locals.isIndeterminateSentence).toEqual(
+            sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
+          )
+          expect(res.locals.isExtendedSentence).toEqual(sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No')
+
+          expect(res.locals.indeterminateSentenceHumanReadable).toBe(
+            sentenceGroup === SentenceGroup.INDETERMINATE ? 'Life sentence' : undefined,
+          )
+
+          expect(next).toHaveBeenCalled()
         })
       })
     })

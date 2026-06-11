@@ -106,7 +106,7 @@ describe('validateIndeterminateDetails', () => {
     ])
   })
 
-  it('ftr56: returns an error, if a selected checkbox is missing details, and no valuesToSave', async () => {
+  it('returns an error, if a selected checkbox is missing details, and no valuesToSave', async () => {
     const requestBody = {
       crn: 'X514364',
       indeterminateOrExtendedSentenceDetails: ['BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE'],

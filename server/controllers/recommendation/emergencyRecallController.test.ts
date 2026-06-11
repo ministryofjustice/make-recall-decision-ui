@@ -9,42 +9,32 @@ import randomEnum from '../../@types/enum.testFactory'
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
 
-const ftr56TestCases = [
-  {
-    description: 'with FTR56 flag enabled',
-  },
-]
-
 describe('get', () => {
   describe('load with no data', () => {
-    ftr56TestCases.forEach(({ description }) => {
-      describe(description, () => {
-        ;[true, false].forEach(isExtendedSentence => {
-          it(`isExtendedSentence: ${isExtendedSentence}`, async () => {
-            const sentenceGroup = isExtendedSentence
-              ? SentenceGroup.EXTENDED
-              : randomEnum(SentenceGroup, [SentenceGroup.EXTENDED])
-            const res = mockRes({
-              locals: {
-                recommendation: {
-                  personOnProbation: { name: 'Joe Bloggs' },
-                  sentenceGroup,
-                },
-                token: 'token1',
-                flags: {},
-              },
-            })
-            const next = mockNext()
-            await emergencyRecallController.get(mockReq(), res, next)
-
-            expect(res.locals.page).toEqual({ id: 'emergencyRecall' })
-            expect(res.locals.inputDisplayValues.value).not.toBeDefined()
-            expect(res.locals.isExtendedSentence).toEqual(isExtendedSentence)
-            expect(res.render).toHaveBeenCalledWith('pages/recommendations/emergencyRecall')
-
-            expect(next).toHaveBeenCalled()
-          })
+    ;[true, false].forEach(isExtendedSentence => {
+      it(`isExtendedSentence: ${isExtendedSentence}`, async () => {
+        const sentenceGroup = isExtendedSentence
+          ? SentenceGroup.EXTENDED
+          : randomEnum(SentenceGroup, [SentenceGroup.EXTENDED])
+        const res = mockRes({
+          locals: {
+            recommendation: {
+              personOnProbation: { name: 'Joe Bloggs' },
+              sentenceGroup,
+            },
+            token: 'token1',
+            flags: {},
+          },
         })
+        const next = mockNext()
+        await emergencyRecallController.get(mockReq(), res, next)
+
+        expect(res.locals.page).toEqual({ id: 'emergencyRecall' })
+        expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+        expect(res.locals.isExtendedSentence).toEqual(isExtendedSentence)
+        expect(res.render).toHaveBeenCalledWith('pages/recommendations/emergencyRecall')
+
+        expect(next).toHaveBeenCalled()
       })
     })
   })

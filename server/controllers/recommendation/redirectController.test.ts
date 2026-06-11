@@ -10,406 +10,404 @@ import ppPaths from '../../routes/paths/pp.paths'
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  describe(`when flagFTR56Enabled is enabled`, () => {
-    it('redirect to task-list-consider-recall', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([])
-      const res = mockRes({
-        locals: {
-          recommendation: { recallType: undefined },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+  it('redirect to task-list-consider-recall', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    const res = mockRes({
+      locals: {
+        recommendation: { recallType: undefined },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list-consider-recall')
-      expect(next).toHaveBeenCalled()
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to task-list', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            recallType: {
-              selected: {
-                value: 'STANDARD',
-              },
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list-consider-recall')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to task-list', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          recallType: {
+            selected: {
+              value: 'STANDARD',
             },
           },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list')
-      expect(next).toHaveBeenCalled()
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to task-list-no-recall', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            recallType: {
-              selected: {
-                value: 'NO_RECALL',
-              },
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to task-list-no-recall', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          recallType: {
+            selected: {
+              value: 'NO_RECALL',
             },
           },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list-no-recall')
-      expect(next).toHaveBeenCalled()
-    })
-
-    it('redirect to spo-task-list-consider-recall by default if spo', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([])
-      const res = mockRes({
-        locals: {
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
-          },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/spo-task-list-consider-recall')
-      expect(next).toHaveBeenCalled()
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to recall-type-extended if extended sentence and spo has recorded decision', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: SentenceGroup.EXTENDED,
-          },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list-no-recall')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to spo-task-list-consider-recall by default if spo', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+    const res = mockRes({
+      locals: {
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-extended')
-      expect(next).toHaveBeenCalled()
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to recall-type-indeterminate if indeterminate sentence and spo has recorded decision', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: SentenceGroup.INDETERMINATE,
-          },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/spo-task-list-consider-recall')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to recall-type-extended if extended sentence and spo has recorded decision', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: SentenceGroup.EXTENDED,
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-indeterminate')
-      expect(next).toHaveBeenCalled()
-    })
-
-    it('redirect to suitability-for-fixed-term-recall if youth sds and spo has recorded decision', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: SentenceGroup.YOUTH_SDS,
-          },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/suitability-for-fixed-term-recall')
-      expect(next).toHaveBeenCalled()
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to check-mappa-information if adult sds and spo has recorded decision', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: SentenceGroup.ADULT_SDS,
-          },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-extended')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to recall-type-indeterminate if indeterminate sentence and spo has recorded decision', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: SentenceGroup.INDETERMINATE,
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, `/recommendation/123/${ppPaths.checkMappaInformation}`)
-      expect(next).toHaveBeenCalled()
-    })
-
-    it('redirect to spo-task-list-consider-recall if SPO_CONSIDER_RECALL', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
-      const res = mockRes({
-        locals: {
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
-          },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/spo-task-list-consider-recall')
-      expect(next).toHaveBeenCalled()
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to task-list if SPO_SIGNATURE_REQUESTED', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            recallType: {
-              selected: {
-                value: 'STANDARD',
-              },
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-indeterminate')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to suitability-for-fixed-term-recall if youth sds and spo has recorded decision', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+        },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+      },
+    })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/suitability-for-fixed-term-recall')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to check-mappa-information if adult sds and spo has recorded decision', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+        },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+      },
+    })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, `/recommendation/123/${ppPaths.checkMappaInformation}`)
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to spo-task-list-consider-recall if SPO_CONSIDER_RECALL', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_CONSIDER_RECALL, active: true }])
+    const res = mockRes({
+      locals: {
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
+        },
+      },
+    })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/spo-task-list-consider-recall')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to task-list if SPO_SIGNATURE_REQUESTED', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.SPO_SIGNATURE_REQUESTED, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          recallType: {
+            selected: {
+              value: 'STANDARD',
             },
           },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.SPO],
-          },
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list')
-      expect(next).toHaveBeenCalled()
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.SPO],
+        },
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to task-list if ACO_SIGNATURE_REQUESTED', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            recallType: {
-              selected: {
-                value: 'STANDARD',
-              },
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to task-list if ACO_SIGNATURE_REQUESTED', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.ACO_SIGNATURE_REQUESTED, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          recallType: {
+            selected: {
+              value: 'STANDARD',
             },
           },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.SPO],
-          },
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list')
-      expect(next).toHaveBeenCalled()
-    })
-
-    it('redirect to sentence-information if AP_RECORDED_RATIONALE and sentence group not set', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {},
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.SPO],
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/sentence-information')
-      expect(next).toHaveBeenCalled()
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to recall-type-extended if AP_RECORDED_RATIONALE and is extended', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: SentenceGroup.EXTENDED,
-          },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to sentence-information if AP_RECORDED_RATIONALE and sentence group not set', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {},
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-extended')
-      expect(next).toHaveBeenCalled()
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to suitability-for-fixed-term-recall if AP_RECORDED_RATIONALE and is youth sds', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: SentenceGroup.YOUTH_SDS,
-          },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/sentence-information')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to recall-type-extended if AP_RECORDED_RATIONALE and is extended', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: SentenceGroup.EXTENDED,
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/suitability-for-fixed-term-recall')
-      expect(next).toHaveBeenCalled()
-    })
-
-    it('redirect to check-mappa-information if AP_RECORDED_RATIONALE and is youth sds', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: SentenceGroup.ADULT_SDS,
-          },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, `/recommendation/123/${ppPaths.checkMappaInformation}`)
-      expect(next).toHaveBeenCalled()
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to task-list-no-recall if AP_RECORDED_RATIONALE', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: faker.helpers.enumValue(SentenceGroup),
-            recallType: {
-              selected: {
-                value: 'NO_RECALL',
-              },
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/recall-type-extended')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to suitability-for-fixed-term-recall if AP_RECORDED_RATIONALE and is youth sds', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+        },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+      },
+    })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/suitability-for-fixed-term-recall')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to check-mappa-information if AP_RECORDED_RATIONALE and is youth sds', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+        },
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+      },
+    })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, `/recommendation/123/${ppPaths.checkMappaInformation}`)
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to task-list-no-recall if AP_RECORDED_RATIONALE', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: faker.helpers.enumValue(SentenceGroup),
+          recallType: {
+            selected: {
+              value: 'NO_RECALL',
             },
           },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list-no-recall')
-      expect(next).toHaveBeenCalled()
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
 
-    it('redirect to task-list if AP_RECORDED_RATIONALE', async () => {
-      ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            sentenceGroup: faker.helpers.enumValue(SentenceGroup),
-            recallType: {
-              selected: {
-                value: 'STANDARD',
-              },
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list-no-recall')
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('redirect to task-list if AP_RECORDED_RATIONALE', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }])
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          sentenceGroup: faker.helpers.enumValue(SentenceGroup),
+          recallType: {
+            selected: {
+              value: 'STANDARD',
             },
           },
-          urlInfo: { basePath: '/recommendation/123/' },
-          user: {
-            token: 'token1',
-            roles: [HMPPS_AUTH_ROLE.PO],
-          },
         },
-      })
-      const next = mockNext()
-      await redirectController.get(mockReq(), res, next)
-
-      expect(updateStatuses).not.toHaveBeenCalled()
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list')
-      expect(next).toHaveBeenCalled()
+        urlInfo: { basePath: '/recommendation/123/' },
+        user: {
+          token: 'token1',
+          roles: [HMPPS_AUTH_ROLE.PO],
+        },
+      },
     })
+    const next = mockNext()
+    await redirectController.get(mockReq(), res, next)
+
+    expect(updateStatuses).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(301, '/recommendation/123/task-list')
+    expect(next).toHaveBeenCalled()
   })
 })

@@ -54,7 +54,7 @@ describe('get', () => {
     expect(res.locals.inputDisplayValues).toEqual([{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'test' }])
   })
 
-  it('FTR56: load with existing data', async () => {
+  it('load with existing data', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
@@ -201,7 +201,7 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  it('FTR56: post with valid data', async () => {
+  it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
@@ -268,7 +268,7 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  it('FTR56: post with valid data and redirects extended sentence correctly', async () => {
+  it('post with valid data and redirects extended sentence correctly', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
@@ -331,7 +331,7 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 
-  it('Ftr56: post with invalid data', async () => {
+  it('post with invalid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const req = mockReq({

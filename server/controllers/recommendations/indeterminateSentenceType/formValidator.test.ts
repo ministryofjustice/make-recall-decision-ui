@@ -44,7 +44,7 @@ describe('validateIndeterminateSentenceType', () => {
     ])
   })
 
-  it('Ftr56: returns an error, if not set, and no valuesToSave', async () => {
+  it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
       indeterminateSentenceType: '',
       crn: 'X34534',
@@ -80,7 +80,7 @@ describe('validateIndeterminateSentenceType', () => {
     ])
   })
 
-  it('Ftr56: returns an error, if set to an invalid value, and no valuesToSave', async () => {
+  it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
       indeterminateSentenceType: 'VALUE',
       crn: 'X34534',

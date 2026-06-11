@@ -35,7 +35,7 @@ describe('get', () => {
     expect(res.locals.inputDisplayValues).toBeUndefined()
   })
 
-  it('Ftr56: load with existing data', async () => {
+  it('load with existing data', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
@@ -67,7 +67,7 @@ describe('get', () => {
     expect(res.locals.inputDisplayValues).toEqual({ value: 'DHMP' })
   })
 
-  it('Ftr56: redirects to Sentence Information page if sentenceGroup does not exists', async () => {
+  it('redirects to Sentence Information page if sentenceGroup does not exists', async () => {
     const basePath = faker.internet.url()
     const res = mockRes({
       locals: {
@@ -84,7 +84,7 @@ describe('get', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('Ftr56: redirects to Sentence Information page if sentenceGroup is not INDETERMINATE', async () => {
+  it('redirects to Sentence Information page if sentenceGroup is not INDETERMINATE', async () => {
     const basePath = faker.internet.url()
     const res = mockRes({
       locals: {
@@ -199,7 +199,7 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  it('Ftr56: post with valid data', async () => {
+  it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`

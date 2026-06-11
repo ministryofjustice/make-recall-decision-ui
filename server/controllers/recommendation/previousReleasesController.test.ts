@@ -6,218 +6,152 @@ import previousReleasesController from './previousReleasesController'
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  describe('with FTR56 flag disabled', () => {
-    it('load with existing data', async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValue({
-        releaseUnderECSL: true,
-        dateOfRelease: '2001-01-02',
-        conditionalReleaseDate: '2003-04-05',
-      })
-      const res = mockRes()
-      const next = mockNext()
-      await previousReleasesController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
-
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        featureFlags: {},
-        propertyToRefresh: 'previousReleases',
-        recommendationId: '123',
-        token: 'token',
-      })
-
-      expect(res.locals.recommendation).toEqual({
-        conditionalReleaseDate: '2003-04-05',
-        dateOfRelease: '2001-01-02',
-        releaseUnderECSL: true,
-      })
-      expect(res.locals.page.id).toEqual('releaseDetails')
+  it('load with existing data', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue({
+      releaseUnderECSL: true,
+      dateOfRelease: '2001-01-02',
+      conditionalReleaseDate: '2003-04-05',
     })
-    it('load with errors', async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValue({
-        releaseUnderECSL: true,
-        dateOfRelease: '2001-01-02',
-        conditionalReleaseDate: '2003-04-05',
-      })
-      const res = mockRes({
-        locals: {
-          errors: [],
-          unsavedValues: {
-            releaseUnderECSL: 'YES',
-            dateOfRelease: { day: '03', month: '04', year: '2002' },
-            conditionalReleaseDate: { day: '06', month: '05', year: '2004' },
-          },
-        },
-      })
-      const next = mockNext()
-      await previousReleasesController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
 
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        featureFlags: {},
-        propertyToRefresh: 'previousReleases',
-        recommendationId: '123',
-        token: 'token',
-      })
-
-      expect(res.locals.recommendation).toEqual({
-        conditionalReleaseDate: '2003-04-05',
-        dateOfRelease: '2001-01-02',
-        releaseUnderECSL: true,
-      })
-      expect(res.locals.page.id).toEqual('releaseDetails')
+    const req = mockReq({
+      params: { recommendationId: '123' },
     })
-  })
 
-  describe('with FTR56 flag enabled', () => {
-    it('load with existing data', async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValue({
-        releaseUnderECSL: true,
-        dateOfRelease: '2001-01-02',
-        conditionalReleaseDate: '2003-04-05',
-      })
-
-      const req = mockReq({
-        params: { recommendationId: '123' },
-      })
-
-      const res = mockRes({
-        locals: {
-          flags: {},
-        },
-      })
-
-      await previousReleasesController.get(req, res, mockNext())
-
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        featureFlags: {},
-        propertyToRefresh: 'previousReleases',
-        recommendationId: '123',
-        token: 'token',
-      })
-
-      expect(res.locals.page.id).toBe('releaseDetails')
-      expect(res.render).toHaveBeenCalledWith('pages/recommendations/releaseDetails')
+    const res = mockRes({
+      locals: {
+        flags: {},
+      },
     })
+
+    await previousReleasesController.get(req, res, mockNext())
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      featureFlags: {},
+      propertyToRefresh: 'previousReleases',
+      recommendationId: '123',
+      token: 'token',
+    })
+
+    expect(res.locals.page.id).toBe('releaseDetails')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/releaseDetails')
   })
 })
 
 describe('post', () => {
-  describe('with FTR56 flag disabled', () => {
-    it('post continue', async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+  it('post continue', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-      const req = mockReq({
-        params: { recommendationId: '123' },
-        body: {
-          continueButton: '1',
-          releaseUnderECSL: 'YES',
-          'dateOfRelease-day': '12',
-          'dateOfRelease-month': '11',
-          'dateOfRelease-year': '2012',
-          'conditionalReleaseDate-day': '23',
-          'conditionalReleaseDate-month': '06',
-          'conditionalReleaseDate-year': '2121',
-        },
-      })
-
-      const res = mockRes({
-        token: 'token1',
-        locals: {
-          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-          urlInfo: { basePath: `/recommendations/123/` },
-        },
-      })
-      const next = mockNext()
-
-      await previousReleasesController.post(req, res, next)
-
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        recommendationId: '123',
-        token: 'token1',
-        valuesToSave: {
-          dateOfRelease: undefined,
-          previousReleases: {
-            hasBeenReleasedPreviously: true,
-          },
-        },
-        featureFlags: {},
-      })
-
-      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list#heading-person-details`)
-      expect(next).not.toHaveBeenCalled() // end of the line for posts.
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        continueButton: '1',
+        releaseUnderECSL: 'YES',
+        'dateOfRelease-day': '12',
+        'dateOfRelease-month': '11',
+        'dateOfRelease-year': '2012',
+        'conditionalReleaseDate-day': '23',
+        'conditionalReleaseDate-month': '06',
+        'conditionalReleaseDate-year': '2121',
+      },
     })
 
-    it('post delete', async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+    const next = mockNext()
 
-      const req = mockReq({
-        params: { recommendationId: '123' },
-        body: {
-          previousReleaseDates: '2005-01-01|',
-          deletePreviousReleaseDateIndex: '0',
-        },
-      })
+    await previousReleasesController.post(req, res, next)
 
-      const res = mockRes({
-        token: 'token1',
-        locals: {
-          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-          urlInfo: { basePath: `/recommendations/123/` },
-        },
-      })
-      const next = mockNext()
-
-      await previousReleasesController.post(req, res, next)
-
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        recommendationId: '123',
-        token: 'token1',
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
         dateOfRelease: undefined,
-        valuesToSave: {
-          previousReleases: {
-            hasBeenReleasedPreviously: false,
-          },
+        previousReleases: {
+          hasBeenReleasedPreviously: true,
         },
-        featureFlags: {},
-      })
-
-      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list#heading-person-details`)
-      expect(next).not.toHaveBeenCalled() // end of the line for posts.
+      },
+      featureFlags: {},
     })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list#heading-person-details`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  describe('with FTR56 flag enabled', () => {
-    it('post continue', async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+  it('post delete', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-      const req = mockReq({
-        params: {
-          recommendationId: '123',
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        previousReleaseDates: '2005-01-01|',
+        deletePreviousReleaseDateIndex: '0',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/123/` },
+      },
+    })
+    const next = mockNext()
+
+    await previousReleasesController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      dateOfRelease: undefined,
+      valuesToSave: {
+        previousReleases: {
+          hasBeenReleasedPreviously: false,
         },
-        body: {
-          continueButton: '1',
-          dateOfRelease: '2026-01-01',
-        },
-      })
+      },
+      featureFlags: {},
+    })
 
-      const res = mockRes({
-        token: 'token',
-        locals: {
-          flags: {},
-        },
-      })
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list#heading-person-details`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
 
-      await previousReleasesController.post(req, res, mockNext())
+  it('post continue', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-      expect(updateRecommendation).toHaveBeenCalledWith({
+    const req = mockReq({
+      params: {
         recommendationId: '123',
-        token: 'token',
-        featureFlags: {},
-        valuesToSave: {
-          previousReleases: {
-            hasBeenReleasedPreviously: true,
-          },
-          dateOfRelease: '2026-01-01',
+      },
+      body: {
+        continueButton: '1',
+        dateOfRelease: '2026-01-01',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token',
+      locals: {
+        flags: {},
+      },
+    })
+
+    await previousReleasesController.post(req, res, mockNext())
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token',
+      featureFlags: {},
+      valuesToSave: {
+        previousReleases: {
+          hasBeenReleasedPreviously: true,
         },
-      })
+        dateOfRelease: '2026-01-01',
+      },
     })
   })
 })

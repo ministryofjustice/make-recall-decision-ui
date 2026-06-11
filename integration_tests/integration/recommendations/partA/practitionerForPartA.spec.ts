@@ -14,101 +14,96 @@ context('Practitioner for Part A Page', () => {
   })
 
   describe('Page Data', () => {
-    describe('Feature flag FTR-56 enabled', () => {
-      const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}`
-      it('Standard page load', () => {
-        const recommendation = RecommendationResponseGenerator.generate()
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+    const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}`
+    it('Standard page load', () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
 
-        cy.visit(`${testPageUrl}`)
+      cy.visit(`${testPageUrl}`)
 
-        cy.title().should('equal', `Practitioner for the person - ${config.applicationName}`)
+      cy.title().should('equal', `Practitioner for the person - ${config.applicationName}`)
 
-        // Back link
-        testStandardBackLink()
+      // Back link
+      testStandardBackLink()
 
-        // Page Heading
-        cy.pageHeading().should('equal', `Practitioner for ${recommendation.personOnProbation.name}`)
+      // Page Heading
+      cy.pageHeading().should('equal', `Practitioner for ${recommendation.personOnProbation.name}`)
 
-        cy.get('.govuk-form-group').should('have.length', 3).as('formGroups')
+      cy.get('.govuk-form-group').should('have.length', 3).as('formGroups')
 
-        cy.get('@formGroups').eq(0).find('.govuk-label').should('contain.text', 'Name')
-        cy.get('@formGroups')
-          .eq(0)
-          .find('.govuk-input')
-          .should('have.attr', 'name', 'name')
-          .should('have.attr', 'type', 'text')
+      cy.get('@formGroups').eq(0).find('.govuk-label').should('contain.text', 'Name')
+      cy.get('@formGroups')
+        .eq(0)
+        .find('.govuk-input')
+        .should('have.attr', 'name', 'name')
+        .should('have.attr', 'type', 'text')
 
-        cy.get('@formGroups').eq(1).find('.govuk-label').should('contain.text', 'Email')
-        cy.get('@formGroups')
-          .eq(1)
-          .find('.govuk-input')
-          .should('have.attr', 'name', 'email')
-          .should('have.attr', 'type', 'email')
+      cy.get('@formGroups').eq(1).find('.govuk-label').should('contain.text', 'Email')
+      cy.get('@formGroups')
+        .eq(1)
+        .find('.govuk-input')
+        .should('have.attr', 'name', 'email')
+        .should('have.attr', 'type', 'email')
 
-        cy.get('@formGroups').eq(2).find('.govuk-label').should('contain.text', 'Telephone')
-        cy.get('@formGroups')
-          .eq(2)
-          .find('.govuk-hint')
-          .should('contain.text', 'PPCS may use this number to ask queries')
-        cy.get('@formGroups')
-          .eq(2)
-          .find('.govuk-input')
-          .should('have.attr', 'name', 'telephone')
-          .should('have.attr', 'type', 'tel')
+      cy.get('@formGroups').eq(2).find('.govuk-label').should('contain.text', 'Telephone')
+      cy.get('@formGroups').eq(2).find('.govuk-hint').should('contain.text', 'PPCS may use this number to ask queries')
+      cy.get('@formGroups')
+        .eq(2)
+        .find('.govuk-input')
+        .should('have.attr', 'name', 'telephone')
+        .should('have.attr', 'type', 'tel')
 
-        // Continue button
-        cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
-      })
+      // Continue button
+      cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
+    })
 
-      it('There are no previous responses to the questions - The input areas are empty', () => {
-        const recommendation = RecommendationResponseGenerator.generate({ practitionerForPartA: false })
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+    it('There are no previous responses to the questions - The input areas are empty', () => {
+      const recommendation = RecommendationResponseGenerator.generate({ practitionerForPartA: false })
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
 
-        cy.visit(testPageUrl)
+      cy.visit(testPageUrl)
 
-        cy.get('.govuk-form-group').as('formGroups')
+      cy.get('.govuk-form-group').as('formGroups')
 
-        cy.get('@formGroups').eq(0).find('.govuk-input').should('be.empty')
-        cy.get('@formGroups').eq(1).find('.govuk-input').should('be.empty')
-        cy.get('@formGroups').eq(2).find('.govuk-input').should('be.empty')
-      })
+      cy.get('@formGroups').eq(0).find('.govuk-input').should('be.empty')
+      cy.get('@formGroups').eq(1).find('.govuk-input').should('be.empty')
+      cy.get('@formGroups').eq(2).find('.govuk-input').should('be.empty')
+    })
 
-      it('There are previous responses to the questions - The input areas are filled in', () => {
-        const recommendation = RecommendationResponseGenerator.generate()
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+    it('There are previous responses to the questions - The input areas are filled in', () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
 
-        cy.visit(testPageUrl)
+      cy.visit(testPageUrl)
 
-        cy.get('.govuk-form-group').as('formGroups')
+      cy.get('.govuk-form-group').as('formGroups')
 
-        cy.get('@formGroups').eq(0).find('.govuk-input').should('have.value', recommendation.practitionerForPartA.name)
-        cy.get('@formGroups').eq(1).find('.govuk-input').should('have.value', recommendation.practitionerForPartA.email)
-        cy.get('@formGroups')
-          .eq(2)
-          .find('.govuk-input')
-          .should('have.value', recommendation.practitionerForPartA.telephone)
-      })
+      cy.get('@formGroups').eq(0).find('.govuk-input').should('have.value', recommendation.practitionerForPartA.name)
+      cy.get('@formGroups').eq(1).find('.govuk-input').should('have.value', recommendation.practitionerForPartA.email)
+      cy.get('@formGroups')
+        .eq(2)
+        .find('.govuk-input')
+        .should('have.value', recommendation.practitionerForPartA.telephone)
+    })
 
-      it('No responses provided and submit button clicked - errors displayed', () => {
-        const recommendation = RecommendationResponseGenerator.generate({ practitionerForPartA: false })
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-        cy.visit(testPageUrl)
+    it('No responses provided and submit button clicked - errors displayed', () => {
+      const recommendation = RecommendationResponseGenerator.generate({ practitionerForPartA: false })
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      cy.visit(testPageUrl)
 
-        cy.get('button.govuk-button').click()
+      cy.get('button.govuk-button').click()
 
-        testForErrorPageTitle()
-        testForErrorSummary([
-          {
-            href: 'name',
-            message: `Enter the name of the probation practitioner for ${recommendation.personOnProbation.name}`,
-          },
-          {
-            href: 'email',
-            message: `Enter the GOV.UK email for the probation practitioner for ${recommendation.personOnProbation.name}`,
-          },
-        ])
-      })
+      testForErrorPageTitle()
+      testForErrorSummary([
+        {
+          href: 'name',
+          message: `Enter the name of the probation practitioner for ${recommendation.personOnProbation.name}`,
+        },
+        {
+          href: 'email',
+          message: `Enter the GOV.UK email for the probation practitioner for ${recommendation.personOnProbation.name}`,
+        },
+      ])
     })
   })
 })

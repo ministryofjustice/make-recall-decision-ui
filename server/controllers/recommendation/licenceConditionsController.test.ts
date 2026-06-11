@@ -94,215 +94,213 @@ const TEMPLATE = {
 const DELIUS_TEMPLATE = { ...TEMPLATE, cvlLicence: undefined as string | undefined }
 
 describe('get', () => {
-  describe(`FTR56 flag 'enabled'`, () => {
-    ;[true, false].forEach(hasFromPageId => {
-      describe(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-        ;[true, false].forEach(isApprovedPremisesRoute => {
-          if (!(hasFromPageId && isApprovedPremisesRoute)) {
-            describe(`on ${isApprovedPremisesRoute ? 'AP' : 'non-AP'} route`, () => {
-              it('load with no data', async () => {
-                ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
+  ;[true, false].forEach(hasFromPageId => {
+    describe(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+      ;[true, false].forEach(isApprovedPremisesRoute => {
+        if (!(hasFromPageId && isApprovedPremisesRoute)) {
+          describe(`on ${isApprovedPremisesRoute ? 'AP' : 'non-AP'} route`, () => {
+            it('load with no data', async () => {
+              ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
 
-                const req = isApprovedPremisesRoute
-                  ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
-                  : mockReq()
-                const urlInfo = UrlInfoGenerator.generate({
-                  fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
-                })
-                const res = mockRes({
-                  locals: {
-                    recommendation: RecommendationResponseGenerator.generate(),
-                    token: 'token1',
-                    urlInfo,
-                  },
-                })
-                const next = mockNext()
-                await licenceConditionsController.get(req, res, next)
-
-                expect(res.locals.page).toEqual({ id: 'licenceConditions' })
-                expect(res.locals.inputDisplayValues.value).not.toBeDefined()
-                expect(res.locals.caseSummary).toStrictEqual({
-                  ...TEMPLATE,
-                  licenceConvictions: {
-                    activeCustodial: TEMPLATE.activeConvictions.filter(
-                      conviction => conviction.sentence && conviction.sentence.isCustodial,
-                    ),
-                    hasMultipleActiveCustodial: false,
-                  },
-                  standardLicenceConditions: formOptions.standardLicenceConditions,
-                })
-                if (isApprovedPremisesRoute) {
-                  expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
-                  expect(res.locals.backLinkText).toEqual(
-                    `Back to overview for ${res.locals.recommendation.personOnProbation.name}`,
-                  )
-                } else if (!hasFromPageId) {
-                  expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
-                  expect(res.locals.backLinkText).toEqual('Back to Consider a recall questions')
-                } else {
-                  expect(res.locals.backLinkUrl).toBeUndefined()
-                }
-                expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
-
-                expect(next).toHaveBeenCalled()
+              const req = isApprovedPremisesRoute
+                ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
+                : mockReq()
+              const urlInfo = UrlInfoGenerator.generate({
+                fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
               })
-
-              const cvlLicenceConditionsBreached = {
-                standardLicenceConditions: {
-                  selected: ['9ce9d594-e346-4785-9642-c87e764bee37'],
-                  allOptions: [
-                    {
-                      code: '9ce9d594-e346-4785-9642-c87e764bee37',
-                      text: 'This is a standard licence condition',
-                    },
-                  ],
+              const res = mockRes({
+                locals: {
+                  recommendation: RecommendationResponseGenerator.generate(),
+                  token: 'token1',
+                  urlInfo,
                 },
-                additionalLicenceConditions: {
-                  selected: ['9ce9d594-e346-4785-9642-c87e764bee39', '9ce9d594-e346-4785-9642-c87e764bee41'],
-                  allOptions: [
-                    {
-                      code: '9ce9d594-e346-4785-9642-c87e764bee39',
-                      text: 'This is an additional licence condition',
-                    },
-                    { code: '9ce9d594-e346-4785-9642-c87e764bee41', text: 'Address approved Text' },
-                  ],
-                },
-                bespokeLicenceConditions: {
-                  selected: ['9ce9d594-e346-4785-9642-c87e764bee45'],
-                  allOptions: [{ code: '9ce9d594-e346-4785-9642-c87e764bee45', text: 'This is a bespoke condition' }],
-                },
-              }
-
-              it('load with existing data', async () => {
-                ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
-
-                const req = isApprovedPremisesRoute
-                  ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
-                  : mockReq()
-                const urlInfo = UrlInfoGenerator.generate({
-                  fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
-                })
-                const res = mockRes({
-                  locals: {
-                    recommendation: {
-                      cvlLicenceConditionsBreached,
-                      personOnProbation: PersonOnProbationGenerator.generate('any'),
-                    },
-                    token: 'token1',
-                    urlInfo,
-                  },
-                })
-                const next = mockNext()
-                await licenceConditionsController.get(req, res, next)
-
-                expect(res.locals.inputDisplayValues).toEqual({
-                  standardLicenceConditions: ['9ce9d594-e346-4785-9642-c87e764bee37'],
-                  additionalLicenceConditions: [
-                    '9ce9d594-e346-4785-9642-c87e764bee39',
-                    '9ce9d594-e346-4785-9642-c87e764bee41',
-                  ],
-                  bespokeLicenceConditions: ['9ce9d594-e346-4785-9642-c87e764bee45'],
-                })
-                if (isApprovedPremisesRoute) {
-                  expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
-                  expect(res.locals.backLinkText).toEqual(
-                    `Back to overview for ${res.locals.recommendation.personOnProbation.name}`,
-                  )
-                } else if (!hasFromPageId) {
-                  expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
-                  expect(res.locals.backLinkText).toEqual('Back to Consider a recall questions')
-                } else {
-                  expect(res.locals.backLinkUrl).toBeUndefined()
-                }
               })
+              const next = mockNext()
+              await licenceConditionsController.get(req, res, next)
 
-              const licenceConditionsBreached = {
-                standardLicenceConditions: {
-                  selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
-                  allOptions: formOptions.standardLicenceConditions,
+              expect(res.locals.page).toEqual({ id: 'licenceConditions' })
+              expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+              expect(res.locals.caseSummary).toStrictEqual({
+                ...TEMPLATE,
+                licenceConvictions: {
+                  activeCustodial: TEMPLATE.activeConvictions.filter(
+                    conviction => conviction.sentence && conviction.sentence.isCustodial,
+                  ),
+                  hasMultipleActiveCustodial: false,
                 },
-                additionalLicenceConditions: {
-                  selectedOptions: [{ mainCatCode: 'NLC5', subCatCode: 'NST14' }],
-                  allOptions: [
-                    {
-                      mainCatCode: 'NLC5',
-                      subCatCode: 'NST14',
-                      title: 'Disclosure of information',
-                      details: 'Notify your supervising officer of any intimate relationships',
-                      note: 'Persons wife is Jane Bloggs',
-                    },
-                  ],
-                },
+                standardLicenceConditions: formOptions.standardLicenceConditions,
+              })
+              if (isApprovedPremisesRoute) {
+                expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
+                expect(res.locals.backLinkText).toEqual(
+                  `Back to overview for ${res.locals.recommendation.personOnProbation.name}`,
+                )
+              } else if (!hasFromPageId) {
+                expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
+                expect(res.locals.backLinkText).toEqual('Back to Consider a recall questions')
+              } else {
+                expect(res.locals.backLinkUrl).toBeUndefined()
               }
+              expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
 
-              it('initial load with error data', async () => {
-                ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
+              expect(next).toHaveBeenCalled()
+            })
 
-                const req = isApprovedPremisesRoute
-                  ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
-                  : mockReq()
+            const cvlLicenceConditionsBreached = {
+              standardLicenceConditions: {
+                selected: ['9ce9d594-e346-4785-9642-c87e764bee37'],
+                allOptions: [
+                  {
+                    code: '9ce9d594-e346-4785-9642-c87e764bee37',
+                    text: 'This is a standard licence condition',
+                  },
+                ],
+              },
+              additionalLicenceConditions: {
+                selected: ['9ce9d594-e346-4785-9642-c87e764bee39', '9ce9d594-e346-4785-9642-c87e764bee41'],
+                allOptions: [
+                  {
+                    code: '9ce9d594-e346-4785-9642-c87e764bee39',
+                    text: 'This is an additional licence condition',
+                  },
+                  { code: '9ce9d594-e346-4785-9642-c87e764bee41', text: 'Address approved Text' },
+                ],
+              },
+              bespokeLicenceConditions: {
+                selected: ['9ce9d594-e346-4785-9642-c87e764bee45'],
+                allOptions: [{ code: '9ce9d594-e346-4785-9642-c87e764bee45', text: 'This is a bespoke condition' }],
+              },
+            }
 
-                const urlInfo = UrlInfoGenerator.generate({
-                  fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
-                })
-                const res = mockRes({
-                  locals: {
-                    errors: {
-                      list: [
-                        {
-                          name: 'licenceConditionsBreached',
-                          text: 'Select one or more licence conditions',
-                          href: '#licenceConditionsBreached',
-                          errorId: 'noLicenceConditionsSelected',
-                        },
-                      ],
-                      licenceConditionsBreached: {
+            it('load with existing data', async () => {
+              ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
+
+              const req = isApprovedPremisesRoute
+                ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
+                : mockReq()
+              const urlInfo = UrlInfoGenerator.generate({
+                fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
+              })
+              const res = mockRes({
+                locals: {
+                  recommendation: {
+                    cvlLicenceConditionsBreached,
+                    personOnProbation: PersonOnProbationGenerator.generate('any'),
+                  },
+                  token: 'token1',
+                  urlInfo,
+                },
+              })
+              const next = mockNext()
+              await licenceConditionsController.get(req, res, next)
+
+              expect(res.locals.inputDisplayValues).toEqual({
+                standardLicenceConditions: ['9ce9d594-e346-4785-9642-c87e764bee37'],
+                additionalLicenceConditions: [
+                  '9ce9d594-e346-4785-9642-c87e764bee39',
+                  '9ce9d594-e346-4785-9642-c87e764bee41',
+                ],
+                bespokeLicenceConditions: ['9ce9d594-e346-4785-9642-c87e764bee45'],
+              })
+              if (isApprovedPremisesRoute) {
+                expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
+                expect(res.locals.backLinkText).toEqual(
+                  `Back to overview for ${res.locals.recommendation.personOnProbation.name}`,
+                )
+              } else if (!hasFromPageId) {
+                expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
+                expect(res.locals.backLinkText).toEqual('Back to Consider a recall questions')
+              } else {
+                expect(res.locals.backLinkUrl).toBeUndefined()
+              }
+            })
+
+            const licenceConditionsBreached = {
+              standardLicenceConditions: {
+                selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+                allOptions: formOptions.standardLicenceConditions,
+              },
+              additionalLicenceConditions: {
+                selectedOptions: [{ mainCatCode: 'NLC5', subCatCode: 'NST14' }],
+                allOptions: [
+                  {
+                    mainCatCode: 'NLC5',
+                    subCatCode: 'NST14',
+                    title: 'Disclosure of information',
+                    details: 'Notify your supervising officer of any intimate relationships',
+                    note: 'Persons wife is Jane Bloggs',
+                  },
+                ],
+              },
+            }
+
+            it('initial load with error data', async () => {
+              ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
+
+              const req = isApprovedPremisesRoute
+                ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
+                : mockReq()
+
+              const urlInfo = UrlInfoGenerator.generate({
+                fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
+              })
+              const res = mockRes({
+                locals: {
+                  errors: {
+                    list: [
+                      {
+                        name: 'licenceConditionsBreached',
                         text: 'Select one or more licence conditions',
                         href: '#licenceConditionsBreached',
                         errorId: 'noLicenceConditionsSelected',
                       },
-                    },
-                    recommendation: {
-                      licenceConditionsBreached,
-                      personOnProbation: PersonOnProbationGenerator.generate('any'),
-                    },
-                    token: 'token1',
-                    urlInfo,
-                  },
-                })
-
-                await licenceConditionsController.get(req, res, mockNext())
-
-                expect(res.locals.errors).toEqual({
-                  licenceConditionsBreached: {
-                    errorId: 'noLicenceConditionsSelected',
-                    href: '#licenceConditionsBreached',
-                    text: 'Select one or more licence conditions',
-                  },
-                  list: [
-                    {
+                    ],
+                    licenceConditionsBreached: {
+                      text: 'Select one or more licence conditions',
                       href: '#licenceConditionsBreached',
                       errorId: 'noLicenceConditionsSelected',
-                      text: 'Select one or more licence conditions',
-                      name: 'licenceConditionsBreached',
                     },
-                  ],
-                })
-                if (isApprovedPremisesRoute) {
-                  expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
-                  expect(res.locals.backLinkText).toEqual(
-                    `Back to overview for ${res.locals.recommendation.personOnProbation.name}`,
-                  )
-                } else if (!hasFromPageId) {
-                  expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
-                  expect(res.locals.backLinkText).toEqual('Back to Consider a recall questions')
-                } else {
-                  expect(res.locals.backLinkUrl).toBeUndefined()
-                }
+                  },
+                  recommendation: {
+                    licenceConditionsBreached,
+                    personOnProbation: PersonOnProbationGenerator.generate('any'),
+                  },
+                  token: 'token1',
+                  urlInfo,
+                },
               })
+
+              await licenceConditionsController.get(req, res, mockNext())
+
+              expect(res.locals.errors).toEqual({
+                licenceConditionsBreached: {
+                  errorId: 'noLicenceConditionsSelected',
+                  href: '#licenceConditionsBreached',
+                  text: 'Select one or more licence conditions',
+                },
+                list: [
+                  {
+                    href: '#licenceConditionsBreached',
+                    errorId: 'noLicenceConditionsSelected',
+                    text: 'Select one or more licence conditions',
+                    name: 'licenceConditionsBreached',
+                  },
+                ],
+              })
+              if (isApprovedPremisesRoute) {
+                expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
+                expect(res.locals.backLinkText).toEqual(
+                  `Back to overview for ${res.locals.recommendation.personOnProbation.name}`,
+                )
+              } else if (!hasFromPageId) {
+                expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
+                expect(res.locals.backLinkText).toEqual('Back to Consider a recall questions')
+              } else {
+                expect(res.locals.backLinkUrl).toBeUndefined()
+              }
             })
-          }
-        })
+          })
+        }
       })
     })
   })
