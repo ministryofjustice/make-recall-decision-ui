@@ -114,9 +114,9 @@ jobs:
       app_version: '${{ needs.build.outputs.app_version }}'
   e2e_dev_tests:
     name: e2e tests against dev
-    if: github.ref == 'refs/heads/main'
-    needs:
-      - deploy_dev
+    #if: github.ref == 'refs/heads/main'
+    #needs:
+    #  - deploy_dev
     secrets: inherit
     uses: ./.github/workflows/e2e_dev_tests.yml
   deploy_preprod:

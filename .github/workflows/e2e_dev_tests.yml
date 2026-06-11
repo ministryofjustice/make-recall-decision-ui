@@ -5,7 +5,7 @@ on: [workflow_call,workflow_dispatch]
 jobs:
   e2e_dev_tests:
     name: e2e dev tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, hmpps-github-actions-runner]
     environment: dev
     steps:
       - name: Checkout make-recall-decision-e2e-tests repo
