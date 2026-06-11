@@ -3,7 +3,7 @@ import { hasValue, isDefined } from '../../utils/utils'
 import { getStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params

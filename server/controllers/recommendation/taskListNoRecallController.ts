@@ -3,7 +3,7 @@ import { isDefined } from '../../utils/utils'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { taskCompleteness } from '../recommendations/helpers/taskCompleteness'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, urlInfo, flags: featureFlags } = res.locals

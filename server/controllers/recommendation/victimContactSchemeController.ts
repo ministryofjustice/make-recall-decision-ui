@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import routeUrls from '../../routes/routeUrls'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 import validateVictimContactScheme from '../recommendations/victimContactScheme/formValidator'
 import inputDisplayValuesVictimContactScheme from '../recommendations/victimContactScheme/inputDisplayValues'
 
@@ -55,7 +55,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const nextPageId =
     req.body.hasVictimsInContactScheme === 'YES' ? 'victim-liaison-officer' : 'task-list#heading-victim-liaison'
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/${nextPageId}`
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/${nextPageId}`
 
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }

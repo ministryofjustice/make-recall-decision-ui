@@ -1,11 +1,11 @@
-import routeUrls from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import setResponsePropertiesToNull from '../support/commands'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
 import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
-import ppPaths from '../../server/routes/paths/pp'
+import ppPaths from '../../server/routes/paths/pp.paths'
 
 context('Make a recommendation - form validation', () => {
   const crn = 'X34983'
@@ -47,7 +47,7 @@ context('Make a recommendation - form validation', () => {
 
           cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(
-            `${routeUrls.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
           )
 
           // Back link
@@ -80,7 +80,7 @@ context('Make a recommendation - form validation', () => {
           cy.task('getStatuses', { statusCode: 200, response: [] })
 
           cy.visit(
-            `${routeUrls.recommendations}/${recommendationId}/alternatives-tried?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+            `${sharedPaths.recommendations}/${recommendationId}/alternatives-tried?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
           )
 
           // Back link
@@ -119,7 +119,7 @@ context('Make a recommendation - form validation', () => {
       response: { ...recommendationResponse, sentenceGroup: 'INDETERMINATE' },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-type`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-type`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateSentenceType',
@@ -131,7 +131,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-details`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-details`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldGroupId: 'option-1',
@@ -163,7 +163,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/indeterminate-details`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-details`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldGroupId: 'option-1',
@@ -203,7 +203,7 @@ context('Make a recommendation - form validation', () => {
       response: { ...recommendationResponse, recallType: undefined },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
@@ -218,7 +218,7 @@ context('Make a recommendation - form validation', () => {
       response: { ...recommendationResponse, recallType: undefined },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type-indeterminate`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
@@ -233,7 +233,7 @@ context('Make a recommendation - form validation', () => {
       response: { ...recommendationResponse, recallType: undefined },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/fixed-licence`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/fixed-licence`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasFixedTermLicenceConditions',
@@ -251,7 +251,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/vulnerabilities`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldGroupId: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
@@ -288,7 +288,7 @@ context('Make a recommendation - form validation', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/vulnerabilities-details`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/vulnerabilities-details`)
     cy.clickButton('Save and continue')
     cy.assertErrorMessage({
       fieldName: 'vulnerabilitiesDetails-RISK_OF_SUICIDE_OR_SELF_HARM',
@@ -300,7 +300,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/police-details`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/police-details`)
     cy.fillInput('Email address', '111')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
@@ -317,7 +317,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/victim-contact-scheme`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasVictimsInContactScheme',
@@ -329,7 +329,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-liaison-officer`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/victim-liaison-officer`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'dateVloInformed',
@@ -342,7 +342,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/what-led`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/what-led`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'whatLedToRecall',
@@ -354,7 +354,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/contraband`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/contraband`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'hasContrabandRisk',
@@ -372,7 +372,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/address-details`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/address-details`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'isMainAddressWherePersonCanBeFound',
@@ -393,7 +393,7 @@ context('Make a recommendation - form validation', () => {
       response: { ...completeRecommendationResponse, offenceAnalysis: undefined },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/offence-analysis`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/offence-analysis`)
     cy.getText('indexOffenceDetails').should('equal', 'Index offence details')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
@@ -409,7 +409,7 @@ context('Make a recommendation - form validation', () => {
       response: { ...completeRecommendationResponse, previousReleases: null },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/add-previous-release`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/add-previous-release`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'previousReleaseDate',
@@ -425,7 +425,7 @@ context('Make a recommendation - form validation', () => {
       response: { ...completeRecommendationResponse, currentRoshForPartA: null },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/rosh`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/rosh`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'riskToChildren',
@@ -452,7 +452,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/rationale-check`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/rationale-check`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'rationaleCheck',
@@ -464,7 +464,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/spo-rationale`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoRecallType',
@@ -475,7 +475,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-rationale`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/spo-rationale`)
     cy.selectRadio('Explain the decision', 'Recall')
     cy.clickButton('Continue')
     cy.assertErrorMessage({
@@ -487,7 +487,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_CONSIDER_RECALL', active: true }] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-why-no-recall`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/spo-why-no-recall`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'spoNoRecallRationale',
@@ -498,7 +498,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'SPO_SIGNATURE_REQUESTED', active: true }] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/spo-countersignature`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/spo-countersignature`)
     cy.clickButton('Countersign')
     cy.assertErrorMessage({
       fieldName: 'managerCountersignatureExposition',
@@ -509,7 +509,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'ACO_SIGNATURE_REQUESTED', active: true }] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/aco-countersignature`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/aco-countersignature`)
     cy.clickButton('Countersign')
     cy.assertErrorMessage({
       fieldName: 'managerCountersignatureExposition',

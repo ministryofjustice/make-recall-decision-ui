@@ -3,7 +3,7 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import inputDisplayValuesAlternativesToRecallTried from '../recommendations/alternativesToRecallTried/inputDisplayValues'
 import validateAlternativesTried from '../recommendations/alternativesToRecallTried/formValidator'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {

@@ -1,12 +1,12 @@
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { testForErrorSummary } from '../../../componentTests/errors.tests'
-import routeUrls from '../../../../server/routes/routeUrls'
+import { sharedPaths } from '../../../../server/routes/paths/shared.paths'
 import testRadioButtons from '../../../componentTests/radioButtons.tests'
 import { RecallTypeSelectedValue } from '../../../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 
 describe('recall type extended', () => {
   const recommendation = RecommendationResponseGenerator.generate()
-  const testPageUrl = `${routeUrls.recommendations}/${recommendation.id}/recall-type-extended`
+  const testPageUrl = `${sharedPaths.recommendations}/${recommendation.id}/recall-type-extended`
 
   beforeEach(() => {
     cy.signIn()

@@ -1,9 +1,9 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import routeUrls from '../../../../server/routes/routeUrls'
+import { sharedPaths } from '../../../../server/routes/paths/shared.paths'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { testBackLink } from '../../../componentTests/backLink.tests'
-import ppPaths from '../../../../server/routes/paths/pp'
+import ppPaths from '../../../../server/routes/paths/pp.paths'
 
 context('Task List Consider a Recall Page', () => {
   beforeEach(() => {
@@ -43,7 +43,7 @@ context('Task List Consider a Recall Page', () => {
         const popName = recommendationWithNoTasksCompleted.personOnProbation.name
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
+        cy.visit(`${sharedPaths.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
 
         testBackLink(
           `/cases/${recommendationWithNoTasksCompleted.crn}/overview`,
@@ -86,7 +86,7 @@ context('Task List Consider a Recall Page', () => {
         const popName = recommendationWithAllTasksCompleted.personOnProbation.name
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAllTasksCompleted })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`)
+        cy.visit(`${sharedPaths.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`)
 
         testBackLink(
           `/cases/${recommendationWithAllTasksCompleted.crn}/overview`,
@@ -136,7 +136,7 @@ context('Task List Consider a Recall Page', () => {
         const popName = recommendationWithNoTasksCompleted.personOnProbation.name
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
 
-        cy.visit(`${routeUrls.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
+        cy.visit(`${sharedPaths.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
 
         testBackLink(
           `/cases/${recommendationWithNoTasksCompleted.crn}/overview`,
@@ -188,7 +188,9 @@ context('Task List Consider a Recall Page', () => {
             const popName = recommendationWithAllTasksCompleted.personOnProbation.name
             cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAllTasksCompleted })
 
-            cy.visit(`${routeUrls.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`)
+            cy.visit(
+              `${sharedPaths.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`,
+            )
 
             testBackLink(
               `/cases/${recommendationWithAllTasksCompleted.crn}/overview`,

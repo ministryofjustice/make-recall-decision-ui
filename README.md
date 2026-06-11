@@ -2,7 +2,7 @@
 
 [![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/make-recall-decision-ui/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/make-recall-decision-ui)
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/ministryofjustice/make-recall-decision-ui/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ministryofjustice/make-recall-decision-ui/tree/main)
+[![GitHub Actions](https://github.com/ministryofjustice/make-recall-decision-ui/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ministryofjustice/make-recall-decision-ui)
 
 If a person on probation breaches their licence conditions, they could be recalled to prison. This service helps a
 probation officer to review case information and make the decision to recall or not.
@@ -28,7 +28,6 @@ Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/CAR
 ## Support / deployment / configuration
 
 * [Environment variables](./docs/env-vars.md) - including notes on changing secrets
-* [NPM dependency Checks](./docs/npm-dependency-checks.md)
 * [Deployment / Helm](./docs/helm-deploy.md) - including how to roll back a deployment
 * [Runbook](./RUNBOOK.md)
 

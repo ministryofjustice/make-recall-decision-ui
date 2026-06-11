@@ -1,12 +1,12 @@
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { testForErrorSummary } from '../../../componentTests/errors.tests'
-import routeUrls from '../../../../server/routes/routeUrls'
+import { sharedPaths } from '../../../../server/routes/paths/shared.paths'
 import testRadioButtons from '../../../componentTests/radioButtons.tests'
 import { RecallTypeSelectedValue } from '../../../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 
 describe('recall type indeterminate', () => {
   const recommendation = RecommendationResponseGenerator.generate()
-  const testPageUrl = `${routeUrls.recommendations}/${recommendation.id}/recall-type-indeterminate`
+  const testPageUrl = `${sharedPaths.recommendations}/${recommendation.id}/recall-type-indeterminate`
 
   beforeEach(() => {
     cy.signIn()

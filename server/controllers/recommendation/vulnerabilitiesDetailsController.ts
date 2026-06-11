@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import inputDisplayValuesVulnerabilitiesDetails from '../recommendations/vulnerabilitiesDetails/inputDisplayValues'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import routeUrls from '../../routes/routeUrls'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { validateVulnerabilitiesDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
 import { ValueWithDetails } from '../../@types/make-recall-decision-api'
@@ -71,7 +71,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-vulnerability`
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

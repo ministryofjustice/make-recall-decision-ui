@@ -1,9 +1,9 @@
 import { makeErrorObject } from '../../../utils/errors'
-import routeUrls from '../../../routes/routeUrls'
 import { isValueValid } from '../formOptions/formOptions'
 import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 import { YesNoValues } from '../formOptions/yesNo'
 
 const validateContraband = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
@@ -53,7 +53,7 @@ const validateContraband = async ({ requestBody, recommendationId }: FormValidat
   }
   return {
     valuesToSave,
-    nextPagePath: `${routeUrls.recommendations}/${recommendationId}/task-list#heading-custody`,
+    nextPagePath: `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-custody`,
   }
 }
 

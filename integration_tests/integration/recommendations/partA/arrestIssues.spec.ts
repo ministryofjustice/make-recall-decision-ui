@@ -1,5 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import ppPaths from '../../../../server/routes/paths/pp'
+import ppPaths from '../../../../server/routes/paths/pp.paths'
 import searchMappedUserResponse from '../../../../api/responses/searchMappedUsers.json'
 import searchActiveUsersResponse from '../../../../api/responses/ppudSearchActiveUsers.json'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
