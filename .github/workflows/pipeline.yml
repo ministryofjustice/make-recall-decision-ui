@@ -29,16 +29,3 @@ jobs:
     #  - deploy_dev
     secrets: inherit
     uses: ./.github/workflows/e2e_dev_tests.yml
-  deploy_preprod:
-    name: Deploy to the preprod environment
-    if: github.ref == 'refs/heads/main'
-    needs:
-      - build
-      - helm_lint
-      - deploy_dev
-      - e2e_dev_tests
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2
-    secrets: inherit
-    with:
-      environment: 'preprod'
-      app_version: '${{ needs.build.outputs.app_version }}'
