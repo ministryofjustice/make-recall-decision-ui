@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { isString } from '../utils/utils'
-import routeUrls from '../routes/routeUrls'
 import logger from '../../logger'
+import { sharedPaths } from '../routes/paths/shared.paths'
 
 const isValidFromPage = (pageUrlSlug: unknown) => {
   const valid =
@@ -28,7 +28,7 @@ const parseRecommendationUrl = (req: Request, res: Response, next: NextFunction)
     fromPageId: fromPageId && isValidFromPage(fromPageId) ? fromPageId : undefined,
     fromAnchor,
     currentPageId,
-    basePath: `${routeUrls.recommendations}/${recommendationId}/`,
+    basePath: `${sharedPaths.recommendations}/${recommendationId}/`,
   }
   next()
 }

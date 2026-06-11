@@ -8,7 +8,7 @@ import { PrisonSentence } from '../../../../@types/make-recall-decision-api/mode
 import { RecommendationResponse, Term } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { PrisonSentenceSequence } from '../../../../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
 import { TermGenerator } from '../../../../../data/common/termGenerator'
-import ppcsPaths from '../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../routes/paths/ppcs.paths'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 

@@ -1,8 +1,8 @@
 import { makeErrorObject } from '../../../utils/errors'
-import routeUrls from '../../../routes/routeUrls'
 import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 const validateWhatLedToRecall = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -24,7 +24,7 @@ const validateWhatLedToRecall = async ({ requestBody, recommendationId }: FormVa
     valuesToSave = {
       whatLedToRecall: stripHtmlTags(whatLedToRecall as string),
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-circumstances`
+    nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-circumstances`
   }
   return {
     errors,

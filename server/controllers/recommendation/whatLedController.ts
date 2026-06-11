@@ -3,7 +3,7 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import inputDisplayValuesWhatLedToRecall from '../recommendations/whatLedToRecall/inputDisplayValues'
 import validateWhatLedToRecall from '../recommendations/whatLedToRecall/formValidator'
-import routeUrls from '../../routes/routeUrls'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 import recommendationUtils from '../../utils/recommendationUtils'
 
 function get(req: Request, res: Response, next: NextFunction) {
@@ -52,7 +52,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-circumstances`
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-circumstances`
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

@@ -12,7 +12,7 @@ import {
   indeterminateSentenceTypeFtr56,
 } from '../recommendations/indeterminateSentenceType/formOptions'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const {

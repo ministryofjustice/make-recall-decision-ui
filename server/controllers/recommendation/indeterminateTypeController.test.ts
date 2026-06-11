@@ -4,7 +4,7 @@ import indeterminateTypeController from './indeterminateTypeController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 jest.mock('../../data/makeDecisionApiClient')
 

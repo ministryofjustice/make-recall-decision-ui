@@ -1,9 +1,9 @@
 import { Request, NextFunction, Response } from 'express'
 import { getCaseSummary, updateRecommendation } from '../../data/makeDecisionApiClient'
 import { RiskResponse } from '../../@types/make-recall-decision-api'
-import routeUrls from '../../routes/routeUrls'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import updatePageReviewedStatus from '../recommendations/helpers/updatePageReviewedStatus'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -49,7 +49,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     token,
   })
 
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/suitability-for-fixed-term-recall`
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/suitability-for-fixed-term-recall`
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

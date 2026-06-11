@@ -1,5 +1,5 @@
 import getCaseRiskResponse from '../../api/responses/get-case-risk.json'
-import routeUrls from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import getCaseRiskNoDataResponse from '../../api/responses/get-case-risk-no-data.json'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 
@@ -30,7 +30,7 @@ context('Risk page', () => {
       },
     })
 
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Jane Bloggs')
     cy.getElement({ qaAttr: 'banner-latest-complete-assessment' }).should('not.exist')
 
@@ -92,7 +92,7 @@ context('Risk page', () => {
       },
     })
 
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
 
     // v1 predictor scores
     const v1Predictors = [OGRS3_EXPECTED, RSR_EXPECTED, OGP_EXPECTED, OVP_EXPECTED, OSP_IIC_EXPECTED, OSP_DC_EXPECTED]
@@ -184,7 +184,7 @@ context('Risk page', () => {
         predictorScores,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
     cy.pageHeading().should('equal', 'Risk for Jane Bloggs')
 
     const v2Predictors = [
@@ -227,7 +227,7 @@ context('Risk page', () => {
         predictorScores,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
 
     assertPredictorScale(OSPC_EXPECTED)
     assertPredictorScale(OSPI_EXPECTED)
@@ -261,7 +261,7 @@ context('Risk page', () => {
         predictorScores,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
 
     assertPredictorScale(OSP_IIC_EXPECTED)
     assertPredictorScale(OSP_DC_EXPECTED)
@@ -280,7 +280,7 @@ context('Risk page', () => {
         mappa: { error: 'NOT_FOUND' },
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
 
     // predictor scores
     cy.getText('rsr-missing').should('contain', 'Data not available.')
@@ -336,7 +336,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: getCaseRiskNoDataResponse,
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
 
     // RoSH content boxes
     ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
@@ -378,7 +378,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: { ...getCaseRiskNoDataResponse, roshSummary: { error: 'MISSING_DATA' } },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
 
     // RoSH content boxes
     ;['whoIsAtRisk', 'natureOfRisk', 'riskImminence', 'riskIncreaseFactors', 'riskMitigationFactors'].forEach(id =>
@@ -399,7 +399,7 @@ context('Risk page', () => {
       statusCode: 200,
       response: { ...getCaseRiskResponse, assessmentStatus: 'INCOMPLETE' },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/risk`)
+    cy.visit(`${sharedPaths.cases}/${crn}/risk`)
     cy.getText('banner-latest-complete-assessment')
       .should('include', 'This information is from the latest complete OASys assessment.')
       .should('include', 'Check OASys for new information. There is a more recent assessment that’s not complete.')
@@ -412,8 +412,7 @@ context('Risk page', () => {
         statusCode: 200,
         response: getCaseRiskResponse,
       })
-
-      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.visit(`${sharedPaths.cases}/${crn}/risk`)
 
       // RoSH history
       cy.get('[data-qa="timeline-item-1"]').should('contain', '17 October 2022')
@@ -542,7 +541,7 @@ context('Risk page', () => {
         statusCode: 200,
         response: getCaseRiskNoDataResponse,
       })
-      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.visit(`${sharedPaths.cases}/${crn}/risk`)
       cy.getText('timeline-missing').should(
         'equal',
         'RoSH levels and predictor scores cannot be retrieved from NDelius or OASys. Double-check NDelius and OASys.',
@@ -560,7 +559,7 @@ context('Risk page', () => {
           },
         },
       })
-      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.visit(`${sharedPaths.cases}/${crn}/risk`)
       cy.getText('score-history-missing').should(
         'equal',
         'Predictor scores cannot be retrieved from OASys. Double-check OASys.',
@@ -580,7 +579,7 @@ context('Risk page', () => {
           },
         },
       })
-      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.visit(`${sharedPaths.cases}/${crn}/risk`)
       cy.getText('rosh-history-missing').should(
         'equal',
         'Historical RoSH levels cannot be retrieved from NDelius. Double-check NDelius and OASys.',
@@ -612,7 +611,7 @@ context('Risk page', () => {
           },
         },
       })
-      cy.visit(`${routeUrls.cases}/${crn}/risk`)
+      cy.visit(`${sharedPaths.cases}/${crn}/risk`)
       const opts = { parent: '[data-qa="timeline-item-2"]' }
       cy.get('#predictor-timeline__toggle-all').click()
       cy.get('[data-qa="timeline-item-1"]').should('not.contain', 'RSR')

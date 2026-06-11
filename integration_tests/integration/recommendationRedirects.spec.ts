@@ -1,4 +1,4 @@
-import routeUrls from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import setResponsePropertiesToNull from '../support/commands'
 
@@ -30,7 +30,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type`)
     cy.selectRadio('Select your recommendation', 'No recall')
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
@@ -41,7 +41,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(
-      `${routeUrls.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`,
+      `${sharedPaths.recommendations}/${recommendationId}/recall-type?fromPageId=task-list&fromAnchor=heading-recommendation`,
     )
     cy.selectRadio('Select your recommendation', 'No recall')
     cy.task('getRecommendation', {
@@ -57,7 +57,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type-indeterminate`)
     cy.selectRadio('What do you recommend?', 'No recall')
     cy.task('getRecommendation', {
       statusCode: 200,
@@ -73,7 +73,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(
-      `${routeUrls.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`,
+      `${sharedPaths.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`,
     )
     cy.selectRadio('What do you recommend?', 'No recall')
     cy.task('getRecommendation', {
@@ -89,7 +89,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme?flagFTR56Enabled=1`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/victim-contact-scheme?flagFTR56Enabled=1`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
@@ -100,7 +100,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.recommendations}/${recommendationId}/victim-contact-scheme`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/victim-contact-scheme`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')

@@ -4,7 +4,7 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isMandatoryTextValue } from '../../utils/utils'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const {

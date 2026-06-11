@@ -12,7 +12,7 @@ import strings from '../../../../../textStrings/en'
 import { getRecommendation, updateRecommendation } from '../../../../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../../../../recommendations/helpers/urls'
 import { isValueValid } from '../../../../recommendations/formOptions/formOptions'
-import ppcsPaths from '../../../../../routes/paths/ppcs'
+import ppcsPaths from '../../../../../routes/paths/ppcs.paths'
 import { BookRecallToPpud } from '../../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 function resetOffenceInfo(

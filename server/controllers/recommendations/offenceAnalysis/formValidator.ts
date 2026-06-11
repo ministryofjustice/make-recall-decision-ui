@@ -1,8 +1,8 @@
 import { makeErrorObject } from '../../../utils/errors'
-import routeUrls from '../../../routes/routeUrls'
 import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 const validateOffenceAnalysis = async ({ requestBody, recommendationId }: FormValidatorArgs): FormValidatorReturn => {
   let errors
@@ -24,7 +24,7 @@ const validateOffenceAnalysis = async ({ requestBody, recommendationId }: FormVa
     valuesToSave = {
       offenceAnalysis: stripHtmlTags(offenceAnalysis as string),
     }
-    nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`
+    nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-person-details`
   }
   return {
     errors,
