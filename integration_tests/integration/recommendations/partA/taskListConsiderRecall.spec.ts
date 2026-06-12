@@ -2,7 +2,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { sharedPaths } from '../../../../server/routes/paths/shared.paths'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
-import { testBackLink, testStandardBackLink } from '../../../componentTests/backLink.tests'
+import { testBackLink } from '../../../componentTests/backLink.tests'
 import ppPaths from '../../../../server/routes/paths/pp.paths'
 
 context('Task List Consider a Recall Page', () => {
@@ -38,15 +38,20 @@ context('Task List Consider a Recall Page', () => {
           triggerLeadingToRecall: false,
           licenceConditionsBreached: false,
           alternativesToRecallTried: false,
+          sentenceGroup: 'none',
         })
         const popName = recommendationWithNoTasksCompleted.personOnProbation.name
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
 
         cy.visit(`${sharedPaths.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
 
-        testStandardBackLink()
+        testBackLink(
+          `/cases/${recommendationWithNoTasksCompleted.crn}/overview`,
+          `Back to overview for ${recommendationWithNoTasksCompleted.personOnProbation.name}`,
+          false,
+        )
 
-        cy.get('.moj-task-list__item').should('have.length', 3).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -66,6 +71,12 @@ context('Task List Consider a Recall Page', () => {
           'To do',
           expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.alternativesTried),
         )
+        checkTaskListItem(
+          3,
+          `${popName}'s sentence information`,
+          'To do',
+          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.sentenceInformation),
+        )
 
         cy.getElement('Continue').should('not.exist')
       })
@@ -77,9 +88,13 @@ context('Task List Consider a Recall Page', () => {
 
         cy.visit(`${sharedPaths.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`)
 
-        testStandardBackLink()
+        testBackLink(
+          `/cases/${recommendationWithAllTasksCompleted.crn}/overview`,
+          `Back to overview for ${recommendationWithAllTasksCompleted.personOnProbation.name}`,
+          false,
+        )
 
-        cy.get('.moj-task-list__item').should('have.length', 3).as('taskListItems')
+        cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
 
         checkTaskListItem(
           0,
@@ -99,7 +114,12 @@ context('Task List Consider a Recall Page', () => {
           'Completed',
           expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.alternativesTried),
         )
-
+        checkTaskListItem(
+          3,
+          `${popName}'s sentence information`,
+          'Completed',
+          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.sentenceInformation),
+        )
         cy.getElement('Continue').should('exist')
       })
     })
@@ -116,9 +136,7 @@ context('Task List Consider a Recall Page', () => {
         const popName = recommendationWithNoTasksCompleted.personOnProbation.name
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
 
-        cy.visit(
-          `${sharedPaths.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall?flagFTR56Enabled=1`,
-        )
+        cy.visit(`${sharedPaths.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
 
         testBackLink(
           `/cases/${recommendationWithNoTasksCompleted.crn}/overview`,
@@ -171,7 +189,7 @@ context('Task List Consider a Recall Page', () => {
             cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAllTasksCompleted })
 
             cy.visit(
-              `${sharedPaths.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall?flagFTR56Enabled=1`,
+              `${sharedPaths.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`,
             )
 
             testBackLink(

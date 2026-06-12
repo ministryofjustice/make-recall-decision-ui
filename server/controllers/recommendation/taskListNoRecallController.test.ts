@@ -41,8 +41,8 @@ describe('get', () => {
     })
     const next = mockNext()
     await taskListNoRecallController.get(mockReq(), res, next)
-
-    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/task-list')
+    // FTR56 is by default enabled
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.taskListConsiderRecall}`)
   })
 
   it('present - redirect to task-list-consider-recall if recall type is undefined and FTR56 enabled', async () => {
@@ -54,7 +54,6 @@ describe('get', () => {
       locals: {
         recommendation,
         urlInfo: { basePath: `/recommendations/123/` },
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -76,7 +75,6 @@ describe('get', () => {
       locals: {
         recommendation,
         urlInfo: { basePath: `/recommendations/123/` },
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -121,7 +119,7 @@ describe('get', () => {
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type-extended')
   })
 
-  it('ftr56: present for Adult_SDS SentenceGroup', async () => {
+  it('present for Adult_SDS SentenceGroup', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
@@ -139,7 +137,7 @@ describe('get', () => {
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type')
   })
 
-  it('ftr56: present for Youth_SDS SentenceGroup', async () => {
+  it('present for Youth_SDS SentenceGroup', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
@@ -157,7 +155,7 @@ describe('get', () => {
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type')
   })
 
-  it('ftr56: present for Extended SentenceGroup', async () => {
+  it('present for Extended SentenceGroup', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
@@ -167,7 +165,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()
@@ -176,7 +173,7 @@ describe('get', () => {
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual('recall-type-extended')
   })
 
-  it('ftr56: present for Indeterminate SentenceGroup', async () => {
+  it('present for Indeterminate SentenceGroup', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'NO_RECALL' } },
@@ -186,7 +183,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation,
-        flags: { flagFTR56Enabled: true },
       },
     })
     const next = mockNext()

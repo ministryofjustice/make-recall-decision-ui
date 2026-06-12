@@ -17,7 +17,6 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {% set hintHtml %}
-          {% if flags.flagFTR56Enabled %}
             <p class='govuk-body'>Explain why you think the risk cannot be managed in the community.</p>
             <p class="govuk-body">Give details about:</p>
             <ul class="govuk-list govuk-list--bullet">
@@ -26,16 +25,7 @@
               <li>police investigations or charges</li>
               <li>any other relevant information</li>
             </ul>
-          {% else %}
-            <p class='govuk-body'>Explain why the risk cannot be managed in the community.</p>
-            <p class='govuk-body'>Give details about:</p>
-            <ul class='govuk-list govuk-list--bullet'>
-              <li>further offending</li>
-              <li>police investigations / charges</li>
-              <li>court dates</li>
-              <li>any other relevant information</li>
-            </ul>
-          {% endif %}
+          
         {% endset %}
         {{ govukTextarea({
               name: "whatLedToRecall",

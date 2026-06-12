@@ -11,7 +11,8 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
     <h2 class="moj-task-list__section" id='heading-circumstances'>
         Provide information about the circumstances
     </h2>
-    {% if ftr56Enabled and recallType == 'NO_RECALL' %}
+    
+    {% if recallType == 'NO_RECALL' %}
        <ul class="moj-task-list__items">
          <li class="moj-task-list__item">
              <span class="moj-task-list__task-name">
@@ -36,7 +37,7 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
                   <a aria-describedby='task-list-status-sentenceInformation' href="{{ changeLinkUrl({ pageUrlSlug: 'sentence-information', urlInfo: urlInfo, fromAnchor: 'heading-alternatives' }) }}">{{ pageHeadings.sentenceInformation }}</a>
               </span>
               <span id='task-list-status-sentenceInformation'>{{ taskStatus({ hasData: hasData(recommendation.sentenceGroup) }) }}</span>
-          </li>
+          </li>   
           {% if recommendation.sentenceGroup == 'INDETERMINATE' %}
             <li class="moj-task-list__item">
                  <span class="moj-task-list__task-name">
@@ -46,7 +47,7 @@ set licenceConditionsBreached = hasData(recommendation.licenceConditionsBreached
             </li>
            {% endif %}
        </ul>
-    {% elif ftr56Enabled and recallType != 'NO_RECALL' %}
+    {% elif recallType != 'NO_RECALL' %}
        <ul class="moj-task-list__items">
           <li class="moj-task-list__item">
               <span class="moj-task-list__task-name">

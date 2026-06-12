@@ -133,7 +133,7 @@ function extractAlternativeTried(recommendation: RecommendationDecorated) {
 }
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation, flags } = res.locals
+  const { recommendation } = res.locals
 
   const alternativesToRecallTried = extractAlternativeTried(recommendation)
   const standardLicenceConditions = extractStandardLicenceConditions(recommendation)
@@ -148,9 +148,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'reviewPractitionersConcerns',
     },
-    sentenceGroupHumanReadable: flags.flagFTR56Enabled
-      ? sentenceGroup.find(group => group.value === recommendation.sentenceGroup)?.text
-      : null,
+    sentenceGroupHumanReadable: sentenceGroup.find(group => group.value === recommendation.sentenceGroup)?.text,
     offenderName: recommendation.personOnProbation.name,
     triggerLeadingToRecall: recommendation.triggerLeadingToRecall,
     standardLicenceConditions,
@@ -161,7 +159,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     isIndeterminateSentence,
     isExtendedSentence,
     indeterminateSentenceHumanReadable:
-      flags.flagFTR56Enabled && isIndeterminateSentence === 'Yes'
+      isIndeterminateSentence === 'Yes'
         ? indeterminateSentenceTypeFtr56.find(
             sentenceType => sentenceType.value === recommendation.indeterminateSentenceType?.selected,
           )?.text

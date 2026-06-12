@@ -58,7 +58,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type-indeterminate`)
-    cy.selectRadio('What do you recommend?', 'No recall')
+    cy.selectRadio('Select your recommendation', 'No recall - create a decision not to recall letter')
     cy.task('getRecommendation', {
       statusCode: 200,
       response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
@@ -75,7 +75,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.visit(
       `${sharedPaths.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`,
     )
-    cy.selectRadio('What do you recommend?', 'No recall')
+    cy.selectRadio('Select your recommendation', 'No recall - create a decision not to recall letter')
     cy.task('getRecommendation', {
       statusCode: 200,
       response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
@@ -85,11 +85,11 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.pageHeading().should('contain', 'Create a decision not to recall letter')
   })
 
-  it('victim contact scheme - directs "no" to the task list page with FTR56 Enabled', () => {
+  it('victim contact scheme - directs "no" to the task list page', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/victim-contact-scheme?flagFTR56Enabled=1`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/victim-contact-scheme`)
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
@@ -104,6 +104,6 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
-    cy.pageHeading().should('contain', 'Create a Part A form')
+    cy.pageHeading().should('contain', `Part A for ${recommendationResponse.personOnProbation.name}`)
   })
 })

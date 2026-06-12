@@ -7,11 +7,7 @@ import strings from '../../textStrings/en'
 import getCaseSection from '../caseSummary/getCaseSection'
 import { NamedFormError, UrlInfo } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import {
-  isFixedTermRecallMandatoryForRecommendation,
-  isFixedTermRecallMandatoryForValueKeys,
-  isRecommendationDiscretionaryRecall,
-} from '../../utils/fixedTermRecallUtils'
+import { isRecommendationDiscretionaryRecall } from '../../utils/fixedTermRecallUtils'
 import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
 import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
 import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
@@ -27,10 +23,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   } = res.locals
 
   // This screen isn't shown for indeterminate or extended sentences in the FTR56 flow
-  if (
-    flags.flagFTR56Enabled &&
-    [SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(recommendation.sentenceGroup)
-  ) {
+  if ([SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(recommendation.sentenceGroup)) {
     res.redirect(303, `${sharedPaths.recommendations}/${recommendation.id}/indeterminate-details`)
     return next()
   }
@@ -57,11 +50,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...caseSummaryRisk,
   }
 
-  const formOptions = getFormOptions(
-    flags.flagFTR56Enabled,
-    recommendation.personOnProbation.name,
-    recommendation.sentenceGroup,
-  )
+  const formOptions = getFormOptions(recommendation.personOnProbation.name, recommendation.sentenceGroup)
 
   const inputDisplayValues = suitabilityInputDisplayValues(formOptions, unsavedValues, recommendation)
 
@@ -70,24 +59,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
   }
 
-  let warningPanel = null
-
-  if (flags.flagFTR56Enabled) {
-    warningPanel =
-      // In the FTR56 flow, rationale is exclusively recorded for the YOUTH_SDS flow
-      // so the warning is only required when the sentenceGroup is YOUTH_SDS
-      recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
-      recommendation.recallType !== null &&
-      isRecommendationDiscretionaryRecall(recommendation)
-        ? warningPanelDetails
-        : undefined
-  } else {
-    warningPanel =
-      recommendation.recallType !== null &&
-      !isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
-        ? warningPanelDetails
-        : undefined
-  }
+  const warningPanel =
+    // In the FTR56 flow, rationale is exclusively recorded for the YOUTH_SDS flow
+    // so the warning is only required when the sentenceGroup is YOUTH_SDS
+    recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
+    recommendation.recallType !== null &&
+    isRecommendationDiscretionaryRecall(recommendation)
+      ? warningPanelDetails
+      : undefined
 
   res.locals = {
     ...res.locals,
@@ -100,11 +79,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     sentenceGroupDetails: getSentenceGroupDetailsFromEnum(recommendation.sentenceGroup),
   }
 
-  if (flags.flagFTR56Enabled) {
-    res.render('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
-  } else {
-    res.render(`pages/recommendations/suitabilityForFixedTermRecall`)
-  }
+  res.render('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
   return next()
 }
 
@@ -125,11 +100,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const errors: NamedFormError[] = []
   const valuesToSave: Record<string, unknown> = {}
 
-  const fieldIds = [
-    ...Object.keys(
-      getFormOptions(flags.flagFTR56Enabled, recommendation.personOnProbation.name, recommendation.sentenceGroup),
-    ),
-  ]
+  const fieldIds = [...Object.keys(getFormOptions(recommendation.personOnProbation.name, recommendation.sentenceGroup))]
 
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
 
@@ -153,36 +124,22 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   // We can't validate these fields as they're set from the NDelius value,
   // but they're still required so we add them in here
-  if (flags.flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+  if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
     valuesToSave.isMappaLevel2Or3 = req.body.isMappaLevel2Or3 === 'YES'
     valuesToSave.isMappaCategory4 = req.body.isMappaCategory4 === 'YES'
   }
 
-  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation, flags.flagFTR56Enabled)
-  const ftrIsMandatoryUpdated = isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
+  // wipe the recall Type and rationale if the criteria has changed
+  const criteriaChanged = fieldIds.some(
+    fieldId => recommendation[fieldId as keyof typeof recommendation] !== valuesToSave[fieldId],
+  )
 
-  if (!flags.flagFTR56Enabled && ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
+  if (criteriaChanged) {
     valuesToSave.recallType = {
       ...recommendation.recallType,
       selected: {
-        value: recommendation.recallType?.selected.value,
+        value: null,
       },
-    }
-  }
-
-  if (flags.flagFTR56Enabled) {
-    // wipe the recall Type and rationale if the criteria has changed
-    const criteriaChanged = fieldIds.some(
-      fieldId => recommendation[fieldId as keyof typeof recommendation] !== valuesToSave[fieldId],
-    )
-
-    if (criteriaChanged) {
-      valuesToSave.recallType = {
-        ...recommendation.recallType,
-        selected: {
-          value: null,
-        },
-      }
     }
   }
 

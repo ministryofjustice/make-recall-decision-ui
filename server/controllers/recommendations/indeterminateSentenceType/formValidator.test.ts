@@ -21,7 +21,7 @@ describe('validateIndeterminateSentenceType', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       indeterminateSentenceType: {
-        allOptions: formOptions.indeterminateSentenceType,
+        allOptions: formOptions.indeterminateSentenceTypeFtr56.map(({ value, text }) => ({ value, text })),
         selected: 'LIFE',
       },
     })
@@ -38,21 +38,19 @@ describe('validateIndeterminateSentenceType', () => {
       {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelected',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
+        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
       },
     ])
   })
 
-  it('Ftr56: returns an error, if not set, and no valuesToSave', async () => {
-    const ftr56Enabled = true
+  it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
       indeterminateSentenceType: '',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIndeterminateSentenceType({
       requestBody,
-      ftr56Enabled,
     })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
@@ -76,21 +74,19 @@ describe('validateIndeterminateSentenceType', () => {
       {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelected',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
+        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
       },
     ])
   })
 
-  it('Ftr56: returns an error, if set to an invalid value, and no valuesToSave', async () => {
-    const ftr56Enabled = true
+  it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
     const requestBody = {
       indeterminateSentenceType: 'VALUE',
       crn: 'X34534',
     }
     const { errors, valuesToSave } = await validateIndeterminateSentenceType({
       requestBody,
-      ftr56Enabled,
     })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([

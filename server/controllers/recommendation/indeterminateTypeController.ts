@@ -7,17 +7,13 @@ import inputDisplayValuesIndeterminateSentenceType from '../recommendations/inde
 import validateIndeterminateSentenceType from '../recommendations/indeterminateSentenceType/formValidator'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import {
-  indeterminateSentenceType,
-  indeterminateSentenceTypeFtr56,
-} from '../recommendations/indeterminateSentenceType/formOptions'
+import { indeterminateSentenceTypeFtr56 } from '../recommendations/indeterminateSentenceType/formOptions'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import ppPaths from '../../routes/paths/pp.paths'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
-    flags,
     urlInfo: { basePath },
   } = res.locals
 
@@ -25,10 +21,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     fullName: recommendation.personOnProbation.name,
   }
 
-  if (
-    flags.flagFTR56Enabled &&
-    (!recommendation.sentenceGroup || recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE)
-  ) {
+  if (!recommendation.sentenceGroup || recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE) {
     res.redirect(303, `${basePath}${ppPaths.sentenceInformation}`)
     return
   }
@@ -48,9 +41,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
-  res.locals.indeterminateSentenceTypeOptions = res.locals.flags.flagFTR56Enabled
-    ? indeterminateSentenceTypeFtr56
-    : indeterminateSentenceType
+  res.locals.indeterminateSentenceTypeOptions = indeterminateSentenceTypeFtr56
 
   res.render(`pages/recommendations/indeterminateSentenceType`)
   next()
@@ -70,7 +61,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     urlInfo,
     token,
-    ftr56Enabled: flags.flagFTR56Enabled,
   })
 
   if (errors) {

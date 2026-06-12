@@ -19,7 +19,7 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
   flagFTR56Enabled: {
     label: 'FTR56/ISR changes',
     description: 'Enables the behaviour required for the FTR56/ISR policy',
-    default: false,
+    default: true,
   },
 }
 

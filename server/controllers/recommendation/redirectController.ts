@@ -11,7 +11,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     recommendation,
     urlInfo: { basePath },
     user: { token, roles },
-    flags: { flagFTR56Enabled },
   } = res.locals
 
   const statuses = (
@@ -45,14 +44,14 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }
   } else if (isAPRationalRecorded) {
     // in the case of the OOH people raising a recall, when the PP enters, he should skip the trigger stuff as the decision has already been met.
-    if (flagFTR56Enabled && !hasValue(recommendation.sentenceGroup)) {
+    if (!hasValue(recommendation.sentenceGroup)) {
       nextPageId = 'sentence-information'
     } else if (!hasValue(recallType)) {
       if (recommendation?.sentenceGroup === SentenceGroup.INDETERMINATE) {
         nextPageId = 'recall-type-indeterminate'
       } else if (recommendation?.sentenceGroup === SentenceGroup.EXTENDED) {
         nextPageId = 'recall-type-extended'
-      } else if (!flagFTR56Enabled || recommendation?.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+      } else if (recommendation?.sentenceGroup === SentenceGroup.YOUTH_SDS) {
         nextPageId = 'suitability-for-fixed-term-recall'
       } else {
         nextPageId = ppPaths.checkMappaInformation
@@ -68,7 +67,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
         nextPageId = 'recall-type-indeterminate'
       } else if (recommendation?.sentenceGroup === SentenceGroup.EXTENDED) {
         nextPageId = 'recall-type-extended'
-      } else if (!flagFTR56Enabled || recommendation?.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+      } else if (recommendation?.sentenceGroup === SentenceGroup.YOUTH_SDS) {
         nextPageId = 'suitability-for-fixed-term-recall'
       } else {
         nextPageId = ppPaths.checkMappaInformation

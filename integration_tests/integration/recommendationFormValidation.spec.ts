@@ -32,41 +32,39 @@ context('Make a recommendation - form validation', () => {
   }
 
   describe('Licence conditions', () => {
-    ;[true, false].forEach(ftr56Enabled => {
-      describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
-        ;[true, false].forEach(hasFromPageId => {
-          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-            cy.signIn()
-            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-            cy.task(
-              'getCaseV2',
-              caseTemplate()
-                .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-                .withAllConvictionsReleasedOnLicence()
-                .build(),
+    describe(`with FTR56 flag 'enabled'`, () => {
+      ;[true, false].forEach(hasFromPageId => {
+        it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+          cy.signIn()
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+          cy.task(
+            'getCaseV2',
+            caseTemplate()
+              .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+              .withAllConvictionsReleasedOnLicence()
+              .build(),
+          )
+
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
             )
+          } else {
+            testStandardBackLink()
+          }
 
-            cy.task('getStatuses', { statusCode: 200, response: [] })
-            cy.visit(
-              `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-            )
-
-            // Back link
-            if (ftr56Enabled && !hasFromPageId) {
-              testBackLink(
-                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                'Back to Consider a recall questions',
-                false,
-              )
-            } else {
-              testStandardBackLink()
-            }
-
-            cy.clickButton('Continue')
-            cy.assertErrorMessage({
-              fieldName: 'licenceConditionsBreached',
-              errorText: 'Select one or more licence conditions',
-            })
+          cy.clickButton('Continue')
+          cy.assertErrorMessage({
+            fieldName: 'licenceConditionsBreached',
+            errorText: 'Select one or more licence conditions',
           })
         })
       })
@@ -74,42 +72,40 @@ context('Make a recommendation - form validation', () => {
   })
 
   describe('Alternatives tried', () => {
-    ;[true, false].forEach(ftr56Enabled => {
-      describe(`FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
-        ;[true, false].forEach(hasFromPageId => {
-          it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-            cy.signIn()
-            cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-            cy.task('getStatuses', { statusCode: 200, response: [] })
+    describe(`FTR56 flag 'enabled'`, () => {
+      ;[true, false].forEach(hasFromPageId => {
+        it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+          cy.signIn()
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
 
-            cy.visit(
-              `${sharedPaths.recommendations}/${recommendationId}/alternatives-tried?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/alternatives-tried?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
             )
+          } else {
+            testStandardBackLink()
+          }
 
-            // Back link
-            if (ftr56Enabled && !hasFromPageId) {
-              testBackLink(
-                `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                'Back to Consider a recall questions',
-                false,
-              )
-            } else {
-              testStandardBackLink()
-            }
-
-            cy.clickButton('Continue')
-            cy.assertErrorMessage({
-              fieldName: 'alternativesToRecallTried',
-              errorText: 'Select which alternatives to recall have been tried already',
-            })
-            cy.selectCheckboxes('What alternatives to recall have been tried already?', [
-              'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-            ])
-            cy.clickButton('Continue')
-            cy.assertErrorMessage({
-              fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
-              errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-            })
+          cy.clickButton('Continue')
+          cy.assertErrorMessage({
+            fieldName: 'alternativesToRecallTried',
+            errorText: 'Select which alternatives to recall have been tried already',
+          })
+          cy.selectCheckboxes('What alternatives to recall have been tried already?', [
+            'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
+          ])
+          cy.clickButton('Continue')
+          cy.assertErrorMessage({
+            fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
+            errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
           })
         })
       })
@@ -118,24 +114,12 @@ context('Make a recommendation - form validation', () => {
 
   it('Indeterminate sentence type', () => {
     cy.signIn()
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-type`)
-    cy.clickButton('Continue')
-    cy.assertErrorMessage({
-      fieldName: 'indeterminateSentenceType',
-      errorText: 'Select whether Jane Bloggs is on a life, IPP or DPP sentence',
-    })
-  })
-
-  it('Ftr56: Indeterminate sentence type', () => {
-    cy.signIn()
     cy.task('getRecommendation', {
       statusCode: 200,
       response: { ...recommendationResponse, sentenceGroup: 'INDETERMINATE' },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-type?flagFTR56Enabled=1`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-type`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateSentenceType',
@@ -152,21 +136,22 @@ context('Make a recommendation - form validation', () => {
     cy.assertErrorMessage({
       fieldGroupId: 'option-1',
       fieldName: 'indeterminateOrExtendedSentenceDetails',
-      errorText: 'Select at least one of the criteria',
+      errorText: 'Select all the criteria that apply to Jane Bloggs',
     })
     cy.selectCheckboxes('Indeterminate and extended sentences', [
-      'Jane Bloggs has shown behaviour similar to the index offence',
-      'Jane Bloggs has shown behaviour that could lead to a sexual or violent offence',
-      'Jane Bloggs is out of touch',
+      'Jane Bloggs has shown behaviour similar to the circumstances surrounding the index offence',
+      'Jane Bloggs has shown behaviour that has caused, or will cause, a sexual or violent offence',
+      'Jane Bloggs has shown behaviour likely to result in a sexual or violent offence, or that could be associated with committing one',
+      'Jane Bloggs is either out of touch with probation, or their current location is not known',
     ])
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-      errorText: 'Enter details about the behaviour similar to the index offence',
+      errorText: 'Enter details about the behaviour similar to the circumstances surrounding the index offence',
     })
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-      errorText: 'Enter details about the behaviour that could lead to a sexual or violent offence',
+      errorText: 'Enter details about the behaviour that has caused, or will cause, a sexual or violent offence',
     })
     cy.assertErrorMessage({
       fieldName: 'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH',
@@ -178,7 +163,7 @@ context('Make a recommendation - form validation', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-details?flagFTR56Enabled=1`)
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/indeterminate-details`)
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldGroupId: 'option-1',
@@ -222,7 +207,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
-      errorText: "Select if you're recommending a fixed term recall, standard recall or no recall",
+      errorText: 'Select a recall recommendation',
     })
   })
 
@@ -237,7 +222,7 @@ context('Make a recommendation - form validation', () => {
     cy.clickButton('Continue')
     cy.assertErrorMessage({
       fieldName: 'recallType',
-      errorText: 'Select whether you recommend a recall or not',
+      errorText: 'Select a recall recommendation',
     })
   })
 

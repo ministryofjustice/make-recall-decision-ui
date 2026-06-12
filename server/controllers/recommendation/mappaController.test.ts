@@ -27,6 +27,10 @@ describe('get', () => {
       propertyToRefresh: 'mappa',
       recommendationId: '123',
       token: 'token',
+      valuesToSave: {
+        isMappaCategory4: false,
+        isMappaLevel2Or3: false,
+      },
     })
 
     expect(updatePageReviewedStatus).toHaveBeenCalledWith({
@@ -44,7 +48,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },
-        flags: { flagFTR56Enabled: true },
+        flags: {},
       },
     })
     const next = mockNext()
@@ -57,7 +61,7 @@ describe('get', () => {
     )
 
     expect(updateRecommendation).toHaveBeenCalledWith({
-      featureFlags: { flagFTR56Enabled: true },
+      featureFlags: {},
       propertyToRefresh: 'mappa',
       recommendationId: '123',
       token: 'token',
@@ -138,7 +142,7 @@ describe('get', () => {
               id: '123',
               personOnProbation: { name: 'Joe Bloggs', mappa: { ...testCase.mappaData } },
             },
-            flags: { flagFTR56Enabled: true },
+            flags: {},
           },
         })
         const next = mockNext()
@@ -152,7 +156,7 @@ describe('get', () => {
         )
 
         expect(updateRecommendation).toHaveBeenCalledWith({
-          featureFlags: { flagFTR56Enabled: true },
+          featureFlags: {},
           valuesToSave: {
             isMappaCategory4: testCase.expected.isMappaCategory4,
             isMappaLevel2Or3: testCase.expected.isMappaLevel2Or3,

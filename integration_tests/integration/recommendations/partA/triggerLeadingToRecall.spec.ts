@@ -1,7 +1,7 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
-import { testBackLink, testStandardBackLink } from '../../../componentTests/backLink.tests'
+import { testBackLink } from '../../../componentTests/backLink.tests'
 import ppPaths from '../../../../server/routes/paths/pp.paths'
 import config from '../../../../server/config'
 
@@ -22,7 +22,7 @@ context('Trigger leading to recall Page', () => {
       })
 
       it('Feature flag FTR-56 enabled', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.title().should('equal', `What has made you consider recalling the person? - ${config.applicationName}`)
 
@@ -63,42 +63,6 @@ context('Trigger leading to recall Page', () => {
         // Continue button
         cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
       })
-
-      it('Feature flag FTR-56 disabled', () => {
-        cy.visit(testPageUrl)
-
-        cy.title().should('equal', `What has made you consider recalling the person? - ${config.applicationName}`)
-
-        // Back link
-        testStandardBackLink()
-
-        // Page Heading
-        cy.pageHeading().should(
-          'equal',
-          `What has made you consider recalling ${recommendation.personOnProbation.name}?`,
-        )
-
-        // Main content
-        cy.get('.govuk-hint').as('hint')
-
-        cy.get('@hint')
-          .find('p')
-          .eq(0)
-          .contains(
-            `You're thinking about whether ${recommendation.personOnProbation.name} should be recalled or not. Explain your concerns. Include details of:`,
-          )
-
-        cy.get('@hint')
-          .find('ul')
-          .should('contain.text', "what you're worried about")
-          .and('contain.text', 'protective factors that are still in place')
-          .and('contain.text', 'protective factors that have broken down')
-
-        cy.get('@hint').find('p').eq(1).contains('This explanation will be recorded in NDelius.')
-
-        // Continue button
-        cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
-      })
     })
 
     describe('There is no previous response to the question', () => {
@@ -127,7 +91,7 @@ context('Trigger leading to recall Page', () => {
       const testCases = [
         {
           description: 'Feature flag FTR-56 enabled',
-          url: `${testPageUrl}?flagFTR56Enabled=1`,
+          url: `${testPageUrl}`,
         },
         {
           description: 'Feature flag FTR-56 disabled',

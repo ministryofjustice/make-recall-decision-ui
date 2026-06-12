@@ -25,30 +25,6 @@
                     value: inputDisplayValues.contactName,
                     errorMessage: errorMessage(errors.contactName)
                 }) }}
-                {% if not ftr56Enabled %}
-                    {{ govukInput({
-                        label: {
-                            text: "Telephone number (optional)"
-                        },
-                        id: "phoneNumber",
-                        name: "phoneNumber",
-                        type: 'tel',
-                        classes: "govuk-input--width-20",
-                        value: inputDisplayValues.phoneNumber,
-                        errorMessage: errorMessage(errors.phoneNumber)
-                    }) }}
-                    {{ govukInput({
-                        label: {
-                            text: "Fax number (optional)"
-                        },
-                        id: "faxNumber",
-                        name: "faxNumber",
-                        type: 'tel',
-                        classes: "govuk-input--width-20",
-                        value: inputDisplayValues.faxNumber,
-                        errorMessage: errorMessage(errors.faxNumber)
-                    }) }}
-                {% endif %}
                 {{ govukInput({
                     label: {
                         text: "Email address"

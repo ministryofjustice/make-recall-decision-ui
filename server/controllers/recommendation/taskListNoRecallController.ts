@@ -10,7 +10,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 
   const recallType = recommendation?.recallType?.selected?.value
 
-  if (featureFlags.flagFTR56Enabled && (!isDefined(recallType) || recallType !== 'NO_RECALL')) {
+  if (!isDefined(recallType) || recallType !== 'NO_RECALL') {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: ppPaths.taskListConsiderRecall, urlInfo }))
   }
 
@@ -24,7 +24,6 @@ function get(req: Request, res: Response, next: NextFunction) {
       id: 'taskListNoRecall',
     },
     recommendation,
-    ftr56Enabled: featureFlags.flagFTR56Enabled,
     recallType,
   }
 

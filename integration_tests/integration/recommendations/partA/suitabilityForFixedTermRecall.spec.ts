@@ -52,7 +52,7 @@ context('Suitability for fixed term recall page', () => {
       })
 
       it('should display correctly', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
         cy.title().should(
           'equal',
           `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
@@ -129,7 +129,7 @@ context('Suitability for fixed term recall page', () => {
       })
 
       it('should handle form errors', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('button').click()
 
@@ -185,7 +185,7 @@ context('Suitability for fixed term recall page', () => {
       })
 
       it('should display correctly when sentence group is YOUTH_SDS', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
         cy.title().should(
           'equal',
           `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
@@ -274,7 +274,7 @@ context('Suitability for fixed term recall page', () => {
         })
 
         cy.task('getRecommendation', { statusCode: 200, response: nonMandatoryRecommendation })
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('.moj-banner--warning').should('not.exist')
       })
@@ -289,7 +289,7 @@ context('Suitability for fixed term recall page', () => {
         })
 
         cy.task('getRecommendation', { statusCode: 200, response: mandatoryRecommendation })
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('.moj-banner--warning')
           .should('exist')
@@ -303,7 +303,7 @@ context('Suitability for fixed term recall page', () => {
       })
 
       it('should handle form errors', () => {
-        cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+        cy.visit(`${testPageUrl}`)
 
         cy.get('button').click()
 
@@ -321,145 +321,6 @@ context('Suitability for fixed term recall page', () => {
           },
         ])
       })
-    })
-  })
-
-  describe('without FTR56 flag enabled', () => {
-    const recommendation = RecommendationResponseGenerator.generate()
-
-    beforeEach(() => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.signIn()
-      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: caseSummaryOverviewResponse })
-      cy.task('getCase', { sectionId: 'risk', statusCode: 200, response: caseSummaryRiskResponse })
-    })
-
-    it('should display correctly', () => {
-      cy.visit(`${testPageUrl}`)
-      cy.title().should(
-        'equal',
-        `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
-      )
-
-      cy.getElement(
-        `Check ${recommendation.personOnProbation.name}'s suitability for a standard or fixed term recall`,
-      ).should('exist')
-      cy.getElement(
-        'Use the following information to answer the questions and assess which type of recall is appropriate.',
-      ).should('exist')
-
-      cy.getElement('9 November 2000 (age 21)').should('exist')
-      cy.getElement('Shoplifting').should('exist')
-      cy.getElement('ORA Suspended Sentence Order').should('exist')
-      cy.getElement('16 weeks').should('exist')
-
-      // radios
-      ;[
-        {
-          label: `Is ${recommendation.personOnProbation.name}'s sentence 48 months or over?`,
-          fieldId: 'isSentence48MonthsOrOver',
-          hint: {
-            hintText: `Use the total length if ${recommendation.personOnProbation.name} is serving consecutive sentences.`,
-          },
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name} under 18?`,
-          fieldId: 'isUnder18',
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name} in MAPPA category 4?`,
-          fieldId: 'isMappaCategory4',
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name}'s MAPPA level 2 or 3?`,
-          fieldId: 'isMappaLevel2Or3',
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name} being recalled on a new charged offence?`,
-          fieldId: 'isRecalledOnNewChargedOffence',
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name} serving a fixed term sentence for a terrorist offence?`,
-          fieldId: 'isServingFTSentenceForTerroristOffence',
-        },
-        {
-          label: `Has ${recommendation.personOnProbation.name} been charged with a terrorist or state threat offence?`,
-          fieldId: 'hasBeenChargedWithTerroristOrStateThreatOffence',
-        },
-      ].forEach((testCase, index) => {
-        testRadioButtons(cy.get('.govuk-form-group').eq(index), {
-          legend: {
-            text: testCase.label,
-            ...(testCase.hint && { hintId: `#${testCase.fieldId}-hint`, hintText: testCase.hint.hintText }),
-          },
-          options: [
-            {
-              input: {
-                id: testCase.fieldId,
-                value: 'YES',
-              },
-              label: {
-                text: 'Yes',
-              },
-            },
-            {
-              input: {
-                id: `${testCase.fieldId}-2`,
-                value: 'NO',
-              },
-              label: {
-                text: 'No',
-              },
-            },
-          ],
-        })
-      })
-    })
-
-    it('should handle form errors', () => {
-      cy.visit(`${testPageUrl}`)
-
-      cy.get('button').click()
-
-      testForErrorPageTitle()
-      testForErrorSummary([
-        {
-          href: 'isSentence48MonthsOrOver',
-          message: `Select whether ${recommendation.personOnProbation.name}'s sentence is 48 months or over`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isUnder18',
-          message: `Select whether ${recommendation.personOnProbation.name} is under 18`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isMappaCategory4',
-          message: `Select whether ${recommendation.personOnProbation.name} is in MAPPA category 4`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isMappaLevel2Or3',
-          message: `Select whether ${recommendation.personOnProbation.name}'s MAPPA level is 2 or 3`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isRecalledOnNewChargedOffence',
-          message: `Select whether ${recommendation.personOnProbation.name} is being recalled on a new charged offence`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isServingFTSentenceForTerroristOffence',
-          message: `Select whether ${recommendation.personOnProbation.name} is serving a fixed term sentence for a terrorist offence`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'hasBeenChargedWithTerroristOrStateThreatOffence',
-          message: `Select whether ${recommendation.personOnProbation.name} has been charged with a terrorist or state threat offence`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-      ])
     })
   })
 })
