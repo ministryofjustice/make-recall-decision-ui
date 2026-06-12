@@ -122,6 +122,10 @@ export default {
       ),
       healthPath: '/health/ping',
     },
+    fliptClient: {
+      namespace: get('FLIPT_NAMESPACE', 'consider-a-recall', requiredInProduction),
+      url: get('FLIPT_SERVER_URL', 'https://feature-toggles-dev.hmpps.service.justice.gov.uk/', requiredInProduction),
+    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   maintenancePage: {

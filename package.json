@@ -98,6 +98,7 @@
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.1036.0",
     "@faker-js/faker": "^9.7.0",
+    "@flipt-io/flipt-client-js": "0.4.2",
     "@microsoft/applicationinsights-web": "^3.1.2",
     "@ministryofjustice/frontend": "8.0.0",
     "@ministryofjustice/hmpps-probation-frontend-components": "1.0.1",
