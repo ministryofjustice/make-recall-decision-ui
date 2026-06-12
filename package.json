@@ -38,6 +38,7 @@
       "^.+\\.tsx?$": [
         "ts-jest",
         {
+          "tsconfig": "tsconfig.app.json",
           "isolatedModules": true
         }
       ]
@@ -53,7 +54,7 @@
       "html"
     ],
     "testMatch": [
-      "<rootDir>/(server|job)/**/?(*.)(spec|test).{ts,js,jsx,mjs}"
+      "<rootDir>/(server|job)/**/?(*.)(test).{ts,js,jsx,mjs}"
     ],
     "testEnvironment": "node",
     "reporters": [
