@@ -1094,30 +1094,58 @@ context('Recommendation - task list', () => {
           mappa: {
             hasBeenReviewed: true,
           },
+          ftr56MappaReviewed: true,
         },
         convictionDetail: {
           hasBeenReviewed: true,
         },
+        sentenceGroup: SentenceGroup.ADULT_SDS,
+        alternativesToRecallTried: true,
+        decisionDateTime: true,
+        triggerLeadingToRecall: true,
+        previousReleases: true,
+        licenceConditionsBreached: true,
       })
 
       it('recommendation ready for SPO countersignature', () => {
-        setUp(recommendationReadyForCountersignature, [
+        setUp(
           {
-            name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
-            active: true,
+            ...recommendationReadyForCountersignature,
+            sentenceGroup: SentenceGroup.YOUTH_SDS,
+            isYouthSentenceOver12Months: true,
+            isYouthChargedWithSeriousOffence: true,
+            recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+            isUnder18: false,
           },
-        ])
+          [
+            {
+              name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
+              active: true,
+            },
+          ],
+        )
         checkRequestSpoCountersignatureLink()
         checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
       })
 
       it('recommendation ready for ACO countersignature', () => {
-        setUp(recommendationReadyForCountersignature, [
+        setUp(
           {
-            name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED,
-            active: true,
+            ...recommendationReadyForCountersignature,
+            ...recommendationReadyForCountersignature,
+            sentenceGroup: SentenceGroup.YOUTH_SDS,
+            isYouthSentenceOver12Months: true,
+            isYouthChargedWithSeriousOffence: true,
+            recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+            isUnder18: false,
           },
-        ])
+          [
+            {
+              name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED,
+              active: true,
+            },
+          ],
+        )
 
         checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
         checkRequestAcoCountersignatureLink()
