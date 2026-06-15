@@ -80,7 +80,8 @@
                                 html: '<h3 class="govuk-heading-s">'+offence.description+"</h3>",
                                 hint: {
                                     html: hintHtml
-                                }
+                                },
+                                checked: true if offence.id == pageData.selectedIndexOffence else false
                             }) %}
                         {% endfor %}
 
