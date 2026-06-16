@@ -13,9 +13,13 @@
 
             <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
 
+            <p class="govuk-body">
+                Check the previous convictions (MG16) document or NOMIS to find the CRO.
+            </p>
+
             {% if recommendation.prisonOffender.cro %}
+                <h2 class='govuk-heading-m govuk-!-margin-bottom-0'>From Part A</h2>
                 <dl class="car-text-list">
-                    <h3 class='govuk-heading-m'>From NOMIS</h3>
                     <div class="car-text-list__row">
                         <dt class="car-text-list__key">CRO</dt>
                         <dd class="car-text-list__value" data-qa="nomisCro">{{ recommendation.prisonOffender.cro }}</dd>
@@ -23,14 +27,18 @@
                 </dl>
             {% endif %}
 
-            {% if recommendation.ppudOffender.croOtherNumber %}
-                <dl class="car-text-list">
-                    <h3 class='govuk-heading-m'>From PPUD</h3>
-                    <div class="car-text-list__row">
-                        <dt class="car-text-list__key">CRO</dt>
-                        <dd class="car-text-list__value" data-qa="ppudCro">{{ recommendation.ppudOffender.croOtherNumber }}</dd>
-                    </div>
-                </dl>
+            {% if recommendation.ppudOffender %}
+                <h2 class='govuk-heading-m govuk-!-margin-bottom-0'>From PPUD</h2>
+                {% if recommendation.ppudOffender.croOtherNumber %}
+                    <dl class="car-text-list">
+                        <div class="car-text-list__row">
+                            <dt class="car-text-list__key">CRO</dt>
+                            <dd class="car-text-list__value" data-qa="ppudCro">{{ recommendation.ppudOffender.croOtherNumber }}</dd>
+                        </div>
+                    </dl>
+                {% else %}
+                    <p class="govuk-body" data-qa="ppudCro">There is a PPUD record but this field is blank.</p>
+                {% endif %}
             {% endif %}
 
             <form novalidate method="post">
@@ -38,7 +46,7 @@
 
                 {{ govukInput({
                     label: {
-                        text: "CRO number",
+                        text: "CRO",
                         classes: "govuk-label--m"
                     },
                     hint: {

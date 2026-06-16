@@ -11,6 +11,7 @@ const strings: Record<string, Record<string, string>> = {
     missingReceivedDateTime: 'Enter recall received date and time',
     missingCurrentEstablishment: 'Select an establishment from the list',
     missingPoliceForce: 'Enter police force',
+    missingCro: 'Enter the CRO',
     missingMappaLevel: 'Enter MAPPA level',
     missingGender: 'Enter gender',
     missingEthnicity: 'Enter ethnicity',
