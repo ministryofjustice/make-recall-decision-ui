@@ -88,6 +88,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       offenderName: `${recommendation.bookRecallToPpud.firstNames} ${recommendation.bookRecallToPpud.lastName}`,
       nomisOffenceData,
       convictionData,
+      selectedIndexOffence: recommendation.nomisIndexOffence?.selected,
     },
     nomisError,
   }
