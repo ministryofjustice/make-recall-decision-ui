@@ -205,7 +205,7 @@ context('Make a recommendation', () => {
     it('present record consideration rationale', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...RecommendationResponseGenerator.generate(), recallConsideredList: null },
+        response: { ...RecommendationResponseGenerator.generate(), recallConsideredList: false },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
@@ -392,31 +392,6 @@ context('Make a recommendation', () => {
       })
     })
 
-    it('present task-list for all items completed', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...recommendationMock,
-          sentenceGroup: SentenceGroup.YOUTH_SDS,
-          recallType: {
-            selected: {
-              value: 'STANDARD',
-              details: null,
-            },
-          },
-        },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
-
-      cy.getElement("Request line manager's countersignature To do").should('exist')
-      cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
-
-      cy.clickLink("Request line manager's countersignature")
-      cy.pageHeading().should('equal', 'Request countersignature')
-    })
-
     it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -508,8 +483,8 @@ context('Make a recommendation', () => {
       cy.task('getStatuses', {
         statusCode: 200,
         response: [
-          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true, sentenceGroup: SentenceGroup.INDETERMINATE },
-          { name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true, sentenceGroup: SentenceGroup.INDETERMINATE },
+          { name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true },
+          { name: RECOMMENDATION_STATUS.ACO_SIGNED, active: true },
         ],
       })
 

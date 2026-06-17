@@ -21,7 +21,7 @@ context('Trigger leading to recall Page', () => {
         cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       })
 
-      it('Feature flag FTR-56 enabled', () => {
+      it('test back link', () => {
         cy.visit(`${testPageUrl}`)
 
         cy.title().should('equal', `What has made you consider recalling the person? - ${config.applicationName}`)
