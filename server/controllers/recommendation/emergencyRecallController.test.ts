@@ -240,7 +240,7 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
   })
 
-  it('post with valid data for extended sentence with FTR56 enabled', async () => {
+  it('post with valid data for extended sentence', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`

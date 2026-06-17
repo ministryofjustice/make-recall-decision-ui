@@ -5,7 +5,7 @@ import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../uti
 import EVENTS from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 import bindPlaceholderValues from '../../../utils/automatedFieldValues/binding'
-import { availableRecallTypesFTR56 } from './availableRecallTypes'
+import { availableRecallTypes } from './availableRecallTypes'
 
 const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType, originalRecallType, ftrMandatory, standardMandatory, personOnProbationName } = requestBody
@@ -20,7 +20,7 @@ const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): 
   const isStandard = recallType === 'STANDARD'
   const isChanged = recallType !== originalRecallType
 
-  const mandatoryFTRRationale = strings.automatedFieldValues.mandatoryFTRRationaleFTR56
+  const { mandatoryFTRRationale } = strings.automatedFieldValues
 
   const recallTypeDetailsFixedTerm =
     ftrMandatoryResolved && isFixedTerm
@@ -29,7 +29,7 @@ const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): 
 
   const recallTypeDetailsStandard =
     standardMandatoryResolved && isStandard
-      ? bindPlaceholderValues(strings.automatedFieldValues.mandatoryStandardRationaleFTR56, {
+      ? bindPlaceholderValues(strings.automatedFieldValues.mandatoryStandardRationale, {
           personOnProbationName: personOnProbationName as string,
         })
       : requestBody.recallTypeDetailsStandard
@@ -86,7 +86,7 @@ const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): 
         value: recallType,
         details: isString(recallTypeDetails) ? stripHtmlTags(recallTypeDetails as string) : undefined,
       },
-      allOptions: availableRecallTypesFTR56(ftrMandatoryResolved, standardMandatoryResolved),
+      allOptions: availableRecallTypes(),
     },
     isThisAnEmergencyRecall: false,
   }

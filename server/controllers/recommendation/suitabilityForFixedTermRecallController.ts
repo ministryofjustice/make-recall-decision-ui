@@ -22,7 +22,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues,
   } = res.locals
 
-  // This screen isn't shown for indeterminate or extended sentences in the FTR56 flow
+  // This screen isn't shown for indeterminate or extended sentences
   if ([SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(recommendation.sentenceGroup)) {
     res.redirect(303, `${sharedPaths.recommendations}/${recommendation.id}/indeterminate-details`)
     return next()
@@ -60,7 +60,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   const warningPanel =
-    // In the FTR56 flow, rationale is exclusively recorded for the YOUTH_SDS flow
+    // In the rationale is exclusively recorded for the YOUTH_SDS flow
     // so the warning is only required when the sentenceGroup is YOUTH_SDS
     recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
     recommendation.recallType !== null &&
@@ -79,7 +79,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     sentenceGroupDetails: getSentenceGroupDetailsFromEnum(recommendation.sentenceGroup),
   }
 
-  res.render('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
+  res.render('pages/recommendations/suitabilityForFixedTermRecall')
   return next()
 }
 

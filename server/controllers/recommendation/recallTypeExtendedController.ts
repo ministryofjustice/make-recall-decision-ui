@@ -38,7 +38,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const errors = []
 
   if (!recallType || !isValueValid(recallType as string, 'recallTypeExtended')) {
-    const errorId = 'noRecallTypeExtendedSelectedFTR56'
+    const errorId = 'noRecallTypeExtendedSelected'
     errors.push(
       makeErrorObject({
         id: 'recallType',

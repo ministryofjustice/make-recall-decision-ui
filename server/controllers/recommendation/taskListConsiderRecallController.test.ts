@@ -15,7 +15,6 @@ jest.mock('../../data/makeDecisionApiClient')
 function checkTestCaseCombination(
   testCaseOptions: RecommendationOptions,
   testCaseBooleanCombination: Array<boolean>,
-  ftr56Enabled: boolean,
   expectedAllTasksCompleted: boolean = testCaseBooleanCombination.every(value => value),
 ) {
   const testCaseOptionsNames = Object.getOwnPropertyNames(testCaseOptions)
@@ -94,7 +93,6 @@ describe('Task List Consider a Recall Controller', () => {
           checkTestCaseCombination(
             testCaseOptions,
             testCaseBooleanCombination,
-            true,
             // the indeterminate sentence type boolean is irrelevant for non-indeterminate
             // sentence groups, so only the first 4 tasks need to be completed
             testCaseBooleanCombination.slice(0, 4).every(value => value),
@@ -114,7 +112,7 @@ describe('Task List Consider a Recall Controller', () => {
             indeterminateSentenceType: testCaseBooleanCombination[3],
             sentenceGroup: SentenceGroup.INDETERMINATE,
           }
-          checkTestCaseCombination(testCaseOptions, testCaseBooleanCombination, true)
+          checkTestCaseCombination(testCaseOptions, testCaseBooleanCombination)
         })
     })
   })

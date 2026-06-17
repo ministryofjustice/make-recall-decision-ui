@@ -122,67 +122,65 @@ describe('get', () => {
   })
 })
 
-describe('post', () => {
-  describe('post with valid data', () => {
-    it(`with FTR56 'enabled'`, async () => {
-      const validationResults = {
-        valuesToSave: {
-          alternativesToRecallTried: {
-            selected: faker.lorem.word(),
-            allOptions: faker.helpers.multiple(() => {
-              return { value: faker.lorem.word(), text: faker.lorem.sentence() }
-            }),
-          },
+describe('post with valid data', () => {
+  it(`alternativesToRecallTriedController post`, async () => {
+    const validationResults = {
+      valuesToSave: {
+        alternativesToRecallTried: {
+          selected: faker.lorem.word(),
+          allOptions: faker.helpers.multiple(() => {
+            return { value: faker.lorem.word(), text: faker.lorem.sentence() }
+          }),
         },
-      }
-      ;(validateAlternativesTried as jest.Mock).mockResolvedValue(validationResults)
-      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+      },
+    }
+    ;(validateAlternativesTried as jest.Mock).mockResolvedValue(validationResults)
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-      const recommendationId = faker.number.int().toString()
-      const req = mockReq({
-        params: { recommendationId },
-        body: {
-          alternativesToRecallTried: 'WARNINGS_LETTER',
-          'alternativesToRecallTriedDetail-WARNINGS_LETTER': 'a warning',
-          'alternativesToRecallTriedDetail-INCREASED_FREQUENCY': '',
-          'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': '',
-          'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS': '',
-          'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': '',
-          'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
-          'alternativesToRecallTriedDetail-DRUG_TESTING': '',
-          'alternativesToRecallTriedDetail-ALTERNATIVE_TO_RECALL_OTHER': '',
-        },
-      })
-
-      const res = mockRes({
-        locals: {
-          user: { token: 'token1' },
-          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-          urlInfo: { basePath: `/recommendations/${recommendationId}/` },
-        },
-      })
-
-      const next = mockNext()
-      await alternativesToRecallTriedController.post(req, res, next)
-
-      expect(validateAlternativesTried).toHaveBeenCalledWith({
-        requestBody: req.body,
-        recommendationId,
-        urlInfo: res.locals.urlInfo,
-        token: res.locals.user.token,
-      })
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        recommendationId,
-        valuesToSave: validationResults.valuesToSave,
-        token: res.locals.user.token,
-        featureFlags: res.locals.flags,
-      })
-      expect(res.redirect).toHaveBeenCalledWith(
-        303,
-        `/recommendations/${recommendationId}/${ppPaths.sentenceInformation}`,
-      )
-      expect(next).not.toHaveBeenCalled() // end of the line for posts.
+    const recommendationId = faker.number.int().toString()
+    const req = mockReq({
+      params: { recommendationId },
+      body: {
+        alternativesToRecallTried: 'WARNINGS_LETTER',
+        'alternativesToRecallTriedDetail-WARNINGS_LETTER': 'a warning',
+        'alternativesToRecallTriedDetail-INCREASED_FREQUENCY': '',
+        'alternativesToRecallTriedDetail-EXTRA_LICENCE_CONDITIONS': '',
+        'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS': '',
+        'alternativesToRecallTriedDetail-REFERRAL_TO_PARTNERSHIP_AGENCIES': '',
+        'alternativesToRecallTriedDetail-REFERRAL_TO_APPROVED_PREMISES': '',
+        'alternativesToRecallTriedDetail-DRUG_TESTING': '',
+        'alternativesToRecallTriedDetail-ALTERNATIVE_TO_RECALL_OTHER': '',
+      },
     })
+
+    const res = mockRes({
+      locals: {
+        user: { token: 'token1' },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: { basePath: `/recommendations/${recommendationId}/` },
+      },
+    })
+
+    const next = mockNext()
+    await alternativesToRecallTriedController.post(req, res, next)
+
+    expect(validateAlternativesTried).toHaveBeenCalledWith({
+      requestBody: req.body,
+      recommendationId,
+      urlInfo: res.locals.urlInfo,
+      token: res.locals.user.token,
+    })
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId,
+      valuesToSave: validationResults.valuesToSave,
+      token: res.locals.user.token,
+      featureFlags: res.locals.flags,
+    })
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      `/recommendations/${recommendationId}/${ppPaths.sentenceInformation}`,
+    )
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
   it('post with invalid data', async () => {

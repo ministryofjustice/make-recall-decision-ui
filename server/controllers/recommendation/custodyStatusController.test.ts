@@ -16,7 +16,7 @@ describe('get', () => {
     ],
   }
 
-  describe(`with FTR56 'enabled'`, () => {
+  describe(`custodyStatus`, () => {
     it('load with no data', async () => {
       const res = mockRes({
         locals: {
@@ -103,7 +103,7 @@ describe('get', () => {
 
 describe('post', () => {
   describe('post with valid data', () => {
-    it(`with FTR56 'enabled'`, async () => {
+    it(`share-case-with-admin`, async () => {
       ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
       const basePath = `/recommendations/123/`
@@ -147,7 +147,7 @@ describe('post', () => {
       expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
 
-    it("with FTR56 enabled - YES_POLICE doesn't require additional details", async () => {
+    it("share-case-with-admin - YES_POLICE doesn't require additional details", async () => {
       ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
       const basePath = `/recommendations/123/`

@@ -3,7 +3,7 @@ import validateRecallType from './formValidator'
 import EVENTS from '../../../utils/constants'
 import bindPlaceholderValues from '../../../utils/automatedFieldValues/binding'
 import strings from '../../../textStrings/en'
-import { availableRecallTypes, availableRecallTypesFTR56 } from './availableRecallTypes'
+import { availableRecallTypes } from './availableRecallTypes'
 
 jest.mock('../../../utils/automatedFieldValues/binding')
 jest.mock('./availableRecallTypes')
@@ -16,24 +16,308 @@ describe('validateRecallType', () => {
     path: `/recommendations/${recommendationId}/recall-type`,
   }
 
-  describe('valid', () => {
-    describe(`with FTR56 flag enabled`, () => {
-      const recallTypes = faker.helpers.multiple(
-        () => {
-          return {
-            value: faker.lorem.word(),
-            text: faker.lorem.word(),
-          }
+  describe('valid recallTypes called', () => {
+    const recallTypes = faker.helpers.multiple(
+      () => {
+        return {
+          value: faker.lorem.word(),
+          text: faker.lorem.word(),
+        }
+      },
+      { count: 3 },
+    )
+
+    beforeEach(() => {
+      ;(availableRecallTypes as jest.Mock).mockReturnValueOnce(recallTypes)
+    })
+
+    it('returns valuesToSave, sets isThisAnEmergencyRecall to false if valid fixed term recall selected', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+        crn: 'X34534',
+        ftrMandatory: 'false',
+        standardMandatory: 'false',
+      }
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+
+      expect(errors).toBeUndefined()
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(valuesToSave).toEqual({
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+            details: requestBody.recallTypeDetailsFixedTerm,
+          },
+          allOptions: recallTypes,
         },
-        { count: 3 },
-      )
+        isThisAnEmergencyRecall: false,
+      })
+    })
 
-      beforeEach(() => {
-        ;(availableRecallTypes as jest.Mock).mockReturnValueOnce(recallTypes)
-        ;(availableRecallTypesFTR56 as jest.Mock).mockReturnValueOnce(recallTypes)
+    it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid fixed term recall selected and fromPageId is task list and value changed', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+        crn: 'X34534',
+        ftrMandatory: 'false',
+        standardMandatory: 'false',
+      }
+      const urlInfoCopy = { ...urlInfo, fromPageId: 'task-list' }
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo: urlInfoCopy,
       })
 
-      it('returns valuesToSave, sets isThisAnEmergencyRecall to false if valid fixed term recall selected', async () => {
+      expect(errors).toBeUndefined()
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(valuesToSave).toEqual({
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+            details: requestBody.recallTypeDetailsFixedTerm,
+          },
+          allOptions: recallTypes,
+        },
+        isThisAnEmergencyRecall: null,
+      })
+    })
+
+    it('returns no isThisAnEmergencyRecall if recall type is set to FIXED_TERM and is not changed', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+        crn: 'X34534',
+        originalRecallType: 'FIXED_TERM',
+        ftrMandatory: 'false',
+        standardMandatory: 'false',
+      }
+      const urlInfoCopy = { ...urlInfo, fromPageId: 'task-list' }
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo: urlInfoCopy,
+      })
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(errors).toBeUndefined()
+      expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
+    })
+
+    it('returns monitoring event data', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+        crn: 'X34534',
+        ftrMandatory: 'false',
+        standardMandatory: 'false',
+      }
+
+      const { monitoringEvent } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(monitoringEvent).toEqual({
+        eventName: EVENTS.MRD_RECALL_TYPE,
+        data: {
+          recallType: 'FIXED_TERM',
+        },
+      })
+    })
+
+    it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid standard recall selected', async () => {
+      const requestBody = {
+        recallType: 'STANDARD',
+        recallTypeDetailsStandard: '<br />I recommend standard recall...',
+        crn: 'X34534',
+        ftrMandatory: 'false',
+        standardMandatory: 'false',
+      }
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+
+      expect(errors).toBeUndefined()
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(valuesToSave).toEqual({
+        recallType: {
+          selected: {
+            value: 'STANDARD',
+            details: 'I recommend standard recall...',
+          },
+          allOptions: recallTypes,
+        },
+        isThisAnEmergencyRecall: null,
+      })
+    })
+
+    it('returns no isThisAnEmergencyRecall if recall type is set to STANDARD and is not changed', async () => {
+      const requestBody = {
+        recallType: 'STANDARD',
+        recallTypeDetailsStandard: '<br />I recommend standard recall...',
+        crn: 'X34534',
+        originalRecallType: 'STANDARD',
+        ftrMandatory: 'false',
+        standardMandatory: 'false',
+      }
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+
+      expect(errors).toBeUndefined()
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
+    })
+
+    it('returns valuesToSave and no errors if valid no recall selected', async () => {
+      const ftrMandatory = faker.datatype.boolean()
+      const requestBody = {
+        recallType: 'NO_RECALL',
+        crn: 'X34534',
+        ftrMandatory: ftrMandatory.toString(),
+        standardMandatory: 'false',
+      }
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+
+      expect(errors).toBeUndefined()
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(valuesToSave).toEqual({
+        recallType: {
+          selected: {
+            value: 'NO_RECALL',
+          },
+          allOptions: recallTypes,
+        },
+        isThisAnEmergencyRecall: null,
+      })
+    })
+
+    it('returns no isThisAnEmergencyRecall if recall type is set to NO_RECALL and is not changed', async () => {
+      const ftrMandatory = faker.datatype.boolean()
+      const requestBody = {
+        recallType: 'NO_RECALL',
+        crn: 'X34534',
+        originalRecallType: 'NO_RECALL',
+        ftrMandatory: ftrMandatory.toString(),
+        standardMandatory: 'false',
+      }
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+
+      expect(errors).toBeUndefined()
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
+    })
+
+    it('returns no missingRecallTypeDetail if fixed term recall is selected but no details sent whilst FTR is Mandatory', async () => {
+      const requestBody = {
+        recallType: 'FIXED_TERM',
+        recallTypeDetailsFixedTerm: ' ', // whitespace
+        crn: 'X34534',
+        ftrMandatory: 'true',
+        personOnProbationName: faker.person.fullName(),
+        standardMandatory: 'false',
+      }
+      const expectedDetails = faker.lorem.sentence()
+      ;(bindPlaceholderValues as jest.Mock).mockReturnValueOnce(expectedDetails)
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+
+      expect(errors).toBeUndefined()
+
+      expect(availableRecallTypes).toHaveBeenCalled()
+
+      expect(valuesToSave.recallType).toEqual({
+        selected: {
+          value: requestBody.recallType,
+          details: expectedDetails,
+        },
+        allOptions: recallTypes,
+      })
+
+      expect(bindPlaceholderValues).toHaveBeenCalledWith(strings.automatedFieldValues.mandatoryFTRRationale, {
+        personOnProbationName: requestBody.personOnProbationName,
+      })
+    })
+
+    it('returns no missingRecallTypeDetail if standard recall is selected but no details sent whilst Standard is Mandatory', async () => {
+      const requestBody = {
+        recallType: 'STANDARD',
+        recallTypeDetailsStandard: ' ', // whitespace
+        crn: 'X34534',
+        ftrMandatory: 'false',
+        personOnProbationName: faker.person.fullName(),
+        standardMandatory: 'true',
+      }
+      const expectedDetails = faker.lorem.sentence()
+      ;(bindPlaceholderValues as jest.Mock).mockReturnValueOnce(expectedDetails)
+
+      const { errors, valuesToSave } = await validateRecallType({
+        requestBody,
+        recommendationId,
+        urlInfo,
+      })
+
+      expect(errors).toBeUndefined()
+      expect(availableRecallTypes).toHaveBeenCalled()
+      expect(valuesToSave.recallType).toEqual({
+        selected: {
+          value: requestBody.recallType,
+          details: expectedDetails,
+        },
+        allOptions: recallTypes,
+      })
+      expect(bindPlaceholderValues).toHaveBeenCalledWith(strings.automatedFieldValues.mandatoryStandardRationale, {
+        personOnProbationName: requestBody.personOnProbationName,
+      })
+    })
+
+    describe('Redirects', () => {
+      it('redirects to emergency recall if Fixed term recall is selected', async () => {
         const requestBody = {
           recallType: 'FIXED_TERM',
           recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
@@ -42,163 +326,38 @@ describe('validateRecallType', () => {
           standardMandatory: 'false',
         }
 
-        const { errors, valuesToSave } = await validateRecallType({
+        const { nextPagePath } = await validateRecallType({
           requestBody,
           recommendationId,
           urlInfo,
         })
 
-        expect(errors).toBeUndefined()
+        expect(availableRecallTypes).toHaveBeenCalled()
 
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-        expect(valuesToSave).toEqual({
-          recallType: {
-            selected: {
-              value: 'FIXED_TERM',
-              details: requestBody.recallTypeDetailsFixedTerm,
-            },
-            allOptions: recallTypes,
-          },
-          isThisAnEmergencyRecall: false,
-        })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
       })
 
-      it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid fixed term recall selected and fromPageId is task list and value changed', async () => {
-        const requestBody = {
-          recallType: 'FIXED_TERM',
-          recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
-          crn: 'X34534',
-          ftrMandatory: 'false',
-          standardMandatory: 'false',
-        }
-        const urlInfoCopy = { ...urlInfo, fromPageId: 'task-list' }
-
-        const { errors, valuesToSave } = await validateRecallType({
-          requestBody,
-          recommendationId,
-          urlInfo: urlInfoCopy,
-        })
-
-        expect(errors).toBeUndefined()
-
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-        expect(valuesToSave).toEqual({
-          recallType: {
-            selected: {
-              value: 'FIXED_TERM',
-              details: requestBody.recallTypeDetailsFixedTerm,
-            },
-            allOptions: recallTypes,
-          },
-          isThisAnEmergencyRecall: null,
-        })
-      })
-
-      it('returns no isThisAnEmergencyRecall if recall type is set to FIXED_TERM and is not changed', async () => {
-        const requestBody = {
-          recallType: 'FIXED_TERM',
-          recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
-          crn: 'X34534',
-          originalRecallType: 'FIXED_TERM',
-          ftrMandatory: 'false',
-          standardMandatory: 'false',
-        }
-        const urlInfoCopy = { ...urlInfo, fromPageId: 'task-list' }
-
-        const { errors, valuesToSave } = await validateRecallType({
-          requestBody,
-          recommendationId,
-          urlInfo: urlInfoCopy,
-        })
-
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-        expect(errors).toBeUndefined()
-        expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
-      })
-
-      it('returns monitoring event data', async () => {
-        const requestBody = {
-          recallType: 'FIXED_TERM',
-          recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
-          crn: 'X34534',
-          ftrMandatory: 'false',
-          standardMandatory: 'false',
-        }
-
-        const { monitoringEvent } = await validateRecallType({
-          requestBody,
-          recommendationId,
-          urlInfo,
-        })
-
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-        expect(monitoringEvent).toEqual({
-          eventName: EVENTS.MRD_RECALL_TYPE,
-          data: {
-            recallType: 'FIXED_TERM',
-          },
-        })
-      })
-
-      it('returns valuesToSave, sets isThisAnEmergencyRecall to null if valid standard recall selected', async () => {
+      it('redirects to emergency recall if Standard recall is selected', async () => {
         const requestBody = {
           recallType: 'STANDARD',
-          recallTypeDetailsStandard: '<br />I recommend standard recall...',
+          recallTypeDetailsStandard: 'I recommend fixed term recall...',
           crn: 'X34534',
           ftrMandatory: 'false',
           standardMandatory: 'false',
         }
 
-        const { errors, valuesToSave } = await validateRecallType({
+        const { nextPagePath } = await validateRecallType({
           requestBody,
           recommendationId,
           urlInfo,
         })
 
-        expect(errors).toBeUndefined()
+        expect(availableRecallTypes).toHaveBeenCalled()
 
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-        expect(valuesToSave).toEqual({
-          recallType: {
-            selected: {
-              value: 'STANDARD',
-              details: 'I recommend standard recall...',
-            },
-            allOptions: recallTypes,
-          },
-          isThisAnEmergencyRecall: null,
-        })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
       })
 
-      it('returns no isThisAnEmergencyRecall if recall type is set to STANDARD and is not changed', async () => {
-        const requestBody = {
-          recallType: 'STANDARD',
-          recallTypeDetailsStandard: '<br />I recommend standard recall...',
-          crn: 'X34534',
-          originalRecallType: 'STANDARD',
-          ftrMandatory: 'false',
-          standardMandatory: 'false',
-        }
-
-        const { errors, valuesToSave } = await validateRecallType({
-          requestBody,
-          recommendationId,
-          urlInfo,
-        })
-
-        expect(errors).toBeUndefined()
-
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-        expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
-      })
-
-      it('returns valuesToSave and no errors if valid no recall selected', async () => {
+      it('redirects to no recall letter page if No recall is selected', async () => {
         const ftrMandatory = faker.datatype.boolean()
         const requestBody = {
           recallType: 'NO_RECALL',
@@ -207,248 +366,83 @@ describe('validateRecallType', () => {
           standardMandatory: 'false',
         }
 
-        const { errors, valuesToSave } = await validateRecallType({
+        const { nextPagePath } = await validateRecallType({
           requestBody,
           recommendationId,
           urlInfo,
         })
 
-        expect(errors).toBeUndefined()
+        expect(availableRecallTypes).toHaveBeenCalled()
 
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(ftrMandatory, false)
-
-        expect(valuesToSave).toEqual({
-          recallType: {
-            selected: {
-              value: 'NO_RECALL',
-            },
-            allOptions: recallTypes,
-          },
-          isThisAnEmergencyRecall: null,
-        })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
       })
 
-      it('returns no isThisAnEmergencyRecall if recall type is set to NO_RECALL and is not changed', async () => {
+      it('if "from page" is set, ignore it if a fixed term recall is selected', async () => {
+        const requestBody = {
+          recallType: 'FIXED_TERM',
+          recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
+          crn: 'X34534',
+          ftrMandatory: 'false',
+          standardMandatory: 'false',
+        }
+        const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
+
+        const { nextPagePath } = await validateRecallType({
+          requestBody,
+          recommendationId,
+          urlInfo: urlInfoWithFromPage,
+        })
+
+        expect(availableRecallTypes).toHaveBeenCalled()
+
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
+      })
+
+      it('if "from page" is set, ignore it if a standard recall is selected', async () => {
+        const requestBody = {
+          recallType: 'STANDARD',
+          recallTypeDetailsStandard: 'I recommend standard recall...',
+          crn: 'X34534',
+          ftrMandatory: 'false',
+          standardMandatory: 'false',
+        }
+        const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
+
+        const { nextPagePath } = await validateRecallType({
+          requestBody,
+          recommendationId,
+          urlInfo: urlInfoWithFromPage,
+        })
+
+        expect(availableRecallTypes).toHaveBeenCalled()
+
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
+      })
+
+      it('if "from page" is set, ignore it if No recall is selected', async () => {
         const ftrMandatory = faker.datatype.boolean()
         const requestBody = {
           recallType: 'NO_RECALL',
           crn: 'X34534',
-          originalRecallType: 'NO_RECALL',
           ftrMandatory: ftrMandatory.toString(),
           standardMandatory: 'false',
         }
+        const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
 
-        const { errors, valuesToSave } = await validateRecallType({
+        const { nextPagePath } = await validateRecallType({
           requestBody,
           recommendationId,
-          urlInfo,
+          urlInfo: urlInfoWithFromPage,
         })
 
-        expect(errors).toBeUndefined()
+        expect(availableRecallTypes).toHaveBeenCalled()
 
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(ftrMandatory, false)
-
-        expect(valuesToSave.isThisAnEmergencyRecall).toBeUndefined()
-      })
-
-      it('returns no missingRecallTypeDetail if fixed term recall is selected but no details sent whilst FTR is Mandatory', async () => {
-        const requestBody = {
-          recallType: 'FIXED_TERM',
-          recallTypeDetailsFixedTerm: ' ', // whitespace
-          crn: 'X34534',
-          ftrMandatory: 'true',
-          personOnProbationName: faker.person.fullName(),
-          standardMandatory: 'false',
-        }
-        const expectedDetails = faker.lorem.sentence()
-        ;(bindPlaceholderValues as jest.Mock).mockReturnValueOnce(expectedDetails)
-
-        const { errors, valuesToSave } = await validateRecallType({
-          requestBody,
-          recommendationId,
-          urlInfo,
-        })
-
-        expect(errors).toBeUndefined()
-
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(true, false)
-
-        expect(valuesToSave.recallType).toEqual({
-          selected: {
-            value: requestBody.recallType,
-            details: expectedDetails,
-          },
-          allOptions: recallTypes,
-        })
-
-        expect(bindPlaceholderValues).toHaveBeenCalledWith(strings.automatedFieldValues.mandatoryFTRRationaleFTR56, {
-          personOnProbationName: requestBody.personOnProbationName,
-        })
-      })
-
-      it('returns no missingRecallTypeDetail if standard recall is selected but no details sent whilst Standard is Mandatory', async () => {
-        const requestBody = {
-          recallType: 'STANDARD',
-          recallTypeDetailsStandard: ' ', // whitespace
-          crn: 'X34534',
-          ftrMandatory: 'false',
-          personOnProbationName: faker.person.fullName(),
-          standardMandatory: 'true',
-        }
-        const expectedDetails = faker.lorem.sentence()
-        ;(bindPlaceholderValues as jest.Mock).mockReturnValueOnce(expectedDetails)
-
-        const { errors, valuesToSave } = await validateRecallType({
-          requestBody,
-          recommendationId,
-          urlInfo,
-        })
-
-        expect(errors).toBeUndefined()
-        expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, true)
-        expect(valuesToSave.recallType).toEqual({
-          selected: {
-            value: requestBody.recallType,
-            details: expectedDetails,
-          },
-          allOptions: recallTypes,
-        })
-        expect(bindPlaceholderValues).toHaveBeenCalledWith(
-          strings.automatedFieldValues.mandatoryStandardRationaleFTR56,
-          {
-            personOnProbationName: requestBody.personOnProbationName,
-          },
-        )
-      })
-
-      describe('Redirects', () => {
-        it('redirects to emergency recall if Fixed term recall is selected', async () => {
-          const requestBody = {
-            recallType: 'FIXED_TERM',
-            recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
-            crn: 'X34534',
-            ftrMandatory: 'false',
-            standardMandatory: 'false',
-          }
-
-          const { nextPagePath } = await validateRecallType({
-            requestBody,
-            recommendationId,
-            urlInfo,
-          })
-
-          expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-          expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
-        })
-
-        it('redirects to emergency recall if Standard recall is selected', async () => {
-          const requestBody = {
-            recallType: 'STANDARD',
-            recallTypeDetailsStandard: 'I recommend fixed term recall...',
-            crn: 'X34534',
-            ftrMandatory: 'false',
-            standardMandatory: 'false',
-          }
-
-          const { nextPagePath } = await validateRecallType({
-            requestBody,
-            recommendationId,
-            urlInfo,
-          })
-
-          expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-          expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
-        })
-
-        it('redirects to no recall letter page if No recall is selected', async () => {
-          const ftrMandatory = true
-          const requestBody = {
-            recallType: 'NO_RECALL',
-            crn: 'X34534',
-            ftrMandatory: ftrMandatory.toString(),
-            standardMandatory: 'false',
-          }
-
-          const { nextPagePath } = await validateRecallType({
-            requestBody,
-            recommendationId,
-            urlInfo,
-          })
-
-          expect(availableRecallTypesFTR56).toHaveBeenCalledWith(ftrMandatory, false)
-
-          expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
-        })
-
-        it('if "from page" is set, ignore it if a fixed term recall is selected', async () => {
-          const requestBody = {
-            recallType: 'FIXED_TERM',
-            recallTypeDetailsFixedTerm: 'I recommend fixed term recall...',
-            crn: 'X34534',
-            ftrMandatory: 'false',
-            standardMandatory: 'false',
-          }
-          const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
-
-          const { nextPagePath } = await validateRecallType({
-            requestBody,
-            recommendationId,
-            urlInfo: urlInfoWithFromPage,
-          })
-
-          expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-          expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
-        })
-
-        it('if "from page" is set, ignore it if a standard recall is selected', async () => {
-          const requestBody = {
-            recallType: 'STANDARD',
-            recallTypeDetailsStandard: 'I recommend standard recall...',
-            crn: 'X34534',
-            ftrMandatory: 'false',
-            standardMandatory: 'false',
-          }
-          const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
-
-          const { nextPagePath } = await validateRecallType({
-            requestBody,
-            recommendationId,
-            urlInfo: urlInfoWithFromPage,
-          })
-
-          expect(availableRecallTypesFTR56).toHaveBeenCalledWith(false, false)
-
-          expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/emergency-recall`)
-        })
-
-        it('if "from page" is set, ignore it if No recall is selected', async () => {
-          const ftrMandatory = faker.datatype.boolean()
-          const requestBody = {
-            recallType: 'NO_RECALL',
-            crn: 'X34534',
-            ftrMandatory: ftrMandatory.toString(),
-            standardMandatory: 'false',
-          }
-          const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-recommendation' }
-
-          const { nextPagePath } = await validateRecallType({
-            requestBody,
-            recommendationId,
-            urlInfo: urlInfoWithFromPage,
-          })
-
-          expect(availableRecallTypesFTR56).toHaveBeenCalledWith(ftrMandatory, false)
-
-          expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
-        })
+        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list-no-recall`)
       })
     })
   })
 
-  describe('invalid', () => {
+  describe('invalid recallTypes called', () => {
     it('errors if fixed term recall is selected but standard detail sent', async () => {
       const requestBody = {
         recallType: 'FIXED_TERM',
@@ -586,35 +580,6 @@ describe('validateRecallType', () => {
       expect(valuesToSave).toBeUndefined()
       expect(unsavedValues).toEqual({
         recallType: 'STANDARD',
-      })
-      expect(errors).toEqual([
-        {
-          href: '#recallType',
-          name: 'recallType',
-          text: 'Select a recall recommendation',
-          errorId: 'noRecallTypeSelected',
-        },
-      ])
-    })
-
-    // there's no such thing as mandatory standard recall pre-FTR56, so we only check for FTR56 cases here
-    it('errors if fixed term recall is selected whilst Standard is Mandatory', async () => {
-      const requestBody = {
-        recallType: 'FIXED_TERM',
-        crn: 'X34534',
-        ftrMandatory: 'false',
-        standardMandatory: 'true',
-      }
-
-      const { errors, valuesToSave, unsavedValues } = await validateRecallType({
-        requestBody,
-        recommendationId,
-        urlInfo,
-      })
-
-      expect(valuesToSave).toBeUndefined()
-      expect(unsavedValues).toEqual({
-        recallType: 'FIXED_TERM',
       })
       expect(errors).toEqual([
         {

@@ -2,7 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import taskListNoRecallController from './taskListNoRecallController'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import ppPaths from '../../routes/paths/pp.paths'
-import { recallTypeFTR56 } from '../recommendations/recallType/formOptions'
+import recallType from '../recommendations/recallType/formOptions'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 describe('get', () => {
@@ -41,11 +41,10 @@ describe('get', () => {
     })
     const next = mockNext()
     await taskListNoRecallController.get(mockReq(), res, next)
-    // FTR56 is by default enabled
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.taskListConsiderRecall}`)
   })
 
-  it('present - redirect to task-list-consider-recall if recall type is undefined and FTR56 enabled', async () => {
+  it('present - redirect to task-list-consider-recall if recall type is undefined', async () => {
     const recommendation = {
       crn: 'X1213',
     }
@@ -62,12 +61,12 @@ describe('get', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.taskListConsiderRecall}`)
   })
 
-  it('present - redirect to task-list-consider-recall if selected recall type is undefined and FTR56 enabled', async () => {
+  it('present - redirect to task-list-consider-recall if selected recall type is undefined', async () => {
     const recommendation: Partial<RecommendationResponse> = {
       crn: 'X1213',
       recallType: {
         selected: undefined,
-        allOptions: recallTypeFTR56,
+        allOptions: recallType,
       },
     }
 

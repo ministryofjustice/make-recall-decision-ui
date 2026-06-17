@@ -16,11 +16,6 @@ export const featureFlagsDefaults: Record<string, FeatureFlagDefault> = {
       'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
     default: false,
   },
-  flagFTR56Enabled: {
-    label: 'FTR56/ISR changes',
-    description: 'Enables the behaviour required for the FTR56/ISR policy',
-    default: true,
-  },
 }
 
 export const determineEnvFeatureOverride = (key: string) => {

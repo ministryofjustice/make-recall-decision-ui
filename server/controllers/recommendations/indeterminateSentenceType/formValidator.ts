@@ -9,14 +9,14 @@ const validateIndeterminateSentenceType = async ({ requestBody }: FormValidatorA
 
   const { indeterminateSentenceType } = requestBody
 
-  const items = formOptions.indeterminateSentenceTypeFtr56
+  const items = formOptions.indeterminateSentenceType
   // api don't accept 'hint' so keep only value and text
   const itemsWithoutHint = items.map(({ value, text }) => ({ value, text }))
 
-  const formId = 'indeterminateSentenceTypeFtr56'
+  const formId = 'indeterminateSentenceType'
 
   if (!indeterminateSentenceType || !isValueValid(indeterminateSentenceType as string, formId)) {
-    const errorId = 'noIndeterminateSentenceTypeSelectedFtr56'
+    const errorId = 'noIndeterminateSentenceTypeSelected'
     errors = [
       makeErrorObject({
         id: 'indeterminateSentenceType',

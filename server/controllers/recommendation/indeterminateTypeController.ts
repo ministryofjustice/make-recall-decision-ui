@@ -7,7 +7,7 @@ import inputDisplayValuesIndeterminateSentenceType from '../recommendations/inde
 import validateIndeterminateSentenceType from '../recommendations/indeterminateSentenceType/formValidator'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
-import { indeterminateSentenceTypeFtr56 } from '../recommendations/indeterminateSentenceType/formOptions'
+import indeterminateSentenceType from '../recommendations/indeterminateSentenceType/formOptions'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import ppPaths from '../../routes/paths/pp.paths'
 
@@ -41,7 +41,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
-  res.locals.indeterminateSentenceTypeOptions = indeterminateSentenceTypeFtr56
+  res.locals.indeterminateSentenceTypeOptions = indeterminateSentenceType
 
   res.render(`pages/recommendations/indeterminateSentenceType`)
   next()

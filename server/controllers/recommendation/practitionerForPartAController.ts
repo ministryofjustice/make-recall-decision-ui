@@ -16,7 +16,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
 
     page: {
-      id: 'practitionerForPartAFTR56',
+      id: 'practitionerForPartA',
     },
     inputDisplayValues: {
       name: isDefined(errors) ? unsavedValues?.name : recommendation.practitionerForPartA?.name,
@@ -26,7 +26,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     regions: regionEnum,
   }
 
-  res.render(`pages/recommendations/practitionerForPartAFTR56`)
+  res.render(`pages/recommendations/practitionerForPartA`)
   next()
 }
 

@@ -241,7 +241,7 @@ describe('post', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
       {
-        errorId: 'noRecallTypeIndeterminateSelectedFTR56',
+        errorId: 'noRecallTypeIndeterminateSelected',
         href: '#recallType',
         text: 'Select a recall recommendation',
         name: 'recallType',

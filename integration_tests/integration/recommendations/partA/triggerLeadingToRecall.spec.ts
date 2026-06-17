@@ -87,41 +87,25 @@ context('Trigger leading to recall Page', () => {
       })
     })
 
-    describe('Error message display', () => {
-      const testCases = [
-        {
-          description: 'Feature flag FTR-56 enabled',
-          url: `${testPageUrl}`,
-        },
-        {
-          description: 'Feature flag FTR-56 disabled',
-          url: testPageUrl,
-        },
-      ]
-      testCases.forEach(testCase => {
-        describe(testCase.description, () => {
-          describe('When no trigger is provided', () => {
-            const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false })
-            beforeEach(() => {
-              cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-            })
+    describe('Error message display, When no trigger is provided', () => {
+      const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false })
+      beforeEach(() => {
+        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      })
 
-            it('Then the expected error message is displayed', () => {
-              cy.visit(testCase.url)
+      it('Then the expected error message is displayed', () => {
+        cy.visit(testPageUrl)
 
-              cy.get('button.govuk-button').click()
+        cy.get('button.govuk-button').click()
 
-              testForErrorPageTitle()
-              testForErrorSummary([
-                {
-                  href: 'triggerLeadingToRecall',
-                  message: `Explain what has made you consider recalling ${recommendation.personOnProbation.name}`,
-                  errorStyleClass: 'govuk-textarea--error',
-                },
-              ])
-            })
-          })
-        })
+        testForErrorPageTitle()
+        testForErrorSummary([
+          {
+            href: 'triggerLeadingToRecall',
+            message: `Explain what has made you consider recalling ${recommendation.personOnProbation.name}`,
+            errorStyleClass: 'govuk-textarea--error',
+          },
+        ])
       })
     })
   })

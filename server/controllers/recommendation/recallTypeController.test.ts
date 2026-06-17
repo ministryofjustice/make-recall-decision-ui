@@ -10,12 +10,9 @@ import { RecommendationResponseGenerator } from '../../../data/recommendations/r
 import validateRecallType from '../recommendations/recallType/formValidator'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import EVENTS from '../../utils/constants'
-import { availableRecallTypesForRecommendationFTR56 } from '../recommendations/recallType/availableRecallTypes'
+import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import {
-  isFixedTermRecallMandatoryForRecommendation,
-  isStandardRecallMandatoryForRecommendationFTR56,
-} from '../../utils/fixedTermRecallUtils'
+import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -54,12 +51,10 @@ describe('get', () => {
 
   const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
   const isFTRMandatory = true
-  const isStandardMandatory = faker.datatype.boolean()
   beforeEach(async () => {
     ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
     ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(isFTRMandatory)
-    ;(availableRecallTypesForRecommendationFTR56 as jest.Mock).mockReturnValueOnce(expectedAvailableRecallTypes)
-    ;(isStandardRecallMandatoryForRecommendationFTR56 as jest.Mock).mockReturnValueOnce(isStandardMandatory)
+    ;(availableRecallTypesForRecommendation as jest.Mock).mockReturnValueOnce(expectedAvailableRecallTypes)
 
     recallTypeController.get(mockReq(), res, next)
   })
@@ -77,21 +72,18 @@ describe('get', () => {
   })
   it('adds result of availableRecallTypes to res.locals', async () => {
     expect(res.locals.availableRecallTypes).toEqual(expectedAvailableRecallTypes)
-    expect(availableRecallTypesForRecommendationFTR56).toHaveBeenCalledWith(res.locals.recommendation)
+    expect(availableRecallTypesForRecommendation).toHaveBeenCalled()
   })
   it("adds PoP's name to res.locals", async () => {
     expect(res.locals.personOnProbationName).toEqual(
       (locals.recommendation as RecommendationResponse)?.personOnProbation?.fullName,
     )
   })
-  it(`adds result of isFixedTermRecallMandatoryForRecommendation 'FTR56' to res.locals`, async () => {
+  it(`adds result of isFixedTermRecallMandatoryForRecommendation to res.locals`, async () => {
     expect(res.locals.ftrMandatory).toEqual(isFTRMandatory)
     expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(res.locals.recommendation)
   })
-  it(`adds result of isStandardRecallMandatoryForRecommendationFTR56 to res.locals`, async () => {
-    expect(res.locals.standardMandatory).toEqual(isStandardMandatory)
-    expect(isStandardRecallMandatoryForRecommendationFTR56).toHaveBeenCalledWith(res.locals.recommendation)
-  })
+
   it(`adds isAdultSentence to res.locals`, async () => {
     expect(res.locals.isAdultSentence).toEqual(res.locals.recommendation.sentenceGroup === 'ADULT_SDS')
   })

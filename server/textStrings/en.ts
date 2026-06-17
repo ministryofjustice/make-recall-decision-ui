@@ -32,10 +32,8 @@ const strings: Record<string, Record<string, string>> = {
       "Select if you're recommending a fixed term recall, standard recall or no recall",
     noRecallTypeSelectedMandatory: "Select if you're recommending a fixed term recall or no recall",
     noRecallTypeSelected: 'Select a recall recommendation',
-    noRecallTypeExtendedSelected: 'Select whether you recommend a recall or not',
-    noRecallTypeExtendedSelectedFTR56: 'Select a recall recommendation',
-    noRecallTypeIndeterminateSelected: 'Select whether you recommend a recall or not',
-    noRecallTypeIndeterminateSelectedFTR56: 'Select a recall recommendation',
+    noRecallTypeExtendedSelected: 'Select a recall recommendation',
+    noRecallTypeIndeterminateSelected: 'Select a recall recommendation',
     missingRecallTypeDetail: 'Explain why you recommend this recall type',
     missingCustodyPoliceAddressDetail: 'Enter the custody address',
     missingOffenceAnalysis: 'Enter the offence analysis',
@@ -69,18 +67,13 @@ const strings: Record<string, Record<string, string>> = {
     noIsSentence12MonthsOrOver: 'Select whether the sentence is 12 months or over',
     noIsMappaLevelAbove1: 'Select whether the MAPPA level is above 1',
     noHasBeenConvictedOfSeriousOffence: 'Select whether {{ fullName }} has been charged with a serious offence',
-    noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
-    noIndeterminateSentenceTypeSelectedFtr56: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
+    noIndeterminateSentenceTypeSelected: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
     noVictimContactSchemeSelected: 'Select whether there are any victims in the victim contact scheme',
     noAlternativesTriedSelected: 'Select which alternatives to recall have been tried already',
-    noIndeterminateDetailsSelected: 'Select at least one of the criteria',
-    noIndeterminateDetailsSelectedFtr56: 'Select all the criteria that apply to {{ fullName }}',
-    missingIndeterminateDetailIndexOffence: 'Enter details about the behaviour similar to the index offence',
-    missingIndeterminateDetailIndexOffenceFtr56:
+    noIndeterminateDetailsSelected: 'Select all the criteria that apply to {{ fullName }}',
+    missingIndeterminateDetailIndexOffence:
       'Enter details about the behaviour similar to the circumstances surrounding the index offence',
     missingIndeterminateDetailSexualViolent:
-      'Enter details about the behaviour that could lead to a sexual or violent offence',
-    missingIndeterminateDetailSexualViolentFtr56:
       'Enter details about the behaviour that has caused, or will cause, a sexual or violent offence',
     missingIndeterminateDetailLikelyResultSexualViolent:
       'Enter details about the behaviour likely to result in a sexual or violent offence',
@@ -220,13 +213,11 @@ const strings: Record<string, Record<string, string>> = {
     custodyStatus: 'Is {{ fullName }} in custody now?',
     vulnerabilities: 'Consider if this recall could affect any vulnerabilities or needs {{ fullName }} may have',
     vulnerabilitiesDetails: 'Give details about the vulnerabilities or needs you have identified',
-    taskList: 'Create a Part A form',
-    taskListFTR56: 'Part A for {{ fullName }}',
+    taskList: 'Part A for {{ fullName }}',
     fixedTermLicenceConditions: 'Licence conditions - fixed term recall',
     localPoliceContactDetails: 'Local police contact details',
     whoCompletedPartA: 'Who completed this Part A?',
     practitionerForPartA: 'Practitioner for {{ fullName }}',
-    practitionerForPartAFTR56: 'Practitioner for {{ fullName }}',
     revocationOrderRecipients: 'Where should the revocation order be sent?',
     ppcsQueryEmails: 'Where should PPCS respond with questions?',
     revocationContact: 'Where should the revocation order be sent?',
@@ -321,10 +312,8 @@ const strings: Record<string, Record<string, string>> = {
   },
   automatedFieldValues: {
     mandatoryFTRRationale:
-      '{{ personOnProbationName }} must get an automatic fixed term recall as they do not meet the exemption criteria.',
-    mandatoryFTRRationaleFTR56:
       '{{ personOnProbationName }} must get a fixed term recall as they do not meet the exclusion criteria.',
-    mandatoryStandardRationaleFTR56:
+    mandatoryStandardRationale:
       '{{ personOnProbationName }} must get a standard recall as they are excluded from getting a fixed term.',
   },
 }

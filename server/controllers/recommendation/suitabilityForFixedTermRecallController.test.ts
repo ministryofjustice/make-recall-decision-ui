@@ -41,7 +41,7 @@ describe('get', () => {
     expect(res.locals.caseSummary).toEqual({ licence: 'case summary data', mappa: 'mappa summary data' })
     expect(res.locals.page).toEqual({ id: 'suitabilityForFixedTermRecall' })
 
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
     expect(next).toHaveBeenCalled()
   })
 
@@ -117,7 +117,7 @@ describe('get', () => {
     })
   })
 
-  describe('redirects when FTR56 flag is enabled and sentenceGroup is not Determinate', () => {
+  describe('redirects when sentenceGroup is not Determinate', () => {
     ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(testCase => {
       it(`redirects when sentence group is ${testCase}`, async () => {
         const res = mockRes({
@@ -137,7 +137,7 @@ describe('get', () => {
     })
   })
 
-  it('shows the warning banner when FTR56 is enabled, the sentenceGroup is YOUTH_SDS and the recallType is not null', async () => {
+  it('shows the warning banner when the sentenceGroup is YOUTH_SDS and the recallType is not null', async () => {
     ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValueOnce(true)
     const res = mockRes({
       locals: {
@@ -159,7 +159,7 @@ describe('get', () => {
     })
   })
 
-  it('does not show the warning banner when FTR56 flag is enabled and sentenceGRoup is ADULT_SDS', async () => {
+  it('does not show the warning banner when sentenceGRoup is ADULT_SDS', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
@@ -177,7 +177,7 @@ describe('get', () => {
     expect(res.locals.page.warningPanel).toBe(undefined)
   })
 
-  it('renders the correct template when FTR56 flag is enabled', async () => {
+  it('renders the correct template', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
@@ -190,7 +190,7 @@ describe('get', () => {
 
     await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall-ftr56')
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
   })
 })
 
@@ -202,7 +202,7 @@ describe('post', () => {
   })
   const basePath = `/recommendations/123/`
 
-  describe('post with valid data FTR56', () => {
+  describe('post with valid data', () => {
     ;[
       {
         recommendationOptions: {

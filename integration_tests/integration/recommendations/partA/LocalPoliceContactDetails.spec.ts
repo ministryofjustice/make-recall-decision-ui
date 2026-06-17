@@ -10,7 +10,7 @@ context('Police Contact Details', () => {
     cy.signIn()
   })
 
-  it('FTR56 ON — shows contact name and email, hides telephone and fax', () => {
+  it('shows contact name and email, hides telephone and fax', () => {
     cy.visit(`${testPageUrl}`)
 
     cy.getElement('Police contact name').should('exist')

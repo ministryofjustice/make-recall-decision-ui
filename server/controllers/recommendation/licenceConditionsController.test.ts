@@ -467,7 +467,7 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/ap-recall-rationale`)
   })
-  describe(`with FTR56 'enabled'`, () => {
+  describe(`licenceConditionsController post`, () => {
     it('post with valid data', async () => {
       ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
       ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)

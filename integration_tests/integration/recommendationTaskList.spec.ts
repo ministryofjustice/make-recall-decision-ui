@@ -14,13 +14,6 @@ import recallTypeValues = RecallTypeSelectedValue.value
 import selected = CustodyStatus.selected
 import { NoneOrOption } from '../../data/@generators/dataGenerators'
 
-const ftr56TestCases = [
-  {
-    description: 'with FTR56 flag enabled',
-    ftr56Enabled: true,
-  },
-]
-
 context('Recommendation - task list', () => {
   beforeEach(() => {
     cy.signIn()
@@ -154,7 +147,7 @@ context('Recommendation - task list', () => {
   ]
 
   scenarios.forEach(({ name, sentenceGroup, expect }) => {
-    it(`Ftr56: task list - To do - ${name}`, () => {
+    it(`task list - To do - ${name}`, () => {
       const response = {
         ...recommendationResponse,
         recallType: {
@@ -164,7 +157,7 @@ context('Recommendation - task list', () => {
         },
         sentenceGroup,
       }
-      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
+      setUp(response as RecommendationResponse, [], [])
 
       cy.getElement('MAPPA information to assess recall type To review').should(expect.mappa ? 'exist' : 'not.exist')
 
@@ -218,7 +211,7 @@ context('Recommendation - task list', () => {
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
     })
 
-    it(`Ftr56: task list - Completed - ${name}`, () => {
+    it(`task list - Completed - ${name}`, () => {
       const response = {
         ...completeRecommendationResponse,
         sentenceGroup,
@@ -255,7 +248,7 @@ context('Recommendation - task list', () => {
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
       }
-      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
+      setUp(response as RecommendationResponse, [], [])
 
       cy.getElement('MAPPA information to assess recall type Reviewed').should(expect.mappa ? 'exist' : 'not.exist')
 
@@ -316,17 +309,17 @@ context('Recommendation - task list', () => {
     })
   })
 
-  describe('Task list — FTR56 ON', () => {
+  describe('Task list', () => {
     describe('recommendations', () => {
       ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
         it(`does not show MAPPA item for ${sentenceGroup}`, () => {
-          setUp({ ...recommendationResponse, sentenceGroup }, [], ['flagFTR56Enabled'])
+          setUp({ ...recommendationResponse, sentenceGroup }, [], [''])
           cy.getElement('MAPPA information to assess recall type').should('not.exist')
         })
       })
       ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
         it(`does not show Suitability item for ${sentenceGroup}`, () => {
-          setUp({ ...recommendationResponse, sentenceGroup }, [], ['flagFTR56Enabled'])
+          setUp({ ...recommendationResponse, sentenceGroup }, [], [''])
           cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
         })
       })
@@ -341,7 +334,7 @@ context('Recommendation - task list', () => {
 
         ;[SentenceGroup.EXTENDED, SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
           it(`does not show indeterminateSentenceType for ${sentenceGroup}`, () => {
-            setUp({ ...noRecallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            setUp({ ...noRecallFtr56Base, sentenceGroup }, [], [])
             cy.getElement('Type of indeterminate sentence').should('not.exist')
           })
         })
@@ -350,7 +343,7 @@ context('Recommendation - task list', () => {
           ['emergencyRecall', 'Is this an emergency recall?'],
         ].forEach(([field, elementText]) => {
           it(`does not show ${field}`, () => {
-            setUp(noRecallFtr56Base, [], ['flagFTR56Enabled'])
+            setUp(noRecallFtr56Base, [], [])
             cy.getElement(elementText).should('not.exist')
           })
         })
@@ -367,7 +360,7 @@ context('Recommendation - task list', () => {
           ['emergencyRecall', 'Is this an emergency recall?', SentenceGroup.INDETERMINATE],
         ].forEach(([field, elementText, sentenceGroup]: [string, string, SentenceGroup]) => {
           it(`does not show ${field} for ${sentenceGroup}`, () => {
-            setUp({ ...recallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            setUp({ ...recallFtr56Base, sentenceGroup }, [], [])
             cy.getElement(elementText).should('not.exist')
           })
         })
@@ -385,14 +378,14 @@ context('Recommendation - task list', () => {
                 recallType: { selected: { value: recallValue } },
               },
               [],
-              ['flagFTR56Enabled'],
+              [],
             )
             cy.getElement('Add any additional licence conditions - fixed term recall').should('not.exist')
           })
         })
         ;[SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
           it(`does not show indeterminateOrExtendedSentenceDetails for ${sentenceGroup}`, () => {
-            setUp({ ...recallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            setUp({ ...recallFtr56Base, sentenceGroup }, [], [])
             cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
           })
         })
@@ -408,7 +401,7 @@ context('Recommendation - task list', () => {
             whyConsideredRecall: null,
           } as RecommendationResponse,
           [],
-          ['flagFTR56Enabled'],
+          [],
         )
         cy.getElement('Preview the letter').should('not.exist')
       })
@@ -424,7 +417,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagFTR56Enabled'],
+          [],
         )
         cy.getElement('Add more details about vulnerabilities or needs To do').should('exist')
       })
@@ -438,7 +431,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagFTR56Enabled'],
+          [],
         )
         cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
       })
@@ -452,7 +445,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagFTR56Enabled'],
+          [],
         )
         cy.getElement('Add more details about vulnerabilities or needs').should('not.exist')
       })
@@ -505,25 +498,23 @@ context('Recommendation - task list', () => {
     cy.getElement('Create Part A').should('not.exist')
   })
 
-  ftr56TestCases.forEach(testCase => {
-    it(`from task list, link to form then return to task list ${testCase.description}`, () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
+  it(`from task list, link to form then return to task list`, () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
 
-      cy.clickLink('What has led to this recall?')
-      cy.log('============= Back link')
-      cy.clickLink('Back')
-      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
-      cy.log('============= Continue button')
-      cy.clickLink('What has led to this recall?')
-      cy.fillInput('What has led to this recall?', 'Re-offending has occurred')
-      cy.clickButton('Continue')
+    cy.clickLink('What has led to this recall?')
+    cy.log('============= Back link')
+    cy.clickLink('Back')
+    cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+    cy.log('============= Continue button')
+    cy.clickLink('What has led to this recall?')
+    cy.fillInput('What has led to this recall?', 'Re-offending has occurred')
+    cy.clickButton('Continue')
 
-      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
-      cy.clickLink('When did the SPO agree this recall?')
-    })
+    cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+    cy.clickLink('When did the SPO agree this recall?')
   })
 
   context('form links', () => {

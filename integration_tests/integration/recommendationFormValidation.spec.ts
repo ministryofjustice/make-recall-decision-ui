@@ -32,81 +32,77 @@ context('Make a recommendation - form validation', () => {
   }
 
   describe('Licence conditions', () => {
-    describe(`with FTR56 flag 'enabled'`, () => {
-      ;[true, false].forEach(hasFromPageId => {
-        it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-          cy.signIn()
-          cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-          cy.task(
-            'getCaseV2',
-            caseTemplate()
-              .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-              .withAllConvictionsReleasedOnLicence()
-              .build(),
+    ;[true, false].forEach(hasFromPageId => {
+      it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+        cy.signIn()
+        cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+        cy.task(
+          'getCaseV2',
+          caseTemplate()
+            .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+            .withAllConvictionsReleasedOnLicence()
+            .build(),
+        )
+
+        cy.task('getStatuses', { statusCode: 200, response: [] })
+        cy.visit(
+          `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+        )
+
+        // Back link
+        if (!hasFromPageId) {
+          testBackLink(
+            `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+            'Back to Consider a recall questions',
+            false,
           )
+        } else {
+          testStandardBackLink()
+        }
 
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-          cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
-          )
-
-          // Back link
-          if (!hasFromPageId) {
-            testBackLink(
-              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-              'Back to Consider a recall questions',
-              false,
-            )
-          } else {
-            testStandardBackLink()
-          }
-
-          cy.clickButton('Continue')
-          cy.assertErrorMessage({
-            fieldName: 'licenceConditionsBreached',
-            errorText: 'Select one or more licence conditions',
-          })
+        cy.clickButton('Continue')
+        cy.assertErrorMessage({
+          fieldName: 'licenceConditionsBreached',
+          errorText: 'Select one or more licence conditions',
         })
       })
     })
   })
 
   describe('Alternatives tried', () => {
-    describe(`FTR56 flag 'enabled'`, () => {
-      ;[true, false].forEach(hasFromPageId => {
-        it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-          cy.signIn()
-          cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
+    ;[true, false].forEach(hasFromPageId => {
+      it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+        cy.signIn()
+        cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+        cy.task('getStatuses', { statusCode: 200, response: [] })
 
-          cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/alternatives-tried?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+        cy.visit(
+          `${sharedPaths.recommendations}/${recommendationId}/alternatives-tried?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+        )
+
+        // Back link
+        if (!hasFromPageId) {
+          testBackLink(
+            `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+            'Back to Consider a recall questions',
+            false,
           )
+        } else {
+          testStandardBackLink()
+        }
 
-          // Back link
-          if (!hasFromPageId) {
-            testBackLink(
-              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-              'Back to Consider a recall questions',
-              false,
-            )
-          } else {
-            testStandardBackLink()
-          }
-
-          cy.clickButton('Continue')
-          cy.assertErrorMessage({
-            fieldName: 'alternativesToRecallTried',
-            errorText: 'Select which alternatives to recall have been tried already',
-          })
-          cy.selectCheckboxes('What alternatives to recall have been tried already?', [
-            'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-          ])
-          cy.clickButton('Continue')
-          cy.assertErrorMessage({
-            fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
-            errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
-          })
+        cy.clickButton('Continue')
+        cy.assertErrorMessage({
+          fieldName: 'alternativesToRecallTried',
+          errorText: 'Select which alternatives to recall have been tried already',
+        })
+        cy.selectCheckboxes('What alternatives to recall have been tried already?', [
+          'Referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
+        ])
+        cy.clickButton('Continue')
+        cy.assertErrorMessage({
+          fieldName: 'alternativesToRecallTriedDetail-REFERRAL_TO_OTHER_TEAMS',
+          errorText: 'Enter more detail for referral to other teams (e.g. IOM, MAPPA, Gangs Unit)',
         })
       })
     })
@@ -159,7 +155,7 @@ context('Make a recommendation - form validation', () => {
     })
   })
 
-  it('Ftr56: Indeterminate or extended sentence details', () => {
+  it('Indeterminate or extended sentence details', () => {
     cy.signIn()
     cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
     cy.task('getStatuses', { statusCode: 200, response: [] })

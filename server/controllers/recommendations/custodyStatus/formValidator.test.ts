@@ -8,7 +8,7 @@ describe('validateCustodyStatus', () => {
     path: `/recommendations/${recommendationId}/custody-status`,
   }
 
-  describe(`with FTR56 enabled`, () => {
+  describe(`validateCustodyStatus`, () => {
     it('returns valuesToSave and no errors if "Yes, prison" selected', async () => {
       const requestBody = {
         custodyStatus: 'YES_PRISON',
@@ -109,7 +109,7 @@ describe('validateCustodyStatus', () => {
     })
   })
 
-  it('returns valuesToSave and no errors if set to "Yes, police custody" without details and FTR56 flag enabled', async () => {
+  it('returns valuesToSave and no errors if set to "Yes, police custody" without details', async () => {
     const requestBody = {
       custodyStatus: 'YES_POLICE',
       crn: 'X34534',

@@ -19,7 +19,7 @@ describe('Practitioner for Part A Controller', () => {
       const next = mockNext()
       await practitionerForPartAController.get(mockReq(), res, next)
 
-      expect(res.locals.page).toEqual({ id: 'practitionerForPartAFTR56' })
+      expect(res.locals.page).toEqual({ id: 'practitionerForPartA' })
 
       expect(res.locals.inputDisplayValues.name).not.toBeDefined()
       expect(res.locals.inputDisplayValues.email).not.toBeDefined()
@@ -28,7 +28,7 @@ describe('Practitioner for Part A Controller', () => {
       expect(res.locals.inputDisplayValues.localDeliveryUnit).not.toBeDefined()
       expect(res.locals.inputDisplayValues.isPersonProbationPractitionerForOffender).not.toBeDefined()
       expect(res.locals.regions).toEqual(regionEnum)
-      expect(res.render).toHaveBeenCalledWith('pages/recommendations/practitionerForPartAFTR56')
+      expect(res.render).toHaveBeenCalledWith('pages/recommendations/practitionerForPartA')
 
       expect(next).toHaveBeenCalled()
     })

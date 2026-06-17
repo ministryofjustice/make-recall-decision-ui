@@ -25,7 +25,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     (recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || indeterminateSentenceTypeCompleted)
   res.locals = {
     ...res.locals,
-    flagFTR56Enabled: true,
     backLinkUrl: `/cases/${recommendation.crn}/overview`,
     isIndeterminateSentence: recommendation.sentenceGroup === SentenceGroup.INDETERMINATE,
     triggerLeadingToRecallCompleted,

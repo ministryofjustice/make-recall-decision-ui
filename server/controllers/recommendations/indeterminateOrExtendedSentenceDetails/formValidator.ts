@@ -6,16 +6,16 @@ import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-const errorsFtr56: Record<string, string> = {
-  BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE: strings.errors.missingIndeterminateDetailIndexOffenceFtr56,
-  BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE: strings.errors.missingIndeterminateDetailSexualViolentFtr56,
+const errorsMap: Record<string, string> = {
+  BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE: strings.errors.missingIndeterminateDetailIndexOffence,
+  BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE: strings.errors.missingIndeterminateDetailSexualViolent,
   BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE:
     strings.errors.missingIndeterminateDetailLikelyResultSexualViolent,
   OUT_OF_TOUCH: strings.errors.missingIndeterminateDetailContact,
 }
 
 const missingDetailsError = (optionId: string) => {
-  const map = errorsFtr56
+  const map = errorsMap
   return map[optionId] ?? 'Enter details'
 }
 
@@ -25,8 +25,8 @@ const validateIndeterminateDetails = async ({ requestBody, urlInfo }: FormValida
     ? indeterminateOrExtendedSentenceDetails
     : [indeterminateOrExtendedSentenceDetails]
 
-  const items = formOptions.indeterminateOrExtendedSentenceDetailsFtr56
-  const formId = 'indeterminateOrExtendedSentenceDetailsFtr56'
+  const items = formOptions.indeterminateOrExtendedSentenceDetails
+  const formId = 'indeterminateOrExtendedSentenceDetails'
 
   const invalidAlternative = selected.some(selectionId => !isValueValid(selectionId, formId))
   const missingDetails = selected.filter(selectionId => {
@@ -49,7 +49,7 @@ const validateIndeterminateDetails = async ({ requestBody, urlInfo }: FormValida
     const errors = []
     let errorId
     if (!indeterminateOrExtendedSentenceDetails || invalidAlternative) {
-      errorId = 'noIndeterminateDetailsSelectedFtr56'
+      errorId = 'noIndeterminateDetailsSelected'
       errors.push(
         makeErrorObject({
           id: 'option-1',

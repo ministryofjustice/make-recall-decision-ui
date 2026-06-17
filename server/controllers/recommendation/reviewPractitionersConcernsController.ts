@@ -6,7 +6,7 @@ import { AdditionalLicenceConditionOption } from '../../@types/make-recall-decis
 import logger from '../../../logger'
 import { isDefined } from '../../utils/utils'
 import { SentenceGroup, sentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import { indeterminateSentenceTypeFtr56 } from '../recommendations/indeterminateSentenceType/formOptions'
+import indeterminateSentenceType from '../recommendations/indeterminateSentenceType/formOptions'
 
 function extractStandardLicenceConditions(recommendation: RecommendationDecorated): Array<string> {
   if (recommendation.licenceConditionsBreached && recommendation.licenceConditionsBreached.standardLicenceConditions) {
@@ -160,7 +160,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     isExtendedSentence,
     indeterminateSentenceHumanReadable:
       isIndeterminateSentence === 'Yes'
-        ? indeterminateSentenceTypeFtr56.find(
+        ? indeterminateSentenceType.find(
             sentenceType => sentenceType.value === recommendation.indeterminateSentenceType?.selected,
           )?.text
         : undefined,

@@ -60,7 +60,7 @@ describe('get', () => {
               name: 'recallType',
               href: '#recallType',
               errorId: 'noRecallTypeExtendedSelected',
-              html: 'Select whether you recommend a recall or not',
+              html: 'Select a recall recommendation',
             },
           ],
           recallType: {
@@ -88,7 +88,7 @@ describe('get', () => {
         {
           href: '#recallType',
           errorId: 'noRecallTypeExtendedSelected',
-          html: 'Select whether you recommend a recall or not',
+          html: 'Select a recall recommendation',
           name: 'recallType',
         },
       ],
@@ -135,7 +135,7 @@ describe('post', () => {
           selected: { value: 'STANDARD' },
           allOptions: [
             { value: 'STANDARD', text: 'Standard recall' },
-            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
+            { value: 'NO_RECALL', text: 'No recall - create a decision not to recall letter' },
           ],
         },
       },
@@ -199,7 +199,7 @@ describe('post', () => {
           selected: { value: 'NO_RECALL' },
           allOptions: [
             { value: 'STANDARD', text: 'Standard recall' },
-            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
+            { value: 'NO_RECALL', text: 'No recall - create a decision not to recall letter' },
           ],
         },
       },
@@ -238,7 +238,7 @@ describe('post', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
       {
-        errorId: 'noRecallTypeExtendedSelectedFTR56',
+        errorId: 'noRecallTypeExtendedSelected',
         href: '#recallType',
         text: 'Select a recall recommendation',
         name: 'recallType',

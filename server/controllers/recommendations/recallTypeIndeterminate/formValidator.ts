@@ -12,7 +12,7 @@ const validateRecallTypeIndeterminate = async ({ requestBody, urlInfo }: FormVal
     const errors = []
     let errorId
     if (!recallType || invalidRecallTypeIndeterminate) {
-      errorId = 'noRecallTypeIndeterminateSelectedFTR56'
+      errorId = 'noRecallTypeIndeterminateSelected'
       errors.push(
         makeErrorObject({
           id: 'recallType',

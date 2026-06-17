@@ -2,11 +2,9 @@ import { RecommendationResponseGenerator } from '../../data/recommendations/reco
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 import generateBooleanCombinations from '../testUtils/booleanUtils'
 import {
-  isFixedTermRecallMandatory,
   isFixedTermRecallMandatoryForRecommendation,
-  isFixedTermRecallMandatoryForValueKeys,
   isRecommendationDiscretionaryRecall,
-  isStandardRecallMandatoryForRecommendationFTR56,
+  isStandardRecallMandatoryForRecommendation,
 } from './fixedTermRecallUtils'
 
 describe('isFixedTermRecallMandatoryForRecommendation', () => {
@@ -63,7 +61,7 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
   })
 })
 
-describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', () => {
+describe('isFixedTermRecallMandatoryForRecommendation', () => {
   describe('when sentence Group is YOUTH_SDS', () => {
     it('returns false when no exclusion criteria fields are set', () => {
       expect(
@@ -177,84 +175,24 @@ describe('isFixedTermRecallMandatoryForRecommendation when FTR56 is enabled', ()
   })
 })
 
-describe('isFixedTermMandatoryForValueKeys', () => {
-  it(' Returns false when no exclusion criteria fields are set', () => {
-    expect(
-      isFixedTermRecallMandatoryForValueKeys({
-        isSentence48MonthsOrOver: undefined,
-        isUnder18: undefined,
-        isMappaCategory4: undefined,
-        isMappaLevel2Or3: undefined,
-        isRecalledOnNewChargedOffence: undefined,
-        isServingFTSentenceForTerroristOffence: undefined,
-        hasBeenChargedWithTerroristOrStateThreatOffence: undefined,
-      }),
-    ).toBeFalsy()
-  })
-  it(' Returns true when all exclusion criteria fields are false', () => {
-    expect(
-      isFixedTermRecallMandatoryForValueKeys({
-        isSentence48MonthsOrOver: false,
-        isUnder18: false,
-        isMappaCategory4: false,
-        isMappaLevel2Or3: false,
-        isRecalledOnNewChargedOffence: false,
-        isServingFTSentenceForTerroristOffence: false,
-        hasBeenChargedWithTerroristOrStateThreatOffence: false,
-      }),
-    ).toBeTruthy()
-  })
-
-  describe(' Returns false when any exclusion criteria fields are true', () => {
-    generateBooleanCombinations(7)
-      .filter(c => c.some(b => b))
-      .forEach(combination => {
-        it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
-          expect(
-            isFixedTermRecallMandatoryForRecommendation({
-              isSentence48MonthsOrOver: combination[0],
-              isUnder18: combination[1],
-              isMappaCategory4: combination[2],
-              isMappaLevel2Or3: combination[3],
-              isRecalledOnNewChargedOffence: combination[4],
-              isServingFTSentenceForTerroristOffence: combination[5],
-              hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
-            }),
-          ).toBeFalsy()
-        })
+describe(' Returns false when any exclusion criteria fields are true', () => {
+  generateBooleanCombinations(7)
+    .filter(c => c.some(b => b))
+    .forEach(combination => {
+      it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
+        expect(
+          isFixedTermRecallMandatoryForRecommendation({
+            isSentence48MonthsOrOver: combination[0],
+            isUnder18: combination[1],
+            isMappaCategory4: combination[2],
+            isMappaLevel2Or3: combination[3],
+            isRecalledOnNewChargedOffence: combination[4],
+            isServingFTSentenceForTerroristOffence: combination[5],
+            hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
+          }),
+        ).toBeFalsy()
       })
-  })
-})
-
-describe('isFixedTermRecallMandatory', () => {
-  it(' Returns false when no exclusion criteria fields are set', () => {
-    expect(
-      isFixedTermRecallMandatory(undefined, undefined, undefined, undefined, undefined, undefined, undefined),
-    ).toBeFalsy()
-  })
-  it(' Returns true when all exclusion criteria fields are false', () => {
-    expect(isFixedTermRecallMandatory(false, false, false, false, false, false, false)).toBeTruthy()
-  })
-
-  describe(' Returns false when any exclusion criteria fields are true', () => {
-    generateBooleanCombinations(7)
-      .filter(c => c.some(b => b))
-      .forEach(combination => {
-        it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
-          expect(
-            isFixedTermRecallMandatory(
-              combination[0],
-              combination[1],
-              combination[2],
-              combination[3],
-              combination[4],
-              combination[5],
-              combination[6],
-            ),
-          ).toBeFalsy()
-        })
-      })
-  })
+    })
 })
 
 describe('isRecommendationDiscretionaryRecall', () => {
@@ -283,10 +221,10 @@ describe('isRecommendationDiscretionaryRecall', () => {
     })
 })
 
-describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
+describe('isStandardRecallMandatoryForRecommendation', () => {
   it(' Returns false when no exclusion criteria fields are set', () => {
     expect(
-      isStandardRecallMandatoryForRecommendationFTR56(
+      isStandardRecallMandatoryForRecommendation(
         RecommendationResponseGenerator.generate({
           sentenceGroup: 'none',
           isMappaCategory4: undefined,
@@ -306,7 +244,7 @@ describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
   })
   it(` Returns false when is Youth SDS`, () => {
     expect(
-      isStandardRecallMandatoryForRecommendationFTR56(
+      isStandardRecallMandatoryForRecommendation(
         RecommendationResponseGenerator.generate({
           sentenceGroup: SentenceGroup.YOUTH_SDS,
         }),
@@ -315,7 +253,7 @@ describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
   })
   it(` Returns true when is Indeterminate`, () => {
     expect(
-      isStandardRecallMandatoryForRecommendationFTR56(
+      isStandardRecallMandatoryForRecommendation(
         RecommendationResponseGenerator.generate({
           sentenceGroup: SentenceGroup.INDETERMINATE,
         }),
@@ -324,7 +262,7 @@ describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
   })
   it(` Returns true when is Extended`, () => {
     expect(
-      isStandardRecallMandatoryForRecommendationFTR56(
+      isStandardRecallMandatoryForRecommendation(
         RecommendationResponseGenerator.generate({
           sentenceGroup: SentenceGroup.EXTENDED,
         }),
@@ -333,7 +271,7 @@ describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
   })
   it(' Returns false when is Adult SDS and all adult exclusion criteria fields are false', () => {
     expect(
-      isStandardRecallMandatoryForRecommendationFTR56(
+      isStandardRecallMandatoryForRecommendation(
         RecommendationResponseGenerator.generate({
           sentenceGroup: SentenceGroup.ADULT_SDS,
           isMappaCategory4: false,
@@ -355,7 +293,7 @@ describe('isStandardRecallMandatoryForRecommendationFTR56', () => {
       .forEach(combination => {
         it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
           expect(
-            isStandardRecallMandatoryForRecommendationFTR56(
+            isStandardRecallMandatoryForRecommendation(
               RecommendationResponseGenerator.generate({
                 sentenceGroup: SentenceGroup.ADULT_SDS,
                 isMappaCategory4: combination[0],

@@ -3,7 +3,7 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import inputDisplayValuesIndeterminateDetails from '../recommendations/indeterminateOrExtendedSentenceDetails/inputDisplayValues'
 import validateIndeterminateDetails from '../recommendations/indeterminateOrExtendedSentenceDetails/formValidator'
-import { indeterminateOrExtendedSentenceDetailsFtr56 } from '../recommendations/indeterminateOrExtendedSentenceDetails/formOptions'
+import indeterminateOrExtendedSentenceDetails from '../recommendations/indeterminateOrExtendedSentenceDetails/formOptions'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
@@ -24,7 +24,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 
   res.locals.fullName = recommendation.personOnProbation?.name
 
-  res.locals.indeterminateOrExtendedSentenceDetails = indeterminateOrExtendedSentenceDetailsFtr56
+  res.locals.indeterminateOrExtendedSentenceDetails = indeterminateOrExtendedSentenceDetails
 
   res.render(`pages/recommendations/indeterminateOrExtendedSentenceDetails`)
   next()

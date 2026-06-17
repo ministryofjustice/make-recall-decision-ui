@@ -21,7 +21,7 @@ describe('validateIndeterminateDetails', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       indeterminateOrExtendedSentenceDetails: {
-        allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetailsFtr56),
+        allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetails),
         selected: [
           {
             details: 'Info..',
@@ -46,7 +46,7 @@ describe('validateIndeterminateDetails', () => {
     const { valuesToSave } = await validateIndeterminateDetails({ requestBody, urlInfo })
     expect(valuesToSave).toEqual({
       indeterminateOrExtendedSentenceDetails: {
-        allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetailsFtr56),
+        allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetails),
         selected: [
           {
             details: 'Details for..',
@@ -68,7 +68,7 @@ describe('validateIndeterminateDetails', () => {
         href: '#option-1',
         name: 'indeterminateOrExtendedSentenceDetails',
         text: 'Select all the criteria that apply to {{ fullName }}',
-        errorId: 'noIndeterminateDetailsSelectedFtr56',
+        errorId: 'noIndeterminateDetailsSelected',
         values: undefined,
         invalidParts: undefined,
       },
@@ -144,10 +144,9 @@ describe('validateIndeterminateDetails', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       indeterminateOrExtendedSentenceDetails: {
-        allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetailsFtr56),
+        allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetails),
         selected: [
           {
-            details: undefined,
             value: 'NONE',
           },
         ],

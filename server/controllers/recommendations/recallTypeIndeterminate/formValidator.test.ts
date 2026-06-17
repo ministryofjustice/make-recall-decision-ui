@@ -115,7 +115,7 @@ describe('validateRecallTypeIndeterminate', () => {
           href: '#recallType',
           name: 'recallType',
           text: 'Select a recall recommendation',
-          errorId: 'noRecallTypeIndeterminateSelectedFTR56',
+          errorId: 'noRecallTypeIndeterminateSelected',
         },
       ])
     })
@@ -132,7 +132,7 @@ describe('validateRecallTypeIndeterminate', () => {
           href: '#recallType',
           name: 'recallType',
           text: 'Select a recall recommendation',
-          errorId: 'noRecallTypeIndeterminateSelectedFTR56',
+          errorId: 'noRecallTypeIndeterminateSelected',
         },
       ])
     })

@@ -290,7 +290,7 @@ describe('post', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
       {
-        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
+        errorId: 'noIndeterminateSentenceTypeSelected',
         href: '#indeterminateSentenceType',
         text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         name: 'indeterminateSentenceType',

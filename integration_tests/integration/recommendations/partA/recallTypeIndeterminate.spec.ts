@@ -14,11 +14,9 @@ describe('recall type indeterminate', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendation })
   })
 
-  describe('with FTR56 flag enabled', () => {
-    const testPageUrlFTR56 = `${testPageUrl}`
-
+  describe('recall-type-indeterminate', () => {
     it('should display correctly with no data', () => {
-      cy.visit(testPageUrlFTR56)
+      cy.visit(testPageUrl)
 
       cy.getElement('What do you recommend?')
       cy.get('.moj-ticket-panel').within(() => {
@@ -54,7 +52,7 @@ describe('recall type indeterminate', () => {
     })
 
     it('should show form validation errors', () => {
-      cy.visit(testPageUrlFTR56)
+      cy.visit(testPageUrl)
       cy.get('button').click()
 
       testForErrorSummary([
@@ -78,7 +76,7 @@ describe('recall type indeterminate', () => {
       })
       cy.task('getRecommendation', { statusCode: 200, response: recommendationWithRecallTypeSelected })
 
-      cy.visit(testPageUrlFTR56)
+      cy.visit(testPageUrl)
 
       cy.get('input[name="recallType"][value="EMERGENCY"]').should('be.checked')
     })

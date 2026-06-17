@@ -56,7 +56,7 @@ context('Excluded and restricted cases', () => {
     })
 
     describe('licence conditions page', () => {
-      it(`FTR56 flag 'enabled'`, () => {
+      it(`Excluded case`, () => {
         cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
         cy.task('getRecommendation', {
           statusCode: 200,
@@ -130,7 +130,7 @@ context('Excluded and restricted cases', () => {
     })
 
     describe('licence conditions page', () => {
-      it(`FTR56 flag 'enabled'`, () => {
+      it(`Restricted case`, () => {
         cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
         cy.task('getRecommendation', {
           statusCode: 200,

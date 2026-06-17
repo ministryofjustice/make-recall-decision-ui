@@ -5,12 +5,9 @@ import inputDisplayValuesRecallType from '../recommendations/recallType/inputDis
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { availableRecallTypesForRecommendationFTR56 } from '../recommendations/recallType/availableRecallTypes'
+import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import {
-  isFixedTermRecallMandatoryForRecommendation,
-  isStandardRecallMandatoryForRecommendationFTR56,
-} from '../../utils/fixedTermRecallUtils'
+import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import { FeatureFlags } from '../../@types/featureFlags'
 
@@ -29,10 +26,10 @@ function get(_: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: availableRecallTypesForRecommendationFTR56(recommendation),
+    availableRecallTypes: availableRecallTypesForRecommendation(),
     personOnProbationName: recommendation.personOnProbation.fullName,
     ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation),
-    standardMandatory: isStandardRecallMandatoryForRecommendationFTR56(recommendation),
+    standardMandatory: false,
     isAdultSentence: recommendation.sentenceGroup === SentenceGroup.ADULT_SDS,
   }
 

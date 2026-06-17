@@ -320,7 +320,7 @@ describe('post', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
       {
-        errorId: 'noIndeterminateDetailsSelectedFtr56',
+        errorId: 'noIndeterminateDetailsSelected',
         href: '#option-1',
         text: 'Select all the criteria that apply to {{ fullName }}',
         name: 'indeterminateOrExtendedSentenceDetails',
@@ -356,7 +356,7 @@ describe('post', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(req.session.errors).toEqual([
       {
-        errorId: 'noIndeterminateDetailsSelectedFtr56',
+        errorId: 'noIndeterminateDetailsSelected',
         href: '#option-1',
         text: 'Select all the criteria that apply to {{ fullName }}',
         name: 'indeterminateOrExtendedSentenceDetails',

@@ -27,7 +27,6 @@ function getSentencesByCustodyType(sentences: PpudDetailsSentence[], custodyType
  * Determines the custody group of the sentence based on the Part A information, i.e. what the Probation Practitioner
  * has responded (NOT what the PPCS worker responds).
  * @param recommendation The relevant recommendation
- * @param ftr56Enabled Whether the FTR56 functionality is enabled
  */
 export function calculatePartACustodyGroup(recommendation: RecommendationResponse): CUSTODY_GROUP {
   return recommendation.sentenceGroup === SentenceGroup.INDETERMINATE

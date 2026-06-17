@@ -44,7 +44,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('load with no data, with FTR56 enabled', async () => {
+  it('load with no data', async () => {
     const res = mockRes({
       locals: {
         recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },

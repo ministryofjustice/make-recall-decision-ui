@@ -20,7 +20,7 @@ describe("SPO review practitioner's concerns page", () => {
     })
   })
 
-  describe('with FTR56 flag enabled', () => {
+  describe('review-practitioners-concerns with sentenceGroup', () => {
     const recommendation = RecommendationResponseGenerator.generate()
 
     const otherRecommendationProperties = {

@@ -21,7 +21,7 @@ describe('validateIndeterminateSentenceType', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       indeterminateSentenceType: {
-        allOptions: formOptions.indeterminateSentenceTypeFtr56.map(({ value, text }) => ({ value, text })),
+        allOptions: formOptions.indeterminateSentenceType.map(({ value, text }) => ({ value, text })),
         selected: 'LIFE',
       },
     })
@@ -32,23 +32,6 @@ describe('validateIndeterminateSentenceType', () => {
       indeterminateSentenceType: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody, recommendationId })
-    expect(valuesToSave).toBeUndefined()
-    expect(errors).toEqual([
-      {
-        href: '#indeterminateSentenceType',
-        name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
-      },
-    ])
-  })
-
-  it('returns an error, if not set, and no valuesToSave', async () => {
-    const requestBody = {
-      indeterminateSentenceType: '',
-      crn: 'X34534',
-    }
     const { errors, valuesToSave } = await validateIndeterminateSentenceType({
       requestBody,
     })
@@ -58,7 +41,7 @@ describe('validateIndeterminateSentenceType', () => {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
         text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
+        errorId: 'noIndeterminateSentenceTypeSelected',
       },
     ])
   })
@@ -75,26 +58,7 @@ describe('validateIndeterminateSentenceType', () => {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
         text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
-      },
-    ])
-  })
-
-  it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
-    const requestBody = {
-      indeterminateSentenceType: 'VALUE',
-      crn: 'X34534',
-    }
-    const { errors, valuesToSave } = await validateIndeterminateSentenceType({
-      requestBody,
-    })
-    expect(valuesToSave).toBeUndefined()
-    expect(errors).toEqual([
-      {
-        href: '#indeterminateSentenceType',
-        name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
+        errorId: 'noIndeterminateSentenceTypeSelected',
       },
     ])
   })

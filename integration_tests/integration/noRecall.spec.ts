@@ -116,7 +116,7 @@ context('No recall', () => {
     })
   })
 
-  describe('Ftr56: Task list', () => {
+  describe('Task list', () => {
     it('To do - Adult_SDS - Mappa should exist', () => {
       const recommendation = {
         ...recommendationResponse,
