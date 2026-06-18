@@ -182,7 +182,7 @@
     "cypress-split": "1.24.31",
     "cypress-terminal-report": "7.3.3",
     "del": "8.0.1",
-    "esbuild": "^0.27.4",
+    "esbuild": "^0.28.0",
     "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-manifest": "^1.0.5",
     "esbuild-sass-plugin": "^3.7.0",
