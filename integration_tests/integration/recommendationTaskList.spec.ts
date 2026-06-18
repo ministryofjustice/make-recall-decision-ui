@@ -1106,7 +1106,6 @@ context('Recommendation - task list', () => {
             isYouthSentenceOver12Months: true,
             isYouthChargedWithSeriousOffence: true,
             recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
-            isUnder18: false,
           },
           [
             {
@@ -1128,7 +1127,6 @@ context('Recommendation - task list', () => {
             isYouthSentenceOver12Months: true,
             isYouthChargedWithSeriousOffence: true,
             recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
-            isUnder18: false,
           },
           [
             {
@@ -1270,7 +1268,6 @@ context('Recommendation - task list', () => {
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
         recallType: { selected: { value: 'FIXED_TERM' } },
-        isUnder18: false,
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })

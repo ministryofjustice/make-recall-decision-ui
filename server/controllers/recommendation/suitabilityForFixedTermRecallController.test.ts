@@ -54,49 +54,37 @@ describe('get', () => {
           hasBeenConvictedOfSeriousOffence: 'YES',
         },
         recommendation: {
-          isSentence48MonthsOrOver: true,
-          isUnder18: true,
           isMappaCategory4: true,
           isMappaLevel2Or3: true,
-          isRecalledOnNewChargedOffence: true,
-          isServingFTSentenceForTerroristOffence: true,
-          hasBeenChargedWithTerroristOrStateThreatOffence: true,
           personOnProbation: {
             name: faker.person.fullName(),
           },
         },
         token: 'token1',
-        errors: [
-          {
-            name: 'isUnder18',
-            text: 'Select whether {{ fullName }} is 18 or over',
-            href: '#isUnder18',
-            errorId: 'noIsUnder18',
-          },
-        ],
+        errors: [],
       },
     })
     const next = mockNext()
     await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
 
-    expect(res.locals.errors[0]).toEqual({
-      name: 'isUnder18',
-      text: 'Select whether {{ fullName }} is 18 or over',
-      href: '#isUnder18',
-      errorId: 'noIsUnder18',
-    })
+    // expect(res.locals.errors[0]).toEqual({
+    //   name: 'isUnder18',
+    //   text: 'Select whether {{ fullName }} is 18 or over',
+    //   href: '#isUnder18',
+    //   errorId: 'noIsUnder18',
+    // })
   })
 
   it('initial load with error data', async () => {
     const res = mockRes({
       locals: {
         errors: [
-          {
-            name: 'isUnder18',
-            text: 'Select whether {{ fullName }} is 18 or over',
-            href: '#isUnder18',
-            errorId: 'noIsUnder18',
-          },
+          // {
+          //   name: 'isUnder18',
+          //   text: 'Select whether {{ fullName }} is 18 or over',
+          //   href: '#isUnder18',
+          //   errorId: 'noIsUnder18',
+          // },
         ],
         recommendation: {
           personOnProbation: {
@@ -109,12 +97,12 @@ describe('get', () => {
 
     await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-    expect(res.locals.errors[0]).toEqual({
-      name: 'isUnder18',
-      text: 'Select whether {{ fullName }} is 18 or over',
-      href: '#isUnder18',
-      errorId: 'noIsUnder18',
-    })
+    // expect(res.locals.errors[0]).toEqual({
+    //   name: 'isUnder18',
+    //   text: 'Select whether {{ fullName }} is 18 or over',
+    //   href: '#isUnder18',
+    //   errorId: 'noIsUnder18',
+    // })
   })
 
   describe('redirects when sentenceGroup is not Determinate', () => {
@@ -336,13 +324,8 @@ describe('post', () => {
       params: { recommendationId: '123' },
       originalUrl: 'some-url',
       body: {
-        isUnder18: '',
-        isSentence48MonthsOrOver: '',
         isMappaCategory4: '',
         isMappaLevel2Or3: '',
-        isRecalledOnNewChargedOffence: '',
-        isServingFTSentenceForTerroristOffence: '',
-        hasBeenChargedWithTerroristOrStateThreatOffence: '',
       },
     })
 

@@ -8,7 +8,7 @@ import regionEnum from '../recommendations/formOptions/region'
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('Practitioner for Part A Controller', () => {
-  describe('get', () => {
+  describe('get practitionerForPartA', () => {
     it('load with no data', async () => {
       const res = mockRes({
         locals: {

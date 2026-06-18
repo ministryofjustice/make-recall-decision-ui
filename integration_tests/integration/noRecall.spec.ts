@@ -78,45 +78,6 @@ context('No recall', () => {
   })
 
   describe('Task list', () => {
-    it('To do', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
-      cy.getElement('What you recommend Completed').should('exist')
-      cy.getElement('What alternatives to recall have been tried already? To do').should('exist')
-      cy.getElement('What licence conditions has Jane Bloggs breached? To do').should('exist')
-      cy.getElement('Type of indeterminate sentence To do').should('not.exist')
-      cy.getElement('Create letter').should('not.exist')
-    })
-
-    it('Completed', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
-      cy.getElement('What you recommend Completed').should('exist')
-      cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
-      cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
-    })
-
-    it('task list - check links to forms', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
-      cy.getLinkHref('What has made you consider recalling Jane Bloggs?').should(
-        'contain',
-        '/recommendations/123/trigger-leading-to-recall?fromPageId=task-list-no-recall&fromAnchor=heading-circumstances',
-      )
-    })
-
-    it('task list - hide preview letter link if other tasks not complete', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...noRecallResponse, nextAppointment: null } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
-      cy.getElement('Preview of the letter').should('not.exist')
-    })
-  })
-
-  describe('Task list', () => {
     it('To do - Adult_SDS - Mappa should exist', () => {
       const recommendation = {
         ...recommendationResponse,

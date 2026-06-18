@@ -8,60 +8,6 @@ import {
 } from './fixedTermRecallUtils'
 
 describe('isFixedTermRecallMandatoryForRecommendation', () => {
-  it(' Returns false when no exclusion criteria fields are set', () => {
-    expect(
-      isFixedTermRecallMandatoryForRecommendation(
-        RecommendationResponseGenerator.generate({
-          isSentence48MonthsOrOver: undefined,
-          isUnder18: undefined,
-          isMappaCategory4: undefined,
-          isMappaLevel2Or3: undefined,
-          isRecalledOnNewChargedOffence: undefined,
-          isServingFTSentenceForTerroristOffence: undefined,
-          hasBeenChargedWithTerroristOrStateThreatOffence: undefined,
-        }),
-      ),
-    ).toBeFalsy()
-  })
-  it(' Returns true when all exclusion criteria fields are false', () => {
-    expect(
-      isFixedTermRecallMandatoryForRecommendation(
-        RecommendationResponseGenerator.generate({
-          isSentence48MonthsOrOver: false,
-          isUnder18: false,
-          isMappaCategory4: false,
-          isMappaLevel2Or3: false,
-          isRecalledOnNewChargedOffence: false,
-          isServingFTSentenceForTerroristOffence: false,
-          hasBeenChargedWithTerroristOrStateThreatOffence: false,
-        }),
-      ),
-    ).toBeFalsy()
-  })
-  describe(' Returns false when any exclusion criteria fields are true', () => {
-    generateBooleanCombinations(7)
-      .filter(c => c.some(b => b))
-      .forEach(combination => {
-        it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
-          expect(
-            isFixedTermRecallMandatoryForRecommendation(
-              RecommendationResponseGenerator.generate({
-                isSentence48MonthsOrOver: combination[0],
-                isUnder18: combination[1],
-                isMappaCategory4: combination[2],
-                isMappaLevel2Or3: combination[3],
-                isRecalledOnNewChargedOffence: combination[4],
-                isServingFTSentenceForTerroristOffence: combination[5],
-                hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
-              }),
-            ),
-          ).toBeFalsy()
-        })
-      })
-  })
-})
-
-describe('isFixedTermRecallMandatoryForRecommendation', () => {
   describe('when sentence Group is YOUTH_SDS', () => {
     it('returns false when no exclusion criteria fields are set', () => {
       expect(
@@ -182,13 +128,13 @@ describe(' Returns false when any exclusion criteria fields are true', () => {
       it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
         expect(
           isFixedTermRecallMandatoryForRecommendation({
-            isSentence48MonthsOrOver: combination[0],
-            isUnder18: combination[1],
-            isMappaCategory4: combination[2],
-            isMappaLevel2Or3: combination[3],
-            isRecalledOnNewChargedOffence: combination[4],
-            isServingFTSentenceForTerroristOffence: combination[5],
-            hasBeenChargedWithTerroristOrStateThreatOffence: combination[6],
+            wasReferredToParoleBoard244ZB: combination[0],
+            wasRepatriatedForMurder: combination[1],
+            isServingSOPCSentence: combination[2],
+            isServingDCRSentence: combination[3],
+            isChargedWithOffence: combination[4],
+            isMappaCategory4: combination[5],
+            isMappaLevel2Or3: combination[6],
           }),
         ).toBeFalsy()
       })

@@ -5,10 +5,29 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import ppPaths from '../../routes/paths/pp.paths'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
+  it('load with no data', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: SentenceGroup.INDETERMINATE },
+        token: 'token1',
+      },
+    })
+    const next = mockNext()
+    await indeterminateTypeController.get(mockReq(), res, next)
+
+    expect(res.locals.page).toEqual({ id: 'indeterminateSentenceType' })
+    expect(res.locals.pageHeadings.indeterminateSentenceType).toEqual('What type of sentence is Joe Bloggs on?')
+    expect(res.locals.pageTitles.indeterminateSentenceType).toEqual('What type of sentence is the person on?')
+    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/indeterminateSentenceType')
+
+    expect(next).toHaveBeenCalled()
+  })
   it('load with existing data', async () => {
     const res = mockRes({
       locals: {
