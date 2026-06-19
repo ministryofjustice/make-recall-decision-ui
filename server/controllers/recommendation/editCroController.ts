@@ -8,6 +8,10 @@ import strings from '../../textStrings/en'
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation, errors, unsavedValues } = res.locals
   const { cro } = recommendation.bookRecallToPpud
+  const ndeliusCro = recommendation.personOnProbation?.croNumber || null
+  const partACro = recommendation.prisonOffender?.cro || null
+  const ppudCro = recommendation.ppudOffender?.croOtherNumber || null
+  const hasPpudRecord = !!recommendation.ppudOffender
 
   res.locals = {
     ...res.locals,
@@ -15,11 +19,12 @@ async function get(_: Request, res: Response, next: NextFunction) {
       id: 'editCro',
     },
     errors: res.locals.errors,
-    values: isDefined(errors)
-      ? unsavedValues
-      : {
-          cro: cro || recommendation.prisonOffender?.cro || '',
-        },
+    values: {
+      partACro,
+      ppudCro,
+      hasPpudRecord,
+      cro: isDefined(errors) ? unsavedValues?.cro : cro || ndeliusCro || partACro || '',
+    },
   }
   res.render(`pages/recommendations/editCro`)
   next()
@@ -37,11 +42,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const recommendation = await getRecommendation(recommendationId, token)
 
-  const croFromPartA = recommendation.prisonOffender?.cro
-  const croFromPpud = recommendation.ppudOffender?.croOtherNumber
   const croEmpty = !cro || cro.trim().length === 0
 
-  if (croEmpty && !croFromPartA && !croFromPpud) {
+  if (croEmpty) {
     const errorId = 'missingCro'
     req.session.errors = [
       makeErrorObject({

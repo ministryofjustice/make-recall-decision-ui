@@ -26,12 +26,15 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'editCro' })
     expect(res.locals.values).toEqual({
       cro: '123456',
+      partACro: null,
+      ppudCro: null,
+      hasPpudRecord: false,
     })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/editCro')
     expect(next).toHaveBeenCalled()
   })
 
-  it('pre-populates cro from Part A when bookRecallToPpud cro is empty', async () => {
+  it('pre-populates cro from ndeliusCro when bookRecallToPpud cro is empty', async () => {
     const req = mockReq({
       params: { recommendationId: '123' },
     })
@@ -40,6 +43,33 @@ describe('get', () => {
       locals: {
         recommendation: {
           bookRecallToPpud: { cro: null },
+          personOnProbation: { croNumber: '111/22A' },
+          prisonOffender: { cro: '789/01A' },
+          ppudOffender: { croOtherNumber: '333/44B' },
+        },
+      },
+    })
+    const next = mockNext()
+    await editCroController.get(req, res, next)
+
+    expect(res.locals.values).toEqual({
+      cro: '111/22A',
+      partACro: '789/01A',
+      ppudCro: '333/44B',
+      hasPpudRecord: true,
+    })
+  })
+
+  it('pre-populates cro from partACro when bookRecallToPpud and ndeliusCro are empty', async () => {
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          bookRecallToPpud: { cro: null },
+          personOnProbation: { croNumber: null },
           prisonOffender: { cro: '789/01A' },
         },
       },
@@ -49,10 +79,13 @@ describe('get', () => {
 
     expect(res.locals.values).toEqual({
       cro: '789/01A',
+      partACro: '789/01A',
+      ppudCro: null,
+      hasPpudRecord: false,
     })
   })
 
-  it('defaults to empty string when both bookRecallToPpud and Part A cro are empty', async () => {
+  it('defaults to empty string when all cro sources are empty', async () => {
     const req = mockReq({
       params: { recommendationId: '123' },
     })
@@ -61,6 +94,7 @@ describe('get', () => {
       locals: {
         recommendation: {
           bookRecallToPpud: { cro: null },
+          personOnProbation: { croNumber: null },
           prisonOffender: { cro: null },
         },
       },
@@ -70,6 +104,35 @@ describe('get', () => {
 
     expect(res.locals.values).toEqual({
       cro: '',
+      partACro: null,
+      ppudCro: null,
+      hasPpudRecord: false,
+    })
+  })
+
+  it('sets hasPpudRecord true and ppudCro null when ppudOffender exists but croOtherNumber is empty', async () => {
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          bookRecallToPpud: { cro: null },
+          personOnProbation: { croNumber: null },
+          prisonOffender: { cro: null },
+          ppudOffender: { croOtherNumber: null },
+        },
+      },
+    })
+    const next = mockNext()
+    await editCroController.get(req, res, next)
+
+    expect(res.locals.values).toEqual({
+      cro: '',
+      partACro: null,
+      ppudCro: null,
+      hasPpudRecord: true,
     })
   })
 })
@@ -122,14 +185,12 @@ describe('post', () => {
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  it('post with empty cro when Part A and PPUD cro are also empty returns validation error', async () => {
+  it('post with empty cro returns validation error', async () => {
     ;(getRecommendation as jest.Mock).mockResolvedValue({
       ...recommendationApiResponse,
       bookRecallToPpud: {
         policeForce: 'Kent',
       },
-      prisonOffender: { cro: null },
-      ppudOffender: { croOtherNumber: null },
     })
 
     const req = mockReq({
@@ -163,73 +224,5 @@ describe('post', () => {
       },
     ])
     expect(res.redirect).toHaveBeenCalledWith(303, req.originalUrl)
-  })
-
-  it('post with empty cro when Part A cro exists allows submission', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        policeForce: 'Kent',
-      },
-      prisonOffender: { cro: '789/01A' },
-      ppudOffender: { croOtherNumber: null },
-    })
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const req = mockReq({
-      params: { recommendationId: '1' },
-      body: {
-        cro: '',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1' },
-        urlInfo: { basePath: `/recommendations/1/` },
-        flags: { xyz: true },
-      },
-    })
-    const next = mockNext()
-
-    await editCroController.post(req, res, next)
-
-    expect(updateRecommendation).toHaveBeenCalled()
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
-  })
-
-  it('post with empty cro when PPUD cro exists allows submission', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
-      bookRecallToPpud: {
-        policeForce: 'Kent',
-      },
-      prisonOffender: { cro: null },
-      ppudOffender: { croOtherNumber: '456/02B' },
-    })
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const req = mockReq({
-      params: { recommendationId: '1' },
-      body: {
-        cro: '',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1' },
-        urlInfo: { basePath: `/recommendations/1/` },
-        flags: { xyz: true },
-      },
-    })
-    const next = mockNext()
-
-    await editCroController.post(req, res, next)
-
-    expect(updateRecommendation).toHaveBeenCalled()
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/check-booking-details`)
   })
 })
