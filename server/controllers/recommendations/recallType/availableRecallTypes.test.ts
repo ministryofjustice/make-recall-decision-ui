@@ -1,15 +1,11 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
-import {
-  availableRecallTypes,
-  availableRecallTypesForRecommendation,
-} from './availableRecallTypes'
+import { availableRecallTypes, availableRecallTypesForRecommendation } from './availableRecallTypes'
 import { formOptions } from '../formOptions/formOptions'
 import { isFixedTermRecallMandatoryForRecommendation } from '../../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 jest.mock('../../../utils/fixedTermRecallUtils')
-
 
 describe('availableRecallTypesForRecommendation', () => {
   const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate()

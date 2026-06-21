@@ -5,9 +5,7 @@ import inputDisplayValuesRecallType from '../recommendations/recallType/inputDis
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import {
-  availableRecallTypesForRecommendation,
-} from '../recommendations/recallType/availableRecallTypes'
+import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import {
   isFixedTermRecallMandatoryForRecommendation,
@@ -16,9 +14,7 @@ import {
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(_: Request, res: Response, next: NextFunction) {
-  const {
-    recommendation,
-  } = res.locals as {
+  const { recommendation } = res.locals as {
     recommendation: RecommendationResponse
   }
 

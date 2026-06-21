@@ -3,7 +3,6 @@ import { isFixedTermRecallMandatoryForRecommendation } from '../../../utils/fixe
 import { FormOption, formOptions } from '../formOptions/formOptions'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
 
-
 export function availableRecallTypes(isFtrMandatory: boolean, isStandardMandatory: boolean): FormOption[] {
   if (isFtrMandatory) {
     return formOptions.recallType.filter(recallType => ['FIXED_TERM', 'NO_RECALL'].includes(recallType.value))
@@ -15,7 +14,6 @@ export function availableRecallTypes(isFtrMandatory: boolean, isStandardMandator
 
   return formOptions.recallType
 }
-
 
 export function availableRecallTypesForRecommendation(recommendation: RecommendationResponse): FormOption[] {
   const isFtrMandatory = isFixedTermRecallMandatoryForRecommendation(recommendation)
