@@ -88,8 +88,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
       name,
       email,
       telephone,
-      region: undefined,
-      localDeliveryUnit: undefined,
     }
     return res.redirect(303, req.originalUrl)
   }
@@ -101,8 +99,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
         name,
         email,
         telephone,
-        region: undefined,
-        localDeliveryUnit: undefined,
       },
     },
     token,

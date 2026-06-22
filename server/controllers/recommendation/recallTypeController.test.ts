@@ -50,7 +50,7 @@ describe('get', () => {
   const res = mockRes({ locals })
 
   const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
-  const isFTRMandatory = true
+  const isFTRMandatory = faker.datatype.boolean()
   beforeEach(async () => {
     ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
     ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(isFTRMandatory)

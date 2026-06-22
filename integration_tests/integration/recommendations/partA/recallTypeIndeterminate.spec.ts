@@ -14,71 +14,69 @@ describe('recall type indeterminate', () => {
     cy.task('getRecommendation', { statusCode: 200, response: recommendation })
   })
 
-  describe('recall-type-indeterminate', () => {
-    it('should display correctly with no data', () => {
-      cy.visit(testPageUrl)
+  it('should display correctly with no data', () => {
+    cy.visit(testPageUrl)
 
-      cy.getElement('What do you recommend?')
-      cy.get('.moj-ticket-panel').within(() => {
-        cy.get('h3').should(
-          'contain.text',
-          `${recommendation.personOnProbation.name} must be given an emergency standard recall, if recalled`,
-        )
-        cy.get('p.govuk-body').should(
-          'contain.text',
-          'This is based on their sentence information. If this does not look right, you can go back to amend your answers.',
-        )
-      })
-
-      testRadioButtons(cy.get('.govuk-form-group'), {
-        legend: { text: 'Select your recommendation' },
-        options: [
-          {
-            input: {
-              id: 'recallType',
-              value: 'EMERGENCY',
-            },
-            label: { text: 'Emergency standard recall' },
-          },
-          {
-            input: {
-              id: 'recallType-2',
-              value: 'NO_RECALL',
-            },
-            label: { text: 'No recall - create a decision not to recall letter' },
-          },
-        ],
-      })
+    cy.getElement('What do you recommend?')
+    cy.get('.moj-ticket-panel').within(() => {
+      cy.get('h3').should(
+        'contain.text',
+        `${recommendation.personOnProbation.name} must be given an emergency standard recall, if recalled`,
+      )
+      cy.get('p.govuk-body').should(
+        'contain.text',
+        'This is based on their sentence information. If this does not look right, you can go back to amend your answers.',
+      )
     })
 
-    it('should show form validation errors', () => {
-      cy.visit(testPageUrl)
-      cy.get('button').click()
-
-      testForErrorSummary([
+    testRadioButtons(cy.get('.govuk-form-group'), {
+      legend: { text: 'Select your recommendation' },
+      options: [
         {
-          href: 'recallType',
-          message: 'Select a recall recommendation',
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-      ])
-    })
-
-    it('should remember the selected recall type', () => {
-      const recommendationWithRecallTypeSelected = RecommendationResponseGenerator.generate({
-        recallType: {
-          selected: {
-            value: RecallTypeSelectedValue.value.STANDARD,
-            details: null,
+          input: {
+            id: 'recallType',
+            value: 'EMERGENCY',
           },
+          label: { text: 'Emergency standard recall' },
         },
-        isThisAnEmergencyRecall: true,
-      })
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationWithRecallTypeSelected })
-
-      cy.visit(testPageUrl)
-
-      cy.get('input[name="recallType"][value="EMERGENCY"]').should('be.checked')
+        {
+          input: {
+            id: 'recallType-2',
+            value: 'NO_RECALL',
+          },
+          label: { text: 'No recall - create a decision not to recall letter' },
+        },
+      ],
     })
+  })
+
+  it('should show form validation errors', () => {
+    cy.visit(testPageUrl)
+    cy.get('button').click()
+
+    testForErrorSummary([
+      {
+        href: 'recallType',
+        message: 'Select a recall recommendation',
+        checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+      },
+    ])
+  })
+
+  it('should remember the selected recall type', () => {
+    const recommendationWithRecallTypeSelected = RecommendationResponseGenerator.generate({
+      recallType: {
+        selected: {
+          value: RecallTypeSelectedValue.value.STANDARD,
+          details: null,
+        },
+      },
+      isThisAnEmergencyRecall: true,
+    })
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationWithRecallTypeSelected })
+
+    cy.visit(testPageUrl)
+
+    cy.get('input[name="recallType"][value="EMERGENCY"]').should('be.checked')
   })
 })

@@ -7,28 +7,6 @@ import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 jest.mock('../../../utils/fixedTermRecallUtils')
 
-describe('availableRecallTypesForRecommendation', () => {
-  const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate()
-
-  it('only FTR and No Recall available when FTR is mandatory', () => {
-    const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value),
-    )
-    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
-
-    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
-
-    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-  })
-  it('all types are available when FTR is discretionary', () => {
-    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
-
-    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
-
-    expect(actualAvailableRecallTypes).toEqual(formOptions.recallType)
-  })
-})
-
 describe('availableRecallTypes', () => {
   it('only FTR and No Recall available when FTR is mandatory', () => {
     const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>

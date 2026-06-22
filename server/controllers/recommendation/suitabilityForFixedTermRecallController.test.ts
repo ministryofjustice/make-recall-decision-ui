@@ -49,60 +49,30 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         unsavedValues: {
-          isSentence12MonthsOrOver: 'YES',
-          isMappaLevelAbove1: 'NO',
-          hasBeenConvictedOfSeriousOffence: 'YES',
+          isMappaCategory4: 'NO',
+          isMappaLevel2Or3: 'YES',
         },
-        recommendation: {
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-          personOnProbation: {
-            name: faker.person.fullName(),
-          },
-        },
+        recommendation: RecommendationResponseGenerator.generate(),
         token: 'token1',
-        errors: [],
+        errors: [
+          {
+            name: 'isUnder18',
+            text: 'Select whether {{ fullName }} is 18 or over',
+            href: '#isUnder18',
+            errorId: 'noIsUnder18',
+          },
+        ],
       },
     })
     const next = mockNext()
     await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
 
-    // expect(res.locals.errors[0]).toEqual({
-    //   name: 'isUnder18',
-    //   text: 'Select whether {{ fullName }} is 18 or over',
-    //   href: '#isUnder18',
-    //   errorId: 'noIsUnder18',
-    // })
-  })
-
-  it('initial load with error data', async () => {
-    const res = mockRes({
-      locals: {
-        errors: [
-          // {
-          //   name: 'isUnder18',
-          //   text: 'Select whether {{ fullName }} is 18 or over',
-          //   href: '#isUnder18',
-          //   errorId: 'noIsUnder18',
-          // },
-        ],
-        recommendation: {
-          personOnProbation: {
-            name: faker.person.fullName(),
-          },
-        },
-        token: 'token1',
-      },
+    expect(res.locals.errors[0]).toEqual({
+      name: 'isUnder18',
+      text: 'Select whether {{ fullName }} is 18 or over',
+      href: '#isUnder18',
+      errorId: 'noIsUnder18',
     })
-
-    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
-
-    // expect(res.locals.errors[0]).toEqual({
-    //   name: 'isUnder18',
-    //   text: 'Select whether {{ fullName }} is 18 or over',
-    //   href: '#isUnder18',
-    //   errorId: 'noIsUnder18',
-    // })
   })
 
   describe('redirects when sentenceGroup is not Determinate', () => {
@@ -317,53 +287,6 @@ describe('post', () => {
         expect(next).not.toHaveBeenCalled() // end of the line for posts.
       })
     })
-  })
-
-  it('post with invalid data', async () => {
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      originalUrl: 'some-url',
-      body: {
-        isMappaCategory4: '',
-        isMappaLevel2Or3: '',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        recommendation: { personOnProbation: { name: faker.person.fullName() } },
-        urlInfo: { basePath },
-        statuses: [],
-      },
-    })
-    const next = mockNext()
-
-    await suitabilityForFixedTermRecallController.post(req, res, next)
-    expect(updateRecommendation).not.toHaveBeenCalled()
-
-    expect(req.session.errors).toEqual([
-      {
-        name: 'isYouthSentenceOver12Months',
-        text: "Select whether {{ fullName }}'s sentence is 12 months or over",
-        href: '#isYouthSentenceOver12Months',
-        errorId: 'noIsYouthSentenceOver12Months',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        name: 'isYouthChargedWithSeriousOffence',
-        text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
-        href: '#isYouthChargedWithSeriousOffence',
-        errorId: 'noIsYouthChargedWithSeriousOffence',
-        values: undefined,
-      },
-    ])
-    expect(req.session.unsavedValues).toEqual({
-      isYouthChargedWithSeriousOffence: undefined,
-      isYouthSentenceOver12Months: undefined,
-    })
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 
   it('post with invalid data', async () => {

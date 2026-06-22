@@ -65,36 +65,6 @@ context('Recommendation - task list', () => {
     },
   }
 
-  it('task list - Completed - in custody', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...completeRecommendationResponse, sentenceGroup: SentenceGroup.INDETERMINATE },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('What you recommend Completed').should('exist')
-    cy.getElement('When did the SPO agree this recall? Completed').should('exist')
-    cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
-    cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
-    cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
-    cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
-    cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
-    cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
-    cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed').should('exist')
-    cy.getElement('Personal details Reviewed').should('exist')
-    cy.getElement('Offence details Reviewed').should('exist')
-    cy.getElement('Offence analysis Completed').should('exist')
-    cy.getElement('MAPPA for Jane Bloggs Reviewed').should('exist')
-    cy.getElement('Local police contact details').should('exist')
-    // the following link should not be present, as person is in custody
-    cy.getElement('Is there anything the police should know before they arrest Jane Bloggs?').should('not.exist')
-    cy.getElement('Address').should('not.exist')
-    // should not exist
-    cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
-
-    cy.getElement("Request line manager's countersignature To do").should('exist')
-  })
-
   const scenarios = [
     {
       name: 'Adult SDS',
@@ -327,14 +297,14 @@ context('Recommendation - task list', () => {
 
     describe('circumstances.njk', () => {
       describe('NO_RECALL', () => {
-        const noRecallFtr56Base = {
+        const noRecallBase = {
           ...recommendationResponse,
           recallType: { selected: { value: 'NO_RECALL' } },
         } as RecommendationResponse
 
         ;[SentenceGroup.EXTENDED, SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
           it(`does not show indeterminateSentenceType for ${sentenceGroup}`, () => {
-            setUp({ ...noRecallFtr56Base, sentenceGroup }, [], [])
+            setUp({ ...noRecallBase, sentenceGroup }, [], [])
             cy.getElement('Type of indeterminate sentence').should('not.exist')
           })
         })
@@ -343,14 +313,14 @@ context('Recommendation - task list', () => {
           ['emergencyRecall', 'Is this an emergency recall?'],
         ].forEach(([field, elementText]) => {
           it(`does not show ${field}`, () => {
-            setUp(noRecallFtr56Base, [], [])
+            setUp(noRecallBase, [], [])
             cy.getElement(elementText).should('not.exist')
           })
         })
       })
 
       describe('RECALL', () => {
-        const recallFtr56Base = {
+        const noRecallBase = {
           ...recommendationResponse,
           recallType: { selected: { value: 'STANDARD' } },
         } as RecommendationResponse
@@ -360,7 +330,7 @@ context('Recommendation - task list', () => {
           ['emergencyRecall', 'Is this an emergency recall?', SentenceGroup.INDETERMINATE],
         ].forEach(([field, elementText, sentenceGroup]: [string, string, SentenceGroup]) => {
           it(`does not show ${field} for ${sentenceGroup}`, () => {
-            setUp({ ...recallFtr56Base, sentenceGroup }, [], [])
+            setUp({ ...noRecallBase, sentenceGroup }, [], [])
             cy.getElement(elementText).should('not.exist')
           })
         })
@@ -373,7 +343,7 @@ context('Recommendation - task list', () => {
           it(`does not show fixedTermAdditionalLicenceConditions for ${sentenceGroup} + ${recallValue}`, () => {
             setUp(
               {
-                ...recallFtr56Base,
+                ...noRecallBase,
                 sentenceGroup,
                 recallType: { selected: { value: recallValue } },
               },
@@ -385,7 +355,7 @@ context('Recommendation - task list', () => {
         })
         ;[SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
           it(`does not show indeterminateOrExtendedSentenceDetails for ${sentenceGroup}`, () => {
-            setUp({ ...recallFtr56Base, sentenceGroup }, [], [])
+            setUp({ ...noRecallBase, sentenceGroup }, [], [])
             cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
           })
         })
@@ -568,8 +538,6 @@ context('Recommendation - task list', () => {
                 }
                 const recommendation = RecommendationResponseGenerator.generate({
                   sentenceGroup,
-                  isYouthSentenceOver12Months: true,
-                  isYouthChargedWithSeriousOffence: true,
                   recallType: {
                     selected: {
                       value: recallTypeValue as RecallTypeSelectedValue.value,
@@ -581,11 +549,7 @@ context('Recommendation - task list', () => {
                   setUp(recommendation)
                 })
 
-                if (
-                  !isIndeterminateSentence &&
-                  !isExtendedSentence &&
-                  (recommendation.sentenceGroup === 'ADULT_SDS' || recommendation.sentenceGroup === 'YOUTH_SDS')
-                ) {
+                if (!isIndeterminateSentence && !isExtendedSentence) {
                   it('shows suitability link', () => {
                     checkSuitabilityLink()
                   })
@@ -709,7 +673,7 @@ context('Recommendation - task list', () => {
                     checkElementDoesntExist(emergencyRecallLinkText)
                   })
                 }
-                if (!isRecall && recommendation.sentenceGroup === 'INDETERMINATE') {
+                if (isIndeterminateSentence) {
                   it(`shows indeterminate type: ${sentenceGroup} link`, () => {
                     // checkIndeterminateOrExtendedDetailsLink()
                     cy.getElement(
@@ -810,7 +774,7 @@ context('Recommendation - task list', () => {
           it('shows offence analysis link', () => {
             checkOffenceAnalysisLink()
           })
-          it.skip('shows previous releases link', () => {
+          it('shows previous releases link', () => {
             checkPreviousReleasesLink()
           })
           if (!isInCustody) {
@@ -1099,12 +1063,24 @@ context('Recommendation - task list', () => {
       })
 
       it('recommendation ready for SPO countersignature', () => {
+        // setUp(
+        //   {
+        //     ...recommendationReadyForCountersignature,
+        //     sentenceGroup: SentenceGroup.YOUTH_SDS,
+        //     isYouthSentenceOver12Months: true,
+        //     isYouthChargedWithSeriousOffence: true,
+        //     recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+        //   },
+        //   [
+        //     {
+        //       name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
+        //       active: true,
+        //     },
+        //   ],
+        // )
         setUp(
           {
             ...recommendationReadyForCountersignature,
-            sentenceGroup: SentenceGroup.YOUTH_SDS,
-            isYouthSentenceOver12Months: true,
-            isYouthChargedWithSeriousOffence: true,
             recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
           },
           [
@@ -1286,12 +1262,11 @@ context('Recommendation - task list', () => {
       cy.pageHeading().should('equal', 'Create a decision not to recall letter')
     })
 
-    it('redirect no recall task list to recall task list if recall is set', () => {
+    it('redirect no recall task list to consider a recall task list if recall is set', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
           ...recommendationResponse,
-          triggerLeadingToRecall: 'recalled',
           recallType: { selected: { value: 'FIXED_TERM' } },
         },
       })

@@ -15,98 +15,91 @@ context('Trigger leading to recall Page', () => {
   })
 
   describe('Page Data', () => {
-    describe('Standard page load', () => {
-      const recommendation = RecommendationResponseGenerator.generate()
-      beforeEach(() => {
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-      })
-
-      it('test back link', () => {
-        cy.visit(`${testPageUrl}`)
-
-        cy.title().should('equal', `What has made you consider recalling the person? - ${config.applicationName}`)
-
-        // Back link
-        testBackLink(
-          `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-          'Back to Consider a recall questions',
-          false,
-        )
-
-        // Page Heading
-        cy.pageHeading().should(
-          'equal',
-          `What has made you consider recalling ${recommendation.personOnProbation.name}?`,
-        )
-
-        // Main content
-        cy.get('.govuk-hint').as('hint')
-
-        cy.get('@hint')
-          .find('p')
-          .eq(0)
-          .contains('Explain the circumstances and behaviour leading you to consider recall, analysing:')
-
-        cy.get('@hint')
-          .find('ul')
-          .should('contain.text', 'any alleged further offending or charges, and the behaviour around them')
-          .and('contain.text', 'how they breached licence conditions')
-          .and('contain.text', 'why the risk they pose is not manageable in the community')
-          .and('contain.text', 'their response to supervision so far')
-          .and('contain.text', 'if the behaviour seems out of character')
-
-        cy.get('@hint')
-          .find('p')
-          .eq(1)
-          .contains('Give as much information as possible. This explanation will be recorded in NDelius.')
-
-        // Continue button
-        cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
-      })
+    const recommendation = RecommendationResponseGenerator.generate()
+    beforeEach(() => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
     })
+    it('Standard page load', () => {
+      cy.visit(`${testPageUrl}`)
 
-    describe('There is no previous response to the question', () => {
-      it('The text area is empty', () => {
-        const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false })
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      cy.title().should('equal', `What has made you consider recalling the person? - ${config.applicationName}`)
 
-        cy.visit(testPageUrl)
+      // Back link
+      testBackLink(
+        `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+        'Back to Consider a recall questions',
+        false,
+      )
 
-        cy.get('.govuk-textarea').should('be.empty')
-      })
+      // Page Heading
+      cy.pageHeading().should('equal', `What has made you consider recalling ${recommendation.personOnProbation.name}?`)
+
+      // Main content
+      cy.get('.govuk-hint').as('hint')
+
+      cy.get('@hint')
+        .find('p')
+        .eq(0)
+        .contains('Explain the circumstances and behaviour leading you to consider recall, analysing:')
+
+      cy.get('@hint')
+        .find('ul')
+        .should('contain.text', 'any alleged further offending or charges, and the behaviour around them')
+        .and('contain.text', 'how they breached licence conditions')
+        .and('contain.text', 'why the risk they pose is not manageable in the community')
+        .and('contain.text', 'their response to supervision so far')
+        .and('contain.text', 'if the behaviour seems out of character')
+
+      cy.get('@hint')
+        .find('p')
+        .eq(1)
+        .contains('Give as much information as possible. This explanation will be recorded in NDelius.')
+
+      // Continue button
+      cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
     })
-
-    describe('There is a previous response to the question', () => {
-      it('The text area is empty', () => {
-        const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: true })
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-
-        cy.visit(testPageUrl)
-
-        cy.get('.govuk-textarea').should('have.value', recommendation.triggerLeadingToRecall)
-      })
-    })
-
-    describe('Error message display, When no trigger is provided', () => {
+  })
+  describe('There is no previous response to the question', () => {
+    it('The text area is empty', () => {
       const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false })
-      beforeEach(() => {
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-      })
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
 
-      it('Then the expected error message is displayed', () => {
-        cy.visit(testPageUrl)
+      cy.visit(testPageUrl)
 
-        cy.get('button.govuk-button').click()
+      cy.get('.govuk-textarea').should('be.empty')
+    })
+  })
 
-        testForErrorPageTitle()
-        testForErrorSummary([
-          {
-            href: 'triggerLeadingToRecall',
-            message: `Explain what has made you consider recalling ${recommendation.personOnProbation.name}`,
-            errorStyleClass: 'govuk-textarea--error',
-          },
-        ])
-      })
+  describe('There is a previous response to the question', () => {
+    it('The text area is empty', () => {
+      const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: true })
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+
+      cy.visit(testPageUrl)
+
+      cy.get('.govuk-textarea').should('have.value', recommendation.triggerLeadingToRecall)
+    })
+  })
+
+  describe('Error message display, When no trigger is provided', () => {
+    const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false })
+    beforeEach(() => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+    })
+
+    it('Then the expected error message is displayed', () => {
+      cy.visit(testPageUrl)
+
+      cy.get('button.govuk-button').click()
+
+      testForErrorPageTitle()
+      testForErrorSummary([
+        {
+          href: 'triggerLeadingToRecall',
+          message: `Explain what has made you consider recalling ${recommendation.personOnProbation.name}`,
+          errorStyleClass: 'govuk-textarea--error',
+        },
+      ])
     })
   })
 })

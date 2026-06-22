@@ -8,7 +8,7 @@ import regionEnum from '../recommendations/formOptions/region'
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('Practitioner for Part A Controller', () => {
-  describe('get practitionerForPartA', () => {
+  describe('get', () => {
     it('load with no data', async () => {
       const res = mockRes({
         locals: {
@@ -129,8 +129,6 @@ describe('Practitioner for Part A Controller', () => {
             name: body.name,
             email: body.email,
             telephone: body.telephone,
-            region: undefined,
-            localDeliveryUnit: undefined,
           },
         },
         featureFlags: {},
@@ -198,8 +196,6 @@ describe('Practitioner for Part A Controller', () => {
           name: 'jane',
           email: 'doe',
           telephone: '5555555',
-          region: undefined,
-          localDeliveryUnit: undefined,
         },
       })
 
@@ -238,8 +234,6 @@ describe('Practitioner for Part A Controller', () => {
           name: 'jane',
           email: 'test@non.govuk.email.com',
           telephone: '5555555',
-          region: undefined,
-          localDeliveryUnit: undefined,
         },
       })
 

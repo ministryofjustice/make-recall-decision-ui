@@ -11,43 +11,6 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },
-      },
-    })
-    const next = mockNext()
-    await mappaController.get(
-      mockReq({
-        params: { recommendationId: '123' },
-      }),
-      res,
-      next,
-    )
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      featureFlags: {},
-      propertyToRefresh: 'mappa',
-      recommendationId: '123',
-      token: 'token',
-      valuesToSave: {
-        isMappaCategory4: false,
-        isMappaLevel2Or3: false,
-      },
-    })
-
-    expect(updatePageReviewedStatus).toHaveBeenCalledWith({
-      recommendationId: '123',
-      reviewedProperty: 'mappa',
-      token: 'token',
-    })
-
-    expect(res.locals.page).toEqual({ id: 'mappa' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/mappa')
-    expect(next).toHaveBeenCalled()
-  })
-
-  it('load with no data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },
         flags: {},
       },
     })

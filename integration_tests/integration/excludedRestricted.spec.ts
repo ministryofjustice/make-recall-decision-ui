@@ -55,20 +55,18 @@ context('Excluded and restricted cases', () => {
       cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
-    describe('licence conditions page', () => {
-      it(`Excluded case`, () => {
-        cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: excludedResponse })
-        const crn = 'X34983'
-        cy.visit(`${sharedPaths.cases}/${crn}/licence-conditions`)
-        cy.pageHeading().should('equal', 'Excluded case')
-        cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
+    it('licence conditions page', () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: excludedResponse })
+      const crn = 'X34983'
+      cy.visit(`${sharedPaths.cases}/${crn}/licence-conditions`)
+      cy.pageHeading().should('equal', 'Excluded case')
+      cy.contains('You are excluded from viewing this offender record. Please contact OM Joe Bloggs').should('exist')
     })
 
     it('contact history page', () => {

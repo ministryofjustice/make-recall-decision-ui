@@ -16,94 +16,91 @@ describe('get', () => {
     ],
   }
 
-  describe(`custodyStatus`, () => {
-    it('load with no data', async () => {
-      const res = mockRes({
-        locals: {
-          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        },
-      })
-      const next = mockNext()
-      await custodyStatusController.get(mockReq(), res, next)
-
-      expect(res.locals.page).toEqual({ id: 'custodyStatus' })
-      expect(res.locals.inputDisplayValues).toEqual({
-        details: undefined,
-        value: undefined,
-      })
-      expect(res.render).toHaveBeenCalledWith('pages/recommendations/custodyStatus')
-
-      expect(next).toHaveBeenCalled()
+  it('load with no data', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+      },
     })
+    const next = mockNext()
+    await custodyStatusController.get(mockReq(), res, next)
 
-    it('load with existing data', async () => {
-      const res = mockRes({
-        locals: {
-          recommendation: {
-            custodyStatus,
-          },
-          token: 'token1',
-        },
-      })
-      const next = mockNext()
-      await custodyStatusController.get(mockReq(), res, next)
-
-      expect(res.locals.inputDisplayValues).toEqual({
-        details: '',
-        value: 'YES_PRISON',
-      })
+    expect(res.locals.page).toEqual({ id: 'custodyStatus' })
+    expect(res.locals.inputDisplayValues).toEqual({
+      details: undefined,
+      value: undefined,
     })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/custodyStatus')
 
-    it('initial load with error data', async () => {
-      const res = mockRes({
-        locals: {
-          errors: {
-            list: [
-              {
-                name: 'custodyStatusDetailsYesPolice',
-                href: '#custodyStatusDetailsYesPolice',
-                errorId: 'missingCustodyPoliceAddressDetail',
-                html: 'Enter the custody address',
-              },
-            ],
-            custodyStatusDetailsYesPolice: {
-              text: 'Enter the custody address',
-              href: '#custodyStatusDetailsYesPolice',
-              errorId: 'missingCustodyPoliceAddressDetail',
-            },
-          },
-          recommendation: {
-            custodyStatus,
-          },
-          token: 'token1',
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('load with existing data', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          custodyStatus,
         },
-      })
+        token: 'token1',
+      },
+    })
+    const next = mockNext()
+    await custodyStatusController.get(mockReq(), res, next)
 
-      await custodyStatusController.get(mockReq(), res, mockNext())
-
-      expect(res.locals.errors).toEqual({
-        custodyStatusDetailsYesPolice: {
-          errorId: 'missingCustodyPoliceAddressDetail',
-          href: '#custodyStatusDetailsYesPolice',
-          text: 'Enter the custody address',
-        },
-        list: [
-          {
-            href: '#custodyStatusDetailsYesPolice',
-            errorId: 'missingCustodyPoliceAddressDetail',
-            html: 'Enter the custody address',
-            name: 'custodyStatusDetailsYesPolice',
-          },
-        ],
-      })
+    expect(res.locals.inputDisplayValues).toEqual({
+      details: '',
+      value: 'YES_PRISON',
     })
   })
-  // })
+
+  it('initial load with error data', async () => {
+    const res = mockRes({
+      locals: {
+        errors: {
+          list: [
+            {
+              name: 'custodyStatusDetailsYesPolice',
+              href: '#custodyStatusDetailsYesPolice',
+              errorId: 'missingCustodyPoliceAddressDetail',
+              html: 'Enter the custody address',
+            },
+          ],
+          custodyStatusDetailsYesPolice: {
+            text: 'Enter the custody address',
+            href: '#custodyStatusDetailsYesPolice',
+            errorId: 'missingCustodyPoliceAddressDetail',
+          },
+        },
+        recommendation: {
+          custodyStatus,
+        },
+        token: 'token1',
+      },
+    })
+
+    await custodyStatusController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.errors).toEqual({
+      custodyStatusDetailsYesPolice: {
+        errorId: 'missingCustodyPoliceAddressDetail',
+        href: '#custodyStatusDetailsYesPolice',
+        text: 'Enter the custody address',
+      },
+      list: [
+        {
+          href: '#custodyStatusDetailsYesPolice',
+          errorId: 'missingCustodyPoliceAddressDetail',
+          html: 'Enter the custody address',
+          name: 'custodyStatusDetailsYesPolice',
+        },
+      ],
+    })
+  })
 })
 
 describe('post', () => {
   describe('post with valid data', () => {
-    it(`share-case-with-admin`, async () => {
+    it(`YES_POLICE with additional details`, async () => {
       ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
       const basePath = `/recommendations/123/`
@@ -147,7 +144,7 @@ describe('post', () => {
       expect(next).not.toHaveBeenCalled() // end of the line for posts.
     })
 
-    it("share-case-with-admin - YES_POLICE doesn't require additional details", async () => {
+    it("YES_POLICE doesn't require additional details", async () => {
       ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
       const basePath = `/recommendations/123/`
@@ -155,7 +152,6 @@ describe('post', () => {
         params: { recommendationId: '123' },
         body: {
           custodyStatus: 'YES_POLICE',
-          custodyStatusDetailsYesPolice: '',
         },
       })
 
@@ -200,7 +196,6 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         custodyStatus: 'YES_POLIC',
-        custodyStatusDetailsYesPolice: '',
       },
     })
 

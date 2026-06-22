@@ -122,8 +122,8 @@ describe('get', () => {
   })
 })
 
-describe('post with valid data', () => {
-  it(`alternativesToRecallTriedController post`, async () => {
+describe('post', () => {
+  it(`post with valid data`, async () => {
     const validationResults = {
       valuesToSave: {
         alternativesToRecallTried: {

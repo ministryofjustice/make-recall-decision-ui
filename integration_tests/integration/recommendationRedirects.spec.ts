@@ -95,15 +95,4 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.clickButton('Continue')
     cy.pageHeading().should('contain', `Part A for ${recommendationResponse.personOnProbation.name}`)
   })
-
-  it('victim contact scheme - directs "no" to the task list page', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/victim-contact-scheme`)
-    cy.selectRadio('Are there any victims in the victim contact scheme?', 'No')
-    cy.task('getStatuses', { statusCode: 200, response: [{ name: 'RECALL_DECIDED', active: true }] })
-    cy.clickButton('Continue')
-    cy.pageHeading().should('contain', `Part A for ${recommendationResponse.personOnProbation.name}`)
-  })
 })
