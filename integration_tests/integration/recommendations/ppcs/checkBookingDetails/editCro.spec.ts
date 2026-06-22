@@ -13,13 +13,13 @@ context('Edit CRO page', () => {
   })
 
   describe('Page Data', () => {
-    it('pre-populates CRO input with Part A value when bookRecallToPpud CRO is empty', () => {
+    it('pre-populates CRO input from bookRecallToPpud cro', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
           ...recommendationResponse,
-          bookRecallToPpud: { cro: null },
-          personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: null },
+          bookRecallToPpud: { cro: '999/99A' },
+          personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: '111/22A' },
           prisonOffender: { cro: '789/01A' },
           ppudOffender: null,
         },
@@ -28,10 +28,28 @@ context('Edit CRO page', () => {
 
       cy.visit(testPageUrl)
 
-      cy.get('#cro').should('have.value', '789/01A')
+      cy.get('#cro').should('have.value', '999/99A')
     })
 
-    it('shows "From Part A" section when prisonOffender CRO exists', () => {
+    it('defaults CRO input to empty when bookRecallToPpud cro is empty', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...recommendationResponse,
+          bookRecallToPpud: { cro: null },
+          personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: '111/22A' },
+          prisonOffender: { cro: '789/01A' },
+          ppudOffender: null,
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
+
+      cy.visit(testPageUrl)
+
+      cy.get('#cro').should('have.value', '')
+    })
+
+    it('shows "From Part A" section when partACro exists', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {

@@ -34,7 +34,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('pre-populates cro from ndeliusCro when bookRecallToPpud cro is empty', async () => {
+  it('uses bookRecallToPpud cro for input and derives partACro from ndeliusCro', async () => {
     const req = mockReq({
       params: { recommendationId: '123' },
     })
@@ -42,7 +42,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          bookRecallToPpud: { cro: null },
+          bookRecallToPpud: { cro: '999/99A' },
           personOnProbation: { croNumber: '111/22A' },
           prisonOffender: { cro: '789/01A' },
           ppudOffender: { croOtherNumber: '333/44B' },
@@ -53,14 +53,14 @@ describe('get', () => {
     await editCroController.get(req, res, next)
 
     expect(res.locals.values).toEqual({
-      cro: '111/22A',
-      partACro: '789/01A',
+      cro: '999/99A',
+      partACro: '111/22A',
       ppudCro: '333/44B',
       hasPpudRecord: true,
     })
   })
 
-  it('pre-populates cro from partACro when bookRecallToPpud and ndeliusCro are empty', async () => {
+  it('derives partACro from nomisCro when ndeliusCro is empty', async () => {
     const req = mockReq({
       params: { recommendationId: '123' },
     })
@@ -68,7 +68,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
-          bookRecallToPpud: { cro: null },
+          bookRecallToPpud: { cro: '999/99A' },
           personOnProbation: { croNumber: null },
           prisonOffender: { cro: '789/01A' },
         },
@@ -78,8 +78,33 @@ describe('get', () => {
     await editCroController.get(req, res, next)
 
     expect(res.locals.values).toEqual({
-      cro: '789/01A',
+      cro: '999/99A',
       partACro: '789/01A',
+      ppudCro: null,
+      hasPpudRecord: false,
+    })
+  })
+
+  it('defaults cro to empty string when bookRecallToPpud cro is empty', async () => {
+    const req = mockReq({
+      params: { recommendationId: '123' },
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          bookRecallToPpud: { cro: null },
+          personOnProbation: { croNumber: '111/22A' },
+          prisonOffender: { cro: '789/01A' },
+        },
+      },
+    })
+    const next = mockNext()
+    await editCroController.get(req, res, next)
+
+    expect(res.locals.values).toEqual({
+      cro: '',
+      partACro: '111/22A',
       ppudCro: null,
       hasPpudRecord: false,
     })

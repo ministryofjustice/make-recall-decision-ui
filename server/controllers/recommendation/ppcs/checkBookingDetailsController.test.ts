@@ -164,7 +164,7 @@ describe('get', () => {
       {
         ...RECOMMENDATION_TEMPLATE,
         bookRecallToPpud: {
-          cro: '1234/2345',
+          cro: RECOMMENDATION_TEMPLATE.personOnProbation.croNumber,
           currentEstablishment: 'HMP Brixton in PPUD',
           dateOfBirth: '1970-03-15',
           firstNames: 'Jane C',
@@ -187,7 +187,7 @@ describe('get', () => {
           dateOfBirth: PRISON_OFFENDER_TEMPLATE.dateOfBirth,
           firstNames: `${convertedFirstName} ${convertedMiddleName}`,
           lastName: convertedLastName,
-          cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
+          cro: RECOMMENDATION_TEMPLATE.personOnProbation.croNumber,
           prisonNumber: PRISON_OFFENDER_TEMPLATE.bookingNo,
           receivedDateTime: null,
           currentEstablishment: expectedCurrentEstablishment,
@@ -213,6 +213,106 @@ describe('get', () => {
       dateOnly: true,
     })
     expect(next).toHaveBeenCalled()
+  })
+
+  it('sets bookRecallToPpud cro from nomisCro when ndeliusCro is empty', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+    ;(determinePpudEstablishment as jest.Mock).mockReturnValueOnce('HMP Brixton in PPUD')
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          personOnProbation: {
+            ...RECOMMENDATION_TEMPLATE.personOnProbation,
+            croNumber: null,
+          },
+        },
+        statuses: [...STATUSES_TEMPLATE],
+        flags: { xyz: 1 },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        valuesToSave: expect.objectContaining({
+          bookRecallToPpud: expect.objectContaining({
+            cro: PRISON_OFFENDER_TEMPLATE.identifiers[0].value,
+          }),
+        }),
+      }),
+    )
+  })
+
+  it('sets bookRecallToPpud cro from ndeliusCro when both ndeliusCro and nomisCro exist', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+    ;(determinePpudEstablishment as jest.Mock).mockReturnValueOnce('HMP Brixton in PPUD')
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          personOnProbation: {
+            ...RECOMMENDATION_TEMPLATE.personOnProbation,
+            croNumber: '111/22A',
+          },
+        },
+        statuses: [...STATUSES_TEMPLATE],
+        flags: { xyz: 1 },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        valuesToSave: expect.objectContaining({
+          bookRecallToPpud: expect.objectContaining({
+            cro: '111/22A',
+          }),
+        }),
+      }),
+    )
+  })
+
+  it('sets bookRecallToPpud cro to null when both ndeliusCro and nomisCro are empty', async () => {
+    const prisonOffenderNoCro = {
+      ...PRISON_OFFENDER_TEMPLATE,
+      identifiers: [] as { type: string; value: string }[],
+    }
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(prisonOffenderNoCro)
+    ;(determinePpudEstablishment as jest.Mock).mockReturnValueOnce('HMP Brixton in PPUD')
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          personOnProbation: {
+            ...RECOMMENDATION_TEMPLATE.personOnProbation,
+            croNumber: null,
+          },
+        },
+        statuses: [...STATUSES_TEMPLATE],
+        flags: { xyz: 1 },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        valuesToSave: expect.objectContaining({
+          bookRecallToPpud: expect.objectContaining({
+            cro: null,
+          }),
+        }),
+      }),
+    )
   })
 
   it('do not update recommendation if bookRecallToPpud is present', async () => {
@@ -275,6 +375,7 @@ describe('get', () => {
       lastName: true,
       dateOfBirth: true,
       prisonNumber: true,
+      cro: true,
     })
   })
 
@@ -290,6 +391,7 @@ describe('get', () => {
             lastName: 'Bloggs',
             dateOfBirth: '2000-01-01',
             prisonNumber: '1234',
+            cro: '123X',
           },
           prisonOffender: {
             firstName: 'Joe',

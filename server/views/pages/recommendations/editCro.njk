@@ -11,7 +11,7 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
-            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+            {{ heading(pageHeadings[page.id]) }}
 
             {{ bodyParagraph('Check the previous convictions (MG16) document or NOMIS to find the CRO.') }}
 

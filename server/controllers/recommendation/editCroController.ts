@@ -9,7 +9,8 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation, errors, unsavedValues } = res.locals
   const { cro } = recommendation.bookRecallToPpud
   const ndeliusCro = recommendation.personOnProbation?.croNumber || null
-  const partACro = recommendation.prisonOffender?.cro || null
+  const nomisCro = recommendation.prisonOffender?.cro || null
+  const partACro = ndeliusCro || nomisCro || null
   const ppudCro = recommendation.ppudOffender?.croOtherNumber || null
   const hasPpudRecord = !!recommendation.ppudOffender
 
@@ -23,7 +24,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       partACro,
       ppudCro,
       hasPpudRecord,
-      cro: isDefined(errors) ? unsavedValues?.cro : cro || ndeliusCro || partACro || '',
+      cro: isDefined(errors) ? unsavedValues?.cro : cro || '',
     },
   }
   res.render(`pages/recommendations/editCro`)
