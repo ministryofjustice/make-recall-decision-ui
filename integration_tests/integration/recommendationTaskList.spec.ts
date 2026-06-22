@@ -362,6 +362,15 @@ context('Recommendation - task list', () => {
       })
     })
 
+    describe('personalDetails', () => {
+      ;['Previous recalls'].forEach(elementText => {
+        it(`does not show ${elementText}`, () => {
+          setUp(recommendationResponse as RecommendationResponse, [], [])
+          cy.getElement(elementText).should('not.exist')
+        })
+      })
+    })
+
     describe('createLetter', () => {
       it('does not show Preview link when tasks are incomplete', () => {
         setUp(
@@ -423,17 +432,39 @@ context('Recommendation - task list', () => {
   })
 
   it('task list - Completed - not in custody', () => {
+    const personName = faker.person.fullName()
     cy.task('getRecommendation', {
       statusCode: 200,
-      response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
+      response: RecommendationResponseGenerator.generate({
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
+        sentenceGroup: SentenceGroup.YOUTH_SDS,
+        recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+        offenceAnalysis: true,
+        indexOffenceDetails: true,
+        convictionDetail: {
+          hasBeenReviewed: true,
+        },
+        personOnProbation: {
+          name: personName,
+          hasBeenReviewed: true,
+        },
+        custodyStatus: {
+          selected: selected.NO,
+          details: faker.location.streetAddress(),
+          allOptions: [],
+        },
+      }),
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
+    cy.getElement(`Is ${personName} in custody now? Completed`).should('exist')
     cy.getElement('Local police contact details Completed').should('exist')
-    cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? Completed').should('exist')
+    cy.getElement(`Is there anything the police should know before they arrest ${personName}? Completed`).should(
+      'exist',
+    )
     cy.getElement('Address Completed').should('exist')
-    // cy.getElement("Request line manager's countersignature To do").should('exist')
+    cy.getElement("Request line manager's countersignature To do").should('exist')
   })
 
   it('task list - custody undetermined', () => {
@@ -673,9 +704,9 @@ context('Recommendation - task list', () => {
                     checkElementDoesntExist(emergencyRecallLinkText)
                   })
                 }
-                if (isIndeterminateSentence) {
+                if (isIndeterminateSentence && isRecall) {
                   it(`shows indeterminate type: ${sentenceGroup} link`, () => {
-                    // checkIndeterminateOrExtendedDetailsLink()
+                    checkIndeterminateOrExtendedDetailsLink()
                     cy.getElement(
                       `What type of sentence is ${recommendation.personOnProbation.name} on? Completed`,
                     ).should(isIndeterminateSentence ? 'exist' : 'not.exist')
@@ -1028,59 +1059,48 @@ context('Recommendation - task list', () => {
       // The requirements for countersignature is a much longer list than the value set below, but most of them are
       // satisfied by the default recommendation produced by the generator. We only set here the ones that aren't
       // guaranteed (e.g. they are normally random boolean values)
+      const personName = faker.person.fullName()
       const recommendationReadyForCountersignature = RecommendationResponseGenerator.generate({
-        recallType: {
-          selected: {
-            value: faker.helpers.arrayElement([recallTypeValues.FIXED_TERM, recallTypeValues.STANDARD]),
-          },
-        },
-        personOnProbation: {
-          hasBeenReviewed: true,
-          mappa: {
-            hasBeenReviewed: true,
-          },
-          ftr56MappaReviewed: true,
-        },
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
+        sentenceGroup: SentenceGroup.YOUTH_SDS,
+        recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+        offenceAnalysis: true,
+        indexOffenceDetails: true,
         convictionDetail: {
           hasBeenReviewed: true,
         },
-        sentenceGroup: SentenceGroup.ADULT_SDS,
-        alternativesToRecallTried: true,
-        decisionDateTime: true,
-        triggerLeadingToRecall: true,
-        previousReleases: true,
-        licenceConditionsBreached: true,
+        personOnProbation: {
+          name: personName,
+          hasBeenReviewed: true,
+          ftr56MappaReviewed: true,
+          mappa: {
+            hasBeenReviewed: true,
+          },
+        },
+
+        custodyStatus: {
+          selected: selected.NO,
+          details: faker.location.streetAddress(),
+          allOptions: [],
+        },
       })
 
       it('recommendation ready for SPO countersignature', () => {
-        setUp(
-          RecommendationResponseGenerator.generate({
-            isYouthSentenceOver12Months: true,
-            isYouthChargedWithSeriousOffence: true,
-            sentenceGroup: SentenceGroup.YOUTH_SDS,
-            recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
-          }),
-          [
-            {
-              name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
-              active: true,
-            },
-          ],
-        )
+        setUp(recommendationReadyForCountersignature, [
+          {
+            name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
+            active: true,
+          },
+        ])
         checkRequestSpoCountersignatureLink()
         checkCountersignatureTextHasNoLink(requestAcoCountersignatureLinkText)
       })
 
       it('recommendation ready for ACO countersignature', () => {
         setUp(
-          {
-            ...recommendationReadyForCountersignature,
-            ...recommendationReadyForCountersignature,
-            sentenceGroup: SentenceGroup.YOUTH_SDS,
-            isYouthSentenceOver12Months: true,
-            isYouthChargedWithSeriousOffence: true,
-            recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
-          },
+          recommendationReadyForCountersignature,
+
           [
             {
               name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED,
