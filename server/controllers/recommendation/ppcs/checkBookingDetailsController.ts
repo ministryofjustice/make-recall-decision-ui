@@ -83,7 +83,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   }
 
-  const partACro = recommendation.personOnProbation?.croNumber || recommendation.prisonOffender?.cro || null
+  const cro =
+    recommendation.personOnProbation?.croNumber ||
+    recommendation.prisonOffender?.cro ||
+    recommendation.ppudOffender?.croOtherNumber ||
+    null
 
   const edited = {} as Record<string, boolean>
 
@@ -109,7 +113,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       lastName,
       dateOfBirth,
       prisonNumber: recommendation.prisonOffender?.bookingNo,
-      cro: partACro,
+      cro,
       // When a recall is OOH, the recall received and recall decision date/time need to
       // match, so we use the decision date provided by the PP during the recommendation process
       // see: https://dsdmoj.atlassian.net/browse/MRD-3015
@@ -141,7 +145,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       edited.prisonNumber = true
     }
 
-    if (bookRecallToPpud.cro !== partACro) {
+    if (bookRecallToPpud.cro !== cro) {
       edited.cro = true
     }
   }

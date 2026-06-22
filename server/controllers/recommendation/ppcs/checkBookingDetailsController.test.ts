@@ -279,7 +279,7 @@ describe('get', () => {
     )
   })
 
-  it('sets bookRecallToPpud cro to null when both ndeliusCro and nomisCro are empty', async () => {
+  it('sets bookRecallToPpud cro from ppudCro when ndeliusCro and nomisCro are empty', async () => {
     const prisonOffenderNoCro = {
       ...PRISON_OFFENDER_TEMPLATE,
       identifiers: [] as { type: string; value: string }[],
@@ -294,6 +294,50 @@ describe('get', () => {
           personOnProbation: {
             ...RECOMMENDATION_TEMPLATE.personOnProbation,
             croNumber: null,
+          },
+          ppudOffender: {
+            ...RECOMMENDATION_TEMPLATE.ppudOffender,
+            croOtherNumber: '555/66C',
+          },
+        },
+        statuses: [...STATUSES_TEMPLATE],
+        flags: { xyz: 1 },
+      },
+    })
+    const next = mockNext()
+
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        valuesToSave: expect.objectContaining({
+          bookRecallToPpud: expect.objectContaining({
+            cro: '555/66C',
+          }),
+        }),
+      }),
+    )
+  })
+
+  it('sets bookRecallToPpud cro to null when ndeliusCro, nomisCro and ppudCro are all empty', async () => {
+    const prisonOffenderNoCro = {
+      ...PRISON_OFFENDER_TEMPLATE,
+      identifiers: [] as { type: string; value: string }[],
+    }
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(prisonOffenderNoCro)
+    ;(determinePpudEstablishment as jest.Mock).mockReturnValueOnce('HMP Brixton in PPUD')
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+          personOnProbation: {
+            ...RECOMMENDATION_TEMPLATE.personOnProbation,
+            croNumber: null,
+          },
+          ppudOffender: {
+            ...RECOMMENDATION_TEMPLATE.ppudOffender,
+            croOtherNumber: null,
           },
         },
         statuses: [...STATUSES_TEMPLATE],
