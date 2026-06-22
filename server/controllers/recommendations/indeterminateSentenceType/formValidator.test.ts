@@ -51,7 +51,7 @@ describe('validateIndeterminateSentenceType', () => {
       indeterminateSentenceType: 'VALUE',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
