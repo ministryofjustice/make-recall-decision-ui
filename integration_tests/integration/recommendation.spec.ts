@@ -403,7 +403,15 @@ context('Make a recommendation', () => {
     it('present task-list for all items completed', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 

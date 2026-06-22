@@ -549,7 +549,7 @@ context('Recommendation - task list', () => {
                   setUp(recommendation)
                 })
 
-                if (!isIndeterminateSentence && !isExtendedSentence) {
+                if (!isIndeterminateSentence && !isExtendedSentence && sentenceGroup !== 'none') {
                   it('shows suitability link', () => {
                     checkSuitabilityLink()
                   })
@@ -739,13 +739,6 @@ context('Recommendation - task list', () => {
         )
       }
 
-      function checkPreviousReleasesLink() {
-        checkLink(
-          'Previous releases',
-          `/recommendations/${recommendationId}/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details`,
-        )
-      }
-
       function checkAddressDetailsLink() {
         checkLink(
           addressDetailsLinkText,
@@ -773,9 +766,6 @@ context('Recommendation - task list', () => {
           })
           it('shows offence analysis link', () => {
             checkOffenceAnalysisLink()
-          })
-          it('shows previous releases link', () => {
-            checkPreviousReleasesLink()
           })
           if (!isInCustody) {
             it('shows address details link', () => {
@@ -1063,26 +1053,13 @@ context('Recommendation - task list', () => {
       })
 
       it('recommendation ready for SPO countersignature', () => {
-        // setUp(
-        //   {
-        //     ...recommendationReadyForCountersignature,
-        //     sentenceGroup: SentenceGroup.YOUTH_SDS,
-        //     isYouthSentenceOver12Months: true,
-        //     isYouthChargedWithSeriousOffence: true,
-        //     recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
-        //   },
-        //   [
-        //     {
-        //       name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
-        //       active: true,
-        //     },
-        //   ],
-        // )
         setUp(
-          {
-            ...recommendationReadyForCountersignature,
+          RecommendationResponseGenerator.generate({
+            isYouthSentenceOver12Months: true,
+            isYouthChargedWithSeriousOffence: true,
+            sentenceGroup: SentenceGroup.YOUTH_SDS,
             recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
-          },
+          }),
           [
             {
               name: RECOMMENDATION_STATUS.SPO_SIGNATURE_REQUESTED,
