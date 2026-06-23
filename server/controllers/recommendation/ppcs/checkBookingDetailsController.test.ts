@@ -435,7 +435,7 @@ describe('get', () => {
             lastName: 'Bloggs',
             dateOfBirth: '2000-01-01',
             prisonNumber: '1234',
-            cro: '123X',
+            cro: RECOMMENDATION_TEMPLATE.personOnProbation.croNumber,
           },
           prisonOffender: {
             firstName: 'Joe',

@@ -19,9 +19,6 @@ context('Edit CRO page', () => {
         response: {
           ...recommendationResponse,
           bookRecallToPpud: { cro: '999/99A' },
-          personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: '111/22A' },
-          prisonOffender: { cro: '789/01A' },
-          ppudOffender: null,
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
@@ -37,9 +34,6 @@ context('Edit CRO page', () => {
         response: {
           ...recommendationResponse,
           bookRecallToPpud: { cro: null },
-          personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: '111/22A' },
-          prisonOffender: { cro: '789/01A' },
-          ppudOffender: null,
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
@@ -54,10 +48,8 @@ context('Edit CRO page', () => {
         statusCode: 200,
         response: {
           ...recommendationResponse,
-          bookRecallToPpud: { cro: null },
           personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: null },
           prisonOffender: { cro: '789/01A' },
-          ppudOffender: null,
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
@@ -73,7 +65,6 @@ context('Edit CRO page', () => {
         statusCode: 200,
         response: {
           ...recommendationResponse,
-          bookRecallToPpud: { cro: null },
           personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: null },
           prisonOffender: { cro: null },
           ppudOffender: { croOtherNumber: null },
@@ -94,7 +85,6 @@ context('Edit CRO page', () => {
         statusCode: 200,
         response: {
           ...recommendationResponse,
-          bookRecallToPpud: { cro: null },
           personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: null },
           prisonOffender: { cro: null },
           ppudOffender: { croOtherNumber: '456/02B' },
@@ -116,9 +106,6 @@ context('Edit CRO page', () => {
         response: {
           ...recommendationResponse,
           bookRecallToPpud: { cro: null },
-          personOnProbation: { ...recommendationResponse.personOnProbation, croNumber: null },
-          prisonOffender: { cro: null },
-          ppudOffender: null,
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
