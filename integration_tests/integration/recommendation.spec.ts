@@ -3378,40 +3378,6 @@ context('Make a recommendation', () => {
       })
     })
 
-    it('book to ppud - create offender', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Record created and booked on to PPUD')
-    })
-    it('book to ppud - update offender', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
-          ppudOffender: {},
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/book-to-ppud`)
-      cy.pageHeading().should('contain', 'Booked on to PPUD')
-    })
-
     it('booked to ppud', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

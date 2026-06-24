@@ -5,6 +5,7 @@ import BookingMemento from './BookingMemento'
 import StageEnum from './StageEnum'
 import { PpudUpdateSentenceRequest } from '../@types/make-recall-decision-api/models/PpudUpdateSentenceRequest'
 import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 function buildDeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
   const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
@@ -35,6 +36,7 @@ function buildDeterminateSentenceRequest(recommendation: RecommendationResponse)
     sentenceExpiryDate: nomisOffence.sentenceSequenceExpiryDate,
     sentencingCourt: nomisOffence.courtDescription,
     sentencedUnder: recommendation.bookRecallToPpud?.legislationSentencedUnder,
+    sentencedAsYouth: recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS ? 'Yes' : 'No',
   }
 }
 
@@ -48,6 +50,7 @@ function buildIndeterminateSentenceRequest(recommendation: RecommendationRespons
     custodyType: selectedPpudSentence.custodyType,
     dateOfSentence: editedIndeterminateSentenceData.dateOfSentence,
     sentencingCourt: editedIndeterminateSentenceData.sentencingCourt,
+    sentencedAsYouth: recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS ? 'Yes' : 'No',
   }
 }
 

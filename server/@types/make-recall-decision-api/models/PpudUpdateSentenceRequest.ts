@@ -10,6 +10,7 @@ export type PpudUpdateSentenceRequest = {
   sentenceExpiryDate?: string,
   sentencingCourt: string,
   sentencedUnder?: string,
+  sentencedAsYouth?: string,
 };
 
 export type SentenceLength = {
