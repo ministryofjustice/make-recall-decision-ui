@@ -19,7 +19,7 @@ describe('recall type indeterminate', () => {
 
     cy.getElement('What do you recommend?')
     cy.get('.moj-ticket-panel').within(() => {
-      cy.get('h3').should(
+      cy.get('h2').should(
         'contain.text',
         `${recommendation.personOnProbation.name} must be given an emergency standard recall, if recalled`,
       )
