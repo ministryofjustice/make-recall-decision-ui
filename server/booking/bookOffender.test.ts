@@ -99,6 +99,7 @@ describe('book offender', () => {
       mappaLevel: 'Level 2 - local inter-agency management',
       nomsId: 'A12345',
       prisonNumber: '7878783',
+      sentencedAsYouth: 'No',
     })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
@@ -321,6 +322,7 @@ describe('book offender', () => {
       mappaLevel: 'Level 2 - local inter-agency management',
       nomsId: 'A12345',
       prisonNumber: '7878783',
+      sentencedAsYouth: 'No',
     })
     expect(result).toEqual({
       offenderId: '767',

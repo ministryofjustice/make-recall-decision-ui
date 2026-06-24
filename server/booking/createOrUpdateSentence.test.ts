@@ -20,6 +20,7 @@ import {
   PpudSentence,
   PpudSentenceData,
 } from '../@types/make-recall-decision-api/models/RecommendationResponse'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -30,6 +31,7 @@ function expectedDeterminateSentenceRequest(
   bookRecallToPpud: BookRecallToPpud,
   nomisOffence: OfferedOffence,
   sentenceLength: SentenceLength,
+  sentenceGroup: SentenceGroup,
 ): PpudUpdateSentenceRequest {
   return {
     custodyType: bookRecallToPpud?.custodyType,
@@ -41,17 +43,20 @@ function expectedDeterminateSentenceRequest(
     sentenceExpiryDate: nomisOffence.sentenceSequenceExpiryDate,
     sentencingCourt: nomisOffence.courtDescription,
     sentencedUnder: bookRecallToPpud?.legislationSentencedUnder,
+    sentencedAsYouth: sentenceGroup === SentenceGroup.YOUTH_SDS ? 'Yes' : 'No',
   }
 }
 
 function expectedIndeterminateSentenceRequest(
   selectedPpudSentence: PpudSentence,
   editedIndeterminateSentenceData: PpudSentenceData,
+  sentenceGroup: SentenceGroup,
 ): PpudUpdateSentenceRequest {
   return {
     custodyType: selectedPpudSentence.custodyType,
     dateOfSentence: editedIndeterminateSentenceData.dateOfSentence,
     sentencingCourt: editedIndeterminateSentenceData.sentencingCourt,
+    sentencedAsYouth: sentenceGroup === SentenceGroup.YOUTH_SDS ? 'Yes' : 'No',
   }
 }
 
@@ -188,6 +193,7 @@ describe('update sentence', () => {
           recommendationWithoutCustodialTerm.bookRecallToPpud,
           recommendationWithoutCustodialTerm.nomisIndexOffence.allOptions[0],
           null,
+          recommendationWithoutCustodialTerm.sentenceGroup,
         )
 
         testSentenceCreation(recommendationWithoutCustodialTerm, bookingMemento, expectedSentenceRequest)
@@ -223,6 +229,7 @@ describe('update sentence', () => {
           recommendationWithCustodialTerm.bookRecallToPpud,
           recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0],
           expectedSentenceLength,
+          recommendationWithCustodialTerm.sentenceGroup,
         )
 
         testSentenceCreation(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
@@ -243,6 +250,7 @@ describe('update sentence', () => {
       const expectedSentenceRequest = expectedIndeterminateSentenceRequest(
         selectedPpudSentence,
         recommendation.bookRecallToPpud.ppudIndeterminateSentenceData,
+        recommendation.sentenceGroup,
       )
 
       testSentenceUpdate(recommendation, bookingMemento, expectedSentenceRequest)

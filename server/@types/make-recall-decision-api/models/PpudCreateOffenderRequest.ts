@@ -15,6 +15,7 @@ export type PpudCreateOffenderRequest = {
   mappaLevel: string,
   nomsId: string,
   prisonNumber: string,
+  sentencedAsYouth: string,
 };
 
 export type PpudAddress = {

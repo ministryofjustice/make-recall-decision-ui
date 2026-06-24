@@ -4,6 +4,7 @@ import { ppudCreateOffender, ppudUpdateOffender, updateRecommendation } from '..
 import type { FeatureFlags } from '../@types/featureFlags'
 import BookingMemento from './BookingMemento'
 import StageEnum from './StageEnum'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 export default async function bookOffender(
   bookingMemento: BookingMemento,
@@ -87,6 +88,7 @@ export default async function bookOffender(
       indexOffence: recommendation.bookRecallToPpud?.indexOffence,
       mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
       prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
+      sentencedAsYouth: recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS ? 'Yes' : 'No',
       address,
       additionalAddresses,
     })
