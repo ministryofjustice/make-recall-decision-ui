@@ -1,4 +1,4 @@
-import { fakerEN_GB as faker } from '@faker-js/faker/'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { DateTime } from 'luxon'
 import { mockNext, mockReq, mockRes } from '../../../../../middleware/testutils/mockRequestUtils'
 import editDateOfSentenceController from './editDateOfSentenceController'
