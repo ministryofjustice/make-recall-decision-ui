@@ -99,6 +99,7 @@ jobs:
     with:
       environment: 'dev'
       app_version: '${{ needs.build.outputs.app_version }}'
+      slack_notification: 'true'
   sentry_release_and_deploy_dev:
     name: Sentry release and deploy to dev
     if: github.ref == 'refs/heads/main'
@@ -156,6 +157,7 @@ jobs:
     with:
       environment: 'prod'
       app_version: '${{ needs.build.outputs.app_version }}'
+      slack_notification: 'true'
   sentry_release_and_deploy_prod:
     name: Sentry release and deploy to prod
     if: github.ref == 'refs/heads/main'
