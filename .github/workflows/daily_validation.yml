@@ -7,3 +7,18 @@ jobs:
     name: e2e tests against dev
     secrets: inherit
     uses: ./.github/workflows/e2e_dev_tests.yml
+  notify_slack_of_failure:
+    name: Notify Slack of failure
+    if: always() && contains(needs.*.result, 'failure')
+    needs:
+      - validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare Slack failure message
+        run: echo "Daily validation checks failed in ${{ github.repository }}." > results_slack_message.txt
+      - name: Notify Slack of failure
+        uses: ministryofjustice/hmpps-github-shared-actions/.github/actions/slack_failure_results@c241b9febb7a4fc11e88d0e781cbdfcf8abd84a5 # v1.0.17
+        with:
+          channel_id: ${{ vars.PROD_RELEASES_SLACK_CHANNEL }}
+          SLACK_BOT_TOKEN: ${{ secrets.HMPPS_SRE_SLACK_BOT_TOKEN }}
+          input_file: results_slack_message.txt
