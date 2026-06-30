@@ -29,9 +29,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   // We can't rely on checking the user's role for this, as some AP/OOH users also work as POs and might access the
   // licence conditions page while processing a recommendation as a PO.
-  // We use .includes instead of .endsWith as the URL can contain the query parameter for the FTR56 flag at the end.
-  // Can be replaced with .endsWith once the flag is permanently enabled.
-  if (req.originalUrl?.includes('/ap-licence-conditions')) {
+  if (req.originalUrl?.endsWith('/ap-licence-conditions')) {
     backLinkUrl = `/cases/${recommendation.crn}/overview`
     backLinkText = `Back to overview for ${recommendation.personOnProbation.name}`
   } else if (!fromPageId) {

@@ -303,16 +303,7 @@ describe('taskCompleteness', () => {
         } as RecommendationResponse
 
         const { areAllComplete } = taskCompleteness(recommendationData, {})
-        if (
-          group === SentenceGroup.ADULT_SDS ||
-          group === SentenceGroup.EXTENDED ||
-          group === SentenceGroup.INDETERMINATE ||
-          group === SentenceGroup.YOUTH_SDS
-        ) {
-          expect(areAllComplete).toEqual(true)
-        } else {
-          expect(areAllComplete).toEqual(false)
-        }
+        expect(areAllComplete).toEqual(true)
       })
     })
 

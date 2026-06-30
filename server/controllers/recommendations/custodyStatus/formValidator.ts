@@ -4,7 +4,7 @@ import strings from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs & {}): FormValidatorReturn => {
+const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
 
   const { custodyStatus } = requestBody

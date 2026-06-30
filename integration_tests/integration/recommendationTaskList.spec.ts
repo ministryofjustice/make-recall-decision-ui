@@ -362,15 +362,6 @@ context('Recommendation - task list', () => {
       })
     })
 
-    describe('personalDetails', () => {
-      ;['Previous recalls'].forEach(elementText => {
-        it(`does not show ${elementText}`, () => {
-          setUp(recommendationResponse as RecommendationResponse, [], [])
-          cy.getElement(elementText).should('not.exist')
-        })
-      })
-    })
-
     describe('createLetter', () => {
       it('does not show Preview link when tasks are incomplete', () => {
         setUp(
@@ -565,7 +556,7 @@ context('Recommendation - task list', () => {
                 } else if (isExtendedSentence) {
                   sentenceGroup = SentenceGroup.EXTENDED
                 } else {
-                  sentenceGroup = 'none'
+                  sentenceGroup = faker.helpers.arrayElement([SentenceGroup.YOUTH_SDS, SentenceGroup.ADULT_SDS])
                 }
                 const recommendation = RecommendationResponseGenerator.generate({
                   sentenceGroup,
@@ -580,7 +571,7 @@ context('Recommendation - task list', () => {
                   setUp(recommendation)
                 })
 
-                if (!isIndeterminateSentence && !isExtendedSentence && sentenceGroup !== 'none') {
+                if (!isIndeterminateSentence && !isExtendedSentence) {
                   it('shows suitability link', () => {
                     checkSuitabilityLink()
                   })
@@ -609,7 +600,7 @@ context('Recommendation - task list', () => {
     context('circumstances details', () => {
       const whatHasLedToRecallLinkText = 'What has led to this recall?'
       const emergencyRecallLinkText = 'Is this an emergency recall?'
-      const indeterminateTypeLinkText = 'Type of indeterminate sentence'
+      const indeterminateTypeLinkText = (popName: string) => `What type of sentence is ${popName} on?`
       const ftrAdditionalLicenceConditionsLinkText = 'Add any additional licence conditions - fixed term recall'
       const indeterminateOrExtendedDetailsLinkText =
         'Confirm the recall criteria - indeterminate and extended sentences'
@@ -646,6 +637,13 @@ context('Recommendation - task list', () => {
         )
       }
 
+      function checkIndeterminateTypeLink(popName: string) {
+        checkLink(
+          indeterminateTypeLinkText(popName),
+          `/recommendations/${recommendationId}/indeterminate-type?fromPageId=task-list&fromAnchor=heading-alternatives`,
+        )
+      }
+
       function checkIndeterminateOrExtendedDetailsLink() {
         checkLink(
           indeterminateOrExtendedDetailsLinkText,
@@ -666,7 +664,8 @@ context('Recommendation - task list', () => {
                 } else if (isExtendedSentence) {
                   sentenceGroup = SentenceGroup.EXTENDED
                 } else {
-                  sentenceGroup = 'none'
+                  sentenceGroup = faker.helpers.arrayElement([SentenceGroup.YOUTH_SDS, SentenceGroup.ADULT_SDS])
+                  // TODO: test both scenarios
                 }
                 const isRecall = recallTypeValue !== recallTypeValues.NO_RECALL
                 const recommendation = RecommendationResponseGenerator.generate({
@@ -704,23 +703,20 @@ context('Recommendation - task list', () => {
                     checkElementDoesntExist(emergencyRecallLinkText)
                   })
                 }
-                if (isIndeterminateSentence && isRecall) {
-                  it(`shows indeterminate type: ${sentenceGroup} link`, () => {
-                    checkIndeterminateOrExtendedDetailsLink()
-                    cy.getElement(
-                      `What type of sentence is ${recommendation.personOnProbation.name} on? Completed`,
-                    ).should(isIndeterminateSentence ? 'exist' : 'not.exist')
+
+                if (isIndeterminateSentence) {
+                  it('shows indeterminate type link', () => {
+                    checkIndeterminateTypeLink(recommendation.personOnProbation.name)
                   })
-                } else if (!isRecall && !isIndeterminateSentence) {
+                } else {
                   it("doesn't show indeterminate type link", () => {
-                    checkElementDoesntExist(indeterminateTypeLinkText)
+                    checkElementDoesntExist(indeterminateTypeLinkText(recommendation.personOnProbation.name))
                   })
                 }
                 if (
                   recallTypeValue === recallTypeValues.FIXED_TERM &&
                   !isIndeterminateSentence &&
-                  !isExtendedSentence &&
-                  (recommendation.sentenceGroup === 'ADULT_SDS' || recommendation.sentenceGroup === 'YOUTH_SDS')
+                  !isExtendedSentence
                 ) {
                   it('shows additional FTR licence conditions link', () => {
                     checkFTRAdditionalLicenceConditionsLink()
@@ -770,6 +766,13 @@ context('Recommendation - task list', () => {
         )
       }
 
+      function checkPreviousReleasesLink() {
+        checkLink(
+          'Release details',
+          `/recommendations/${recommendationId}/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details`,
+        )
+      }
+
       function checkAddressDetailsLink() {
         checkLink(
           addressDetailsLinkText,
@@ -791,6 +794,9 @@ context('Recommendation - task list', () => {
           })
           it('shows personal details link', () => {
             checkPersonalDetailsLink()
+          })
+          it('shows previous releases link', () => {
+            checkPreviousReleasesLink()
           })
           it('shows offence details link', () => {
             checkOffenceDetailsLink()

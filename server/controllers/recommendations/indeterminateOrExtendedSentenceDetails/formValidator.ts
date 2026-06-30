@@ -15,8 +15,7 @@ const errorsMap: Record<string, string> = {
 }
 
 const missingDetailsError = (optionId: string) => {
-  const map = errorsMap
-  return map[optionId] ?? 'Enter details'
+  return errorsMap[optionId] ?? 'Enter details'
 }
 
 const validateIndeterminateDetails = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {

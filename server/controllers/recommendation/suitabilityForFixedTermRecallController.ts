@@ -60,7 +60,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   const warningPanel =
-    // In the rationale is exclusively recorded for the YOUTH_SDS flow
+    // The rationale is exclusively recorded for the YOUTH_SDS flow
     // so the warning is only required when the sentenceGroup is YOUTH_SDS
     recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
     recommendation.recallType !== null &&

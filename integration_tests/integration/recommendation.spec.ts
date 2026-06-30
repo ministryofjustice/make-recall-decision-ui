@@ -411,6 +411,19 @@ context('Make a recommendation', () => {
               details: null,
             },
           },
+          personOnProbation: {
+            name: 'Jane Bloggs',
+            hasBeenReviewed: true,
+            hasData: true,
+            mappa: {
+              category: 0,
+              level: 1,
+              lastUpdatedDate: '2022-11-04',
+              hasData: true,
+              hasBeenReviewed: true,
+            },
+            ftr56MappaReviewed: true,
+          },
         },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -555,7 +568,7 @@ context('Make a recommendation', () => {
     })
     ;[true, false].forEach(hasFromPageId => {
       describe(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-        it(`licence conditions - select saved conditions - hasFromPageId: ${hasFromPageId}`, () => {
+        it(`licence conditions - select saved conditions`, () => {
           cy.task('getRecommendation', {
             statusCode: 200,
             response: {

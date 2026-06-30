@@ -12,7 +12,10 @@ import { formOptions } from '../recommendations/formOptions/formOptions'
 import EVENTS from '../../utils/constants'
 import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { isFixedTermRecallMandatoryForRecommendation } from '../../utils/fixedTermRecallUtils'
+import {
+  isFixedTermRecallMandatoryForRecommendation,
+  isStandardRecallMandatoryForRecommendation,
+} from '../../utils/fixedTermRecallUtils'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -51,11 +54,12 @@ describe('get', () => {
 
   const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
   const isFTRMandatory = faker.datatype.boolean()
+  const isStandardMandatory = faker.datatype.boolean()
   beforeEach(async () => {
     ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
     ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(isFTRMandatory)
     ;(availableRecallTypesForRecommendation as jest.Mock).mockReturnValueOnce(expectedAvailableRecallTypes)
-
+    ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(isStandardMandatory)
     recallTypeController.get(mockReq(), res, next)
   })
 
@@ -82,6 +86,11 @@ describe('get', () => {
   it(`adds result of isFixedTermRecallMandatoryForRecommendation to res.locals`, async () => {
     expect(res.locals.ftrMandatory).toEqual(isFTRMandatory)
     expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(res.locals.recommendation)
+  })
+
+  it(`adds result of isStandardRecallMandatoryForRecommendation to res.locals`, async () => {
+    expect(res.locals.standardMandatory).toEqual(isStandardMandatory)
+    expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(res.locals.recommendation)
   })
 
   it(`adds isAdultSentence to res.locals`, async () => {

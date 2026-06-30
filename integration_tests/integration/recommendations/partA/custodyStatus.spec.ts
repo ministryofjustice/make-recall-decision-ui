@@ -20,13 +20,10 @@ context('Custody status', () => {
       const testCases = [
         {
           description: 'with no custody status option selected',
-          custodyStatus: undefined,
-          custodyStatusDetails: undefined,
         },
         {
           description: 'with custody status option YES_PRISON selected',
           custodyStatus: CustodyStatus.selected.YES_PRISON,
-          custodyStatusDetails: undefined,
         },
         {
           description: 'with custody status option YES_POLICE selected',
@@ -36,7 +33,6 @@ context('Custody status', () => {
         {
           description: 'with custody status option NO selected',
           custodyStatus: CustodyStatus.selected.NO,
-          custodyStatusDetails: undefined,
         },
       ]
       testCases.forEach(testCase => {
@@ -93,8 +89,6 @@ context('Custody status', () => {
               },
             ],
           })
-
-          cy.get('.govuk-radios__conditional').should('not.exist')
 
           cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
         })
