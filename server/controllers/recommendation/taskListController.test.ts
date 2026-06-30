@@ -7,6 +7,10 @@ import config from '../../config'
 import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { CustodyStatus } from '../../@types/make-recall-decision-api/models/CustodyStatus'
+import selected = CustodyStatus.selected
+import { RecallTypeSelectedValue } from '../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
@@ -190,13 +194,61 @@ describe('get', () => {
 
   it('present - tasks complete', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate }
+    const recommendation = RecommendationResponseGenerator.generate({
+      recallType: {
+        selected: {
+          value: RecallTypeSelectedValue.value.FIXED_TERM,
+        },
+      },
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+      alternativesToRecallTried: true,
+      decisionDateTime: true,
+      triggerLeadingToRecall: false,
+      previousReleases: true,
+      licenceConditionsBreached: true,
+      isChargedWithOffence: true,
+      personOnProbation: {
+        name: 'Jane Bloggs',
+        hasBeenReviewed: true,
+        mappa: {
+          hasBeenReviewed: true,
+        },
+        ftr56MappaReviewed: true,
+      },
+      indexOffenceDetails: true,
+      convictionDetail: {
+        hasBeenReviewed: true,
+      },
+      offenceAnalysis: true,
+      custodyStatus: {
+        selected: selected.YES_POLICE,
+        details: faker.location.streetAddress(),
+        allOptions: [],
+      },
+
+      indeterminateOrExtendedSentenceDetails: false,
+      practitionerForPartA: true,
+      whoCompletedPartA: {
+        isPersonProbationPractitionerForOffender: true,
+      },
+      whatLedToRecall: true,
+      isThisAnEmergencyRecall: true,
+      isServingTerroristOrNationalSecurityOffence: true,
+      isAtRiskOfInvolvedInForeignPowerThreat: true,
+      wasReferredToParoleBoard244ZB: true,
+      wasRepatriatedForMurder: true,
+      isServingSOPCSentence: true,
+      isServingDCRSentence: true,
+      isYouthSentenceOver12Months: true,
+      isYouthChargedWithSeriousOffence: true,
+    })
     const res = mockRes({
       locals: {
         recommendation,
         user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
+
     const next = mockNext()
     await taskListController.get(mockReq(), res, next)
 
@@ -205,13 +257,27 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: false,
+      isReadyForCounterSignature: true,
+
       areAllComplete: false,
+      statuses: {
+        ...taskCompleteness.statuses,
+        isChargedWithOffence: true,
+        isServingTerroristOrNationalSecurityOffence: true,
+        isAtRiskOfInvolvedInForeignPowerThreat: true,
+        wasReferredToParoleBoard244ZB: true,
+        wasRepatriatedForMurder: true,
+        isServingSOPCSentence: true,
+        isServingDCRSentence: true,
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
+        sentenceGroup: true,
+      },
     })
 
-    expect(res.locals.lineManagerCountersignLink).toEqual(false)
+    expect(res.locals.lineManagerCountersignLink).toEqual(true)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('To do')
     expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
@@ -319,7 +385,7 @@ describe('get', () => {
       { name: STATUSES.ACO_SIGNATURE_REQUESTED, active: false },
       { name: STATUSES.ACO_SIGNED, active: true },
     ])
-    const recommendation = { ...recommendationTemplate }
+    const recommendation = { ...recommendationTemplate, triggerLeadingToRecall: { selected: true } }
     const res = mockRes({
       locals: {
         recommendation,
@@ -337,6 +403,7 @@ describe('get', () => {
       ...taskCompleteness,
       isReadyForCounterSignature: false,
       areAllComplete: false,
+      statuses: { ...taskCompleteness.statuses, triggerLeadingToRecall: true },
     })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
