@@ -76,7 +76,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   return res.redirect(
     303,
     nextPageLinkUrl({
-      nextPageId: ppPaths.taskListConsiderRecall,
+      nextPageId: ppPaths.licenceConditions,
       urlInfo,
     }),
   )

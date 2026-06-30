@@ -27,7 +27,7 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('present - task-list-no-recall if recall type set to NO_RECALL', async () => {
+  it('present - redirect to task-list-consider-recall if recall type no set to NO_RECALL', async () => {
     const recommendation = {
       crn: 'X1213',
       recallType: { selected: { value: 'FIXED_TERM' } },

@@ -14,10 +14,6 @@ function get(req: Request, res: Response, next: NextFunction) {
     return res.redirect(303, nextPageLinkUrl({ nextPageId: ppPaths.taskListConsiderRecall, urlInfo }))
   }
 
-  if (recallType !== 'NO_RECALL') {
-    return res.redirect(303, nextPageLinkUrl({ nextPageId: 'task-list', urlInfo }))
-  }
-
   res.locals = {
     ...res.locals,
     page: {

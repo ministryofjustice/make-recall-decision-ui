@@ -283,13 +283,13 @@ context('Recommendation - task list', () => {
     describe('recommendations', () => {
       ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
         it(`does not show MAPPA item for ${sentenceGroup}`, () => {
-          setUp({ ...recommendationResponse, sentenceGroup }, [], [''])
+          setUp({ ...recommendationResponse, sentenceGroup }, [], [])
           cy.getElement('MAPPA information to assess recall type').should('not.exist')
         })
       })
       ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
         it(`does not show Suitability item for ${sentenceGroup}`, () => {
-          setUp({ ...recommendationResponse, sentenceGroup }, [], [''])
+          setUp({ ...recommendationResponse, sentenceGroup }, [], [])
           cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
         })
       })
@@ -665,7 +665,6 @@ context('Recommendation - task list', () => {
                   sentenceGroup = SentenceGroup.EXTENDED
                 } else {
                   sentenceGroup = faker.helpers.arrayElement([SentenceGroup.YOUTH_SDS, SentenceGroup.ADULT_SDS])
-                  // TODO: test both scenarios
                 }
                 const isRecall = recallTypeValue !== recallTypeValues.NO_RECALL
                 const recommendation = RecommendationResponseGenerator.generate({

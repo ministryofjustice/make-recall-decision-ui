@@ -172,7 +172,7 @@ describe('post', () => {
     })
     it('Next page URL retrieved', () =>
       expect(nextPageLinkUrl).toHaveBeenCalledWith({
-        nextPageId: ppPaths.taskListConsiderRecall,
+        nextPageId: ppPaths.licenceConditions,
         urlInfo,
       }))
     it(`Redirected to ${nextPageUrl} page`, () => expect(res.redirect).toHaveBeenCalledWith(303, nextPageUrl))
