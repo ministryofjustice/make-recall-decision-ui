@@ -36,14 +36,24 @@ export default function setUpWebSecurity(): Router {
             // file is overwriting that, so we manually add it back in here
             config.apis.probationApi.url,
           ],
-          imgSrc: ["'self'", 'data:', '*.google-analytics.com', '*.analytics.google.com', '*.smartsurvey.co.uk'],
+          imgSrc: [
+            "'self'",
+            'data:',
+            '*.google-analytics.com',
+            '*.analytics.google.com',
+            '*.smartsurvey.co.uk',
+            // The image we use for the SmartSurvey pop-up was taken from
+            // brand.gov.uk. Can be removed once the survey is removed
+            '*.brand.gov.uk',
+          ],
           styleSrc: [
             "'self'",
-            // unsafe-hashes and the two hashes below were added for the SmartSurvey pop-up added to the
+            // unsafe-hashes and the three hashes below were added for the SmartSurvey pop-up added to
             // the request-spo-countersign page. Can be removed once the survey is removed
             "'unsafe-hashes'",
             "'sha256-v+hB44R3iMNw3SytNBSdcp6VH4zSKLWgsPe08xV/oPk='",
             "'sha256-qnVkQSG7pWu17hBhIw0kCpfEB3XGvt0mNRa6+uM6OUU='",
+            "'sha256-9kro3v0dc6rZm7Gw6JoDGiu3Io0gvt9rQGk3H4LJXYU='",
           ],
           fontSrc: ["'self'"],
           formAction: [
