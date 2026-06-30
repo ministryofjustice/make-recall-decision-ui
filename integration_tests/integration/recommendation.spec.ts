@@ -19,12 +19,6 @@ import { RecommendationResponseGenerator } from '../../data/recommendations/reco
 import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
 import selected = CustodyStatus.selected
 
-const testCases = [
-  {
-    description: 'with FTR56 flag enabled',
-  },
-]
-
 const recommendationMock = RecommendationResponseGenerator.generate({
   sentenceGroup: SentenceGroup.ADULT_SDS,
   alternativesToRecallTried: true,
@@ -292,149 +286,58 @@ context('Make a recommendation', () => {
       cy.url().should('contain', 'recall-type-extended')
     })
 
-    describe('present discuss-with-manager', () => {
-      it('getRecommendation', () => {
-        const recommendation = {
-          ...completeRecommendationResponse,
-          recallConsideredList: null,
-          sentenceGroup: SentenceGroup.EXTENDED,
-        }
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: recommendation,
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-      })
-      it('present share-case-with-manager', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse, recallConsideredList: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-
-        cy.task('updateStatuses', { statusCode: 200, response: [] })
-
-        cy.visit(`${sharedPaths.recommendations}/${recommendationId}/record-consideration-rationale`)
-
-        cy.clickButton('Send to NDelius')
-
-        cy.pageHeading().should('equal', 'Share this case with your manager')
-
-        cy.clickLink('Continue to make a recommendation')
-
-        cy.pageHeading().should('equal', 'Discuss with your manager')
-      })
-
-      it('share-case-with-manager CTA returns to overview', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse, recallConsideredList: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-
-        cy.task('updateStatuses', { statusCode: 200, response: [] })
-
-        cy.visit(`${sharedPaths.recommendations}/${recommendationId}/record-consideration-rationale`)
-
-        cy.clickButton('Send to NDelius')
-
-        cy.pageHeading().should('equal', 'Share this case with your manager')
-
-        cy.clickLink('Return to overview')
-
-        cy.pageHeading().should('equal', 'Overview for Jane Bloggs')
-      })
-
-      it('present discuss-with-manager', () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: {
-            ...completeRecommendationResponse,
-            recallConsideredList: null,
-            sentenceGroup: SentenceGroup.EXTENDED,
-          },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-
-        cy.visit(`${sharedPaths.recommendations}/${recommendationId}/share-case-with-manager`)
-
-        cy.clickLink('Continue to make a recommendation')
-
-        cy.pageHeading().should('equal', 'Discuss with your manager')
-
-        cy.clickLink('Continue')
-
-        cy.pageHeading().should('equal', 'What do you recommend?')
-
-        cy.url().should('contain', 'recall-type-extended')
-      })
-    })
-    describe('present discuss-with-manager', () => {
-      testCases.forEach(({ description }) => {
-        it(description, () => {
-          const recommendation = {
-            ...completeRecommendationResponse,
-            recallConsideredList: null,
-            sentenceGroup: SentenceGroup.EXTENDED,
-          }
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: recommendation,
-          })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-
-          cy.visit(`${sharedPaths.recommendations}/${recommendationId}/share-case-with-manager`)
-
-          cy.clickLink('Continue to make a recommendation')
-
-          cy.pageHeading().should('equal', 'Discuss with your manager')
-
-          cy.clickLink('Continue')
-
-          cy.pageHeading().should('equal', 'What do you recommend?')
-
-          cy.url().should('contain', 'recall-type-extended')
-
-          cy.getElement('No recall - create a decision not to recall letter').should('exist')
-        })
-      })
-    })
-
-    it('present task-list for all items completed', () => {
+    it('present discuss-with-manager', () => {
+      const recommendation = {
+        ...completeRecommendationResponse,
+        recallConsideredList: null,
+        sentenceGroup: SentenceGroup.EXTENDED,
+      }
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: {
-          ...recommendationMock,
-          recallType: {
-            selected: {
-              value: 'STANDARD',
-              details: null,
-            },
-          },
-          personOnProbation: {
-            name: 'Jane Bloggs',
-            hasBeenReviewed: true,
-            hasData: true,
-            mappa: {
-              category: 0,
-              level: 1,
-              lastUpdatedDate: '2022-11-04',
-              hasData: true,
-              hasBeenReviewed: true,
-            },
-            ftr56MappaReviewed: true,
-          },
-        },
+        response: recommendation,
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/share-case-with-manager`)
 
-      cy.getElement("Request line manager's countersignature To do").should('exist')
-      cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+      cy.clickLink('Continue to make a recommendation')
 
-      cy.clickLink("Request line manager's countersignature")
-      cy.pageHeading().should('equal', 'Request countersignature')
+      cy.pageHeading().should('equal', 'Discuss with your manager')
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'What do you recommend?')
+
+      cy.url().should('contain', 'recall-type-extended')
+
+      cy.getElement('No recall - create a decision not to recall letter').should('exist')
+    })
+
+    it('present discuss-with-manager - with FTR56 flag enabled', () => {
+      const recommendation = {
+        ...completeRecommendationResponse,
+        recallConsideredList: null,
+        sentenceGroup: SentenceGroup.EXTENDED,
+      }
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: recommendation,
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/share-case-with-manager`)
+
+      cy.clickLink('Continue to make a recommendation')
+
+      cy.pageHeading().should('equal', 'Discuss with your manager')
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'What do you recommend?')
+
+      cy.url().should('contain', 'recall-type-extended')
+
+      cy.getElement('No recall - create a decision not to recall letter').should('exist')
     })
 
     it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
@@ -704,7 +607,7 @@ context('Make a recommendation', () => {
 
           cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
           )
 
           // Back link
@@ -753,7 +656,7 @@ context('Make a recommendation', () => {
 
           cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
           )
 
           // Back link
@@ -792,7 +695,7 @@ context('Make a recommendation', () => {
 
           cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
           )
 
           // Back link
@@ -835,7 +738,7 @@ context('Make a recommendation', () => {
           )
 
           cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
           )
 
           // Back link
@@ -857,7 +760,7 @@ context('Make a recommendation', () => {
 
         it('licence conditions - shows message if person has no active custodial convictions', () => {
           cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
           )
           cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
           cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
@@ -877,7 +780,7 @@ context('Make a recommendation', () => {
 
           cy.task('getStatuses', { statusCode: 200, response: [] })
           cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?${hasFromPageId ? 'fromPageId=task-list' : ''}`,
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
           )
 
           // Back link

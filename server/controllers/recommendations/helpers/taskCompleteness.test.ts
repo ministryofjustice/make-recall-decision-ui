@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { hasAllRequiredVulnerabilityDetails, taskCompleteness } from './taskCompleteness'
 import recommendationResponse from '../../../../api/responses/get-recommendation.json'
-import noRecallResponse from '../../../../api/responses/get-recommendation-no-recall.json'
+// import noRecallResponse from '../../../../api/responses/get-recommendation-no-recall.json'
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
