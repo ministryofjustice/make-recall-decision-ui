@@ -32,10 +32,8 @@ describe('validateCustodyStatus', () => {
             details: null,
           },
         })
-        expect(valuesToSave).not.toContain({
-          hasArrestIssues: null,
-          localPoliceContact: null,
-        })
+        expect(valuesToSave).not.toHaveProperty('hasArrestIssues')
+        expect(valuesToSave).not.toHaveProperty('localPoliceContact')
         expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
       })
 
