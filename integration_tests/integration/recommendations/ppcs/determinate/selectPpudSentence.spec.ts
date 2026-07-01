@@ -93,7 +93,7 @@ context('Select PPUD Sentence', () => {
     it('should only show determinate sentences and not indeterminate ones', () => {
       cy.visit(testPageUrl)
 
-      cy.contains('Add your booking to PPUD - John Doe')
+      cy.contains('Select or add a sentence for your booking - John Doe')
 
       cy.get('.govuk-radios__input').should('exist')
 

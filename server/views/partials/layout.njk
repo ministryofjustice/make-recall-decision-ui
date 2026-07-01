@@ -55,18 +55,18 @@
 {% from "components/text-list/macro.njk" import textList %}
 
 {% block head %}
-  <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  <link href="{{ '/assets/css/app.css' | assetMap }}" rel="stylesheet"/>
   {% for css in feComponents.cssIncludes %}
     <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet" />
   {% endfor %}
   <script src="/assets/applicationinsights-web.min.js"></script>
-  <script src="/assets/applicationinsights.js"></script>
+  <script src="{{ '/assets/js/applicationinsights.js' | assetMap }}"></script>
   <script nonce="{{ cspNonce }}">
     window.applicationInsights.init('{{ applicationInsightsConnectionString }}', '{{ applicationInsightsRoleName }}', '{{ user.username }}');
   </script>
   <script src="/assets/js/jquery.min.js"></script>
   <script src="/assets/accessible-autocomplete.min.js"></script>
-  <script src="/assets/js/vStyleDropdownArrow.js"></script>
+  <script src="{{ '/assets/js/vStyleDropdownArrow.js' | assetMap }}"></script>
   <script type="module" src='/assets/moj/components/filter-toggle-button/filter-toggle-button.bundle.mjs'></script>
   {% block headEnd %}{% endblock %}
 {% endblock %}
@@ -83,11 +83,11 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the
       <body>, to avoid blocking the initial render. #}
-  <script type="module" src="/assets/govukFrontendInit.js"></script>
-  <script type="module" src="/assets/mojFrontendInit.js"></script>
   <script src="/assets/web-vitals.iife.js" defer></script>
-  <script src="/assets/analytics.js" defer></script>
-  <script src="/assets/accessibility.js" defer></script>
-  <script src="/assets/back-links.js" defer></script>
-  <script src="/assets/accessible-autocomplete-fix.js" defer></script>
+  <script type="module" src="{{ '/assets/js/govukFrontendInit.js' | assetMap }}" defer></script>
+  <script type="module" src="{{ '/assets/js/mojFrontendInit.js' | assetMap }}" defer></script>
+  <script src="{{ '/assets/js/analytics.js' | assetMap }}" defer></script>
+  <script src="{{ '/assets/js/accessibility.js' | assetMap }}" defer></script>
+  <script src="{{ '/assets/js/back-links.js' | assetMap }}" defer></script>
+  <script src="{{ '/assets/js/accessible-autocomplete-fix.js' | assetMap }}" defer></script>
 {% endblock %}

@@ -2,7 +2,7 @@ import completeRecommendationResponse from '../../../../api/responses/get-recomm
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
 import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
-import routeUrls from '../../../../server/routes/routeUrls'
+import { sharedPaths } from '../../../../server/routes/paths/shared.paths'
 
 describe("SPO review practitioner's concerns page", () => {
   beforeEach(() => {
@@ -22,7 +22,7 @@ describe("SPO review practitioner's concerns page", () => {
 
   describe('with FTR56 flag disabled', () => {
     it('should load the page correctly', () => {
-      cy.visit(`${routeUrls.recommendations}/1/review-practitioners-concerns`)
+      cy.visit(`${sharedPaths.recommendations}/1/review-practitioners-concerns`)
 
       cy.pageHeading().should('equal', "Review practitioner's concerns")
       cy.getElement('Review these details and discuss the case with the practitioner.').should('exist')
@@ -170,7 +170,7 @@ describe("SPO review practitioner's concerns page", () => {
           },
         })
 
-        cy.visit(`${routeUrls.recommendations}/1/review-practitioners-concerns?flagFTR56Enabled=1`)
+        cy.visit(`${sharedPaths.recommendations}/1/review-practitioners-concerns?flagFTR56Enabled=1`)
 
         cy.pageHeading().should('equal', "Review practitioner's concerns")
         cy.getElement('Review these details and discuss the case with the practitioner.').should('exist')

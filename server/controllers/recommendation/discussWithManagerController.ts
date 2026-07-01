@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {

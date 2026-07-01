@@ -4,7 +4,7 @@ import { getRecommendation, ppudReferenceList, updateRecommendation } from '../.
 import matchIndexOffenceController from './matchIndexOffenceController'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
-import ppcsPaths from '../../routes/paths/ppcs'
+import ppcsPaths from '../../routes/paths/ppcs.paths'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../utils/utils')

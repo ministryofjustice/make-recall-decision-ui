@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import routeUrls from '../../routes/routeUrls'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 import { isDefined } from '../../utils/utils'
 import validatePreviousReleases from '../recommendations/previousReleases/formValidator'
 import { splitIsoDateToParts } from '../../utils/dates/conversion'
@@ -97,12 +97,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
     })
   }
 
-  let nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-person-details`
+  let nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-person-details`
 
   if (!flags.flagFTR56Enabled) {
     const { deletePreviousReleaseDateIndex } = req.body
     if (isDefined(deletePreviousReleaseDateIndex)) {
-      nextPagePath = `${routeUrls.recommendations}/${recommendationId}/previous-releases`
+      nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/previous-releases`
     }
   }
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

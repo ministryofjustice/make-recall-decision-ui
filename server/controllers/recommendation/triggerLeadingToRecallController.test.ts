@@ -4,7 +4,7 @@ import triggerLeadingToRecallController from './triggerLeadingToRecallController
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 import strings from '../../textStrings/en'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'

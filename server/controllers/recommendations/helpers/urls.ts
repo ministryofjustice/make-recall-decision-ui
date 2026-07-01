@@ -1,8 +1,8 @@
 import { RecallTypeSelectedValue } from '../../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import routeUrls from '../../../routes/routeUrls'
 import type { FeatureFlags } from '../../../@types/featureFlags'
 import { UrlInfo } from '../../../@types/pagesForms'
+import { sharedPaths } from '../../../routes/paths/shared.paths'
 
 /**
  * Determines the URL for the next page.
@@ -90,7 +90,7 @@ export const checkForRedirectPath = ({
   hasSpoRole: boolean
   featureFlags: FeatureFlags
 }) => {
-  const caseOverviewPath = `${routeUrls.cases}/${crn}/overview`
+  const caseOverviewPath = `${sharedPaths.cases}/${crn}/overview`
   const isRecallTaskListRequested = requestedPageId === 'task-list'
   const isNoRecallTaskListRequested = requestedPageId === 'task-list-no-recall'
 

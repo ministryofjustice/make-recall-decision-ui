@@ -5,7 +5,7 @@ import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 
 jest.mock('../../data/makeDecisionApiClient')
 

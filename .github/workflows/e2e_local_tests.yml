@@ -1,0 +1,162 @@
+name: e2e local tests
+
+on:
+  workflow_call:
+    inputs:
+      ui-branch-name:
+        description: 'The branch name of make-recall-decision-ui to check out'
+        required: true
+        type: string
+
+jobs:
+  get-timings:
+    uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/workflows/cypress_get_timings.yml@v1
+    permissions:
+      contents: read
+    with:
+      spec-file-patterns: 'e2e_tests/features/**/*.feature'
+      timings-cache-key: 'e2e-local-test-timings'
+
+  e2e_local_tests:
+    name: e2e local tests
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    needs: get-timings
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [ 1, 2, 3, 4, 5, 6, 7, 8 ]
+    outputs:
+      timings-1: ${{ steps.timings.outputs.t1 }}
+      timings-2: ${{ steps.timings.outputs.t2 }}
+      timings-3: ${{ steps.timings.outputs.t3 }}
+      timings-4: ${{ steps.timings.outputs.t4 }}
+      timings-5: ${{ steps.timings.outputs.t5 }}
+      timings-6: ${{ steps.timings.outputs.t6 }}
+      timings-7: ${{ steps.timings.outputs.t7 }}
+      timings-8: ${{ steps.timings.outputs.t8 }}
+    steps:
+      - name: Check out make-recall-decision-api repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: 'ministryofjustice/make-recall-decision-api'
+          path: 'make-recall-decision-api'
+      - name: Check out make-recall-decision-ui repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: 'ministryofjustice/make-recall-decision-ui'
+          ref: ${{ inputs.ui-branch_name }}
+          path: 'make-recall-decision-ui'
+      - name: Check out make-recall-decision-e2e-tests repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: 'ministryofjustice/make-recall-decision-e2e-tests'
+          path: 'make-recall-decision-e2e-tests'
+      - name: Use Node.js .nvmrc
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: 'make-recall-decision-e2e-tests/.nvmrc'
+      - name: Install npm
+        working-directory: make-recall-decision-e2e-tests
+        shell: bash
+        run: sudo npm install -g npm@11
+      - name: Start components
+        working-directory: make-recall-decision-ui
+        run: ./scripts/start-services-for-e2e-tests.sh
+      - uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/actions/cypress/create_timings_file@bd2ccc17cfc6c285638a4be7bbb280527a30c328 # v1.1.0
+        with:
+          timings: ${{ needs.get-timings.outputs.timings }}
+      - name: Run the tests
+        id: e2e_tests
+        uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
+        with:
+          working-directory: make-recall-decision-e2e-tests
+          publish-summary: false
+          browser: chrome
+          config-file: 'e2e_tests/cypress.config.ts'
+          spec: 'e2e_tests/features/**/*.feature'
+          install-command: npm run setup
+        env:
+          # used to split the tests by times for parallel runs
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
+          SPLIT_FILE: 'timings.json'
+          # filter to specify what types of tests to run
+          TAGS: 'not @E2E and not @smoke'
+          # credentials and other config values for running tests against local environment
+          CYPRESS_USERNAME_PO: ${{secrets.LOCAL_USERNAME_PO}}
+          CYPRESS_PASSWORD_PO: ${{secrets.LOCAL_PASSWORD_PO}}
+          CYPRESS_USERNAME_SPO: ${{secrets.LOCAL_USERNAME_SPO}}
+          CYPRESS_PASSWORD_SPO: ${{secrets.LOCAL_PASSWORD_SPO}}
+          CYPRESS_USERNAME_ACO: ${{secrets.LOCAL_USERNAME_ACO}}
+          CYPRESS_PASSWORD_ACO: ${{secrets.LOCAL_PASSWORD_ACO}}
+          CYPRESS_USERNAME_PPCS: ${{secrets.LOCAL_USERNAME_PPCS}}
+          CYPRESS_PASSWORD_PPCS: ${{secrets.LOCAL_PASSWORD_PPCS}}
+          CYPRESS_API_CLIENT_ID: ${{secrets.LOCAL_API_CLIENT_ID}}
+          CYPRESS_API_CLIENT_SECRET: ${{secrets.LOCAL_API_CLIENT_SECRET}}
+          CYPRESS_MAKE_RECALL_DECISION_API_URL: ${{secrets.LOCAL_MAKE_RECALL_DECISION_API_URL}}
+          CYPRESS_HMPPS_AUTH_EXTERNAL_URL: ${{secrets.LOCAL_HMPPS_AUTH_EXTERNAL_URL}}
+          CYPRESS_INTEGRATION_TEST: true
+      - name: Output updated timings
+        if: success() # failure timings could skew the results; they should happen infrequently, so best left out
+        id: timings
+        run: echo "t${{ matrix.container }}=$(jq -c . < timings.json)" >> $GITHUB_OUTPUT
+      - name: Record API docker logs
+        if: failure()
+        working-directory: make-recall-decision-api
+        run: docker-compose logs
+      - name: Record UI docker logs
+        if: failure()
+        working-directory: make-recall-decision-ui
+        run: docker-compose logs
+      - name: Upload screenshots
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: screenshots
+          path: make-recall-decision-e2e-tests/e2e_tests/screenshots/
+      - name: Upload reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: reports
+          path: make-recall-decision-e2e-tests/e2e_tests/reports/
+      - name: Upload JUnit results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: junit
+          path: make-recall-decision-e2e-tests/e2e_tests/junit/
+      - name: Publish test report
+        if: ${{ !cancelled() && github.event.repository.visibility == 'public' }}
+        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
+        with:
+          artifact: ${{ inputs.test_results_artifact_name }}
+          name: Local e2e Test Report
+          path: 'e2e_tests/junit/**/*.xml'
+          working-directory: make-recall-decision-e2e-tests
+          reporter: java-junit
+          fail-on-empty: false
+          fail-on-error: false
+          list-suites: 'failed'
+          list-tests: 'failed'
+      - name: fail the action if the tests failed
+        if: ${{ steps.e2e_tests.outcome == 'failure' }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            core.setFailed('e2e tests failed')
+
+  save-timings:
+    if: success() # failure timings could skew the results; they should happen infrequently, so best left out
+    uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/workflows/cypress_save_timings.yml@v1
+    permissions:
+      actions: write
+    needs:
+      - get-timings
+      - e2e_local_tests
+    with:
+      initial-timings: ${{ needs.get-timings.outputs.timings }}
+      updated-timings: ${{ toJSON(needs.e2e_local_tests.outputs) }}
+      timings-cache-key: 'e2e-local-test-timings'

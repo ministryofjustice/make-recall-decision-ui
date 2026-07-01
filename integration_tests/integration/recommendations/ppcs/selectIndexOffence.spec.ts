@@ -129,6 +129,26 @@ context('Determinate Sentence - Select Index Offence Page', () => {
       cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
     })
 
+    it('should remember a previously selected index offence', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...defaultRecommendationResponse,
+          nomisIndexOffence: { selected: defaultPrisonSentenceSequences[0].indexSentence.offences[0].offenderChargeId },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: defaultUpdateRecommendationResponse(crn, recommendationId),
+      })
+      cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequences })
+
+      cy.visit(testPageUrl)
+
+      cy.get('.govuk-radios').find('.govuk-radios__item').first().find('input').should('be.checked')
+    })
+
     describe('Term variations', () => {
       const verifyAndRetrieveSingleNOMISRadioItem = () => {
         cy.get('.govuk-form-group').should('have.length', 1).as('radioFormGroup')

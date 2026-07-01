@@ -1,7 +1,7 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import taskListNoRecallController from './taskListNoRecallController'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 import { recallTypeFTR56 } from '../recommendations/recallType/formOptions'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 

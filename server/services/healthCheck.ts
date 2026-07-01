@@ -33,23 +33,17 @@ function service(name: string, url: string, agentConfig: AgentConfig): HealthChe
 }
 
 function addAppInfo(result: HealthCheckResult): HealthCheckResult {
-  const buildInformation = getBuild()
+  const buildInformation = {
+    buildNumber: config.buildNumber,
+    gitRef: config.gitRef,
+  }
   const buildInfo = {
     uptime: process.uptime(),
     build: buildInformation,
-    version: buildInformation && buildInformation.buildNumber,
+    version: buildInformation.buildNumber,
   }
 
   return { ...result, ...buildInfo }
-}
-
-function getBuild() {
-  try {
-    // eslint-disable-next-line n/global-require, @typescript-eslint/no-require-imports
-    return require('../../build-info.json')
-  } catch (err) {
-    return null
-  }
 }
 
 function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus: HealthCheckStatus) {

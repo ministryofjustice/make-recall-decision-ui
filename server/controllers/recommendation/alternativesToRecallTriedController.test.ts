@@ -4,7 +4,7 @@ import alternativesToRecallTriedController from './alternativesToRecallTriedCont
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
-import ppPaths from '../../routes/paths/pp'
+import ppPaths from '../../routes/paths/pp.paths'
 import validateAlternativesTried from '../recommendations/alternativesToRecallTried/formValidator'
 import ErrorGenerator from '../../../data/common/errorGenerator'
 
