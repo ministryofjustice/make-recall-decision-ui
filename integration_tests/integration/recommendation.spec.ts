@@ -1,3 +1,4 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import getCaseOverviewResponse from '../../api/responses/get-case-overview.json'
 import searchActiveUsersResponse from '../../api/responses/ppudSearchActiveUsers.json'
@@ -14,17 +15,47 @@ import ppcsPaths from '../../server/routes/paths/ppcs.paths'
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { testBackLink, testStandardBackLink } from '../componentTests/backLink.tests'
 import ppPaths from '../../server/routes/paths/pp.paths'
+import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
+import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
+import selected = CustodyStatus.selected
 
-const ftr56TestCases = [
-  {
-    description: 'with FTR56 flag enabled',
-    ftr56Enabled: true,
+const recommendationMock = RecommendationResponseGenerator.generate({
+  sentenceGroup: SentenceGroup.ADULT_SDS,
+  alternativesToRecallTried: true,
+  decisionDateTime: true,
+  triggerLeadingToRecall: true,
+  previousReleases: true,
+  licenceConditionsBreached: true,
+  isChargedWithOffence: true,
+  isServingTerroristOrNationalSecurityOffence: true,
+  isAtRiskOfInvolvedInForeignPowerThreat: true,
+  wasReferredToParoleBoard244ZB: true,
+  wasRepatriatedForMurder: true,
+  isServingSOPCSentence: true,
+  isServingDCRSentence: true,
+  isYouthSentenceOver12Months: true,
+  isYouthChargedWithSeriousOffence: true,
+  personOnProbation: {
+    name: 'Jane Bloggs',
+    hasBeenReviewed: true,
+    mappa: {
+      hasBeenReviewed: true,
+    },
+    ftr56MappaReviewed: true,
   },
-  {
-    description: 'with FTR56 flag disabled',
-    ftr56Enabled: false,
+  indexOffenceDetails: true,
+  convictionDetail: {
+    hasBeenReviewed: true,
   },
-]
+  offenceAnalysis: true,
+  custodyStatus: {
+    selected: selected.YES_POLICE,
+    details: faker.location.streetAddress(),
+    allOptions: [],
+  },
+
+  indeterminateOrExtendedSentenceDetails: true,
+})
 
 context('Make a recommendation', () => {
   const crn = 'X34983'
@@ -79,49 +110,34 @@ context('Make a recommendation', () => {
       cy.getElement('An error occurred creating a new recommendation').should('exist')
     })
 
-    ftr56TestCases.forEach(testCase => {
-      it(`shows a warning page if "Make a recommendation" is submitted while another recommendation exists ${testCase.description}`, () => {
-        cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    it(`shows a warning page if "Make a recommendation" is submitted while another recommendation exists`, () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
 
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...recommendationResponse },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(
-          `${sharedPaths.cases}/${crn}/create-recommendation-warning?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
-        )
-        cy.clickButton('Continue')
-        cy.pageHeading().should('equal', 'There is already a recommendation for Jane Bloggs')
-        cy.getElement('Mr Anderson started this recommendation on 31 October 2000.').should('exist')
-
-        cy.clickLink('Update recommendation')
-        cy.pageHeading().should(
-          'equal',
-          testCase.ftr56Enabled
-            ? `Part A for ${recommendationResponse.personOnProbation.name}`
-            : 'Create a Part A form',
-        )
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${sharedPaths.cases}/${crn}/create-recommendation-warning`)
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', 'There is already a recommendation for Jane Bloggs')
+      cy.getElement('Mr Anderson started this recommendation on 31 October 2000.').should('exist')
 
-      it(`update button links to Part A task list if recall is
-          set ${testCase.description}`, () => {
-        cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
-        cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.visit(`${sharedPaths.cases}/${crn}/overview?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`)
-        cy.clickLink('Update recommendation')
-        cy.pageHeading().should(
-          'equal',
-          testCase.ftr56Enabled
-            ? `Part A for ${recommendationResponse.personOnProbation.name}`
-            : 'Create a Part A form',
-        )
+      cy.clickLink('Update recommendation')
+      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+    })
+
+    it(`update button links to Part A task list if recall is set`, () => {
+      cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+      cy.task('getCase', { sectionId: 'overview', statusCode: 200, response: getCaseOverviewResponse })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendationResponse, recallType: { selected: { value: 'STANDARD' } } },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.visit(`${sharedPaths.cases}/${crn}/overview`)
+      cy.clickLink('Update recommendation')
+      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
     })
 
     it('update button links to no recall task list if no recall is set', () => {
@@ -189,7 +205,7 @@ context('Make a recommendation', () => {
     it('present record consideration rationale', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: RecommendationResponseGenerator.generate({ recallConsideredList: false }),
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
@@ -270,102 +286,72 @@ context('Make a recommendation', () => {
       cy.url().should('contain', 'recall-type-extended')
     })
 
-    describe('present discuss-with-manager', () => {
-      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
-        it(description, () => {
-          const recommendation = {
-            ...completeRecommendationResponse,
-            recallConsideredList: null,
-            sentenceGroup: SentenceGroup.EXTENDED,
-          }
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: recommendation,
-          })
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-
-          cy.visit(
-            `${sharedPaths.recommendations}/${recommendationId}/share-case-with-manager?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
-          )
-
-          cy.clickLink('Continue to make a recommendation')
-
-          cy.pageHeading().should('equal', 'Discuss with your manager')
-
-          cy.clickLink('Continue')
-
-          cy.pageHeading().should('equal', 'What do you recommend?')
-
-          cy.url().should('contain', 'recall-type-extended')
-
-          cy.getElement(
-            ftr56Enabled
-              ? 'No recall - create a decision not to recall letter'
-              : 'No recall - send a decision not to recall letter',
-          ).should('exist')
-        })
-      })
-    })
-
-    if (!ftr56TestCases) {
-      describe('present what do you recommend for extended sentence', () => {
-        it('with FTR56 flag disabled', () => {
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: {
-              ...completeRecommendationResponse,
-              recallConsideredList: null,
-            },
-          })
-
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-
-          cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type-extended?flagFTR56Enabled=0`)
-
-          cy.pageHeading().should('equal', 'What do you recommend?')
-
-          cy.selectRadio('What do you recommend?', 'No recall - send a decision not to recall letter')
-
-          cy.getElement('No recall - send a decision not to recall letter').should('exist')
-
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: {
-              ...completeRecommendationResponse,
-              recallConsideredList: null,
-              recallType: { selected: { value: 'NO_RECALL' } }, // we set this so that the correct task list page loads when continue button is pushed.
-            },
-          })
-
-          cy.task('getStatuses', { statusCode: 200, response: [] })
-
-          cy.clickButton('Continue')
-
-          cy.pageHeading().should('equal', 'Create a decision not to recall letter')
-        })
-      })
-    }
-
-    it('present task-list for all items completed', () => {
+    it('present discuss-with-manager', () => {
+      const recommendation = {
+        ...completeRecommendationResponse,
+        recallConsideredList: null,
+        sentenceGroup: SentenceGroup.EXTENDED,
+      }
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: recommendation,
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/share-case-with-manager`)
 
-      cy.getElement("Request line manager's countersignature To do").should('exist')
-      cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
+      cy.clickLink('Continue to make a recommendation')
 
-      cy.clickLink("Request line manager's countersignature")
-      cy.pageHeading().should('equal', 'Request countersignature')
+      cy.pageHeading().should('equal', 'Discuss with your manager')
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'What do you recommend?')
+
+      cy.url().should('contain', 'recall-type-extended')
+
+      cy.getElement('No recall - create a decision not to recall letter').should('exist')
+    })
+
+    it('present discuss-with-manager - with FTR56 flag enabled', () => {
+      const recommendation = {
+        ...completeRecommendationResponse,
+        recallConsideredList: null,
+        sentenceGroup: SentenceGroup.EXTENDED,
+      }
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: recommendation,
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/share-case-with-manager`)
+
+      cy.clickLink('Continue to make a recommendation')
+
+      cy.pageHeading().should('equal', 'Discuss with your manager')
+
+      cy.clickLink('Continue')
+
+      cy.pageHeading().should('equal', 'What do you recommend?')
+
+      cy.url().should('contain', 'recall-type-extended')
+
+      cy.getElement('No recall - create a decision not to recall letter').should('exist')
     })
 
     it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -381,7 +367,15 @@ context('Make a recommendation', () => {
     it('present task-list for SPO_SIGNED', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', { statusCode: 200, response: [{ name: RECOMMENDATION_STATUS.SPO_SIGNED, active: true }] })
 
@@ -397,7 +391,15 @@ context('Make a recommendation', () => {
     it('present task-list for SPO_SIGNED and ACO_SIGNATURE_REQUESTED', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -416,7 +418,15 @@ context('Make a recommendation', () => {
     it('present task-list for SPO_SIGNED and ACO_SIGNED', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -459,297 +469,334 @@ context('Make a recommendation', () => {
     beforeEach(() => {
       cy.signIn()
     })
-    ;[true, false].forEach(ftr56Enabled => {
-      describe(`with FTR56 flag ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
-        ;[true, false].forEach(hasFromPageId => {
-          describe(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
-            it('licence conditions - select saved conditions', () => {
-              cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
-              cy.task('getStatuses', { statusCode: 200, response: [] })
-
-              cy.task(
-                'getCaseV2',
-                caseTemplate()
-                  .withActiveConviction(
-                    standardActiveConvictionTemplate()
-                      .withDescription('Robbery - 05714')
-                      .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
-                  )
-                  .withAllConvictionsReleasedOnLicence()
-                  .build(),
-              )
-
-              cy.visit(
-                `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-              )
-
-              // Back link
-              if (ftr56Enabled && !hasFromPageId) {
-                testBackLink(
-                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                  'Back to Consider a recall questions',
-                  false,
-                )
-              } else {
-                testStandardBackLink()
-              }
-
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-              ).should('be.checked')
-
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'Not commit any offence',
-              ).should('be.checked')
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'Poss, own, control, inspect specified items /docs',
-              ).should('be.checked')
-            })
-
-            it('licence conditions - display CVL licence conditions', () => {
-              const cvlLicenceConditionsBreached = {
+    ;[true, false].forEach(hasFromPageId => {
+      describe(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, () => {
+        it(`licence conditions - select saved conditions`, () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: {
+              ...recommendationMock,
+              recallType: {
+                selected: {
+                  value: 'STANDARD',
+                  details: null,
+                },
+              },
+              licenceConditionsBreached: {
                 standardLicenceConditions: {
-                  selected: ['9ce9d594-e346-4785-9642-c87e764bee37'],
+                  selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
                   allOptions: [
                     {
-                      code: '9ce9d594-e346-4785-9642-c87e764bee37',
-                      text: 'This is a standard licence condition',
+                      value: 'GOOD_BEHAVIOUR',
+                      text: 'Be of good behaviour',
+                    },
+                    {
+                      value: 'NO_OFFENCE',
+                      text: 'Not to commit any offence',
                     },
                   ],
                 },
                 additionalLicenceConditions: {
-                  selected: ['9ce9d594-e346-4785-9642-c87e764bee39', '9ce9d594-e346-4785-9642-c87e764bee41'],
+                  selectedOptions: [
+                    {
+                      mainCatCode: 'NLC5',
+                      subCatCode: 'NST14',
+                    },
+                  ],
                   allOptions: [
                     {
-                      code: '9ce9d594-e346-4785-9642-c87e764bee39',
-                      text: 'This is an additional licence condition',
+                      mainCatCode: 'NLC5',
+                      subCatCode: 'NST14',
+                      title: 'Disclosure of information',
+                      details: 'Notify your supervising officer of any intimate relationships',
+                      note: 'Persons wife is Jane Bloggs',
                     },
-                    { code: '9ce9d594-e346-4785-9642-c87e764bee41', text: 'Address approved Text' },
                   ],
                 },
-                bespokeLicenceConditions: {
-                  selected: ['9ce9d594-e346-4785-9642-c87e764bee45'],
-                  allOptions: [{ code: '9ce9d594-e346-4785-9642-c87e764bee45', text: 'This is a bespoke condition' }],
-                },
-              }
-
-              cy.task('getRecommendation', {
-                statusCode: 200,
-                response: {
-                  ...completeRecommendationResponse,
-                  cvlLicenceConditionsBreached,
-                  licenceConditionsBreached: null,
-                },
-              })
-
-              cy.task(
-                'getCaseV2',
-                caseTemplate()
-                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-                  .withAllConvictionsNotReleasedOnLicence()
-                  .withCvlLicence()
-                  .build(),
-              )
-
-              cy.task('getStatuses', { statusCode: 200, response: [] })
-              cy.visit(
-                `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-              )
-
-              // Back link
-              if (ftr56Enabled && !hasFromPageId) {
-                testBackLink(
-                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                  'Back to Consider a recall questions',
-                  false,
-                )
-              } else {
-                testStandardBackLink()
-              }
-
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'This is a standard licence condition',
-              ).should('be.checked')
-
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'Freedom of movement',
-              ).should('be.checked')
-
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'This is a bespoke condition',
-              ).should('be.checked')
-            })
-
-            it('licence conditions - display CVL licence conditions - missing data', () => {
-              cy.task('getRecommendation', {
-                statusCode: 200,
-                response: { ...completeRecommendationResponse, licenceConditionsBreached: null },
-              })
-
-              cy.task(
-                'getCaseV2',
-                caseTemplate()
-                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
-                  .withAllConvictionsNotReleasedOnLicence()
-                  .withCvlLicenceMissingData()
-                  .build(),
-              )
-
-              cy.task('getStatuses', { statusCode: 200, response: [] })
-              cy.visit(
-                `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-              )
-
-              // Back link
-              if (ftr56Enabled && !hasFromPageId) {
-                testBackLink(
-                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                  'Back to Consider a recall questions',
-                  false,
-                )
-              } else {
-                testStandardBackLink()
-              }
-
-              cy.getElement('There are no standard licence conditions in CVL. Check the licence document.').should(
-                'exist',
-              )
-              cy.getElement('There are no additional licence conditions in CVL. Check the licence document.').should(
-                'exist',
-              )
-              cy.getElement('There are no bespoke licence conditions in CVL. Check the licence document.').should(
-                'exist',
-              )
-            })
-
-            it('licence conditions - display Delius licence conditions', () => {
-              cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-
-              cy.task(
-                'getCaseV2',
-                caseTemplate()
-                  .withActiveConviction(
-                    standardActiveConvictionTemplate()
-                      .withDescription('Burglary - 05714')
-                      .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
-                  )
-                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
-                  .withAllConvictionsNotReleasedOnLicence()
-                  .build(),
-              )
-
-              cy.task('getStatuses', { statusCode: 200, response: [] })
-              cy.visit(
-                `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-              )
-
-              // Back link
-              if (ftr56Enabled && !hasFromPageId) {
-                testBackLink(
-                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                  'Back to Consider a recall questions',
-                  false,
-                )
-              } else {
-                testStandardBackLink()
-              }
-
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-              ).should('be.checked')
-
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'Not commit any offence',
-              ).should('be.checked')
-              cy.getSelectableOptionByLabel(
-                'What licence conditions has Jane Bloggs breached?',
-                'Poss, own, control, inspect specified items /docs',
-              ).should('be.checked')
-            })
-
-            it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
-              cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-              cy.task('getStatuses', { statusCode: 200, response: [] })
-
-              cy.task(
-                'getCaseV2',
-                caseTemplate()
-                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Burglary - 05714'))
-                  .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
-                  .withAllConvictionsNotReleasedOnLicence()
-                  .build(),
-              )
-
-              cy.visit(
-                `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-              )
-
-              // Back link
-              if (ftr56Enabled && !hasFromPageId) {
-                testBackLink(
-                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                  'Back to Consider a recall questions',
-                  false,
-                )
-              } else {
-                testStandardBackLink()
-              }
-
-              cy.getElement(
-                'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
-              ).should('exist')
-              cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
-            })
-
-            it('licence conditions - shows message if person has no active custodial convictions', () => {
-              cy.visit(
-                `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-              )
-              cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-              cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-              cy.task(
-                'getCaseV2',
-                caseTemplate()
-                  .withActiveConviction(
-                    standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNonCustodial(),
-                  )
-                  .withActiveConviction(
-                    standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNonCustodial(),
-                  )
-                  .withAllConvictionsNotReleasedOnLicence()
-                  .build(),
-              )
-
-              cy.task('getStatuses', { statusCode: 200, response: [] })
-              cy.visit(
-                `${sharedPaths.recommendations}/${recommendationId}/licence-conditions?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}${hasFromPageId ? '&fromPageId=task-list' : ''}`,
-              )
-
-              // Back link
-              if (ftr56Enabled && !hasFromPageId) {
-                testBackLink(
-                  `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
-                  'Back to Consider a recall questions',
-                  false,
-                )
-              } else {
-                testStandardBackLink()
-              }
-
-              cy.getElement(
-                'This person has no active convictions. Double-check that the information in NDelius is correct.',
-              ).should('exist')
-            })
+              },
+            },
           })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.task(
+            'getCaseV2',
+            caseTemplate()
+              .withActiveConviction(
+                standardActiveConvictionTemplate()
+                  .withDescription('Robbery - 05714')
+                  .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
+              )
+              .withAllConvictionsReleasedOnLicence()
+              .build(),
+          )
+
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
+            )
+          } else {
+            testStandardBackLink()
+          }
+
+          cy.getSelectableOptionByLabel(
+            `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
+            'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+          ).should('be.checked')
+
+          cy.getSelectableOptionByLabel(
+            `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
+            'Not commit any offence',
+          ).should('be.checked')
+          cy.getSelectableOptionByLabel(
+            `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
+            'Poss, own, control, inspect specified items /docs',
+          ).should('be.checked')
+        })
+
+        it('licence conditions - display CVL licence conditions', () => {
+          const cvlLicenceConditionsBreached = {
+            standardLicenceConditions: {
+              selected: ['9ce9d594-e346-4785-9642-c87e764bee37'],
+              allOptions: [
+                {
+                  code: '9ce9d594-e346-4785-9642-c87e764bee37',
+                  text: 'This is a standard licence condition',
+                },
+              ],
+            },
+            additionalLicenceConditions: {
+              selected: ['9ce9d594-e346-4785-9642-c87e764bee39', '9ce9d594-e346-4785-9642-c87e764bee41'],
+              allOptions: [
+                {
+                  code: '9ce9d594-e346-4785-9642-c87e764bee39',
+                  text: 'This is an additional licence condition',
+                },
+                { code: '9ce9d594-e346-4785-9642-c87e764bee41', text: 'Address approved Text' },
+              ],
+            },
+            bespokeLicenceConditions: {
+              selected: ['9ce9d594-e346-4785-9642-c87e764bee45'],
+              allOptions: [{ code: '9ce9d594-e346-4785-9642-c87e764bee45', text: 'This is a bespoke condition' }],
+            },
+          }
+
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: {
+              ...completeRecommendationResponse,
+              cvlLicenceConditionsBreached,
+              licenceConditionsBreached: null,
+            },
+          })
+
+          cy.task(
+            'getCaseV2',
+            caseTemplate()
+              .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+              .withAllConvictionsNotReleasedOnLicence()
+              .withCvlLicence()
+              .build(),
+          )
+
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
+            )
+          } else {
+            testStandardBackLink()
+          }
+
+          cy.getSelectableOptionByLabel(
+            'What licence conditions has Jane Bloggs breached?',
+            'This is a standard licence condition',
+          ).should('be.checked')
+
+          cy.getSelectableOptionByLabel(
+            'What licence conditions has Jane Bloggs breached?',
+            'Freedom of movement',
+          ).should('be.checked')
+
+          cy.getSelectableOptionByLabel(
+            'What licence conditions has Jane Bloggs breached?',
+            'This is a bespoke condition',
+          ).should('be.checked')
+        })
+
+        it('licence conditions - display CVL licence conditions - missing data', () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: RecommendationResponseGenerator.generate({
+              licenceConditionsBreached: false,
+            }),
+          })
+
+          cy.task(
+            'getCaseV2',
+            caseTemplate()
+              .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05714'))
+              .withAllConvictionsNotReleasedOnLicence()
+              .withCvlLicenceMissingData()
+              .build(),
+          )
+
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
+            )
+          } else {
+            testStandardBackLink()
+          }
+
+          cy.getElement('There are no standard licence conditions in CVL. Check the licence document.').should('exist')
+          cy.getElement('There are no additional licence conditions in CVL. Check the licence document.').should(
+            'exist',
+          )
+          cy.getElement('There are no bespoke licence conditions in CVL. Check the licence document.').should('exist')
+        })
+
+        it('licence conditions - display Delius licence conditions', () => {
+          cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
+
+          cy.task(
+            'getCaseV2',
+            caseTemplate()
+              .withActiveConviction(
+                standardActiveConvictionTemplate()
+                  .withDescription('Burglary - 05714')
+                  .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
+              )
+              .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
+              .withAllConvictionsNotReleasedOnLicence()
+              .build(),
+          )
+
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
+            )
+          } else {
+            testStandardBackLink()
+          }
+
+          cy.getSelectableOptionByLabel(
+            'What licence conditions has Jane Bloggs breached?',
+            'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+          ).should('be.checked')
+
+          cy.getSelectableOptionByLabel(
+            'What licence conditions has Jane Bloggs breached?',
+            'Not commit any offence',
+          ).should('be.checked')
+          cy.getSelectableOptionByLabel(
+            'What licence conditions has Jane Bloggs breached?',
+            'Poss, own, control, inspect specified items /docs',
+          ).should('be.checked')
+        })
+
+        it('licence conditions - shows banner if person has multiple active custodial convictions', () => {
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+
+          cy.task(
+            'getCaseV2',
+            caseTemplate()
+              .withActiveConviction(standardActiveConvictionTemplate().withDescription('Burglary - 05714'))
+              .withActiveConviction(standardActiveConvictionTemplate().withDescription('Robbery - 05727'))
+              .withAllConvictionsNotReleasedOnLicence()
+              .build(),
+          )
+
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
+            )
+          } else {
+            testStandardBackLink()
+          }
+
+          cy.getElement(
+            'This person is not on licence for at least one of their active convictions. Check the throughcare details in NDelius are correct.',
+          ).should('exist')
+          cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
+        })
+
+        it('licence conditions - shows message if person has no active custodial convictions', () => {
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
+          )
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+          cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+          cy.task(
+            'getCaseV2',
+            caseTemplate()
+              .withActiveConviction(
+                standardActiveConvictionTemplate().withDescription('Burglary - 05714').withNonCustodial(),
+              )
+              .withActiveConviction(
+                standardActiveConvictionTemplate().withDescription('Robbery - 05727').withNonCustodial(),
+              )
+              .withAllConvictionsNotReleasedOnLicence()
+              .build(),
+          )
+
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.visit(
+            `${sharedPaths.recommendations}/${recommendationId}/licence-conditions${hasFromPageId ? '?fromPageId=task-list' : ''}`,
+          )
+
+          // Back link
+          if (!hasFromPageId) {
+            testBackLink(
+              `/recommendations/${recommendationId}/${ppPaths.taskListConsiderRecall}`,
+              'Back to Consider a recall questions',
+              false,
+            )
+          } else {
+            testStandardBackLink()
+          }
+
+          cy.getElement(
+            'This person has no active convictions. Double-check that the information in NDelius is correct.',
+          ).should('exist')
         })
       })
     })
@@ -972,13 +1019,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('equal', 'When did the SPO agree to this recall?')
     })
 
-    it('Previous releases', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/previous-releases`)
-      cy.pageHeading().should('equal', 'Previous releases')
-    })
-
     it('Confirmation part a', () => {
       cy.task('getRecommendation', { statusCode: 200, response: { ...completeRecommendationResponse } })
       cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -1052,34 +1092,25 @@ context('Make a recommendation', () => {
       cy.getText('address-2').should('contain', 'No fixed abode')
     })
 
-    ftr56TestCases.forEach(testCase => {
-      it(`shows a message if no addresses ${testCase.description}`, () => {
-        const recommendationWithAddresses = {
-          ...recommendationResponse,
-          personOnProbation: {
-            name: 'Jane Bloggs',
-            addresses: [],
-          },
-        }
-        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-        cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
-        cy.visit(
-          `${sharedPaths.recommendations}/${recommendationId}/address-details?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
-        )
-        cy.fillInput('Where can the police find Jane Bloggs?', '35 Oak Rise, Carshalton, Surrey S12 345')
-        cy.task('getStatuses', {
-          statusCode: 200,
-          response: [{ name: RECOMMENDATION_STATUS.RECALL_DECIDED, active: true }],
-        })
-        cy.clickButton('Continue')
-        cy.pageHeading().should(
-          'equal',
-          testCase.ftr56Enabled
-            ? `Part A for ${recommendationResponse.personOnProbation.name}`
-            : 'Create a Part A form',
-        )
+    it(`shows a message if no addresses`, () => {
+      const recommendationWithAddresses = {
+        ...recommendationResponse,
+        personOnProbation: {
+          name: 'Jane Bloggs',
+          addresses: [],
+        },
+      }
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationWithAddresses })
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/address-details`)
+      cy.fillInput('Where can the police find Jane Bloggs?', '35 Oak Rise, Carshalton, Surrey S12 345')
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.RECALL_DECIDED, active: true }],
       })
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
     })
 
     it('lists one address', () => {
@@ -1174,7 +1205,16 @@ context('Make a recommendation', () => {
     it('present Countersigning section on task list for SPO - line manager signature requested', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+          recallConsideredList: null,
+        },
       })
 
       cy.task('getStatuses', {
@@ -1198,7 +1238,16 @@ context('Make a recommendation', () => {
     it('present Countersigning section on task list for SPO - line manager signed', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+          recallConsideredList: null,
+        },
       })
 
       cy.task('getStatuses', {
@@ -1222,7 +1271,16 @@ context('Make a recommendation', () => {
     it('present Countersigning section on task list for SPO - senior manager requested', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+          recallConsideredList: null,
+        },
       })
 
       cy.task('getStatuses', {
@@ -1247,7 +1305,16 @@ context('Make a recommendation', () => {
     it('present Countersigning section on task list for SPO - senior manager signed', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+          recallConsideredList: null,
+        },
       })
 
       cy.task('getStatuses', {
@@ -1613,7 +1680,15 @@ context('Make a recommendation', () => {
     it('present rationale check while countersigning', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -1706,7 +1781,15 @@ context('Make a recommendation', () => {
     it('present telephone entry while countersigning', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -1726,7 +1809,15 @@ context('Make a recommendation', () => {
     it('present rationale check while countersigning', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -1830,7 +1921,15 @@ context('Make a recommendation', () => {
     it('present telephone entry while countersigning', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -1846,7 +1945,15 @@ context('Make a recommendation', () => {
     it('present notification on telephone entry page if same signer', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -1867,7 +1974,15 @@ context('Make a recommendation', () => {
     it('present task-list with create part A button', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...completeRecommendationResponse },
+        response: {
+          ...recommendationMock,
+          recallType: {
+            selected: {
+              value: 'STANDARD',
+              details: null,
+            },
+          },
+        },
       })
       cy.task('getStatuses', {
         statusCode: 200,
@@ -1942,112 +2057,82 @@ context('Make a recommendation', () => {
       cy.signIn()
     })
 
-    ftr56TestCases.forEach(testCase => {
-      it(`present Who Completed Part A page ${testCase.description}`, () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse, recallConsideredList: null, whoCompletedPartA: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
-
-        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-        cy.visit(
-          `${sharedPaths.recommendations}/${recommendationId}/who-completed-part-a/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
-        )
-
-        cy.pageHeading().should('contain', 'Who completed this Part A?')
-
-        cy.fillInput('Name', 'Joe Bloggs')
-        cy.fillInput('Email', 'bloggs@me.gov.uk')
-        cy.selectRadio('Is this person the probation practitioner for Jane Bloggs?', 'Yes')
-        cy.clickButton('Continue')
-        cy.pageHeading().should(
-          'equal',
-          testCase.ftr56Enabled
-            ? `Part A for ${recommendationResponse.personOnProbation.name}`
-            : 'Create a Part A form',
-        )
+    it(`present Who Completed Part A page`, () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null, whoCompletedPartA: null },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      it(`present Practitioner For Part A page ${testCase.description}`, () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse, recallConsideredList: null, practitionerForPartA: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/who-completed-part-a/`)
 
-        cy.visit(
-          `${sharedPaths.recommendations}/${recommendationId}/practitioner-for-part-a/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
-        )
+      cy.pageHeading().should('contain', 'Who completed this Part A?')
 
-        cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
+      cy.fillInput('Name', 'Joe Bloggs')
+      cy.fillInput('Email', 'bloggs@me.gov.uk')
+      cy.selectRadio('Is this person the probation practitioner for Jane Bloggs?', 'Yes')
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+    })
 
-        cy.fillInput('Name', 'Joe Bloggs')
-        cy.fillInput('Email', 'bloggs@me.gov.uk')
-
-        cy.clickButton('Continue')
-        cy.pageHeading().should(
-          'equal',
-          testCase.ftr56Enabled
-            ? `Part A for ${recommendationResponse.personOnProbation.name}`
-            : 'Create a Part A form',
-        )
+    it(`present Practitioner For Part A page `, () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null, practitionerForPartA: null },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      it(`present Revocation Order Recipients ${testCase.description}`, () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse, recallConsideredList: null, revocationOrderRecipients: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/practitioner-for-part-a/`)
 
-        cy.visit(
-          `${sharedPaths.recommendations}/${recommendationId}/revocation-order-recipients/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
-        )
+      cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
 
-        cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
+      cy.fillInput('Name', 'Joe Bloggs')
+      cy.fillInput('Email', 'bloggs@me.gov.uk')
 
-        cy.fillInput('Enter email address', 'bloggs@me.com')
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+    })
 
-        cy.clickButton('Continue')
-        cy.pageHeading().should(
-          'equal',
-          testCase.ftr56Enabled
-            ? `Part A for ${recommendationResponse.personOnProbation.name}`
-            : 'Create a Part A form',
-        )
+    it(`present Revocation Order Recipients`, () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null, revocationOrderRecipients: null },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
 
-      it(`present PPCS Query Emails ${testCase.description}`, () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: { ...completeRecommendationResponse, recallConsideredList: null, ppcsQueryEmails: null },
-        })
-        cy.task('getStatuses', { statusCode: 200, response: [] })
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-        cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/revocation-order-recipients/`)
 
-        cy.visit(
-          `${sharedPaths.recommendations}/${recommendationId}/ppcs-query-emails/?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
-        )
+      cy.pageHeading().should('contain', 'Where should the revocation order be sent?')
 
-        cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
+      cy.fillInput('Enter email address', 'bloggs@me.com')
 
-        cy.fillInput('Enter email address', 'bloggs@me.com')
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+    })
 
-        cy.clickButton('Continue')
-        cy.pageHeading().should(
-          'equal',
-          testCase.ftr56Enabled
-            ? `Part A for ${recommendationResponse.personOnProbation.name}`
-            : 'Create a Part A form',
-        )
+    it(`present PPCS Query Emails`, () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...completeRecommendationResponse, recallConsideredList: null, ppcsQueryEmails: null },
       })
+      cy.task('getStatuses', { statusCode: 200, response: [] })
+
+      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+
+      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/ppcs-query-emails/`)
+
+      cy.pageHeading().should('contain', 'Where should PPCS respond with questions?')
+
+      cy.fillInput('Enter email address', 'bloggs@me.com')
+
+      cy.clickButton('Continue')
+      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
     })
 
     it('present Preview Part A page', () => {
@@ -3157,197 +3242,176 @@ context('Make a recommendation', () => {
       cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
     })
 
-    describe('select indeterminate ppud sentence', () => {
-      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
-        it(description, () => {
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: {
-              ...completeRecommendationResponse,
-              sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
-              bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-              ppudOffender: {
+    it('select indeterminate ppud sentence', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          sentenceGroup: SentenceGroup.INDETERMINATE,
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+          ppudOffender: {
+            id: '1',
+            sentences: [
+              {
                 id: '1',
-                sentences: [
-                  {
-                    id: '1',
-                    dateOfSentence: '2003-06-12',
-                    custodyType: 'Mandatory (MLP)',
-                    licenceExpiryDate: null,
-                    mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                    offence: {
-                      indexOffence: 'some offence',
-                      dateOfIndexOffence: null,
-                    },
-                    sentenceExpiryDate: '1969-03-02',
-                    tariffExpiryDate: '1970-03-02',
-                  },
-                ],
+                dateOfSentence: '2003-06-12',
+                custodyType: 'Mandatory (MLP)',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'some offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
+                tariffExpiryDate: '1970-03-02',
               },
-              convictionDetail: {
-                indexOffenceDescription: 'Burglary',
-                sentenceExpiryDate: '2024-05-10',
-                dateOfSentence: '2022-03-11',
-              },
-            },
-          })
-          cy.task('getStatuses', {
-            statusCode: 200,
-            response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-          })
-
-          cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
-          )
-          cy.pageHeading().should('contain', 'Select a sentence for your booking')
-
-          cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
-          cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
-          cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should(
-            'contain.text',
-            ftr56Enabled ? CUSTODY_GROUP.INDETERMINATE : CUSTODY_GROUP.DETERMINATE,
-          )
-          cy.get('div[id=nomis-sentence-details-sentence-expiry-date-row] dd').should('contain.text', '10 May 2024')
-
-          cy.get('div[id=1-offence-row] dd').should('contain.text', 'some offence')
-          cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
-          cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
-          cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1970')
-
-          cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Add your booking to PPUD')
-          cy.get('p.govuk-body')
-            .contains(
-              'Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.',
-            )
-            .should('exist')
-          // check the determinate sentence content is not present
-          cy.get('#determinateSentencesDetails').should('not.exist')
-        })
+            ],
+          },
+          convictionDetail: {
+            indexOffenceDescription: 'Burglary',
+            sentenceExpiryDate: '2024-05-10',
+            dateOfSentence: '2022-03-11',
+          },
+        },
       })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+
+      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
+      cy.pageHeading().should('contain', 'Select a sentence for your booking')
+
+      cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
+      cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
+      cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should('contain.text', CUSTODY_GROUP.INDETERMINATE)
+      cy.get('div[id=nomis-sentence-details-sentence-expiry-date-row] dd').should('contain.text', '10 May 2024')
+
+      cy.get('div[id=1-offence-row] dd').should('contain.text', 'some offence')
+      cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
+      cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
+      cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1970')
+
+      cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Add your booking to PPUD')
+      cy.get('p.govuk-body')
+        .contains(
+          'Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.',
+        )
+        .should('exist')
+      // check the determinate sentence content is not present
+      cy.get('#determinateSentencesDetails').should('not.exist')
     })
 
-    describe('select indeterminate ppud sentence - show determinate sentence details', () => {
-      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
-        it(description, () => {
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: {
-              ...completeRecommendationResponse,
-              sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
-              bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-              ppudOffender: {
+    it('select indeterminate ppud sentence - show determinate sentence details', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          sentenceGroup: SentenceGroup.INDETERMINATE,
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+          ppudOffender: {
+            id: '1',
+            sentences: [
+              {
                 id: '1',
-                sentences: [
-                  {
-                    id: '1',
-                    dateOfSentence: '2003-06-12',
-                    custodyType: 'Mandatory (MLP)',
-                    licenceExpiryDate: null,
-                    mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                    offence: {
-                      indexOffence: 'some offence',
-                      dateOfIndexOffence: null,
-                    },
-                    sentenceExpiryDate: '1969-03-02',
-                  },
-                  {
-                    id: '2',
-                    dateOfSentence: '2004-06-12',
-                    custodyType: 'Determinate', // determinate sentences
-                    licenceExpiryDate: null,
-                    mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                    offence: {
-                      indexOffence: 'some offence',
-                      dateOfIndexOffence: null,
-                    },
-                    sentenceExpiryDate: '1969-03-02',
-                  },
-                  {
-                    id: '3',
-                    dateOfSentence: '2004-06-12',
-                    custodyType: 'EDS', // determinate sentences
-                    licenceExpiryDate: null,
-                    mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                    offence: {
-                      indexOffence: 'another offence',
-                      dateOfIndexOffence: null,
-                    },
-                    sentenceExpiryDate: '1969-03-02',
-                  },
-                ],
+                dateOfSentence: '2003-06-12',
+                custodyType: 'Mandatory (MLP)',
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'some offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
               },
-              convictionDetail: {
-                indexOffenceDescription: 'Burglary',
-                sentenceExpiryDate: '2024-05-10',
-                dateOfSentence: '2022-03-11',
+              {
+                id: '2',
+                dateOfSentence: '2004-06-12',
+                custodyType: 'Determinate', // determinate sentences
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'some offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
               },
-            },
-          })
-          cy.task('getStatuses', {
-            statusCode: 200,
-            response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-          })
-
-          cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
-          )
-          cy.pageHeading().should('contain', 'Select a sentence for your booking')
-          cy.get('#determinateSentencesDetails')
-            .find('.govuk-details__summary-text')
-            .should('contain.text', '2 determinate sentences')
-
-          cy.get('#determinateSentencesDetails')
-            .find('.govuk-details__text')
-            .should('contain.text', 'You can view the determinate sentences for Jane Bloggs')
-        })
+              {
+                id: '3',
+                dateOfSentence: '2004-06-12',
+                custodyType: 'EDS', // determinate sentences
+                licenceExpiryDate: null,
+                mappaLevel: 'Level 2 – Local Inter-Agency Management',
+                offence: {
+                  indexOffence: 'another offence',
+                  dateOfIndexOffence: null,
+                },
+                sentenceExpiryDate: '1969-03-02',
+              },
+            ],
+          },
+          convictionDetail: {
+            indexOffenceDescription: 'Burglary',
+            sentenceExpiryDate: '2024-05-10',
+            dateOfSentence: '2022-03-11',
+          },
+        },
       })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+
+      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
+      cy.pageHeading().should('contain', 'Select a sentence for your booking')
+      cy.get('#determinateSentencesDetails')
+        .find('.govuk-details__summary-text')
+        .should('contain.text', '2 determinate sentences')
+
+      cy.get('#determinateSentencesDetails')
+        .find('.govuk-details__text')
+        .should('contain.text', 'You can view the determinate sentences for Jane Bloggs')
     })
 
     it('select indeterminate ppud sentence - show notification banner when there are no indeterminate sentences', () => {
-      ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
-        it(description, () => {
-          cy.task('getRecommendation', {
-            statusCode: 200,
-            response: {
-              ...completeRecommendationResponse,
-              sentenceGroup: ftr56Enabled ? SentenceGroup.INDETERMINATE : undefined,
-              bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-              ppudOffender: {
-                id: '1',
-                sentences: [],
-              },
-              convictionDetail: {
-                indexOffenceDescription: 'Burglary',
-                sentenceExpiryDate: '2024-05-10',
-                dateOfSentence: '2022-03-11',
-              },
-            },
-          })
-          cy.task('getStatuses', {
-            statusCode: 200,
-            response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-          })
-
-          cy.visit(
-            `/recommendations/252523937/select-indeterminate-ppud-sentence?flagFTR56Enabled=${ftr56Enabled ? '1' : '0'}`,
-          )
-          cy.pageHeading().should('contain', 'Select a sentence for your booking')
-
-          cy.get('#govuk-notification-banner-title').should('contain.text', 'No indeterminate sentences found in PPUD')
-          cy.get('.govuk-notification-banner__content').should(
-            'contain.text',
-            'The sentence needs to be added to PPUD and the booking on completed there.',
-          )
-
-          cy.get('#return-to-booking-details-button')
-            .should('have.attr', 'href', '/recommendations/1/check-booking-details')
-            .invoke('text')
-            .then(text => {
-              const normalized = text.replace(/\s+/g, ' ').trim()
-              expect(normalized).to.eq('Return to booking details')
-            })
-        })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          sentenceGroup: SentenceGroup.INDETERMINATE,
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+          ppudOffender: {
+            id: '1',
+            sentences: [],
+          },
+          convictionDetail: {
+            indexOffenceDescription: 'Burglary',
+            sentenceExpiryDate: '2024-05-10',
+            dateOfSentence: '2022-03-11',
+          },
+        },
       })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+      })
+
+      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
+      cy.pageHeading().should('contain', 'Select a sentence for your booking')
+
+      cy.get('#govuk-notification-banner-title').should('contain.text', 'No indeterminate sentences found in PPUD')
+      cy.get('.govuk-notification-banner__content').should(
+        'contain.text',
+        'The sentence needs to be added to PPUD and the booking on completed there.',
+      )
+
+      cy.get('#return-to-booking-details-button')
+        .should('have.attr', 'href', '/recommendations/1/check-booking-details')
+        .invoke('text')
+        .then(text => {
+          const normalized = text.replace(/\s+/g, ' ').trim()
+          expect(normalized).to.eq('Return to booking details')
+        })
     })
 
     it('book to ppud - create offender', () => {
@@ -3753,14 +3817,6 @@ context('Make a recommendation', () => {
 
     it('present licence condition breaches page for AP', () => {
       cy.visit(`${sharedPaths.recommendations}/${recommendationId}/ap-licence-conditions`)
-
-      cy.pageHeading().should('contain', 'What licence conditions has Jane Bloggs breached?')
-
-      testStandardBackLink()
-    })
-
-    it('present licence condition breaches page for AP - FTR56 enabled', () => {
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/ap-licence-conditions?flagFTR56Enabled=1`)
 
       cy.pageHeading().should('contain', 'What licence conditions has Jane Bloggs breached?')
 

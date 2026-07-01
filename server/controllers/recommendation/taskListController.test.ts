@@ -205,13 +205,13 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: true,
+      isReadyForCounterSignature: false,
       areAllComplete: false,
     })
 
-    expect(res.locals.lineManagerCountersignLink).toEqual(true)
+    expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('To do')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
@@ -234,13 +234,13 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: true,
+      isReadyForCounterSignature: false,
       areAllComplete: false,
     })
 
-    expect(res.locals.lineManagerCountersignLink).toEqual(true)
+    expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Requested')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
@@ -265,16 +265,16 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: true,
+      isReadyForCounterSignature: false,
       areAllComplete: false,
     })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
-    expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
 
-    expect(res.locals.seniorManagerCountersignLink).toEqual(true)
-    expect(res.locals.seniorManagerCountersignLabel).toEqual('To do')
+    expect(res.locals.seniorManagerCountersignLink).toEqual(false)
+    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
     expect(res.locals.countersignSpoExposition).toEqual('spo reasons')
   })
@@ -300,16 +300,16 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: true,
+      isReadyForCounterSignature: false,
       areAllComplete: false,
     })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
-    expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
 
-    expect(res.locals.seniorManagerCountersignLink).toEqual(true)
-    expect(res.locals.seniorManagerCountersignLabel).toEqual('Requested')
+    expect(res.locals.seniorManagerCountersignLink).toEqual(false)
+    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
   })
   it('present - tasks complete and ACO signature signed', async () => {
@@ -330,22 +330,22 @@ describe('get', () => {
     await taskListController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'taskList' })
-    expect(res.locals.isAcoSigned).toEqual(true)
+    expect(res.locals.isAcoSigned).toEqual(false)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: true,
-      areAllComplete: true,
+      isReadyForCounterSignature: false,
+      areAllComplete: false,
     })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
-    expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
 
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.seniorManagerCountersignLabel).toEqual('Completed')
-    expect(res.locals.seniorManagerCountersignStyle).toEqual('blue')
+    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
   })
   it('present - with spo role', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])

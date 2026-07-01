@@ -84,25 +84,13 @@
                               </div>
                             </details>
                         </li>
-                        {% if not flags.flagFTR56Enabled %}
-                          <li class="moj-task-list__item">
-                              <p>Is {{ offenderName }} on an indeterminate sentence?</p>
-                              {{ isIndeterminateSentence }}
-                          </li>
-                          <li class="moj-task-list__item">
-                              <p>Is {{ offenderName }} on an extended sentence?</p>
-                              {{ isExtendedSentence }}
-                          </li>
-                        {% endif %}
 
-                        {% if flags.flagFTR56Enabled %}
                           <li class="moj-task-list__item">
                               <p class="govuk-body">Which sentence group does {{ offenderName }}'s sentence type fall into?</p>
                               <p class="govuk-body">{{ sentenceGroupHumanReadable }}</p>
                           </li>
-                        {% endif %}
 
-                        {% if flags.flagFTR56Enabled and isIndeterminateSentence == 'Yes' %}
+                        {% if isIndeterminateSentence == 'Yes' %}
                           <li class="moj-task-list__item">
                             <p class="govuk-body">
                               What type of sentence is {{ offenderName }} on?

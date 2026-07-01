@@ -37,7 +37,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     urlInfo,
     token,
-    ftr56Enabled: flags.flagFTR56Enabled,
   })
 
   if (errors) {

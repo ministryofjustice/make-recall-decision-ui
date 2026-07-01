@@ -2,7 +2,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { sharedPaths } from '../../../../server/routes/paths/shared.paths'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
-import { testBackLink, testStandardBackLink } from '../../../componentTests/backLink.tests'
+import { testBackLink } from '../../../componentTests/backLink.tests'
 import ppPaths from '../../../../server/routes/paths/pp.paths'
 
 context('Task List Consider a Recall Page', () => {
@@ -32,193 +32,115 @@ context('Task List Consider a Recall Page', () => {
   }
 
   describe('Page Data - Standard page load', () => {
-    describe('With FTR56 disabled', () => {
-      it('no tasks completed', () => {
-        const recommendationWithNoTasksCompleted = RecommendationResponseGenerator.generate({
-          triggerLeadingToRecall: false,
-          licenceConditionsBreached: false,
-          alternativesToRecallTried: false,
-        })
-        const popName = recommendationWithNoTasksCompleted.personOnProbation.name
-        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
-
-        cy.visit(`${sharedPaths.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
-
-        testStandardBackLink()
-
-        cy.get('.moj-task-list__item').should('have.length', 3).as('taskListItems')
-
-        checkTaskListItem(
-          0,
-          `What has made you consider recalling ${popName}?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.triggerLeadingToRecall),
-        )
-        checkTaskListItem(
-          1,
-          `What licence conditions has ${popName} breached?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.licenceConditions),
-        )
-        checkTaskListItem(
-          2,
-          'What alternatives to recall have been tried already?',
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.alternativesTried),
-        )
-
-        cy.getElement('Continue').should('not.exist')
+    it('no tasks completed', () => {
+      const recommendationWithNoTasksCompleted = RecommendationResponseGenerator.generate({
+        triggerLeadingToRecall: false,
+        licenceConditionsBreached: false,
+        alternativesToRecallTried: false,
+        sentenceGroup: 'none',
+        indeterminateSentenceType: false,
       })
+      const popName = recommendationWithNoTasksCompleted.personOnProbation.name
+      cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
 
-      it('all tasks completed', () => {
-        const recommendationWithAllTasksCompleted = RecommendationResponseGenerator.generate()
-        const popName = recommendationWithAllTasksCompleted.personOnProbation.name
-        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAllTasksCompleted })
+      cy.visit(`${sharedPaths.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall`)
 
-        cy.visit(`${sharedPaths.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`)
+      testBackLink(
+        `/cases/${recommendationWithNoTasksCompleted.crn}/overview`,
+        `Back to overview for ${recommendationWithNoTasksCompleted.personOnProbation.name}`,
+        false,
+      )
 
-        testStandardBackLink()
+      cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
 
-        cy.get('.moj-task-list__item').should('have.length', 3).as('taskListItems')
+      checkTaskListItem(
+        0,
+        `What has made you consider recalling ${popName}?`,
+        'To do',
+        expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.triggerLeadingToRecall),
+      )
+      checkTaskListItem(
+        1,
+        `What licence conditions has ${popName} breached?`,
+        'To do',
+        expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.licenceConditions),
+      )
+      checkTaskListItem(
+        2,
+        'What alternatives to recall have been tried already?',
+        'To do',
+        expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.alternativesTried),
+      )
+      checkTaskListItem(
+        3,
+        `${popName}'s sentence information`,
+        'To do',
+        expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.sentenceInformation),
+      )
 
-        checkTaskListItem(
-          0,
-          `What has made you consider recalling ${popName}?`,
-          'Completed',
-          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.triggerLeadingToRecall),
-        )
-        checkTaskListItem(
-          1,
-          `What licence conditions has ${popName} breached?`,
-          'Completed',
-          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.licenceConditions),
-        )
-        checkTaskListItem(
-          2,
-          'What alternatives to recall have been tried already?',
-          'Completed',
-          expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.alternativesTried),
-        )
-
-        cy.getElement('Continue').should('exist')
-      })
+      cy.getElement('Continue').should('not.exist')
     })
 
-    describe('With FTR56 enabled', () => {
-      it('no tasks completed', () => {
-        const recommendationWithNoTasksCompleted = RecommendationResponseGenerator.generate({
-          triggerLeadingToRecall: false,
-          licenceConditionsBreached: false,
-          alternativesToRecallTried: false,
-          sentenceGroup: 'none',
-          indeterminateSentenceType: false,
-        })
-        const popName = recommendationWithNoTasksCompleted.personOnProbation.name
-        cy.task('getRecommendation', { statusCode: 200, response: recommendationWithNoTasksCompleted })
-
-        cy.visit(
-          `${sharedPaths.recommendations}/${recommendationWithNoTasksCompleted.id}/task-list-consider-recall?flagFTR56Enabled=1`,
-        )
-
-        testBackLink(
-          `/cases/${recommendationWithNoTasksCompleted.crn}/overview`,
-          `Back to overview for ${recommendationWithNoTasksCompleted.personOnProbation.name}`,
-          false,
-        )
-
-        cy.get('.moj-task-list__item').should('have.length', 4).as('taskListItems')
-
-        checkTaskListItem(
-          0,
-          `What has made you consider recalling ${popName}?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.triggerLeadingToRecall),
-        )
-        checkTaskListItem(
-          1,
-          `What licence conditions has ${popName} breached?`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.licenceConditions),
-        )
-        checkTaskListItem(
-          2,
-          'What alternatives to recall have been tried already?',
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.alternativesTried),
-        )
-        checkTaskListItem(
-          3,
-          `${popName}'s sentence information`,
-          'To do',
-          expectedLinkHref(recommendationWithNoTasksCompleted.id, ppPaths.sentenceInformation),
-        )
-
-        cy.getElement('Continue').should('not.exist')
-      })
-
-      describe('all tasks completed', () => {
-        ;[true, false].forEach(sentenceTypeIsIndeterminate => {
-          it(`Indeterminate sentence type ${sentenceTypeIsIndeterminate ? '' : 'not '}selected`, () => {
-            const sentenceGroup = sentenceTypeIsIndeterminate
-              ? SentenceGroup.INDETERMINATE
-              : faker.helpers.arrayElement(
-                  Object.values(SentenceGroup).filter(val => val !== SentenceGroup.INDETERMINATE),
-                )
-            const recommendationWithAllTasksCompleted = RecommendationResponseGenerator.generate({
-              sentenceGroup,
-            })
-            const popName = recommendationWithAllTasksCompleted.personOnProbation.name
-            cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAllTasksCompleted })
-
-            cy.visit(
-              `${sharedPaths.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall?flagFTR56Enabled=1`,
-            )
-
-            testBackLink(
-              `/cases/${recommendationWithAllTasksCompleted.crn}/overview`,
-              `Back to overview for ${recommendationWithAllTasksCompleted.personOnProbation.name}`,
-              false,
-            )
-
-            cy.get('.moj-task-list__item')
-              .should('have.length', sentenceTypeIsIndeterminate ? 5 : 4)
-              .as('taskListItems')
-
-            checkTaskListItem(
-              0,
-              `What has made you consider recalling ${popName}?`,
-              'Completed',
-              expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.triggerLeadingToRecall),
-            )
-            checkTaskListItem(
-              1,
-              `What licence conditions has ${popName} breached?`,
-              'Completed',
-              expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.licenceConditions),
-            )
-            checkTaskListItem(
-              2,
-              'What alternatives to recall have been tried already?',
-              'Completed',
-              expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.alternativesTried),
-            )
-            checkTaskListItem(
-              3,
-              `${popName}'s sentence information`,
-              'Completed',
-              expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.sentenceInformation),
-            )
-            if (sentenceTypeIsIndeterminate) {
-              checkTaskListItem(
-                4,
-                `What type of sentence is ${popName} on?`,
-                'Completed',
-                expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.indeterminateSentenceType),
+    describe('all tasks completed', () => {
+      ;[true, false].forEach(sentenceTypeIsIndeterminate => {
+        it(`Indeterminate sentence type ${sentenceTypeIsIndeterminate ? '' : 'not '}selected`, () => {
+          const sentenceGroup = sentenceTypeIsIndeterminate
+            ? SentenceGroup.INDETERMINATE
+            : faker.helpers.arrayElement(
+                Object.values(SentenceGroup).filter(val => val !== SentenceGroup.INDETERMINATE),
               )
-            }
-
-            cy.getElement('Continue').should('exist')
+          const recommendationWithAllTasksCompleted = RecommendationResponseGenerator.generate({
+            sentenceGroup,
           })
+          const popName = recommendationWithAllTasksCompleted.personOnProbation.name
+          cy.task('getRecommendation', { statusCode: 200, response: recommendationWithAllTasksCompleted })
+
+          cy.visit(`${sharedPaths.recommendations}/${recommendationWithAllTasksCompleted.id}/task-list-consider-recall`)
+
+          testBackLink(
+            `/cases/${recommendationWithAllTasksCompleted.crn}/overview`,
+            `Back to overview for ${recommendationWithAllTasksCompleted.personOnProbation.name}`,
+            false,
+          )
+
+          cy.get('.moj-task-list__item')
+            .should('have.length', sentenceTypeIsIndeterminate ? 5 : 4)
+            .as('taskListItems')
+
+          checkTaskListItem(
+            0,
+            `What has made you consider recalling ${popName}?`,
+            'Completed',
+            expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.triggerLeadingToRecall),
+          )
+          checkTaskListItem(
+            1,
+            `What licence conditions has ${popName} breached?`,
+            'Completed',
+            expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.licenceConditions),
+          )
+          checkTaskListItem(
+            2,
+            'What alternatives to recall have been tried already?',
+            'Completed',
+            expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.alternativesTried),
+          )
+          checkTaskListItem(
+            3,
+            `${popName}'s sentence information`,
+            'Completed',
+            expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.sentenceInformation),
+          )
+          if (sentenceTypeIsIndeterminate) {
+            checkTaskListItem(
+              4,
+              `What type of sentence is ${popName} on?`,
+              'Completed',
+              expectedLinkHref(recommendationWithAllTasksCompleted.id, ppPaths.indeterminateSentenceType),
+            )
+          }
+
+          cy.getElement('Continue').should('exist')
         })
       })
     })

@@ -5,6 +5,7 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import ppPaths from '../../routes/paths/pp.paths'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -12,7 +13,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: SentenceGroup.INDETERMINATE },
         token: 'token1',
       },
     })
@@ -28,72 +29,12 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('load with existing data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          personOnProbation: { name: 'Joe Bloggs' },
-          indeterminateSentenceType: {
-            selected: 'IPP',
-            allOptions: [
-              { value: 'LIFE', text: 'Life sentence' },
-              {
-                value: 'IPP',
-                text: 'Imprisonment for Public Protection (IPP) sentence',
-              },
-              { value: 'DPP', text: 'Detention for Public Protection (DPP) sentence' },
-            ],
-          },
-        },
-        token: 'token1',
-      },
-    })
-    const next = mockNext()
-    await indeterminateTypeController.get(mockReq(), res, next)
-
-    expect(res.locals.inputDisplayValues).toEqual({ value: 'IPP' })
-  })
-
-  it('Ftr56: load with existing data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          personOnProbation: { name: 'Joe Bloggs' },
-          sentenceGroup: 'INDETERMINATE',
-          indeterminateSentenceType: {
-            selected: 'DHMP',
-            allOptions: [
-              { value: 'LIFE', text: 'Life sentence' },
-              {
-                value: 'IPP',
-                text: 'Imprisonment for public protection (IPP)',
-              },
-              { value: 'DPP', text: 'Detention for public protection (DPP)' },
-              {
-                value: 'DHMP',
-                text: 'Detention at His Majesty’s pleasure (DHMP)',
-                hint: 'Youth indeterminate sentence',
-              },
-            ],
-          },
-        },
-        token: 'token1',
-        flags: { flagFTR56Enabled: true },
-      },
-    })
-    const next = mockNext()
-    await indeterminateTypeController.get(mockReq(), res, next)
-
-    expect(res.locals.inputDisplayValues).toEqual({ value: 'DHMP' })
-  })
-
-  it('Ftr56: redirects to Sentence Information page if sentenceGroup does not exists', async () => {
+  it('redirects to Sentence Information page if sentenceGroup does not exists', async () => {
     const basePath = faker.internet.url()
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         token: 'token1',
-        flags: { flagFTR56Enabled: true },
         urlInfo: { basePath },
       },
     })
@@ -105,13 +46,12 @@ describe('get', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('Ftr56: redirects to Sentence Information page if sentenceGroup is not INDETERMINATE', async () => {
+  it('redirects to Sentence Information page if sentenceGroup is not INDETERMINATE', async () => {
     const basePath = faker.internet.url()
     const res = mockRes({
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: 'DETERMINATE' },
         token: 'token1',
-        flags: { flagFTR56Enabled: true },
         urlInfo: { basePath },
       },
     })
@@ -132,11 +72,11 @@ describe('get', () => {
               name: 'indeterminateSentenceType',
               href: '#indeterminateSentenceType',
               errorId: 'noIndeterminateSentenceTypeSelected',
-              text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
+              text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
             },
           ],
           indeterminateSentenceType: {
-            text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
+            text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
             href: '#indeterminateSentenceType',
             errorId: 'noIndeterminateSentenceTypeSelected',
           },
@@ -155,13 +95,13 @@ describe('get', () => {
       indeterminateSentenceType: {
         errorId: 'noIndeterminateSentenceTypeSelected',
         href: '#indeterminateSentenceType',
-        text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
       },
       list: [
         {
           href: '#indeterminateSentenceType',
           errorId: 'noIndeterminateSentenceTypeSelected',
-          text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
+          text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
           name: 'indeterminateSentenceType',
         },
       ],
@@ -170,54 +110,43 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it('post with valid data', async () => {
+  it('post with invalid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const basePath = `/recommendations/123/`
     const req = mockReq({
+      originalUrl: 'some-url',
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
-        indeterminateSentenceType: 'IPP',
+        indeterminateSentenceType: '',
       },
     })
 
     const res = mockRes({
-      token: 'token1',
       locals: {
+        user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath },
-        statuses: [],
+        urlInfo: { basePath: `/recommendations/123/` },
       },
     })
-    const next = mockNext()
 
-    await indeterminateTypeController.post(req, res, next)
+    await indeterminateTypeController.post(req, res, mockNext())
 
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      valuesToSave: {
-        indeterminateSentenceType: {
-          selected: 'IPP',
-          allOptions: [
-            { value: 'LIFE', text: 'Life sentence' },
-            {
-              value: 'IPP',
-              text: 'Imprisonment for Public Protection (IPP) sentence',
-            },
-            { value: 'DPP', text: 'Detention for Public Protection (DPP) sentence' },
-          ],
-        },
+    expect(updateRecommendation).not.toHaveBeenCalled()
+    expect(req.session.errors).toEqual([
+      {
+        errorId: 'noIndeterminateSentenceTypeSelected',
+        href: '#indeterminateSentenceType',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
+        name: 'indeterminateSentenceType',
+        invalidParts: undefined,
+        values: undefined,
       },
-      token: 'token1',
-      featureFlags: {},
-    })
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+    ])
+    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 
-  it('Ftr56: post with valid data', async () => {
+  it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
@@ -253,9 +182,6 @@ describe('post', () => {
         },
         urlInfo: { basePath },
         statuses: [],
-        flags: {
-          flagFTR56Enabled: true,
-        },
       },
     })
     const next = mockNext()
@@ -279,7 +205,7 @@ describe('post', () => {
         },
       },
       token: 'token1',
-      featureFlags: { flagFTR56Enabled: true },
+      featureFlags: {},
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
@@ -313,7 +239,7 @@ describe('post', () => {
       {
         errorId: 'noIndeterminateSentenceTypeSelected',
         href: '#indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         name: 'indeterminateSentenceType',
         invalidParts: undefined,
         values: undefined,

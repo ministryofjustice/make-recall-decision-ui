@@ -5,25 +5,17 @@ import inputDisplayValuesRecallType from '../recommendations/recallType/inputDis
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import {
-  availableRecallTypesForRecommendation,
-  availableRecallTypesForRecommendationFTR56,
-} from '../recommendations/recallType/availableRecallTypes'
+import { availableRecallTypesForRecommendation } from '../recommendations/recallType/availableRecallTypes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import {
   isFixedTermRecallMandatoryForRecommendation,
-  isStandardRecallMandatoryForRecommendationFTR56,
+  isStandardRecallMandatoryForRecommendation,
 } from '../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import { FeatureFlags } from '../../@types/featureFlags'
 
 function get(_: Request, res: Response, next: NextFunction) {
-  const {
-    recommendation,
-    flags: { flagFTR56Enabled },
-  } = res.locals as {
+  const { recommendation } = res.locals as {
     recommendation: RecommendationResponse
-    flags: FeatureFlags
   }
 
   res.locals = {
@@ -36,13 +28,11 @@ function get(_: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: flagFTR56Enabled
-      ? availableRecallTypesForRecommendationFTR56(recommendation)
-      : availableRecallTypesForRecommendation(recommendation),
+    availableRecallTypes: availableRecallTypesForRecommendation(recommendation),
     personOnProbationName: recommendation.personOnProbation.fullName,
-    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation, flagFTR56Enabled),
-    standardMandatory: flagFTR56Enabled ? isStandardRecallMandatoryForRecommendationFTR56(recommendation) : undefined,
-    isAdultSentence: flagFTR56Enabled && recommendation.sentenceGroup === SentenceGroup.ADULT_SDS,
+    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation),
+    standardMandatory: isStandardRecallMandatoryForRecommendation(recommendation),
+    isAdultSentence: recommendation.sentenceGroup === SentenceGroup.ADULT_SDS,
   }
 
   res.render(`pages/recommendations/recallType`)
@@ -63,7 +53,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     recommendationId,
     urlInfo,
     token,
-    flagFTR56Enabled: flags.flagFTR56Enabled,
   })
 
   if (errors) {

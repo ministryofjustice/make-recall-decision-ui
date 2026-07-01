@@ -14,17 +14,6 @@ import recallTypeValues = RecallTypeSelectedValue.value
 import selected = CustodyStatus.selected
 import { NoneOrOption } from '../../data/@generators/dataGenerators'
 
-const ftr56TestCases = [
-  {
-    description: 'with FTR56 flag enabled',
-    ftr56Enabled: true,
-  },
-  {
-    description: 'with FTR56 flag disabled',
-    ftr56Enabled: false,
-  },
-]
-
 context('Recommendation - task list', () => {
   beforeEach(() => {
     cy.signIn()
@@ -75,37 +64,6 @@ context('Recommendation - task list', () => {
       activeConvictions: [{ sentence: { isCustodial: true } }, { sentence: { isCustodial: true } }],
     },
   }
-
-  it('task list - Completed - in custody', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: { ...completeRecommendationResponse, sentenceGroup: SentenceGroup.INDETERMINATE },
-    })
-    cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('What you recommend Completed').should('exist')
-    cy.getElement('When did the SPO agree this recall? Completed').should('exist')
-    cy.getElement('What alternatives to recall have been tried already? Completed').should('exist')
-    cy.getElement('What licence conditions has Jane Bloggs breached? Completed').should('exist')
-    cy.getElement('Consider if recall could affect vulnerabilities or needs Completed').should('exist')
-    cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
-    cy.getElement('Are there any victims in the victim contact scheme? Completed').should('exist')
-    cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
-    cy.getElement('Confirm the recall criteria - indeterminate and extended sentences Completed').should('exist')
-    cy.getElement('Personal details Reviewed').should('exist')
-    cy.getElement('Offence details Reviewed').should('exist')
-    cy.getElement('Offence analysis Completed').should('exist')
-    cy.getElement('MAPPA for Jane Bloggs Reviewed').should('exist')
-    cy.getElement('Previous releases Completed').should('exist')
-    cy.getElement('Local police contact details').should('exist')
-    // the following link should not be present, as person is in custody
-    cy.getElement('Is there anything the police should know before they arrest Jane Bloggs?').should('not.exist')
-    cy.getElement('Address').should('not.exist')
-    // should not exist
-    cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
-
-    cy.getElement("Request line manager's countersignature To do").should('exist')
-  })
 
   const scenarios = [
     {
@@ -159,7 +117,7 @@ context('Recommendation - task list', () => {
   ]
 
   scenarios.forEach(({ name, sentenceGroup, expect }) => {
-    it(`Ftr56: task list - To do - ${name}`, () => {
+    it(`task list - To do - ${name}`, () => {
       const response = {
         ...recommendationResponse,
         recallType: {
@@ -169,7 +127,7 @@ context('Recommendation - task list', () => {
         },
         sentenceGroup,
       }
-      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
+      setUp(response as RecommendationResponse, [], [])
 
       cy.getElement('MAPPA information to assess recall type To review').should(expect.mappa ? 'exist' : 'not.exist')
 
@@ -223,7 +181,7 @@ context('Recommendation - task list', () => {
       cy.getElement("Request senior manager's countersignature Cannot start yet").should('exist')
     })
 
-    it(`Ftr56: task list - Completed - ${name}`, () => {
+    it(`task list - Completed - ${name}`, () => {
       const response = {
         ...completeRecommendationResponse,
         sentenceGroup,
@@ -260,7 +218,7 @@ context('Recommendation - task list', () => {
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
       }
-      setUp(response as RecommendationResponse, [], ['flagFTR56Enabled'])
+      setUp(response as RecommendationResponse, [], [])
 
       cy.getElement('MAPPA information to assess recall type Reviewed').should(expect.mappa ? 'exist' : 'not.exist')
 
@@ -321,17 +279,17 @@ context('Recommendation - task list', () => {
     })
   })
 
-  describe('Task list — FTR56 ON', () => {
+  describe('Task list', () => {
     describe('recommendations', () => {
       ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
         it(`does not show MAPPA item for ${sentenceGroup}`, () => {
-          setUp({ ...recommendationResponse, sentenceGroup }, [], ['flagFTR56Enabled'])
+          setUp({ ...recommendationResponse, sentenceGroup }, [], [])
           cy.getElement('MAPPA information to assess recall type').should('not.exist')
         })
       })
       ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
         it(`does not show Suitability item for ${sentenceGroup}`, () => {
-          setUp({ ...recommendationResponse, sentenceGroup }, [], ['flagFTR56Enabled'])
+          setUp({ ...recommendationResponse, sentenceGroup }, [], [])
           cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
         })
       })
@@ -339,14 +297,14 @@ context('Recommendation - task list', () => {
 
     describe('circumstances.njk', () => {
       describe('NO_RECALL', () => {
-        const noRecallFtr56Base = {
+        const noRecallBase = {
           ...recommendationResponse,
           recallType: { selected: { value: 'NO_RECALL' } },
         } as RecommendationResponse
 
         ;[SentenceGroup.EXTENDED, SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
           it(`does not show indeterminateSentenceType for ${sentenceGroup}`, () => {
-            setUp({ ...noRecallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            setUp({ ...noRecallBase, sentenceGroup }, [], [])
             cy.getElement('Type of indeterminate sentence').should('not.exist')
           })
         })
@@ -355,14 +313,14 @@ context('Recommendation - task list', () => {
           ['emergencyRecall', 'Is this an emergency recall?'],
         ].forEach(([field, elementText]) => {
           it(`does not show ${field}`, () => {
-            setUp(noRecallFtr56Base, [], ['flagFTR56Enabled'])
+            setUp(noRecallBase, [], [])
             cy.getElement(elementText).should('not.exist')
           })
         })
       })
 
       describe('RECALL', () => {
-        const recallFtr56Base = {
+        const noRecallBase = {
           ...recommendationResponse,
           recallType: { selected: { value: 'STANDARD' } },
         } as RecommendationResponse
@@ -372,7 +330,7 @@ context('Recommendation - task list', () => {
           ['emergencyRecall', 'Is this an emergency recall?', SentenceGroup.INDETERMINATE],
         ].forEach(([field, elementText, sentenceGroup]: [string, string, SentenceGroup]) => {
           it(`does not show ${field} for ${sentenceGroup}`, () => {
-            setUp({ ...recallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            setUp({ ...noRecallBase, sentenceGroup }, [], [])
             cy.getElement(elementText).should('not.exist')
           })
         })
@@ -385,30 +343,21 @@ context('Recommendation - task list', () => {
           it(`does not show fixedTermAdditionalLicenceConditions for ${sentenceGroup} + ${recallValue}`, () => {
             setUp(
               {
-                ...recallFtr56Base,
+                ...noRecallBase,
                 sentenceGroup,
                 recallType: { selected: { value: recallValue } },
               },
               [],
-              ['flagFTR56Enabled'],
+              [],
             )
             cy.getElement('Add any additional licence conditions - fixed term recall').should('not.exist')
           })
         })
         ;[SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
           it(`does not show indeterminateOrExtendedSentenceDetails for ${sentenceGroup}`, () => {
-            setUp({ ...recallFtr56Base, sentenceGroup }, [], ['flagFTR56Enabled'])
+            setUp({ ...noRecallBase, sentenceGroup }, [], [])
             cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
           })
-        })
-      })
-    })
-
-    describe('personalDetails', () => {
-      ;['Previous releases', 'Previous recalls'].forEach(elementText => {
-        it(`does not show ${elementText}`, () => {
-          setUp(recommendationResponse as RecommendationResponse, [], ['flagFTR56Enabled'])
-          cy.getElement(elementText).should('not.exist')
         })
       })
     })
@@ -422,7 +371,7 @@ context('Recommendation - task list', () => {
             whyConsideredRecall: null,
           } as RecommendationResponse,
           [],
-          ['flagFTR56Enabled'],
+          [],
         )
         cy.getElement('Preview the letter').should('not.exist')
       })
@@ -438,7 +387,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagFTR56Enabled'],
+          [],
         )
         cy.getElement('Add more details about vulnerabilities or needs To do').should('exist')
       })
@@ -452,7 +401,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagFTR56Enabled'],
+          [],
         )
         cy.getElement('Add more details about vulnerabilities or needs Completed').should('exist')
       })
@@ -466,7 +415,7 @@ context('Recommendation - task list', () => {
             },
           },
           [],
-          ['flagFTR56Enabled'],
+          [],
         )
         cy.getElement('Add more details about vulnerabilities or needs').should('not.exist')
       })
@@ -474,15 +423,37 @@ context('Recommendation - task list', () => {
   })
 
   it('task list - Completed - not in custody', () => {
+    const personName = faker.person.fullName()
     cy.task('getRecommendation', {
       statusCode: 200,
-      response: { ...completeRecommendationResponse, custodyStatus: { selected: 'NO' } },
+      response: RecommendationResponseGenerator.generate({
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
+        sentenceGroup: SentenceGroup.YOUTH_SDS,
+        recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+        offenceAnalysis: true,
+        indexOffenceDetails: true,
+        convictionDetail: {
+          hasBeenReviewed: true,
+        },
+        personOnProbation: {
+          name: personName,
+          hasBeenReviewed: true,
+        },
+        custodyStatus: {
+          selected: selected.NO,
+          details: faker.location.streetAddress(),
+          allOptions: [],
+        },
+      }),
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
-    cy.getElement('Is Jane Bloggs in custody now? Completed').should('exist')
+    cy.getElement(`Is ${personName} in custody now? Completed`).should('exist')
     cy.getElement('Local police contact details Completed').should('exist')
-    cy.getElement('Is there anything the police should know before they arrest Jane Bloggs? Completed').should('exist')
+    cy.getElement(`Is there anything the police should know before they arrest ${personName}? Completed`).should(
+      'exist',
+    )
     cy.getElement('Address Completed').should('exist')
     cy.getElement("Request line manager's countersignature To do").should('exist')
   })
@@ -516,36 +487,26 @@ context('Recommendation - task list', () => {
     cy.getElement('Offence details To review').should('exist')
     cy.getElement('Offence analysis To do').should('exist')
     cy.getElement('MAPPA for Jane Bloggs To review').should('exist')
-    cy.getElement('Previous releases To do').should('exist')
     cy.getElement('Create Part A').should('not.exist')
   })
 
-  ftr56TestCases.forEach(testCase => {
-    it(`from task list, link to form then return to task list ${testCase.description}`, () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-      cy.visit(
-        `${sharedPaths.recommendations}/${recommendationId}/task-list?flagFTR56Enabled=${testCase.ftr56Enabled ? 1 : 0}`,
-      )
+  it(`from task list, link to form then return to task list`, () => {
+    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.task('getStatuses', { statusCode: 200, response: [] })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list`)
 
-      if (testCase.ftr56Enabled) {
-        cy.clickLink('What has led to this recall?')
-        cy.log('============= Back link')
-        cy.clickLink('Back')
-        cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
-        cy.log('============= Continue button')
-        cy.clickLink('What has led to this recall?')
-        cy.fillInput('What has led to this recall?', 'Re-offending has occurred')
-        cy.clickButton('Continue')
-      }
+    cy.clickLink('What has led to this recall?')
+    cy.log('============= Back link')
+    cy.clickLink('Back')
+    cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+    cy.log('============= Continue button')
+    cy.clickLink('What has led to this recall?')
+    cy.fillInput('What has led to this recall?', 'Re-offending has occurred')
+    cy.clickButton('Continue')
 
-      cy.pageHeading().should(
-        'equal',
-        testCase.ftr56Enabled ? `Part A for ${recommendationResponse.personOnProbation.name}` : 'Create a Part A form',
-      )
-      cy.clickLink('When did the SPO agree this recall?')
-    })
+    cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
+    cy.clickLink('When did the SPO agree this recall?')
   })
 
   context('form links', () => {
@@ -595,7 +556,7 @@ context('Recommendation - task list', () => {
                 } else if (isExtendedSentence) {
                   sentenceGroup = SentenceGroup.EXTENDED
                 } else {
-                  sentenceGroup = 'none'
+                  sentenceGroup = faker.helpers.arrayElement([SentenceGroup.YOUTH_SDS, SentenceGroup.ADULT_SDS])
                 }
                 const recommendation = RecommendationResponseGenerator.generate({
                   sentenceGroup,
@@ -639,7 +600,7 @@ context('Recommendation - task list', () => {
     context('circumstances details', () => {
       const whatHasLedToRecallLinkText = 'What has led to this recall?'
       const emergencyRecallLinkText = 'Is this an emergency recall?'
-      const indeterminateTypeLinkText = 'Type of indeterminate sentence'
+      const indeterminateTypeLinkText = (popName: string) => `What type of sentence is ${popName} on?`
       const ftrAdditionalLicenceConditionsLinkText = 'Add any additional licence conditions - fixed term recall'
       const indeterminateOrExtendedDetailsLinkText =
         'Confirm the recall criteria - indeterminate and extended sentences'
@@ -669,17 +630,17 @@ context('Recommendation - task list', () => {
         )
       }
 
-      function checkIndeterminateTypeLink() {
-        checkLink(
-          indeterminateTypeLinkText,
-          `/recommendations/${recommendationId}/indeterminate-type?fromPageId=task-list&fromAnchor=heading-circumstances`,
-        )
-      }
-
       function checkFTRAdditionalLicenceConditionsLink() {
         checkLink(
           ftrAdditionalLicenceConditionsLinkText,
           `/recommendations/${recommendationId}/fixed-licence?fromPageId=task-list&fromAnchor=heading-circumstances`,
+        )
+      }
+
+      function checkIndeterminateTypeLink(popName: string) {
+        checkLink(
+          indeterminateTypeLinkText(popName),
+          `/recommendations/${recommendationId}/indeterminate-type?fromPageId=task-list&fromAnchor=heading-alternatives`,
         )
       }
 
@@ -703,7 +664,7 @@ context('Recommendation - task list', () => {
                 } else if (isExtendedSentence) {
                   sentenceGroup = SentenceGroup.EXTENDED
                 } else {
-                  sentenceGroup = 'none'
+                  sentenceGroup = faker.helpers.arrayElement([SentenceGroup.YOUTH_SDS, SentenceGroup.ADULT_SDS])
                 }
                 const isRecall = recallTypeValue !== recallTypeValues.NO_RECALL
                 const recommendation = RecommendationResponseGenerator.generate({
@@ -741,13 +702,14 @@ context('Recommendation - task list', () => {
                     checkElementDoesntExist(emergencyRecallLinkText)
                   })
                 }
+
                 if (isIndeterminateSentence) {
                   it('shows indeterminate type link', () => {
-                    checkIndeterminateTypeLink()
+                    checkIndeterminateTypeLink(recommendation.personOnProbation.name)
                   })
                 } else {
                   it("doesn't show indeterminate type link", () => {
-                    checkElementDoesntExist(indeterminateTypeLinkText)
+                    checkElementDoesntExist(indeterminateTypeLinkText(recommendation.personOnProbation.name))
                   })
                 }
                 if (
@@ -805,7 +767,7 @@ context('Recommendation - task list', () => {
 
       function checkPreviousReleasesLink() {
         checkLink(
-          'Previous releases',
+          'Release details',
           `/recommendations/${recommendationId}/previous-releases?fromPageId=task-list&fromAnchor=heading-person-details`,
         )
       }
@@ -832,14 +794,14 @@ context('Recommendation - task list', () => {
           it('shows personal details link', () => {
             checkPersonalDetailsLink()
           })
+          it('shows previous releases link', () => {
+            checkPreviousReleasesLink()
+          })
           it('shows offence details link', () => {
             checkOffenceDetailsLink()
           })
           it('shows offence analysis link', () => {
             checkOffenceAnalysisLink()
-          })
-          it('shows previous releases link', () => {
-            checkPreviousReleasesLink()
           })
           if (!isInCustody) {
             it('shows address details link', () => {
@@ -1102,20 +1064,30 @@ context('Recommendation - task list', () => {
       // The requirements for countersignature is a much longer list than the value set below, but most of them are
       // satisfied by the default recommendation produced by the generator. We only set here the ones that aren't
       // guaranteed (e.g. they are normally random boolean values)
+      const personName = faker.person.fullName()
       const recommendationReadyForCountersignature = RecommendationResponseGenerator.generate({
-        recallType: {
-          selected: {
-            value: faker.helpers.arrayElement([recallTypeValues.FIXED_TERM, recallTypeValues.STANDARD]),
-          },
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
+        sentenceGroup: SentenceGroup.YOUTH_SDS,
+        recallType: { selected: { value: RecallTypeSelectedValue.value.FIXED_TERM } },
+        offenceAnalysis: true,
+        indexOffenceDetails: true,
+        convictionDetail: {
+          hasBeenReviewed: true,
         },
         personOnProbation: {
+          name: personName,
           hasBeenReviewed: true,
+          ftr56MappaReviewed: true,
           mappa: {
             hasBeenReviewed: true,
           },
         },
-        convictionDetail: {
-          hasBeenReviewed: true,
+
+        custodyStatus: {
+          selected: selected.NO,
+          details: faker.location.streetAddress(),
+          allOptions: [],
         },
       })
 
@@ -1131,12 +1103,16 @@ context('Recommendation - task list', () => {
       })
 
       it('recommendation ready for ACO countersignature', () => {
-        setUp(recommendationReadyForCountersignature, [
-          {
-            name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED,
-            active: true,
-          },
-        ])
+        setUp(
+          recommendationReadyForCountersignature,
+
+          [
+            {
+              name: RECOMMENDATION_STATUS.ACO_SIGNATURE_REQUESTED,
+              active: true,
+            },
+          ],
+        )
 
         checkCountersignatureTextHasNoLink(requestSpoCountersignatureLinkText)
         checkRequestAcoCountersignatureLink()
@@ -1253,6 +1229,7 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: {
         ...completeRecommendationResponse,
+        sentenceGroup: 'ADULT_SDS',
         recallType: { selected: { value: 'FIXED_TERM' } },
       },
     })
@@ -1265,8 +1242,10 @@ context('Recommendation - task list', () => {
       statusCode: 200,
       response: {
         ...completeRecommendationResponse,
+        sentenceGroup: 'YOUTH_SDS',
+        isYouthSentenceOver12Months: true,
+        isYouthChargedWithSeriousOffence: true,
         recallType: { selected: { value: 'FIXED_TERM' } },
-        isUnder18: false,
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
@@ -1285,14 +1264,17 @@ context('Recommendation - task list', () => {
       cy.pageHeading().should('equal', 'Create a decision not to recall letter')
     })
 
-    it('redirect no recall task list to recall task list if recall is set', () => {
+    it('redirect no recall task list to consider a recall task list if recall is set', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...recommendationResponse, recallType: { selected: { value: 'FIXED_TERM' } } },
+        response: {
+          ...recommendationResponse,
+          recallType: { selected: { value: 'FIXED_TERM' } },
+        },
       })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${sharedPaths.recommendations}/1/task-list-no-recall`)
-      cy.pageHeading().should('equal', 'Create a Part A form')
+      cy.pageHeading().should('equal', 'Consider a recall')
     })
   })
 

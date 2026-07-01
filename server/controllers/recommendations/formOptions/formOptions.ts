@@ -1,23 +1,16 @@
 import custodyStatus from '../custodyStatus/formOptions'
-import { recallType, recallTypeFTR56 } from '../recallType/formOptions'
+import recallType from '../recallType/formOptions'
 import { yesNoOptions, YesNoValues } from './yesNo'
 import strings from '../../../textStrings/en'
 import { UiListItem } from '../../../@types/pagesForms'
 import { renderTemplateString } from '../../../utils/nunjucks'
 import alternativesToRecallTried from '../alternativesToRecallTried/formOptions'
-import {
-  indeterminateOrExtendedSentenceDetails,
-  indeterminateOrExtendedSentenceDetailsFtr56,
-} from '../indeterminateOrExtendedSentenceDetails/formOptions'
-import { indeterminateSentenceType, indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
+import indeterminateOrExtendedSentenceDetails from '../indeterminateOrExtendedSentenceDetails/formOptions'
+import indeterminateSentenceType from '../indeterminateSentenceType/formOptions'
 import howWillAppointmentHappen from '../nextAppointment/formOptions'
 import rationaleCheck from '../rationaleCheck/formOptions'
-import { recallTypeExtended, recallTypeExtendedFTR56 } from '../recallTypeExtended/formOptions'
-import {
-  recallTypeIndeterminate,
-  recallTypeIndeterminateApi,
-  recallTypeIndeterminateFTR56,
-} from '../recallTypeIndeterminate/formOptions'
+import { recallTypeExtended } from '../recallTypeExtended/formOptions'
+import { recallTypeIndeterminate, recallTypeIndeterminateApi } from '../recallTypeIndeterminate/formOptions'
 import roshLevels from '../rosh/formOptions'
 import hasVictimsInContactScheme from '../victimContactScheme/formOptions'
 import { vulnerabilities } from '../vulnerabilities/formOptions'
@@ -40,22 +33,17 @@ type FormOptionsType = {
 export const formOptions: FormOptionsType = {
   sentenceGroup,
   recallType,
-  recallTypeFTR56,
   rationaleCheck,
   spoRecallTypeEnum,
   recallTypeIndeterminate,
-  recallTypeIndeterminateFTR56,
   recallTypeExtended,
-  recallTypeExtendedFTR56,
   recallTypeIndeterminateApi,
   standardLicenceConditions,
   custodyStatus,
   alternativesToRecallTried,
   vulnerabilities,
   indeterminateSentenceType,
-  indeterminateSentenceTypeFtr56,
   indeterminateOrExtendedSentenceDetails,
-  indeterminateOrExtendedSentenceDetailsFtr56,
   whyConsideredRecall,
   howWillAppointmentHappen,
   yesNo: yesNoOptions(),

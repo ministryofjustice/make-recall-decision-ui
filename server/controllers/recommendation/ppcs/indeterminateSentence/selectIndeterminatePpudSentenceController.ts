@@ -14,7 +14,7 @@ import { RecommendationResponse } from '../../../../@types/make-recall-decision-
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
-  const custodyGroup = calculatePartACustodyGroup(recommendation, res.locals.flags.flagFTR56Enabled)
+  const custodyGroup = calculatePartACustodyGroup(recommendation)
   const indeterminateSentences = getIndeterminateSentences(recommendation.ppudOffender?.sentences)
   const determinateSentences = getDeterminateSentences(recommendation.ppudOffender?.sentences)
 
