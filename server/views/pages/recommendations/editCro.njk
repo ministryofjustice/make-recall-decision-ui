@@ -11,26 +11,33 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
-            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
+            {{ heading(pageHeadings[page.id]) }}
 
-            {% if recommendation.prisonOffender.cro %}
-                <dl class="car-text-list">
-                    <h3 class='govuk-heading-m'>From NOMIS</h3>
-                    <div class="car-text-list__row">
-                        <dt class="car-text-list__key">CRO</dt>
-                        <dd class="car-text-list__value" data-qa="nomisCro">{{ recommendation.prisonOffender.cro }}</dd>
-                    </div>
-                </dl>
+            {{ bodyParagraph('Check the previous convictions (MG16) document or NOMIS to find the CRO.') }}
+
+            {% if values.partACro %}
+                {{ textList({
+                    heading: 'From Part A',
+                    headingSize: 'm',
+                    rows: [
+                        { key: 'CRO', value: values.partACro }
+                    ]
+                }) }}
             {% endif %}
 
-            {% if recommendation.ppudOffender.croOtherNumber %}
-                <dl class="car-text-list">
-                    <h3 class='govuk-heading-m'>From PPUD</h3>
-                    <div class="car-text-list__row">
-                        <dt class="car-text-list__key">CRO</dt>
-                        <dd class="car-text-list__value" data-qa="ppudCro">{{ recommendation.ppudOffender.croOtherNumber }}</dd>
-                    </div>
-                </dl>
+            {% if values.hasPpudRecord %}
+                {% if values.ppudCro %}
+                    {{ textList({
+                        heading: 'From PPUD',
+                        headingSize: 'm',
+                        rows: [
+                            { key: 'CRO', value: values.ppudCro }
+                        ]
+                    }) }}
+                {% else %}
+                    {{ heading('From PPUD', 2, 'm') }}
+                    {{ bodyParagraph('There is a PPUD record but this field is blank.') }}
+                {% endif %}
             {% endif %}
 
             <form novalidate method="post">
@@ -38,7 +45,7 @@
 
                 {{ govukInput({
                     label: {
-                        text: "CRO number",
+                        text: "CRO",
                         classes: "govuk-label--m"
                     },
                     hint: {
