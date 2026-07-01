@@ -5,6 +5,7 @@ import applicationPackageInfo from '../applicationPackageInfo'
 import appConfig from '../config'
 
 import type { FeatureFlags } from '../@types/featureFlags'
+import logger from '../../logger'
 
 export function defaultName(): string {
   const {
@@ -45,7 +46,13 @@ export const appInsightsEvent = (
   _: FeatureFlags,
 ) => {
   if (defaultClient && eventName) {
-    defaultClient.trackEvent({ name: eventName, properties: { ...eventData, userName } })
+    try {
+      defaultClient.trackEvent({ name: eventName, properties: { ...eventData, userName } })
+    } catch (err) {
+      logger.warn('AppInsights error:', err)
+    }
+  } else {
+    logger.warn('No default client found for appInsights')
   }
 }
 
