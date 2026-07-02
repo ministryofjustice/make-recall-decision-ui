@@ -31,6 +31,7 @@ export default function setUpWebSecurity(): Router {
             '*.google-analytics.com',
             '*.analytics.google.com',
             '*.applicationinsights.azure.com',
+            '*.monitor.azure.com',
             // This removes sourcemap errors from the Probation Components API assets
             // normally handled by the package's CSP settings, but it seems this config
             // file is overwriting that, so we manually add it back in here
