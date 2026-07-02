@@ -48,10 +48,11 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
-            <h1 class='govuk-heading-l'>Your recall booking - {{ fullName }}</h1>
-
-            <a class='govuk-button govuk-button--primary govuk-!-margin-bottom-0'
-               href='/recommendations/{{ recommendation.id }}/book-to-ppud'>Continue</a>
+            <h1 class='govuk-heading-l'>Booking summary for {{ fullName }}</h1>
+            <p class="govuk-body">Check the information you tried to send to PPUD against what’s there. You may have to add some information directly into PPUD.</p>
+            
+            <a target="_blank" rel="noopener noreferrer" class="govuk-link"
+               href='/recommendations/{{ recommendation.id }}/book-to-ppud'>Go to PPUD (opens in new tab)</a>   
 
             <h2 class='govuk-heading-m govuk-!-margin-top-8'>
                 Sentence
@@ -60,7 +61,7 @@
                 </div>
             </h2>
 
-            <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+            <dl class="govuk-summary-list govuk-!-margin-bottom-4" id="indeterminate-sentence">
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Custody type
@@ -145,31 +146,20 @@
 
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Licence expiry date
+                        Tariff expiry date
                     </dt>
                     <dd class="govuk-summary-list__value" data-qa="licenceExpiryDate">
                         {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.licenceExpiryDate }) ) }}
                     </dd>
                 </div>
-                {% if offence.sentenceEndDate %}
-                    <div class="govuk-summary-list__row">
+                <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            Sentence expiry date
-                        </dt>
-                        <dd class="govuk-summary-list__value" data-qa="sentenceEndDate">
-                            {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceEndDate }) ) }}
-                        </dd>
-                    </div>
-                {% else %}
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Latest sentence expiry date
+                            Full punishment
                         </dt>
                         <dd class="govuk-summary-list__value" data-qa="sentenceSequenceExpiryDate">
                             {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.sentenceSequenceExpiryDate }) ) }}
                         </dd>
-                    </div>
-                {% endif %}
+                </div>
             </dl>
 
             <h2 class='govuk-heading-m govuk-!-margin-top-8'>
@@ -179,7 +169,7 @@
                 </div>
             </h2>
 
-            <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+            <dl class="govuk-summary-list govuk-!-margin-bottom-4" id="personalDetails">
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                     </dt>
@@ -257,7 +247,14 @@
                     <dd class="govuk-summary-list__value">
                         {{ blankSafe(recommendation.bookRecallToPpud.cro) }}
                     </dd>
-
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        PNC
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ blankSafe(recommendation.personOnProbation.pncNumber) }}
+                    </dd>
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
@@ -275,7 +272,6 @@
                     <dd class="govuk-summary-list__value">
                         {{ blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'You must enter releasing prison') }}
                     </dd>
-
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
@@ -284,7 +280,6 @@
                     <dd class="govuk-summary-list__value">
                         {{ blankSafe(recommendation.bookRecallToPpud.legislationReleasedUnder, true, 'You must enter legislation') }}
                     </dd>
-
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
@@ -300,6 +295,14 @@
                         {% else %}
                             - <span class="govuk-visually-hidden">no value</span>
                         {% endif %}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Current establishment
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ blankSafe(recommendation.bookRecallToPpud.releasingPrison, true, 'You must enter releasing prison') }}
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
