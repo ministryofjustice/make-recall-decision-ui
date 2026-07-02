@@ -107,7 +107,7 @@
     "@types/qs": "^6.9.14",
     "accessible-autocomplete": "^3.0.1",
     "agentkeepalive": "^4.2.1",
-    "applicationinsights": "^3.15.1",
+    "applicationinsights": "^2.9.8",
     "assert": "2.1.0",
     "body-parser": "^1.20.3",
     "bunyan": "^1.8.15",
@@ -150,7 +150,7 @@
     "@aws-sdk/types": "^3.667.0",
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
     "@ministryofjustice/eslint-config-hmpps": "2.0.0-alpha.1",
-    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "3.0.1",
     "@tsconfig/node24": "24.0.4",
     "@types/bunyan": "^1.8.11",
@@ -179,7 +179,7 @@
     "cypress": "^15.16.0",
     "cypress-axe": "1.7.0",
     "cypress-multi-reporters": "^2.0.5",
-    "cypress-split": "1.24.31",
+    "cypress-split": "^1.25.0",
     "cypress-terminal-report": "7.3.3",
     "del": "8.0.1",
     "esbuild": "^0.28.1",
@@ -206,7 +206,6 @@
     "xml2js": "^0.6.0"
   },
   "overrides": {
-    "@opentelemetry/core": "2.8.0",
     "csurf": {
       "cookie": "0.7.2"
     },
