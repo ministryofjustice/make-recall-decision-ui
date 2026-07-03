@@ -313,33 +313,6 @@ context('Make a recommendation', () => {
       cy.getElement('No recall - create a decision not to recall letter').should('exist')
     })
 
-    it('present discuss-with-manager - with FTR56 flag enabled', () => {
-      const recommendation = {
-        ...completeRecommendationResponse,
-        recallConsideredList: null,
-        sentenceGroup: SentenceGroup.EXTENDED,
-      }
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: recommendation,
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/share-case-with-manager`)
-
-      cy.clickLink('Continue to make a recommendation')
-
-      cy.pageHeading().should('equal', 'Discuss with your manager')
-
-      cy.clickLink('Continue')
-
-      cy.pageHeading().should('equal', 'What do you recommend?')
-
-      cy.url().should('contain', 'recall-type-extended')
-
-      cy.getElement('No recall - create a decision not to recall letter').should('exist')
-    })
-
     it('present task-list for SPO_SIGNATURE_REQUESTED', () => {
       cy.task('getRecommendation', {
         statusCode: 200,

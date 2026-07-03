@@ -320,7 +320,7 @@ context('Recommendation - task list', () => {
       })
 
       describe('RECALL', () => {
-        const noRecallBase = {
+        const recallBase = {
           ...recommendationResponse,
           recallType: { selected: { value: 'STANDARD' } },
         } as RecommendationResponse
@@ -330,7 +330,7 @@ context('Recommendation - task list', () => {
           ['emergencyRecall', 'Is this an emergency recall?', SentenceGroup.INDETERMINATE],
         ].forEach(([field, elementText, sentenceGroup]: [string, string, SentenceGroup]) => {
           it(`does not show ${field} for ${sentenceGroup}`, () => {
-            setUp({ ...noRecallBase, sentenceGroup }, [], [])
+            setUp({ ...recallBase, sentenceGroup }, [], [])
             cy.getElement(elementText).should('not.exist')
           })
         })
@@ -343,7 +343,7 @@ context('Recommendation - task list', () => {
           it(`does not show fixedTermAdditionalLicenceConditions for ${sentenceGroup} + ${recallValue}`, () => {
             setUp(
               {
-                ...noRecallBase,
+                ...recallBase,
                 sentenceGroup,
                 recallType: { selected: { value: recallValue } },
               },
@@ -355,7 +355,7 @@ context('Recommendation - task list', () => {
         })
         ;[SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].forEach(sentenceGroup => {
           it(`does not show indeterminateOrExtendedSentenceDetails for ${sentenceGroup}`, () => {
-            setUp({ ...noRecallBase, sentenceGroup }, [], [])
+            setUp({ ...recallBase, sentenceGroup }, [], [])
             cy.getElement('Confirm the recall criteria - indeterminate and extended sentences').should('not.exist')
           })
         })

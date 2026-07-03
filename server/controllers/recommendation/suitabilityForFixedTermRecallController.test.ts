@@ -8,6 +8,7 @@ import { RecommendationResponseGenerator } from '../../../data/recommendations/r
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
 import { isRecommendationDiscretionaryRecall } from '../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import ErrorGenerator from '../../../data/common/errorGenerator'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../caseSummary/getCaseSection')
@@ -46,6 +47,7 @@ describe('get', () => {
   })
 
   it('load with errors', async () => {
+    const errors = ErrorGenerator.generate()
     const res = mockRes({
       locals: {
         unsavedValues: {
@@ -54,25 +56,13 @@ describe('get', () => {
         },
         recommendation: RecommendationResponseGenerator.generate(),
         token: 'token1',
-        errors: [
-          {
-            name: 'isUnder18',
-            text: 'Select whether {{ fullName }} is 18 or over',
-            href: '#isUnder18',
-            errorId: 'noIsUnder18',
-          },
-        ],
+        errors,
       },
     })
     const next = mockNext()
     await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
 
-    expect(res.locals.errors[0]).toEqual({
-      name: 'isUnder18',
-      text: 'Select whether {{ fullName }} is 18 or over',
-      href: '#isUnder18',
-      errorId: 'noIsUnder18',
-    })
+    expect(res.locals.errors).toEqual(errors)
   })
 
   describe('redirects when sentenceGroup is not Determinate', () => {

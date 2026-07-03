@@ -76,7 +76,7 @@ describe('get', () => {
   })
   it('adds result of availableRecallTypes to res.locals', async () => {
     expect(res.locals.availableRecallTypes).toEqual(expectedAvailableRecallTypes)
-    expect(availableRecallTypesForRecommendation).toHaveBeenCalled()
+    expect(availableRecallTypesForRecommendation).toHaveBeenCalledWith(res.locals.recommendation)
   })
   it("adds PoP's name to res.locals", async () => {
     expect(res.locals.personOnProbationName).toEqual(

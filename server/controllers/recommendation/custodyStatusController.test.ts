@@ -162,40 +162,40 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/share-case-with-admin`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
+})
 
-  it('post with invalid data', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+it('post with invalid data', async () => {
+  ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '123' },
-      body: {
-        custodyStatus: 'YES_POLIC',
-      },
-    })
-
-    const res = mockRes({
-      locals: {
-        user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/123/` },
-        flags: {},
-      },
-    })
-
-    await custodyStatusController.post(req, res, mockNext())
-
-    expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'noCustodyStatusSelected',
-        href: '#custodyStatus',
-        invalidParts: undefined,
-        name: 'custodyStatus',
-        text: 'Select whether the person is in custody or not',
-        values: undefined,
-      },
-    ])
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  const req = mockReq({
+    originalUrl: 'some-url',
+    params: { recommendationId: '123' },
+    body: {
+      custodyStatus: 'YES_POLIC',
+    },
   })
+
+  const res = mockRes({
+    locals: {
+      user: { token: 'token1' },
+      recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+      urlInfo: { basePath: `/recommendations/123/` },
+      flags: {},
+    },
+  })
+
+  await custodyStatusController.post(req, res, mockNext())
+
+  expect(updateRecommendation).not.toHaveBeenCalled()
+  expect(req.session.errors).toEqual([
+    {
+      errorId: 'noCustodyStatusSelected',
+      href: '#custodyStatus',
+      invalidParts: undefined,
+      name: 'custodyStatus',
+      text: 'Select whether the person is in custody or not',
+      values: undefined,
+    },
+  ])
+  expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
 })

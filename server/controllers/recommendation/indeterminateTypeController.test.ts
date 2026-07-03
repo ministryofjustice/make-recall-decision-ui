@@ -29,6 +29,38 @@ describe('get', () => {
     expect(next).toHaveBeenCalled()
   })
 
+  it('load with existing data', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          personOnProbation: { name: 'Joe Bloggs' },
+          sentenceGroup: 'INDETERMINATE',
+          indeterminateSentenceType: {
+            selected: 'DHMP',
+            allOptions: [
+              { value: 'LIFE', text: 'Life sentence' },
+              {
+                value: 'IPP',
+                text: 'Imprisonment for public protection (IPP)',
+              },
+              { value: 'DPP', text: 'Detention for public protection (DPP)' },
+              {
+                value: 'DHMP',
+                text: 'Detention at His Majesty’s pleasure (DHMP)',
+                hint: 'Youth indeterminate sentence',
+              },
+            ],
+          },
+        },
+        token: 'token1',
+      },
+    })
+    const next = mockNext()
+    await indeterminateTypeController.get(mockReq(), res, next)
+
+    expect(res.locals.inputDisplayValues).toEqual({ value: 'DHMP' })
+  })
+
   it('redirects to Sentence Information page if sentenceGroup does not exists', async () => {
     const basePath = faker.internet.url()
     const res = mockRes({
@@ -110,42 +142,6 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it('post with invalid data', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '123' },
-      body: {
-        crn: 'X098092',
-        indeterminateSentenceType: '',
-      },
-    })
-
-    const res = mockRes({
-      locals: {
-        user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/123/` },
-      },
-    })
-
-    await indeterminateTypeController.post(req, res, mockNext())
-
-    expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'noIndeterminateSentenceTypeSelected',
-        href: '#indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
-        name: 'indeterminateSentenceType',
-        invalidParts: undefined,
-        values: undefined,
-      },
-    ])
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
-  })
-
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 

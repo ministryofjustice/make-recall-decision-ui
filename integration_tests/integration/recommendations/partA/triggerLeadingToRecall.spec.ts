@@ -15,12 +15,13 @@ context('Trigger leading to recall Page', () => {
   })
 
   describe('Page Data', () => {
-    const recommendation = RecommendationResponseGenerator.generate()
-    beforeEach(() => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-    })
     it('Standard page load', () => {
-      cy.visit(`${testPageUrl}`)
+      const recommendation = RecommendationResponseGenerator.generate()
+      beforeEach(() => {
+        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      })
+
+      cy.visit(testPageUrl)
 
       cy.title().should('equal', `What has made you consider recalling the person? - ${config.applicationName}`)
 
@@ -58,48 +59,49 @@ context('Trigger leading to recall Page', () => {
       // Continue button
       cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
     })
-  })
-  describe('There is no previous response to the question', () => {
-    it('The text area is empty', () => {
+
+    describe('There is no previous response to the question', () => {
+      it('The text area is empty', () => {
+        const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false })
+        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+
+        cy.visit(testPageUrl)
+
+        cy.get('.govuk-textarea').should('be.empty')
+      })
+    })
+
+    describe('There is a previous response to the question', () => {
+      it('The text area is empty', () => {
+        const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: true })
+        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+
+        cy.visit(testPageUrl)
+
+        cy.get('.govuk-textarea').should('have.value', recommendation.triggerLeadingToRecall)
+      })
+    })
+
+    describe('Error message display, when no trigger is provided', () => {
       const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false })
-      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      beforeEach(() => {
+        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      })
 
-      cy.visit(testPageUrl)
+      it('Then the expected error message is displayed', () => {
+        cy.visit(testPageUrl)
 
-      cy.get('.govuk-textarea').should('be.empty')
-    })
-  })
+        cy.get('button.govuk-button').click()
 
-  describe('There is a previous response to the question', () => {
-    it('The text area is empty', () => {
-      const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: true })
-      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-
-      cy.visit(testPageUrl)
-
-      cy.get('.govuk-textarea').should('have.value', recommendation.triggerLeadingToRecall)
-    })
-  })
-
-  describe('Error message display, When no trigger is provided', () => {
-    const recommendation = RecommendationResponseGenerator.generate({ triggerLeadingToRecall: false })
-    beforeEach(() => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-    })
-
-    it('Then the expected error message is displayed', () => {
-      cy.visit(testPageUrl)
-
-      cy.get('button.govuk-button').click()
-
-      testForErrorPageTitle()
-      testForErrorSummary([
-        {
-          href: 'triggerLeadingToRecall',
-          message: `Explain what has made you consider recalling ${recommendation.personOnProbation.name}`,
-          errorStyleClass: 'govuk-textarea--error',
-        },
-      ])
+        testForErrorPageTitle()
+        testForErrorSummary([
+          {
+            href: 'triggerLeadingToRecall',
+            message: `Explain what has made you consider recalling ${recommendation.personOnProbation.name}`,
+            errorStyleClass: 'govuk-textarea--error',
+          },
+        ])
+      })
     })
   })
 })

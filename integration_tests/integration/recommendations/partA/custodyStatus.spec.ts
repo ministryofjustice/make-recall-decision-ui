@@ -28,7 +28,6 @@ context('Custody status', () => {
         {
           description: 'with custody status option YES_POLICE selected',
           custodyStatus: CustodyStatus.selected.YES_POLICE,
-          custodyStatusDetails: faker.location.streetAddress(),
         },
         {
           description: 'with custody status option NO selected',
@@ -40,7 +39,6 @@ context('Custody status', () => {
           const recommendation = RecommendationResponseGenerator.generate({
             custodyStatus: {
               selected: testCase.custodyStatus ?? 'none',
-              details: testCase.custodyStatusDetails,
             },
           })
           cy.task('getRecommendation', { statusCode: 200, response: recommendation })

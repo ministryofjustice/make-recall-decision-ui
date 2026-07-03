@@ -31,34 +31,6 @@ describe('get', () => {
       locals: {
         recommendation: {
           indeterminateOrExtendedSentenceDetails: {
-            selected: [{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'test' }],
-            allOptions: [
-              {
-                value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-                text: '{{ fullName }} has shown behaviour similar to the index offence',
-              },
-              {
-                value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-                text: '{{ fullName }} has shown behaviour that could lead to a sexual or violent offence',
-              },
-              { value: 'OUT_OF_TOUCH', text: '{{ fullName }} is out of touch' },
-            ],
-          },
-        },
-        token: 'token1',
-      },
-    })
-    const next = mockNext()
-    await indeterminateDetailsController.get(mockReq(), res, next)
-
-    expect(res.locals.inputDisplayValues).toEqual([{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'test' }])
-  })
-
-  it('load with existing data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          indeterminateOrExtendedSentenceDetails: {
             selected: [{ value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE', details: 'test' }],
             allOptions: [
               {

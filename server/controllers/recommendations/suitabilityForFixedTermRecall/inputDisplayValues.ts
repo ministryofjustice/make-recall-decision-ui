@@ -11,7 +11,7 @@ type BooleanKeys<T> = {
 }[keyof T]
 
 export default (
-  // This tells typescript that the formOption keys (eg. isSentence48MonthsOrOver) will exist on formOptions
+  // This tells typescript that the formOption keys (eg. isMappaCategory4) will exist on formOptions
   // but will also exist on RecommendationResponse - just saying it's a key of RecommendationResponse makes the
   // booleanToYesNo function throw a warning because it thinks it can be *any* key (and RecommendationResponse has a lot)
   formOptions: Partial<Record<BooleanKeys<RecommendationResponse>, SuitabilityFormOptions>>,

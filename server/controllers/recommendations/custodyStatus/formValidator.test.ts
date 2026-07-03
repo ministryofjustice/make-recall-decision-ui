@@ -107,7 +107,7 @@ describe('validateCustodyStatus', () => {
     expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-custody`)
   })
 
-  it('returns valuesToSave and no errors if set to "Yes, police custody" without details', async () => {
+  it('returns valuesToSave and no errors if set to "Yes, police custody"', async () => {
     const requestBody = {
       custodyStatus: 'YES_POLICE',
       crn: 'X34534',

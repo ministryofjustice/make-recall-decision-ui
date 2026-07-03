@@ -451,6 +451,13 @@ context('Recall Type Page', () => {
             },
           ])
           testForErrorPageTitle()
+          testForErrorSummary([
+            {
+              href: 'recallTypeDetailsStandard',
+              message: 'Explain why you recommend this recall type',
+              errorStyleClass: 'govuk-textarea--error',
+            },
+          ])
         })
       })
     })

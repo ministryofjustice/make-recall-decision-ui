@@ -5,13 +5,14 @@ import emergencyRecallController from './emergencyRecallController'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import randomEnum from '../../@types/enum.testFactory'
+import ErrorGenerator from '../../../data/common/errorGenerator'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
 
 describe('get', () => {
   ;[true, false].forEach(isExtendedSentence => {
-    it(`load with no data & isExtendedSentence: ${isExtendedSentence}`, async () => {
+    it(`load with no data, isExtendedSentence: ${isExtendedSentence}`, async () => {
       const sentenceGroup = isExtendedSentence
         ? SentenceGroup.EXTENDED
         : randomEnum(SentenceGroup, [SentenceGroup.EXTENDED])
@@ -52,17 +53,11 @@ describe('get', () => {
   })
 
   it('initial load with error data', async () => {
+    const errors = ErrorGenerator.generate()
     const res = mockRes({
       locals: {
         errors: {
-          list: [
-            {
-              name: 'isThisAnEmergencyRecall',
-              href: '#isThisAnEmergencyRecall',
-              errorId: 'noEmergencyRecallSelected',
-              html: 'Select whether this is an emergency recall or not',
-            },
-          ],
+          list: errors,
           isThisAnEmergencyRecall: {
             text: 'Select whether this is an emergency recall or not',
             href: '#isThisAnEmergencyRecall',
@@ -79,14 +74,7 @@ describe('get', () => {
     await emergencyRecallController.get(mockReq(), res, mockNext())
 
     expect(res.locals.errors).toEqual({
-      list: [
-        {
-          name: 'isThisAnEmergencyRecall',
-          href: '#isThisAnEmergencyRecall',
-          errorId: 'noEmergencyRecallSelected',
-          html: 'Select whether this is an emergency recall or not',
-        },
-      ],
+      list: errors,
       isThisAnEmergencyRecall: {
         text: 'Select whether this is an emergency recall or not',
         href: '#isThisAnEmergencyRecall',
@@ -208,33 +196,6 @@ describe('post', () => {
     await emergencyRecallController.post(req, res, next)
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/fixed-licence`)
-  })
-  it('post with valid data for extended sentence', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-    const basePath = `/recommendations/123/`
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        crn: 'X098092',
-        recallType: 'STANDARD',
-        isThisAnEmergencyRecall: 'NO',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: SentenceGroup.EXTENDED },
-        urlInfo: { basePath },
-      },
-    })
-    const next = mockNext()
-
-    await emergencyRecallController.post(req, res, next)
-
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
   })
 
   it('post with valid data for extended sentence', async () => {

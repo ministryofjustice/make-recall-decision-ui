@@ -39,15 +39,8 @@ const strings: Record<string, Record<string, string>> = {
     missingOffenceAnalysis: 'Enter the offence analysis',
     noCustodyStatusSelected: 'Select whether the person is in custody or not',
     noEmergencyRecallSelected: 'Select whether this is an emergency recall or not',
-    noIsUnder18: 'Select whether {{ fullName }} is under 18',
-    noIsSentence48MonthsOrOver: "Select whether {{ fullName }}'s sentence is 48 months or over",
     noIsMappaCategory4: 'Select whether {{ fullName }} is in MAPPA category 4',
     noIsMappaLevel2Or3: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
-    noIsRecalledOnNewChargedOffence: 'Select whether {{ fullName }} is being recalled on a new charged offence',
-    noIsServingFTSentenceForTerroristOffence:
-      'Select whether {{ fullName }} is serving a fixed term sentence for a terrorist offence',
-    noHasBeenChargedWithTerroristOrStateThreatOffence:
-      'Select whether {{ fullName }} has been charged with a terrorist or state threat offence',
     noIsChargedWithOffence: 'Select whether {{ fullName }} is being recalled because of being charged with an offence',
     noIsServingTerroristOrNationalSecurityOffence:
       'Select whether {{ fullName }} is serving a sentence for a terrorist or national security offence',
