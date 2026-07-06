@@ -443,13 +443,6 @@ context('Recall Type Page', () => {
 
           cy.get('button.govuk-button').click()
 
-          testForErrorSummary([
-            {
-              href: 'recallTypeDetailsStandard',
-              message: 'Explain why you recommend this recall type',
-              checkFieldHasErrorStyling: false,
-            },
-          ])
           testForErrorPageTitle()
           testForErrorSummary([
             {

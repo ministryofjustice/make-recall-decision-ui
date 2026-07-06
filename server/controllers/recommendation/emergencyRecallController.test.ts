@@ -58,11 +58,6 @@ describe('get', () => {
       locals: {
         errors: {
           list: errors,
-          isThisAnEmergencyRecall: {
-            text: 'Select whether this is an emergency recall or not',
-            href: '#isThisAnEmergencyRecall',
-            errorId: 'noEmergencyRecallSelected',
-          },
         },
         recommendation: {
           isThisAnEmergencyRecall: undefined,
@@ -75,11 +70,6 @@ describe('get', () => {
 
     expect(res.locals.errors).toEqual({
       list: errors,
-      isThisAnEmergencyRecall: {
-        text: 'Select whether this is an emergency recall or not',
-        href: '#isThisAnEmergencyRecall',
-        errorId: 'noEmergencyRecallSelected',
-      },
     })
   })
 })

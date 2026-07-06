@@ -16,67 +16,116 @@ jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
 
 describe('get', () => {
-  const recommendationTemplate = {
-    custodyStatus: {
-      selected: 'NO',
-    },
-    localPoliceContact: {
-      contactName: 'Joe Bloggs',
-    },
-    crn: 'X098092',
+  // const recommendationTemplate = {
+  //   custodyStatus: {
+  //     selected: 'NO',
+  //   },
+  //   localPoliceContact: {
+  //     contactName: 'Joe Bloggs',
+  //   },
+  //   crn: 'X098092',
+  //   recallType: {
+  //     selected: { value: 'STANDARD' },
+  //   },
+  //   decisionDateTime: '2021-01-01T12:00:00',
+  //   whatLedToRecall: 'text',
+  //   isThisAnEmergencyRecall: false,
+  //   activeCustodialConvictionCount: 1,
+  //   hasVictimsInContactScheme: {
+  //     selected: 'NO',
+  //   },
+  //   indeterminateSentenceType: { selected: 'NO' },
+  //   hasArrestIssues: { selected: false },
+  //   hasContrabandRisk: { selected: false },
+  //   personOnProbation: {
+  //     name: 'Joe Bloggs',
+  //     mappa: { hasBeenReviewed: true },
+  //     hasBeenReviewed: true,
+  //   },
+  //   alternativesToRecallTried: {
+  //     selected: [{ value: 'NONE' }],
+  //   },
+  //   licenceConditionsBreached: {
+  //     standardLicenceConditions: {
+  //       selected: ['GOOD_BEHAVIOUR'],
+  //     },
+  //   },
+  //   vulnerabilities: {
+  //     selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE }],
+  //   },
+  //   convictionDetail: { hasBeenReviewed: true },
+  //   offenceAnalysis: 'text',
+  //   isMainAddressWherePersonCanBeFound: { selected: true },
+  //   previousReleases: { hasBeenReleasedPreviously: false },
+  //   currentRoshForPartA: {},
+  //   whoCompletedPartA: {
+  //     name: 'john',
+  //     email: 'john@me.com',
+  //     telephone: '123456',
+  //     region: 'region A',
+  //     localDeliveryUnit: 'here',
+  //     isPersonProbationPractitionerForOffender: true,
+  //   },
+  //   practitionerForPartA: {
+  //     name: 'jane',
+  //     email: 'jane@me.com',
+  //     telephone: '55555',
+  //     region: 'region A',
+  //     localDeliveryUnit: 'here',
+  //     isPersonProbationPractitionerForOffender: true,
+  //   },
+  //   revocationOrderRecipients: ['here@me.com'],
+  //   ppcsQueryEmails: ['bob@me.com'],
+  // }
+
+  const recommendationTemplate = RecommendationResponseGenerator.generate({
     recallType: {
-      selected: { value: 'STANDARD' },
-    },
-    decisionDateTime: '2021-01-01T12:00:00',
-    whatLedToRecall: 'text',
-    isThisAnEmergencyRecall: false,
-    activeCustodialConvictionCount: 1,
-    hasVictimsInContactScheme: {
-      selected: 'NO',
-    },
-    indeterminateSentenceType: { selected: 'NO' },
-    hasArrestIssues: { selected: false },
-    hasContrabandRisk: { selected: false },
-    personOnProbation: {
-      name: 'Joe Bloggs',
-      mappa: { hasBeenReviewed: true },
-      hasBeenReviewed: true,
-    },
-    alternativesToRecallTried: {
-      selected: [{ value: 'NONE' }],
-    },
-    licenceConditionsBreached: {
-      standardLicenceConditions: {
-        selected: ['GOOD_BEHAVIOUR'],
+      selected: {
+        value: RecallTypeSelectedValue.value.FIXED_TERM,
       },
     },
-    vulnerabilities: {
-      selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE }],
+    sentenceGroup: SentenceGroup.ADULT_SDS,
+    alternativesToRecallTried: true,
+    decisionDateTime: true,
+    triggerLeadingToRecall: false,
+    previousReleases: true,
+    licenceConditionsBreached: true,
+    isChargedWithOffence: true,
+    personOnProbation: {
+      name: 'Jane Bloggs',
+      hasBeenReviewed: true,
+      mappa: {
+        hasBeenReviewed: true,
+      },
+      ftr56MappaReviewed: true,
     },
-    convictionDetail: { hasBeenReviewed: true },
-    offenceAnalysis: 'text',
-    isMainAddressWherePersonCanBeFound: { selected: true },
-    previousReleases: { hasBeenReleasedPreviously: false },
-    currentRoshForPartA: {},
+    indexOffenceDetails: true,
+    convictionDetail: {
+      hasBeenReviewed: true,
+    },
+    offenceAnalysis: true,
+    custodyStatus: {
+      selected: selected.YES_POLICE,
+      details: faker.location.streetAddress(),
+      allOptions: [],
+    },
+
+    indeterminateOrExtendedSentenceDetails: false,
+    practitionerForPartA: true,
     whoCompletedPartA: {
-      name: 'john',
-      email: 'john@me.com',
-      telephone: '123456',
-      region: 'region A',
-      localDeliveryUnit: 'here',
       isPersonProbationPractitionerForOffender: true,
     },
-    practitionerForPartA: {
-      name: 'jane',
-      email: 'jane@me.com',
-      telephone: '55555',
-      region: 'region A',
-      localDeliveryUnit: 'here',
-      isPersonProbationPractitionerForOffender: true,
-    },
-    revocationOrderRecipients: ['here@me.com'],
-    ppcsQueryEmails: ['bob@me.com'],
-  }
+    whatLedToRecall: true,
+    isThisAnEmergencyRecall: true,
+    isServingTerroristOrNationalSecurityOffence: true,
+    isAtRiskOfInvolvedInForeignPowerThreat: true,
+    wasReferredToParoleBoard244ZB: true,
+    wasRepatriatedForMurder: true,
+    isServingSOPCSentence: true,
+    isServingDCRSentence: true,
+    isYouthSentenceOver12Months: true,
+    isYouthChargedWithSeriousOffence: true,
+  })
 
   const taskCompleteness = {
     areAllComplete: true,
@@ -88,7 +137,7 @@ describe('get', () => {
       hasArrestIssues: true,
       hasContrabandRisk: true,
       hasVictimsInContactScheme: true,
-      sentenceGroup: false,
+      sentenceGroup: true,
       triggerLeadingToRecall: false,
       isMainAddressWherePersonCanBeFound: true,
       isThisAnEmergencyRecall: true,
@@ -109,15 +158,15 @@ describe('get', () => {
       whoCompletedPartA: true,
       ppcsQueryEmails: true,
       revocationOrderRecipients: true,
-      isChargedWithOffence: false,
-      isServingTerroristOrNationalSecurityOffence: false,
-      isAtRiskOfInvolvedInForeignPowerThreat: false,
-      wasReferredToParoleBoard244ZB: false,
-      wasRepatriatedForMurder: false,
-      isServingSOPCSentence: false,
-      isServingDCRSentence: false,
-      isYouthSentenceOver12Months: false,
-      isYouthChargedWithSeriousOffence: false,
+      isChargedWithOffence: true,
+      isServingTerroristOrNationalSecurityOffence: true,
+      isAtRiskOfInvolvedInForeignPowerThreat: true,
+      wasReferredToParoleBoard244ZB: true,
+      wasRepatriatedForMurder: true,
+      isServingSOPCSentence: true,
+      isServingDCRSentence: true,
+      isYouthSentenceOver12Months: true,
+      isYouthChargedWithSeriousOffence: true,
     },
   }
 
@@ -300,13 +349,13 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: false,
+      isReadyForCounterSignature: true,
       areAllComplete: false,
     })
 
-    expect(res.locals.lineManagerCountersignLink).toEqual(false)
+    expect(res.locals.lineManagerCountersignLink).toEqual(true)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Requested')
     expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
     expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
@@ -331,16 +380,16 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: false,
+      isReadyForCounterSignature: true,
       areAllComplete: false,
     })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
-    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
+    expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
 
-    expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.seniorManagerCountersignLink).toEqual(true)
+    expect(res.locals.seniorManagerCountersignLabel).toEqual('To do')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
     expect(res.locals.countersignSpoExposition).toEqual('spo reasons')
   })
@@ -366,16 +415,16 @@ describe('get', () => {
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: false,
+      isReadyForCounterSignature: true,
       areAllComplete: false,
     })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
-    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
+    expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
 
-    expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.seniorManagerCountersignLink).toEqual(true)
+    expect(res.locals.seniorManagerCountersignLabel).toEqual('Requested')
     expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
   })
   it('present - tasks complete and ACO signature signed', async () => {
@@ -385,7 +434,7 @@ describe('get', () => {
       { name: STATUSES.ACO_SIGNATURE_REQUESTED, active: false },
       { name: STATUSES.ACO_SIGNED, active: true },
     ])
-    const recommendation = { ...recommendationTemplate, triggerLeadingToRecall: { selected: true } }
+    const recommendation = { ...recommendationTemplate }
     const res = mockRes({
       locals: {
         recommendation,
@@ -396,23 +445,22 @@ describe('get', () => {
     await taskListController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'taskList' })
-    expect(res.locals.isAcoSigned).toEqual(false)
+    expect(res.locals.isAcoSigned).toEqual(true)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
     expect(res.locals.recommendation).toEqual(recommendation)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
-      isReadyForCounterSignature: false,
-      areAllComplete: false,
-      statuses: { ...taskCompleteness.statuses, triggerLeadingToRecall: true },
+      isReadyForCounterSignature: true,
+      areAllComplete: true,
     })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('Cannot start yet')
-    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
+    expect(res.locals.lineManagerCountersignLabel).toEqual('Completed')
+    expect(res.locals.lineManagerCountersignStyle).toEqual('blue')
 
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
-    expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
+    expect(res.locals.seniorManagerCountersignLabel).toEqual('Completed')
+    expect(res.locals.seniorManagerCountersignStyle).toEqual('blue')
   })
   it('present - with spo role', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])

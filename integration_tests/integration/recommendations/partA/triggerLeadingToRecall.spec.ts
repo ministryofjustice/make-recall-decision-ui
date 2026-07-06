@@ -17,9 +17,7 @@ context('Trigger leading to recall Page', () => {
   describe('Page Data', () => {
     it('Standard page load', () => {
       const recommendation = RecommendationResponseGenerator.generate()
-      beforeEach(() => {
-        cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-      })
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
 
       cy.visit(testPageUrl)
 

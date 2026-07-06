@@ -199,7 +199,7 @@ context('Make a recommendation', () => {
       cy.get('textarea').type('Some details')
       cy.get('button').click()
 
-      cy.pageHeading().should('equal', 'Consider a recall')
+      cy.pageHeading().should('equal', 'What licence conditions has Jane Bloggs breached?')
     })
 
     it('present record consideration rationale', () => {

@@ -30,7 +30,7 @@ type MandatoryFTRCriteria = {
   isMappaLevel2Or3?: boolean
 }
 
-export const isFixedTermRecallMandatory = (sentenceGroup: SentenceGroup, criteria: MandatoryFTRCriteria) => {
+const isFixedTermRecallMandatory = (sentenceGroup: SentenceGroup, criteria: MandatoryFTRCriteria) => {
   if (sentenceGroup === SentenceGroup.ADULT_SDS) {
     return !(
       (criteria.wasReferredToParoleBoard244ZB ?? true) ||
