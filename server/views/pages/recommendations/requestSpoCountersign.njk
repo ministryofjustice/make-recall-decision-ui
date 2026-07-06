@@ -32,6 +32,18 @@
             </div>
         </div>
     </div>
+
+  <script id="ss-popup-3742462" nonce="{{ cspNonce }}">
+    var _ssq = { 'cid': 3742462 , 'custom_variable1' : '{{ recommendation.id }}' }
+    window.onload = function() {
+      var ss = document.createElement('script')
+      ss.type = 'text/javascript'
+      ss.async = true
+      ss.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.smartsurvey.co.uk/s/popup/' + _ssq.cid + '/js/'
+      var s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(ss, s)
+    }
+  </script>
 {% endblock %}
 
 {% block bodyEnd %}

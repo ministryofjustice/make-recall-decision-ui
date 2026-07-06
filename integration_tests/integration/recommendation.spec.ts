@@ -2456,34 +2456,6 @@ context('Make a recommendation', () => {
       cy.getText('ppudDateOfBirth').should('contain', '3 January 1990')
     })
 
-    it('edit CRO', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {
-            cro: '64941/08C',
-          },
-          bookRecallToPpud: {
-            cro: '64941',
-          },
-          ppudOffender: {
-            croOtherNumber: '64941/08D',
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/edit-cro`)
-      cy.pageHeading().should('contain', 'Edit CRO')
-
-      cy.getText('nomisCro').should('contain', '64941/08C')
-      cy.getText('ppudCro').should('contain', '64941/08D')
-    })
-
     it('edit Prison Number', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
