@@ -439,6 +439,9 @@ context('Recommendation - task list', () => {
         personOnProbation: {
           name: personName,
           hasBeenReviewed: true,
+          mappa: {
+            hasBeenReviewed: true,
+          },
         },
         custodyStatus: {
           selected: selected.NO,
