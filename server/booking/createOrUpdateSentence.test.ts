@@ -21,6 +21,7 @@ import {
   PpudSentenceData,
 } from '../@types/make-recall-decision-api/models/RecommendationResponse'
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
+import SENTENCED_AS_YOUTH from '../@types/make-recall-decision-api/models/ppud/SentencedAsYouth'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -43,7 +44,7 @@ function expectedDeterminateSentenceRequest(
     sentenceExpiryDate: nomisOffence.sentenceSequenceExpiryDate,
     sentencingCourt: nomisOffence.courtDescription,
     sentencedUnder: bookRecallToPpud?.legislationSentencedUnder,
-    sentencedAsYouth: sentenceGroup === SentenceGroup.YOUTH_SDS ? 'Yes' : 'No',
+    sentencedAsYouth: sentenceGroup === SentenceGroup.YOUTH_SDS ? SENTENCED_AS_YOUTH.YES : SENTENCED_AS_YOUTH.NO,
   }
 }
 
@@ -56,7 +57,7 @@ function expectedIndeterminateSentenceRequest(
     custodyType: selectedPpudSentence.custodyType,
     dateOfSentence: editedIndeterminateSentenceData.dateOfSentence,
     sentencingCourt: editedIndeterminateSentenceData.sentencingCourt,
-    sentencedAsYouth: sentenceGroup === SentenceGroup.YOUTH_SDS ? 'Yes' : 'No',
+    sentencedAsYouth: sentenceGroup === SentenceGroup.YOUTH_SDS ? SENTENCED_AS_YOUTH.YES : SENTENCED_AS_YOUTH.NO,
   }
 }
 

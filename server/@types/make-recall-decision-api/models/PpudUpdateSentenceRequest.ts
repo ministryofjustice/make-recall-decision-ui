@@ -1,3 +1,5 @@
+import SENTENCED_AS_YOUTH from './ppud/SentencedAsYouth'
+
 export type PpudUpdateSentenceRequest = {
   custodyType: string,
   dateOfSentence: string,
@@ -10,7 +12,7 @@ export type PpudUpdateSentenceRequest = {
   sentenceExpiryDate?: string,
   sentencingCourt: string,
   sentencedUnder?: string,
-  sentencedAsYouth?: string,
+  sentencedAsYouth?: SENTENCED_AS_YOUTH,
 };
 
 export type SentenceLength = {

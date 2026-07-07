@@ -5,6 +5,7 @@ import type { FeatureFlags } from '../@types/featureFlags'
 import BookingMemento from './BookingMemento'
 import StageEnum from './StageEnum'
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
+import SENTENCED_AS_YOUTH from '../@types/make-recall-decision-api/models/ppud/SentencedAsYouth'
 
 export default async function bookOffender(
   bookingMemento: BookingMemento,
@@ -88,7 +89,8 @@ export default async function bookOffender(
       indexOffence: recommendation.bookRecallToPpud?.indexOffence,
       mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
       prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
-      sentencedAsYouth: recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS ? 'Yes' : 'No',
+      sentencedAsYouth:
+        recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS ? SENTENCED_AS_YOUTH.YES : SENTENCED_AS_YOUTH.NO,
       address,
       additionalAddresses,
     })

@@ -2,6 +2,8 @@ import bookOffender from './bookOffender'
 import StageEnum from './StageEnum'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { ppudCreateOffender, ppudUpdateOffender, updateRecommendation } from '../data/makeDecisionApiClient'
+import SENTENCED_AS_YOUTH from '../@types/make-recall-decision-api/models/ppud/SentencedAsYouth'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -27,6 +29,7 @@ describe('book offender', () => {
     const establishment = 'HMP Brixton'
     const recommendation: RecommendationResponse = {
       id: '1',
+      sentenceGroup: SentenceGroup.ADULT_SDS,
       prisonOffender: {
         status: 'INACTIVE OUT',
       },
@@ -99,7 +102,7 @@ describe('book offender', () => {
       mappaLevel: 'Level 2 - local inter-agency management',
       nomsId: 'A12345',
       prisonNumber: '7878783',
-      sentencedAsYouth: 'No',
+      sentencedAsYouth: SENTENCED_AS_YOUTH.NO,
     })
 
     expect(updateRecommendation).toHaveBeenCalledWith({
@@ -254,6 +257,7 @@ describe('book offender', () => {
     const establishment = 'HMP Brixton'
     const recommendation: RecommendationResponse = {
       id: '1',
+      sentenceGroup: SentenceGroup.ADULT_SDS,
       prisonOffender: {
         status: 'INACTIVE OUT',
       },
@@ -322,7 +326,7 @@ describe('book offender', () => {
       mappaLevel: 'Level 2 - local inter-agency management',
       nomsId: 'A12345',
       prisonNumber: '7878783',
-      sentencedAsYouth: 'No',
+      sentencedAsYouth: SENTENCED_AS_YOUTH.NO,
     })
     expect(result).toEqual({
       offenderId: '767',
