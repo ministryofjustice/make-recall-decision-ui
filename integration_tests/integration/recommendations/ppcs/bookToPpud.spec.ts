@@ -71,7 +71,10 @@ context('Select PPUD Sentence', () => {
     })
 
     it('When user has had to create a new PPUD sentence', () => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendation, ppudOffender: undefined },
+      })
       cy.visit(testPageUrl)
 
       cy.get('.govuk-panel.govuk-panel--confirmation').should('exist')
@@ -81,7 +84,7 @@ context('Select PPUD Sentence', () => {
       cy.get('.govuk-panel.govuk-panel--confirmation')
         .should('be.visible')
         .within(() => {
-          cy.get('.govuk-panel__title').should('contain.text', 'Booked on to PPUD')
+          cy.get('.govuk-panel__title').should('contain.text', 'Record created and booked on to PPUD')
 
           cy.get('.govuk-panel__body').eq(0).should('contain.text', 'John Doe')
 
