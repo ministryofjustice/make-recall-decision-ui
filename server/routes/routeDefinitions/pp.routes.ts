@@ -58,6 +58,7 @@ import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../rec
 import ppPaths from '../paths/pp.paths'
 import sentenceInformationController from '../../controllers/recommendation/sentenceInformationController'
 import checkMappaInformationController from '../../controllers/recommendation/checkMappaInformationController'
+import chargedWithOffence from '../../controllers/recommendation/chargedWithOffenceController'
 
 const roles = {
   allow: [HMPPS_AUTH_ROLE.PO],
@@ -515,6 +516,16 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
     ...ppPostTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.checkMappaInformation}`,
     handler: checkMappaInformationController.post,
+  },
+  {
+    ...ppGetTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppPaths.chargedWithOffence}`,
+    handler: chargedWithOffence.get,
+  },
+  {
+    ...ppPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppPaths.chargedWithOffence}`,
+    handler: chargedWithOffence.post,
   },
   // Non-default middleware routes
   {

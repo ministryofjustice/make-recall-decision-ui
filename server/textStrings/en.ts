@@ -310,6 +310,7 @@ const strings: Record<string, Record<string, string>> = {
     areOffenceChangesNeeded: 'Do you need to change the index offence or add a comment?',
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
+    chargedWithOffence: 'Is {{ fullName }} being recalled because of being charged or convicted for an offence?',
   },
   labels: {
     yes: 'Yes',

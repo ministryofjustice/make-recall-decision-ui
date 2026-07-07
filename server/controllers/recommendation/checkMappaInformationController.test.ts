@@ -59,4 +59,53 @@ describe('post', () => {
       },
     })
   })
+
+  describe('with ftr56SentenceConviction flag', () => {
+    it('it redirects correctly when disabled', async () => {
+      ;(updateRecommendation as jest.Mock).mockResolvedValueOnce({})
+
+      const res = mockRes({
+        token: 'token',
+      })
+
+      const req = mockReq({
+        params: { recommendationId: '1' },
+        body: {
+          isMappaCategory4: true,
+          isMappaLevel2Or3: true,
+        },
+      })
+      const next = mockNext()
+
+      await checkMappaInformationController.post(req, res, next)
+
+      expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/1/suitability-for-fixed-term-recall')
+    })
+
+    it('it redirects correctly when enabled', async () => {
+      ;(updateRecommendation as jest.Mock).mockResolvedValueOnce({})
+
+      const res = mockRes({
+        token: 'token',
+        locals: {
+          flags: {
+            ftr56SentenceConviction: true,
+          },
+        },
+      })
+
+      const req = mockReq({
+        params: { recommendationId: '1' },
+        body: {
+          isMappaCategory4: true,
+          isMappaLevel2Or3: true,
+        },
+      })
+      const next = mockNext()
+
+      await checkMappaInformationController.post(req, res, next)
+
+      expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/1/charged-with-offence')
+    })
+  })
 })
