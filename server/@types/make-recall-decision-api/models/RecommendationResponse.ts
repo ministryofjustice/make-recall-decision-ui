@@ -27,6 +27,7 @@ import { CvlLicenceConditionsBreached } from './CvlLicenceConditionsBreached'
 import BookingMemento from '../../../booking/BookingMemento'
 import CUSTODY_GROUP from './ppud/CustodyGroup'
 import { SentenceGroup } from '../../../controllers/recommendations/sentenceInformation/formOptions'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../../controllers/recommendations/chargedWithOffence/formOptions'
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;
@@ -111,6 +112,7 @@ export type RecommendationResponse = {
   isAtRiskOfInvolvedInForeignPowerThreat?: boolean,
   isYouthSentenceOver12Months?: boolean,
   isYouthChargedWithSeriousOffence?: boolean,
+  isRecalledOnNewChargedOrConvictedOffence?: IsRecalledOnNewChargedOrConvictedOffence,
 };
 
 export namespace RecommendationResponse {
@@ -277,4 +279,3 @@ export type PpudUser = {
   fullName: string,
   teamName: string,
 }
-
