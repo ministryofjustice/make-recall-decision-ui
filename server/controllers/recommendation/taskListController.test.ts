@@ -16,68 +16,6 @@ jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
 
 describe('get', () => {
-  // const recommendationTemplate = {
-  //   custodyStatus: {
-  //     selected: 'NO',
-  //   },
-  //   localPoliceContact: {
-  //     contactName: 'Joe Bloggs',
-  //   },
-  //   crn: 'X098092',
-  //   recallType: {
-  //     selected: { value: 'STANDARD' },
-  //   },
-  //   decisionDateTime: '2021-01-01T12:00:00',
-  //   whatLedToRecall: 'text',
-  //   isThisAnEmergencyRecall: false,
-  //   activeCustodialConvictionCount: 1,
-  //   hasVictimsInContactScheme: {
-  //     selected: 'NO',
-  //   },
-  //   indeterminateSentenceType: { selected: 'NO' },
-  //   hasArrestIssues: { selected: false },
-  //   hasContrabandRisk: { selected: false },
-  //   personOnProbation: {
-  //     name: 'Joe Bloggs',
-  //     mappa: { hasBeenReviewed: true },
-  //     hasBeenReviewed: true,
-  //   },
-  //   alternativesToRecallTried: {
-  //     selected: [{ value: 'NONE' }],
-  //   },
-  //   licenceConditionsBreached: {
-  //     standardLicenceConditions: {
-  //       selected: ['GOOD_BEHAVIOUR'],
-  //     },
-  //   },
-  //   vulnerabilities: {
-  //     selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE }],
-  //   },
-  //   convictionDetail: { hasBeenReviewed: true },
-  //   offenceAnalysis: 'text',
-  //   isMainAddressWherePersonCanBeFound: { selected: true },
-  //   previousReleases: { hasBeenReleasedPreviously: false },
-  //   currentRoshForPartA: {},
-  //   whoCompletedPartA: {
-  //     name: 'john',
-  //     email: 'john@me.com',
-  //     telephone: '123456',
-  //     region: 'region A',
-  //     localDeliveryUnit: 'here',
-  //     isPersonProbationPractitionerForOffender: true,
-  //   },
-  //   practitionerForPartA: {
-  //     name: 'jane',
-  //     email: 'jane@me.com',
-  //     telephone: '55555',
-  //     region: 'region A',
-  //     localDeliveryUnit: 'here',
-  //     isPersonProbationPractitionerForOffender: true,
-  //   },
-  //   revocationOrderRecipients: ['here@me.com'],
-  //   ppcsQueryEmails: ['bob@me.com'],
-  // }
-
   const recommendationTemplate = RecommendationResponseGenerator.generate({
     recallType: {
       selected: {
@@ -243,57 +181,10 @@ describe('get', () => {
 
   it('present - tasks complete', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = RecommendationResponseGenerator.generate({
-      recallType: {
-        selected: {
-          value: RecallTypeSelectedValue.value.FIXED_TERM,
-        },
-      },
-      sentenceGroup: SentenceGroup.ADULT_SDS,
-      alternativesToRecallTried: true,
-      decisionDateTime: true,
-      triggerLeadingToRecall: false,
-      previousReleases: true,
-      licenceConditionsBreached: true,
-      isChargedWithOffence: true,
-      personOnProbation: {
-        name: 'Jane Bloggs',
-        hasBeenReviewed: true,
-        mappa: {
-          hasBeenReviewed: true,
-        },
-        ftr56MappaReviewed: true,
-      },
-      indexOffenceDetails: true,
-      convictionDetail: {
-        hasBeenReviewed: true,
-      },
-      offenceAnalysis: true,
-      custodyStatus: {
-        selected: selected.YES_POLICE,
-        details: faker.location.streetAddress(),
-        allOptions: [],
-      },
 
-      indeterminateOrExtendedSentenceDetails: false,
-      practitionerForPartA: true,
-      whoCompletedPartA: {
-        isPersonProbationPractitionerForOffender: true,
-      },
-      whatLedToRecall: true,
-      isThisAnEmergencyRecall: true,
-      isServingTerroristOrNationalSecurityOffence: true,
-      isAtRiskOfInvolvedInForeignPowerThreat: true,
-      wasReferredToParoleBoard244ZB: true,
-      wasRepatriatedForMurder: true,
-      isServingSOPCSentence: true,
-      isServingDCRSentence: true,
-      isYouthSentenceOver12Months: true,
-      isYouthChargedWithSeriousOffence: true,
-    })
     const res = mockRes({
       locals: {
-        recommendation,
+        recommendation: recommendationTemplate,
         user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
@@ -303,25 +194,12 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'taskList' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
-    expect(res.locals.recommendation).toEqual(recommendation)
+    expect(res.locals.recommendation).toEqual(recommendationTemplate)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
       isReadyForCounterSignature: true,
 
       areAllComplete: false,
-      statuses: {
-        ...taskCompleteness.statuses,
-        isChargedWithOffence: true,
-        isServingTerroristOrNationalSecurityOffence: true,
-        isAtRiskOfInvolvedInForeignPowerThreat: true,
-        wasReferredToParoleBoard244ZB: true,
-        wasRepatriatedForMurder: true,
-        isServingSOPCSentence: true,
-        isServingDCRSentence: true,
-        isYouthSentenceOver12Months: true,
-        isYouthChargedWithSeriousOffence: true,
-        sentenceGroup: true,
-      },
     })
 
     expect(res.locals.lineManagerCountersignLink).toEqual(true)
