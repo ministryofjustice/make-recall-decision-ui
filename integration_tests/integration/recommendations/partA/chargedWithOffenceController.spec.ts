@@ -1,6 +1,7 @@
 import testRadioButtons from '../../../componentTests/radioButtons.tests'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../../../server/controllers/recommendations/chargedWithOffence/formOptions'
 
 context('Charged with new offence', () => {
   const mockRecommendation = RecommendationResponseGenerator.generate()
@@ -25,7 +26,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence',
               name: '',
-              value: 'ONLY_CHARGED',
+              value: IsRecalledOnNewChargedOrConvictedOffence.ONLY_CHARGED,
               checked: false,
             },
             label: {
@@ -36,7 +37,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence-2',
               name: '',
-              value: 'CHARGED_AND_CONVICTED',
+              value: IsRecalledOnNewChargedOrConvictedOffence.CHARGED_AND_CONVICTED,
               checked: false,
             },
             label: {
@@ -47,7 +48,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence-3',
               name: '',
-              value: 'NO',
+              value: IsRecalledOnNewChargedOrConvictedOffence.NO,
               checked: false,
             },
             label: {
@@ -77,7 +78,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence',
               name: '',
-              value: 'ONLY_CHARGED',
+              value: IsRecalledOnNewChargedOrConvictedOffence.ONLY_CHARGED,
               checked: false,
             },
             label: {
@@ -88,7 +89,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence-2',
               name: '',
-              value: 'CHARGED_AND_CONVICTED',
+              value: IsRecalledOnNewChargedOrConvictedOffence.CHARGED_AND_CONVICTED,
               checked: false,
             },
             label: {
@@ -99,7 +100,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence-3',
               name: '',
-              value: 'NO',
+              value: IsRecalledOnNewChargedOrConvictedOffence.NO,
               checked: true,
             },
             label: {
