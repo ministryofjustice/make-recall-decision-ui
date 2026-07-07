@@ -10,6 +10,5 @@ export default configureAllowedScripts({
     'node_modules/unrs-resolver@1.12.2': 'ALLOW',
     'node_modules/esbuild@0.28.1': 'ALLOW',
     'node_modules/fsevents@2.3.3': 'ALLOW',
-    'node_modules/protobufjs@7.6.4': 'ALLOW',
   },
 })
