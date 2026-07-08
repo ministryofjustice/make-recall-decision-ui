@@ -2,6 +2,8 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { getCaseSummary, updateRecommendation } from '../../data/makeDecisionApiClient'
 import checkMappaInformationController from './checkMappaInformationController'
 import { MappaGenerator } from '../../../data/common/mappaGenerator'
+import ppPaths from '../../routes/paths/pp.paths'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -79,7 +81,10 @@ describe('post', () => {
 
       await checkMappaInformationController.post(req, res, next)
 
-      expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/1/suitability-for-fixed-term-recall')
+      expect(res.redirect).toHaveBeenCalledWith(
+        303,
+        `${sharedPaths.recommendations}/1/${ppPaths.suitabilityForFixedTermRecall}`,
+      )
     })
 
     it('it redirects correctly when enabled', async () => {
@@ -105,7 +110,7 @@ describe('post', () => {
 
       await checkMappaInformationController.post(req, res, next)
 
-      expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/1/charged-with-offence')
+      expect(res.redirect).toHaveBeenCalledWith(303, `${sharedPaths.recommendations}/1/${ppPaths.chargedWithOffence}`)
     })
   })
 })

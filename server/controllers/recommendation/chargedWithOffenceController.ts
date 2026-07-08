@@ -5,6 +5,9 @@ import ppPaths from '../../routes/paths/pp.paths'
 import { sharedPaths } from '../../routes/paths/shared.paths'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { makeErrorObject } from '../../utils/errors'
+import strings from '../../textStrings/en'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import { stripHtmlTags } from '../../utils/utils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -28,22 +31,58 @@ async function post(req: Request, res: Response, next: NextFunction) {
     recommendation,
   } = res.locals
 
-  const { _csrf, ...valuesToSave } = req.body
+  const { isRecalledOnNewChargedOrConvictedOffence } = req.body
 
-  if (!valuesToSave.isRecalledOnNewChargedOrConvictedOffence) {
+  if (!isRecalledOnNewChargedOrConvictedOffence) {
+    const errorId = 'missingisRecalledOnNewChargedOrConvictedOffence'
     req.session.errors = [
       makeErrorObject({
         id: 'isRecalledOnNewChargedOrConvictedOffence',
-        text: `Select if ${recommendation.personOnProbation.name} has been charged or convicted for an offence`,
-        errorId: 'missingisRecalledOnNewChargedOrConvictedOffence',
+        text: strings.errors[errorId],
+        errorId,
       }),
     ]
     return res.redirect(303, req.originalUrl)
   }
 
+  let valuesToRemove: RecommendationResponse = {}
+
+  if (
+    recommendation?.isRecalledOnNewChargedOrConvictedOffence &&
+    isRecalledOnNewChargedOrConvictedOffence !== recommendation?.isRecalledOnNewChargedOrConvictedOffence?.selected
+  ) {
+    valuesToRemove = {
+      wasReferredToParoleBoard244ZB: null,
+      wasRepatriatedForMurder: null,
+      isServingSOPCSentence: null,
+      isServingDCRSentence: null,
+      isChargedWithOffence: null,
+      isServingTerroristOrNationalSecurityOffence: null,
+      isAtRiskOfInvolvedInForeignPowerThreat: null,
+      isYouthSentenceOver12Months: null,
+      isYouthChargedWithSeriousOffence: null,
+      recallType: {
+        selected: null,
+        allOptions: [],
+      },
+      fixedTermAdditionalLicenceConditions: {
+        selected: null,
+        details: null,
+      },
+    }
+  }
+
   await updateRecommendation({
     recommendationId,
-    valuesToSave,
+    valuesToSave: {
+      ...valuesToRemove,
+      isRecalledOnNewChargedOrConvictedOffence: {
+        selected: isRecalledOnNewChargedOrConvictedOffence,
+        allOptions: [
+          ...chargedWithOffenceOptions.map(option => ({ value: option.value, text: stripHtmlTags(option.html) })),
+        ],
+      },
+    },
     token,
     featureFlags,
   })

@@ -27,7 +27,8 @@ import { CvlLicenceConditionsBreached } from './CvlLicenceConditionsBreached'
 import BookingMemento from '../../../booking/BookingMemento'
 import CUSTODY_GROUP from './ppud/CustodyGroup'
 import { SentenceGroup } from '../../../controllers/recommendations/sentenceInformation/formOptions'
-import { IsRecalledOnNewChargedOrConvictedOffence } from '../../../controllers/recommendations/chargedWithOffence/formOptions'
+import { IsRecalledOnNewChargedOrConvictedOffence } from './IsRecalledOnNewChargedOrConvictedOffence'
+
 
 export type RecommendationResponse = {
   userAccessResponse?: UserAccessResponse;

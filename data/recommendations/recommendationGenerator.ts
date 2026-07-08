@@ -18,7 +18,8 @@ import { BookingMementoGenerator, BookingMementoOptions } from './bookingMemento
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { CustodyStatusGenerator, CustodyStatusOptions } from './custodyStatusGenerator'
 import regionEnum from '../../server/controllers/recommendations/formOptions/region'
-import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/controllers/recommendations/chargedWithOffence/formOptions'
+import { IsRecalledOnNewChargedOrConvictedOffenceOptions } from './isRecalledOnNewChargedOrConvictedOffenceGenerator'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -83,7 +84,7 @@ export type RecommendationOptions = {
   isAtRiskOfInvolvedInForeignPowerThreat?: boolean
   isYouthSentenceOver12Months?: boolean
   isYouthChargedWithSeriousOffence?: boolean
-  isRecalledOnNewChargedOrConvictedOffence?: NoneOrOption<IsRecalledOnNewChargedOrConvictedOffence>
+  isRecalledOnNewChargedOrConvictedOffence?: NoneOrOption<IsRecalledOnNewChargedOrConvictedOffenceOptions>
 }
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
@@ -271,9 +272,11 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     isYouthSentenceOver12Months: options?.isYouthSentenceOver12Months,
     isYouthChargedWithSeriousOffence: options?.isYouthChargedWithSeriousOffence,
     isRecalledOnNewChargedOrConvictedOffence:
-      options?.isRecalledOnNewChargedOrConvictedOffence === 'none'
-        ? undefined
-        : (options?.isRecalledOnNewChargedOrConvictedOffence ??
-          faker.helpers.enumValue(IsRecalledOnNewChargedOrConvictedOffence)),
+      (options?.isRecalledOnNewChargedOrConvictedOffence ?? true)
+        ? {
+            selected: faker.helpers.enumValue(IsRecalledOnNewChargedOrConvictedOffence.selected),
+            allOptions: [],
+          }
+        : undefined,
   }),
 }

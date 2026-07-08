@@ -1,10 +1,14 @@
 import testRadioButtons from '../../../componentTests/radioButtons.tests'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
-import { IsRecalledOnNewChargedOrConvictedOffence } from '../../../../server/controllers/recommendations/chargedWithOffence/formOptions'
+import { testStandardBackLink } from '../../../componentTests/backLink.tests'
+import config from '../../../../server/config'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 context('Charged with new offence', () => {
-  const mockRecommendation = RecommendationResponseGenerator.generate()
+  const mockRecommendation = RecommendationResponseGenerator.generate({
+    isRecalledOnNewChargedOrConvictedOffence: 'none',
+  })
   const testPageUrl = `/recommendations/${mockRecommendation.id}/charged-with-offence`
 
   beforeEach(() => {
@@ -17,16 +21,23 @@ context('Charged with new offence', () => {
     it('Should load the page correctly', () => {
       cy.visit(testPageUrl)
 
+      cy.title().should(
+        'equal',
+        `Is the person being recalled because of being charged or convicted for an offence? - ${config.applicationName}`,
+      )
+
+      testStandardBackLink()
+
       testRadioButtons(cy.get('.govuk-form-group'), {
         legend: {
-          text: `Is the person being recalled because of being charged or convicted for an offence?`,
+          text: `Is ${mockRecommendation.personOnProbation.name} being recalled because of being charged or convicted for an offence?`,
         },
         options: [
           {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence',
               name: '',
-              value: IsRecalledOnNewChargedOrConvictedOffence.ONLY_CHARGED,
+              value: IsRecalledOnNewChargedOrConvictedOffence.selected.ONLY_CHARGED,
               checked: false,
             },
             label: {
@@ -37,7 +48,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence-2',
               name: '',
-              value: IsRecalledOnNewChargedOrConvictedOffence.CHARGED_AND_CONVICTED,
+              value: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
               checked: false,
             },
             label: {
@@ -48,7 +59,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence-3',
               name: '',
-              value: IsRecalledOnNewChargedOrConvictedOffence.NO,
+              value: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
               checked: false,
             },
             label: {
@@ -71,14 +82,14 @@ context('Charged with new offence', () => {
 
       testRadioButtons(cy.get('.govuk-form-group'), {
         legend: {
-          text: `Is the person being recalled because of being charged or convicted for an offence?`,
+          text: `Is ${mockRecommendation.personOnProbation.name} being recalled because of being charged or convicted for an offence?`,
         },
         options: [
           {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence',
               name: '',
-              value: IsRecalledOnNewChargedOrConvictedOffence.ONLY_CHARGED,
+              value: IsRecalledOnNewChargedOrConvictedOffence.selected.ONLY_CHARGED,
               checked: false,
             },
             label: {
@@ -89,7 +100,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence-2',
               name: '',
-              value: IsRecalledOnNewChargedOrConvictedOffence.CHARGED_AND_CONVICTED,
+              value: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
               checked: false,
             },
             label: {
@@ -100,7 +111,7 @@ context('Charged with new offence', () => {
             input: {
               id: 'isRecalledOnNewChargedOrConvictedOffence-3',
               name: '',
-              value: IsRecalledOnNewChargedOrConvictedOffence.NO,
+              value: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
               checked: true,
             },
             label: {

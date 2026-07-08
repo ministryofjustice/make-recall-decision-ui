@@ -1,7 +1,12 @@
-import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { sharedPaths } from '../../routes/paths/shared.paths'
+import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import chargedWithOffenceController from './chargedWithOffenceController'
+import ppPaths from '../../routes/paths/pp.paths'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
+import chargedWithOffenceOptions from '../recommendations/chargedWithOffence/formOptions'
+import { stripHtmlTags } from '../../utils/utils'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -29,7 +34,7 @@ describe('post', () => {
   it('with invalid data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: RecommendationResponseGenerator.generate({ personOnProbation: { name: 'John Smith' } }),
+        recommendation: RecommendationResponseGenerator.generate(),
       },
     })
     const req = mockReq()
@@ -40,7 +45,7 @@ describe('post', () => {
       errors: [
         {
           errorId: 'missingisRecalledOnNewChargedOrConvictedOffence',
-          text: 'Select if John Smith has been charged or convicted for an offence',
+          text: 'Select if {{ fullName }} has been charged or convicted for an offence',
           name: 'isRecalledOnNewChargedOrConvictedOffence',
           values: undefined,
           invalidParts: undefined,
@@ -56,7 +61,7 @@ describe('post', () => {
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
-        isRecalledOnNewChargedOrConvictedOffence: 'NO',
+        isRecalledOnNewChargedOrConvictedOffence: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
       },
     })
 
@@ -66,12 +71,78 @@ describe('post', () => {
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       valuesToSave: {
-        isRecalledOnNewChargedOrConvictedOffence: 'NO',
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+          allOptions: [
+            ...chargedWithOffenceOptions.map(option => ({ value: option.value, text: stripHtmlTags(option.html) })),
+          ],
+        },
       },
       featureFlags: {},
       token: 'token',
       recommendationId: '123',
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/suitability-for-fixed-term-recall')
+
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      `${sharedPaths.recommendations}/123/${ppPaths.suitabilityForFixedTermRecall}`,
+    )
+  })
+
+  it('resets existing data when the previously selected option has changed', async () => {
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        isRecalledOnNewChargedOrConvictedOffence: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: RecommendationResponseGenerator.generate({
+          isRecalledOnNewChargedOrConvictedOffence: {
+            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+          },
+        }),
+      },
+    })
+
+    await chargedWithOffenceController.post(req, res, mockNext())
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      valuesToSave: {
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+          allOptions: [
+            ...chargedWithOffenceOptions.map(option => ({ value: option.value, text: stripHtmlTags(option.html) })),
+          ],
+        },
+        fixedTermAdditionalLicenceConditions: {
+          details: null,
+          selected: null,
+        },
+        isAtRiskOfInvolvedInForeignPowerThreat: null,
+        isChargedWithOffence: null,
+        isServingDCRSentence: null,
+        isServingSOPCSentence: null,
+        isServingTerroristOrNationalSecurityOffence: null,
+        isYouthChargedWithSeriousOffence: null,
+        isYouthSentenceOver12Months: null,
+        recallType: {
+          allOptions: [],
+          selected: null,
+        },
+        wasReferredToParoleBoard244ZB: null,
+        wasRepatriatedForMurder: null,
+      },
+      featureFlags: {},
+      token: 'token',
+      recommendationId: '123',
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      `${sharedPaths.recommendations}/123/${ppPaths.suitabilityForFixedTermRecall}`,
+    )
   })
 })

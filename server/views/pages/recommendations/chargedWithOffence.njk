@@ -18,13 +18,13 @@
             name: "isRecalledOnNewChargedOrConvictedOffence",
             fieldset: {
               legend: {
-                text: pageTitles[page.id],
+                text: pageHeadings[page.id],
                 classes: "govuk-fieldset__legend--l"
               }
             },
             items: radioCheckboxItems({
               items: chargedWithOffenceOptions,
-              currentValues: recommendation.isRecalledOnNewChargedOrConvictedOffence
+              currentValues: recommendation.isRecalledOnNewChargedOrConvictedOffence.selected
             }),
             errorMessage: errorMessage(errors.isRecalledOnNewChargedOrConvictedOffence)
           })
