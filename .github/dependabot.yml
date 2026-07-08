@@ -50,11 +50,26 @@ version: 2
       # ⚠️ Production dependencies are NOT grouped here, those need to be reviewed individually
 
   - package-ecosystem: "docker"
+    multi-ecosystem-group: "docker"
     directory: "/"
     schedule:
       interval: "daily"
     cooldown:
       default-days: 7
+      exclude: "ghcr.io/ministryofjustice/*"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "docker"
+
+  - package-ecosystem: "docker-compose"
+    multi-ecosystem-group: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude: "ghcr.io/ministryofjustice/*"
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
@@ -66,7 +81,33 @@ version: 2
       interval: "daily"
     cooldown:
       default-days: 7
+      exclude:
+        - "ministryofjustice/*"
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
       - "github-actions"
+
+  - package-ecosystem: "helm"
+    directory: "/helm_deploy/*"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "https://ministryofjustice.github.io/hmpps-helm-charts/*"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "helm"
+      
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    labels:
+      - "pre-commit"
+      - "helm"
