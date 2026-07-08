@@ -57,7 +57,8 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 7
-      exclude: "ghcr.io/ministryofjustice/*"
+      exclude:
+        - "ghcr.io/ministryofjustice/*"
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
@@ -70,7 +71,8 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 7
-      exclude: "ghcr.io/ministryofjustice/*"
+      exclude:
+        - "ghcr.io/ministryofjustice/*"
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
