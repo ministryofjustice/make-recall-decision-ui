@@ -8,122 +8,14 @@ describe('validateCustodyStatus', () => {
     path: `/recommendations/${recommendationId}/custody-status`,
   }
 
-  ;[true, false].forEach(ftr56Enabled => {
-    describe(`with FTR56 ${ftr56Enabled ? 'enabled' : 'disabled'}`, () => {
-      it('returns valuesToSave and no errors if "Yes, prison" selected', async () => {
-        const requestBody = {
-          custodyStatus: 'YES_PRISON',
-          crn: 'X34534',
-        }
-        const { errors, valuesToSave, nextPagePath } = await validateCustodyStatus({
-          requestBody,
-          urlInfo,
-          ftr56Enabled,
-        })
-        expect(errors).toBeUndefined()
-        expect(valuesToSave).toEqual({
-          custodyStatus: {
-            allOptions: [
-              { value: 'YES_PRISON', text: 'Yes, prison custody' },
-              { value: 'YES_POLICE', text: 'Yes, police custody' },
-              { value: 'NO', text: 'No' },
-            ],
-            selected: 'YES_PRISON',
-            details: null,
-          },
-        })
-        expect(valuesToSave).not.toHaveProperty('hasArrestIssues')
-        expect(valuesToSave).not.toHaveProperty('localPoliceContact')
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
-      })
-
-      it('returns valuesToSave, null details, and no errors if "No" selected', async () => {
-        const requestBody = {
-          custodyStatus: 'NO',
-          custodyStatusDetailsYesPolice: 'something from a previous entry',
-          crn: 'X34534',
-        }
-        const { errors, valuesToSave, nextPagePath } = await validateCustodyStatus({
-          requestBody,
-          urlInfo,
-          ftr56Enabled,
-        })
-        expect(errors).toBeUndefined()
-        expect(valuesToSave).toEqual({
-          custodyStatus: {
-            allOptions: [
-              { value: 'YES_PRISON', text: 'Yes, prison custody' },
-              { value: 'YES_POLICE', text: 'Yes, police custody' },
-              { value: 'NO', text: 'No' },
-            ],
-            selected: 'NO',
-            details: null,
-          },
-        })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
-      })
-
-      it('returns an error, if not set, and no valuesToSave', async () => {
-        const requestBody = {
-          custodyStatus: '',
-          crn: 'X34534',
-        }
-        const { errors, valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo, ftr56Enabled })
-        expect(valuesToSave).toBeUndefined()
-        expect(errors).toEqual([
-          {
-            href: '#custodyStatus',
-            name: 'custodyStatus',
-            text: 'Select whether the person is in custody or not',
-            errorId: 'noCustodyStatusSelected',
-          },
-        ])
-      })
-
-      it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
-        const requestBody = {
-          custodyStatus: 'VALUE',
-          crn: 'X34534',
-        }
-        const { errors, valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo, ftr56Enabled })
-        expect(valuesToSave).toBeUndefined()
-        expect(errors).toEqual([
-          {
-            href: '#custodyStatus',
-            name: 'custodyStatus',
-            text: 'Select whether the person is in custody or not',
-            errorId: 'noCustodyStatusSelected',
-          },
-        ])
-      })
-
-      it('if "from page" is set to recall task list, redirect to it', async () => {
-        const requestBody = {
-          custodyStatus: 'YES_PRISON',
-          crn: 'X34534',
-        }
-        const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-custody' }
-        const { nextPagePath } = await validateCustodyStatus({
-          requestBody,
-          recommendationId,
-          urlInfo: urlInfoWithFromPage,
-          ftr56Enabled,
-        })
-        expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-custody`)
-      })
-    })
-  })
-
-  it('returns valuesToSave and no errors if set to "Yes, police custody" with details and FTR56 flag disabled', async () => {
+  it('returns valuesToSave and no errors if "Yes, prison" selected', async () => {
     const requestBody = {
-      custodyStatus: 'YES_POLICE',
-      custodyStatusDetailsYesPolice: 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
+      custodyStatus: 'YES_PRISON',
       crn: 'X34534',
     }
     const { errors, valuesToSave, nextPagePath } = await validateCustodyStatus({
       requestBody,
       urlInfo,
-      ftr56Enabled: false,
     })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
@@ -133,22 +25,24 @@ describe('validateCustodyStatus', () => {
           { value: 'YES_POLICE', text: 'Yes, police custody' },
           { value: 'NO', text: 'No' },
         ],
-        selected: 'YES_POLICE',
-        details: 'West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
+        selected: 'YES_PRISON',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(valuesToSave).not.toHaveProperty('hasArrestIssues')
+    expect(valuesToSave).not.toHaveProperty('localPoliceContact')
+
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
   })
 
-  it('returns valuesToSave and no errors if set to "Yes, police custody" without details and FTR56 flag enabled', async () => {
+  it('returns valuesToSave, null details, and no errors if "No" selected', async () => {
     const requestBody = {
-      custodyStatus: 'YES_POLICE',
+      custodyStatus: 'NO',
+      custodyStatusDetailsYesPolice: 'something from a previous entry',
       crn: 'X34534',
     }
     const { errors, valuesToSave, nextPagePath } = await validateCustodyStatus({
       requestBody,
       urlInfo,
-      ftr56Enabled: true,
     })
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
@@ -158,49 +52,80 @@ describe('validateCustodyStatus', () => {
           { value: 'YES_POLICE', text: 'Yes, police custody' },
           { value: 'NO', text: 'No' },
         ],
-        selected: 'YES_POLICE',
-        details: null,
+        selected: 'NO',
       },
     })
-    expect(nextPagePath).toEqual('/recommendations/34/task-list')
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list`)
   })
 
-  it('strips HTML tags from "Yes, police custody" details when FTR56 flag disabled', async () => {
+  it('returns an error, if not set, and no valuesToSave', async () => {
     const requestBody = {
-      custodyStatus: 'YES_POLICE',
-      custodyStatusDetailsYesPolice:
-        '<script>alert("hey")</script>West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
+      custodyStatus: '',
       crn: 'X34534',
     }
-    const { valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo, ftr56Enabled: false })
-    expect(valuesToSave).toHaveProperty(
-      'custodyStatus.details',
-      'alert("hey")West Ham Lane Police Station\n18 West Ham Lane\nStratford\nE15 4SG',
-    )
-  })
-
-  it('returns an error, if "Yes, police custody" is set, but no details and FTR56 flag disabled', async () => {
-    const requestBody = {
-      custodyStatus: 'YES_POLICE',
-      custodyStatusDetailsYesPolice: ' ', // whitespace
-      crn: 'X34534',
-    }
-    const { errors, unsavedValues, valuesToSave } = await validateCustodyStatus({
-      requestBody,
-      urlInfo,
-      ftr56Enabled: false,
-    })
+    const { errors, valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo })
     expect(valuesToSave).toBeUndefined()
-    expect(unsavedValues).toEqual({
-      custodyStatus: 'YES_POLICE',
-    })
     expect(errors).toEqual([
       {
-        href: '#custodyStatusDetailsYesPolice',
-        name: 'custodyStatusDetailsYesPolice',
-        text: 'Enter the custody address',
-        errorId: 'missingCustodyPoliceAddressDetail',
+        href: '#custodyStatus',
+        name: 'custodyStatus',
+        text: 'Select whether the person is in custody or not',
+        errorId: 'noCustodyStatusSelected',
       },
     ])
+  })
+
+  it('returns an error, if set to an invalid value, and no valuesToSave', async () => {
+    const requestBody = {
+      custodyStatus: 'VALUE',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave } = await validateCustodyStatus({ requestBody, urlInfo })
+    expect(valuesToSave).toBeUndefined()
+    expect(errors).toEqual([
+      {
+        href: '#custodyStatus',
+        name: 'custodyStatus',
+        text: 'Select whether the person is in custody or not',
+        errorId: 'noCustodyStatusSelected',
+      },
+    ])
+  })
+
+  it('if "from page" is set to recall task list, redirect to it', async () => {
+    const requestBody = {
+      custodyStatus: 'YES_PRISON',
+      crn: 'X34534',
+    }
+    const urlInfoWithFromPage = { ...urlInfo, fromPageId: 'task-list', fromAnchor: 'heading-custody' }
+    const { nextPagePath } = await validateCustodyStatus({
+      requestBody,
+      recommendationId,
+      urlInfo: urlInfoWithFromPage,
+    })
+    expect(nextPagePath).toEqual(`/recommendations/${recommendationId}/task-list#heading-custody`)
+  })
+
+  it('returns valuesToSave and no errors if set to "Yes, police custody"', async () => {
+    const requestBody = {
+      custodyStatus: 'YES_POLICE',
+      crn: 'X34534',
+    }
+    const { errors, valuesToSave, nextPagePath } = await validateCustodyStatus({
+      requestBody,
+      urlInfo,
+    })
+    expect(errors).toBeUndefined()
+    expect(valuesToSave).toEqual({
+      custodyStatus: {
+        allOptions: [
+          { value: 'YES_PRISON', text: 'Yes, prison custody' },
+          { value: 'YES_POLICE', text: 'Yes, police custody' },
+          { value: 'NO', text: 'No' },
+        ],
+        selected: 'YES_POLICE',
+      },
+    })
+    expect(nextPagePath).toEqual('/recommendations/34/task-list')
   })
 })

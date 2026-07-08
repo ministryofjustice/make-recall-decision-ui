@@ -8,12 +8,12 @@ import NamedFormErrorGenerator from '../../../../data/common/errorGenerator'
 import ppPaths from '../../../routes/paths/pp.paths'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
-import { indeterminateSentenceTypeFtr56 } from '../indeterminateSentenceType/formOptions'
+import indeterminateSentenceType from '../indeterminateSentenceType/formOptions'
 
 jest.mock('../../../utils/errors')
 jest.mock('../helpers/urls')
 
-const apiCompatibleIndeterminateSentenceTypes = indeterminateSentenceTypeFtr56.map(({ value, text }) => ({
+const apiCompatibleIndeterminateSentenceTypes = indeterminateSentenceType.map(({ value, text }) => ({
   value,
   text,
 }))

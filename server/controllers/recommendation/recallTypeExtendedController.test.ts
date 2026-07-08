@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
@@ -61,7 +60,7 @@ describe('get', () => {
               name: 'recallType',
               href: '#recallType',
               errorId: 'noRecallTypeExtendedSelected',
-              html: 'Select whether you recommend a recall or not',
+              html: 'Select a recall recommendation',
             },
           ],
           recallType: {
@@ -89,7 +88,7 @@ describe('get', () => {
         {
           href: '#recallType',
           errorId: 'noRecallTypeExtendedSelected',
-          html: 'Select whether you recommend a recall or not',
+          html: 'Select a recall recommendation',
           name: 'recallType',
         },
       ],
@@ -98,161 +97,120 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  ;[true, false].forEach(ftr56Enabled => {
-    it(`post with valid data when FTR56 is ${ftr56Enabled ? 'enabled' : 'disabled'}`, async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+  it(`post with valid data`, async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-      const req = mockReq({
-        params: { recommendationId: '123' },
-        body: {
-          crn: 'X098092',
-          recallType: 'STANDARD',
-        },
-      })
-
-      const res = mockRes({
-        token: 'token1',
-        locals: {
-          user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
-          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-          urlInfo: UrlInfoGenerator.generate(),
-          flags: {
-            flagFTR56Enabled: ftr56Enabled,
-          },
-        },
-      })
-      const next = mockNext()
-
-      const nextPageLink = faker.internet.url()
-      if (!ftr56Enabled) {
-        ;(nextPageLinkUrl as jest.Mock).mockReturnValue(nextPageLink)
-      }
-
-      await recallTypeExtendedController.post(req, res, next)
-
-      expect(updateStatuses).toHaveBeenCalledWith({
-        recommendationId: '123',
-        token: 'token1',
-        activate: [STATUSES.RECALL_DECIDED],
-        deActivate: [STATUSES.NO_RECALL_DECIDED],
-      })
-
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        recommendationId: '123',
-        token: 'token1',
-        valuesToSave: {
-          recallType: {
-            selected: { value: 'STANDARD' },
-            allOptions: [
-              { value: 'STANDARD', text: 'Standard recall' },
-              { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
-            ],
-          },
-        },
-        featureFlags: {
-          flagFTR56Enabled: ftr56Enabled,
-        },
-      })
-
-      expect(appInsightsEvent).toHaveBeenCalledWith(
-        'mrdRecallType',
-        'Dave',
-        {
-          crn: 'X098092',
-          recallType: 'STANDARD',
-          recommendationId: '123',
-          region: { code: 'N07', name: 'London' },
-        },
-        {
-          flagFTR56Enabled: ftr56Enabled,
-        },
-      )
-
-      if (ftr56Enabled) {
-        // We want to ensure we are ignoring fromInfo from the url info
-        expect(nextPageLinkUrl).not.toHaveBeenCalled()
-      } else {
-        expect(nextPageLinkUrl).toHaveBeenCalledWith({
-          nextPageId: 'emergency-recall',
-          urlInfo: res.locals.urlInfo,
-        })
-      }
-
-      expect(res.redirect).toHaveBeenCalledWith(
-        303,
-        ftr56Enabled ? `${res.locals.urlInfo.basePath}indeterminate-details` : nextPageLink,
-      )
-      expect(next).not.toHaveBeenCalled() // end of the line for posts.
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        recallType: 'STANDARD',
+      },
     })
 
-    it(`post with valid data when FTR56 is ${ftr56Enabled ? 'enabled' : 'disabled'} - no recall`, async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-
-      const req = mockReq({
-        params: { recommendationId: '123' },
-        body: {
-          crn: 'X098092',
-          recallType: 'NO_RECALL',
-        },
-      })
-
-      const res = mockRes({
-        token: 'token1',
-        locals: {
-          recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-          urlInfo: UrlInfoGenerator.generate(),
-          flags: {
-            flagFTR56Enabled: ftr56Enabled,
-          },
-        },
-      })
-      const next = mockNext()
-
-      const nextPageLink = faker.internet.url()
-      if (!ftr56Enabled) {
-        ;(nextPageLinkUrl as jest.Mock).mockReturnValue(nextPageLink)
-      }
-
-      await recallTypeExtendedController.post(req, res, next)
-
-      expect(updateStatuses).toHaveBeenCalledWith({
-        recommendationId: '123',
-        token: 'token1',
-        activate: [STATUSES.NO_RECALL_DECIDED],
-        deActivate: [STATUSES.RECALL_DECIDED],
-      })
-
-      expect(updateRecommendation).toHaveBeenCalledWith({
-        recommendationId: '123',
-        token: 'token1',
-        valuesToSave: {
-          recallType: {
-            selected: { value: 'NO_RECALL' },
-            allOptions: [
-              { value: 'STANDARD', text: 'Standard recall' },
-              { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
-            ],
-          },
-        },
-        featureFlags: {
-          flagFTR56Enabled: ftr56Enabled,
-        },
-      })
-
-      if (ftr56Enabled) {
-        // We want to ensure we are ignoring fromInfo from the url info
-        expect(nextPageLinkUrl).not.toHaveBeenCalled()
-        expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}task-list-no-recall`)
-      } else {
-        expect(nextPageLinkUrl).toHaveBeenCalledWith({
-          nextPageId: 'task-list-no-recall',
-          urlInfo: res.locals.urlInfo,
-        })
-        expect(res.redirect).toHaveBeenCalledWith(303, nextPageLink)
-      }
-
-      expect(next).not.toHaveBeenCalled() // end of the line for posts.
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: UrlInfoGenerator.generate(),
+      },
     })
+    const next = mockNext()
+
+    await recallTypeExtendedController.post(req, res, next)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.RECALL_DECIDED],
+      deActivate: [STATUSES.NO_RECALL_DECIDED],
+    })
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        recallType: {
+          selected: { value: 'STANDARD' },
+          allOptions: [
+            { value: 'STANDARD', text: 'Standard recall' },
+            { value: 'NO_RECALL', text: 'No recall - create a decision not to recall letter' },
+          ],
+        },
+      },
+      featureFlags: {},
+    })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdRecallType',
+      'Dave',
+      {
+        crn: 'X098092',
+        recallType: 'STANDARD',
+        recommendationId: '123',
+        region: { code: 'N07', name: 'London' },
+      },
+      {},
+    )
+
+    // We want to ensure we are ignoring fromInfo from the url info
+    expect(nextPageLinkUrl).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}indeterminate-details`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it(`post with valid data - no recall`, async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        recallType: 'NO_RECALL',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        urlInfo: UrlInfoGenerator.generate(),
+        flags: {},
+      },
+    })
+    const next = mockNext()
+
+    await recallTypeExtendedController.post(req, res, next)
+
+    expect(updateStatuses).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      activate: [STATUSES.NO_RECALL_DECIDED],
+      deActivate: [STATUSES.RECALL_DECIDED],
+    })
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        recallType: {
+          selected: { value: 'NO_RECALL' },
+          allOptions: [
+            { value: 'STANDARD', text: 'Standard recall' },
+            { value: 'NO_RECALL', text: 'No recall - create a decision not to recall letter' },
+          ],
+        },
+      },
+      featureFlags: {},
+    })
+
+    // We want to ensure we are ignoring fromInfo from the url info
+    expect(nextPageLinkUrl).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}task-list-no-recall`)
+
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
   it('post with invalid data', async () => {
@@ -282,7 +240,7 @@ describe('post', () => {
       {
         errorId: 'noRecallTypeExtendedSelected',
         href: '#recallType',
-        text: 'Select whether you recommend a recall or not',
+        text: 'Select a recall recommendation',
         name: 'recallType',
         invalidParts: undefined,
         values: undefined,

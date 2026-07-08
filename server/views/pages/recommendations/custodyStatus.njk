@@ -12,8 +12,6 @@
       {% include '../../partials/error-summary.njk' %}
       <form novalidate method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-        {% if flags.flagFTR56Enabled %}
           {{ govukRadios({
             idPrefix: "custodyStatus",
             name: "custodyStatus",
@@ -30,39 +28,6 @@
             }),
             errorMessage: errorMessage(errors.custodyStatus)
           }) }}
-        {% else %}
-          {% set yesPoliceDetailHtml %}
-            {{ govukTextarea({
-              name: "custodyStatusDetailsYesPolice",
-              id: "custodyStatusDetailsYesPolice",
-              label: {
-                text: "Custody address",
-                classes: "govuk-label--s"
-              },
-              value: inputDisplayValues.details,
-              errorMessage: errorMessage(errors.custodyStatusDetailsYesPolice)
-            }) }}
-          {% endset %}
-          {{ govukRadios({
-            idPrefix: "custodyStatus",
-            name: "custodyStatus",
-            fieldset: {
-              legend: {
-                text: pageHeadings[page.id],
-                classes: "govuk-fieldset__legend--l",
-                isPageHeading: true
-              }
-            },
-            items: radioCheckboxItems({
-              items: formOptions.custodyStatus,
-              currentValues: inputDisplayValues.value,
-              conditionalContent: {
-                YES_POLICE: yesPoliceDetailHtml
-              }
-            }),
-            errorMessage: errorMessage(errors.custodyStatus)
-          }) }}
-        {% endif %}
         {{ formSubmitButton({ marginTop: "7" }) }}
       </form>
     </div>

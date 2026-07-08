@@ -6,39 +6,26 @@ import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-const errorsDefault: Record<string, string> = {
+const errorsMap: Record<string, string> = {
   BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE: strings.errors.missingIndeterminateDetailIndexOffence,
   BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE: strings.errors.missingIndeterminateDetailSexualViolent,
-  OUT_OF_TOUCH: strings.errors.missingIndeterminateDetailContact,
-}
-
-const errorsFtr56: Record<string, string> = {
-  BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE: strings.errors.missingIndeterminateDetailIndexOffenceFtr56,
-  BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE: strings.errors.missingIndeterminateDetailSexualViolentFtr56,
   BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE:
     strings.errors.missingIndeterminateDetailLikelyResultSexualViolent,
   OUT_OF_TOUCH: strings.errors.missingIndeterminateDetailContact,
 }
 
-const missingDetailsError = (optionId: string, ftr56Enabled: boolean) => {
-  const map = ftr56Enabled ? errorsFtr56 : errorsDefault
-  return map[optionId] ?? 'Enter details'
+const missingDetailsError = (optionId: string) => {
+  return errorsMap[optionId] ?? 'Enter details'
 }
 
-const validateIndeterminateDetails = async ({
-  requestBody,
-  urlInfo,
-  ftr56Enabled,
-}: FormValidatorArgs & { ftr56Enabled?: boolean }): FormValidatorReturn => {
+const validateIndeterminateDetails = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { indeterminateOrExtendedSentenceDetails } = requestBody
   const selected = Array.isArray(indeterminateOrExtendedSentenceDetails)
     ? indeterminateOrExtendedSentenceDetails
     : [indeterminateOrExtendedSentenceDetails]
 
-  const items = ftr56Enabled
-    ? formOptions.indeterminateOrExtendedSentenceDetailsFtr56
-    : formOptions.indeterminateOrExtendedSentenceDetails
-  const formId = ftr56Enabled ? 'indeterminateOrExtendedSentenceDetailsFtr56' : 'indeterminateOrExtendedSentenceDetails'
+  const items = formOptions.indeterminateOrExtendedSentenceDetails
+  const formId = 'indeterminateOrExtendedSentenceDetails'
 
   const invalidAlternative = selected.some(selectionId => !isValueValid(selectionId, formId))
   const missingDetails = selected.filter(selectionId => {
@@ -61,7 +48,7 @@ const validateIndeterminateDetails = async ({
     const errors = []
     let errorId
     if (!indeterminateOrExtendedSentenceDetails || invalidAlternative) {
-      errorId = ftr56Enabled ? 'noIndeterminateDetailsSelectedFtr56' : 'noIndeterminateDetailsSelected'
+      errorId = 'noIndeterminateDetailsSelected'
       errors.push(
         makeErrorObject({
           id: 'option-1',
@@ -77,7 +64,7 @@ const validateIndeterminateDetails = async ({
         errors.push(
           makeErrorObject({
             id: `indeterminateOrExtendedSentenceDetailsDetail-${selectionId}`,
-            text: missingDetailsError(selectionId, ftr56Enabled),
+            text: missingDetailsError(selectionId),
             errorId,
           }),
         )

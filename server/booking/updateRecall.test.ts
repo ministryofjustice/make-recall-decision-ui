@@ -18,82 +18,68 @@ describe('update recall', () => {
     expect(bookingMemento).toEqual(result)
   })
 
-  describe('happy path', () => {
-    const ftr56TestCases = [
-      {
-        description: 'with FTR56 flag enabled',
-        ftr56Enabled: true,
+  it('happy path', async () => {
+    const bookingMemento = {
+      stage: StageEnum.RELEASE_BOOKED,
+      offenderId: '767',
+      sentenceId: '444',
+      releaseId: '555',
+      failed: true,
+      failedMessage: '{}',
+    }
+
+    const recommendation: RecommendationResponse = {
+      id: '1',
+      decisionDateTime: '2024-01-29T16:15:39',
+      bookRecallToPpud: {
+        mappaLevel: 'Level 2 - local inter-agency management',
+        policeForce: 'Bethnal Green Police Force',
+        probationArea: 'london',
+        receivedDateTime: '2024-01-29T16:15:39',
       },
-      {
-        description: 'with FTR56 flag disabled',
-        ftr56Enabled: false,
+      sentenceGroup: SentenceGroup.EXTENDED,
+      hasContrabandRisk: {
+        selected: true,
+        details: 'Contraband detail...',
       },
-    ]
-    ftr56TestCases.forEach(({ description, ftr56Enabled }) => {
-      it(description, async () => {
-        const bookingMemento = {
-          stage: StageEnum.RELEASE_BOOKED,
-          offenderId: '767',
-          sentenceId: '444',
-          releaseId: '555',
-          failed: true,
-          failedMessage: '{}',
-        }
+    } as unknown as RecommendationResponse
 
-        const recommendation: RecommendationResponse = {
-          id: '1',
-          decisionDateTime: '2024-01-29T16:15:39',
-          bookRecallToPpud: {
-            mappaLevel: 'Level 2 - local inter-agency management',
-            policeForce: 'Bethnal Green Police Force',
-            probationArea: 'london',
-            receivedDateTime: '2024-01-29T16:15:39',
-          },
-          sentenceGroup: ftr56Enabled ? SentenceGroup.EXTENDED : undefined,
-          hasContrabandRisk: {
-            selected: true,
-            details: 'Contraband detail...',
-          },
-        } as unknown as RecommendationResponse
+    const featureFlags = {}
 
-        const featureFlags = { flagFTR56Enabled: ftr56Enabled }
+    ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
 
-        ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
+    const result = await updateRecall(bookingMemento, recommendation, 'token', featureFlags)
 
-        const result = await updateRecall(bookingMemento, recommendation, 'token', featureFlags)
+    expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
+      decisionDateTime: '2024-01-29T16:15:39',
+      isInCustody: false,
+      mappaLevel: 'Level 2 - local inter-agency management',
+      policeForce: 'Bethnal Green Police Force',
+      probationArea: 'london',
+      receivedDateTime: '2024-01-29T16:15:39',
+      riskOfContrabandDetails: 'Contraband detail...',
+    })
 
-        expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
-          decisionDateTime: '2024-01-29T16:15:39',
-          isInCustody: false,
-          mappaLevel: 'Level 2 - local inter-agency management',
-          policeForce: 'Bethnal Green Police Force',
-          probationArea: 'london',
-          receivedDateTime: '2024-01-29T16:15:39',
-          riskOfContrabandDetails: 'Contraband detail...',
-        })
-
-        expect(updateRecommendation).toHaveBeenCalledWith({
-          recommendationId: '1',
-          valuesToSave: {
-            bookingMemento: {
-              offenderId: '767',
-              sentenceId: '444',
-              recallId: '898',
-              releaseId: '555',
-              stage: 'RECALL_BOOKED',
-            },
-          },
-          token: 'token',
-          featureFlags,
-        })
-        expect(result).toEqual({
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '1',
+      valuesToSave: {
+        bookingMemento: {
           offenderId: '767',
           sentenceId: '444',
           recallId: '898',
           releaseId: '555',
           stage: 'RECALL_BOOKED',
-        })
-      })
+        },
+      },
+      token: 'token',
+      featureFlags,
+    })
+    expect(result).toEqual({
+      offenderId: '767',
+      sentenceId: '444',
+      recallId: '898',
+      releaseId: '555',
+      stage: 'RECALL_BOOKED',
     })
   })
 })

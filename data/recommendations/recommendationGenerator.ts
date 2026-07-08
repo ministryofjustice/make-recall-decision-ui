@@ -66,13 +66,8 @@ export type RecommendationOptions = {
   nomisIndexOffence?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: NoneOrOption<PpudOffenderOptions>
   bookingMemento?: NoneOrOption<BookingMementoOptions>
-  isUnder18?: boolean
-  isSentence48MonthsOrOver?: boolean
   isMappaCategory4?: boolean
   isMappaLevel2Or3?: boolean
-  isRecalledOnNewChargedOffence?: boolean
-  isServingFTSentenceForTerroristOffence?: boolean
-  hasBeenChargedWithTerroristOrStateThreatOffence?: boolean
   wasReferredToParoleBoard244ZB?: boolean
   wasRepatriatedForMurder?: boolean
   isServingSOPCSentence?: boolean
@@ -252,13 +247,8 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),
     bookingMemento:
       options?.bookingMemento === 'none' ? undefined : BookingMementoGenerator.generate(options?.bookingMemento),
-    isUnder18: options?.isUnder18,
-    isSentence48MonthsOrOver: options?.isSentence48MonthsOrOver,
     isMappaCategory4: options?.isMappaCategory4,
     isMappaLevel2Or3: options?.isMappaLevel2Or3,
-    isRecalledOnNewChargedOffence: options?.isRecalledOnNewChargedOffence,
-    isServingFTSentenceForTerroristOffence: options?.isServingFTSentenceForTerroristOffence,
-    hasBeenChargedWithTerroristOrStateThreatOffence: options?.hasBeenChargedWithTerroristOrStateThreatOffence,
     wasReferredToParoleBoard244ZB: options?.wasReferredToParoleBoard244ZB,
     wasRepatriatedForMurder: options?.wasRepatriatedForMurder,
     isServingSOPCSentence: options?.isServingSOPCSentence,

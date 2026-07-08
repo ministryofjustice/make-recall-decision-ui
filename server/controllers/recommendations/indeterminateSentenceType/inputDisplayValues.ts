@@ -7,6 +7,7 @@ const inputDisplayValuesIndeterminateSentenceType = ({ errors = {}, apiValues }:
   const inputDisplayValues = {
     value: '',
   }
+
   if (!isDefined(errors.indeterminateSentenceType)) {
     inputDisplayValues.value = getProperty<RecommendationResponse, IndeterminateSentenceType>(
       apiValues,
