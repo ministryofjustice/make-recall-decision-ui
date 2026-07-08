@@ -92,7 +92,8 @@ updates:
       - "github-actions"
 
   - package-ecosystem: "helm"
-    directory: "/helm_deploy/*"
+    directories:
+      - "/helm_deploy/*"
     schedule:
       interval: "daily"
     cooldown:
