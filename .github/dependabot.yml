@@ -9,6 +9,7 @@ multi-ecosystem-groups:
   docker:
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 5
 
 updates:
   - package-ecosystem: "npm"
@@ -66,7 +67,6 @@ updates:
       default-days: 7
       exclude:
         - "ghcr.io/ministryofjustice/*"
-    open-pull-requests-limit: 5
     labels:
       - "dependencies"
       - "docker"
@@ -81,7 +81,6 @@ updates:
       default-days: 7
       exclude:
         - "ghcr.io/ministryofjustice/*"
-    open-pull-requests-limit: 5
     labels:
       - "dependencies"
       - "docker"
