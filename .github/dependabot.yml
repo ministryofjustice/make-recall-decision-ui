@@ -4,6 +4,12 @@
 # https://developer-portal.service.justice.gov.uk/guidelines/dependabot-guidelines/
 
 version: 2
+
+multi-ecosystem-groups:
+  docker:
+    schedule:
+      interval: "weekly"
+
 updates:
   - package-ecosystem: "npm"
     directory: "/"
@@ -52,6 +58,7 @@ updates:
 
   - package-ecosystem: "docker"
     multi-ecosystem-group: "docker"
+    patterns: ["*"]
     directory: "/"
     schedule:
       interval: "daily"
@@ -66,6 +73,7 @@ updates:
 
   - package-ecosystem: "docker-compose"
     multi-ecosystem-group: "docker"
+    patterns: ["*"]
     directory: "/"
     schedule:
       interval: "daily"
