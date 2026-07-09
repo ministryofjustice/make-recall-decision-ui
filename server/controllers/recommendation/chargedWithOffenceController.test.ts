@@ -122,7 +122,6 @@ describe('post', () => {
           selected: null,
         },
         isAtRiskOfInvolvedInForeignPowerThreat: null,
-        isChargedWithOffence: null,
         isServingDCRSentence: null,
         isServingSOPCSentence: null,
         isServingTerroristOrNationalSecurityOffence: null,
@@ -134,6 +133,46 @@ describe('post', () => {
         },
         wasReferredToParoleBoard244ZB: null,
         wasRepatriatedForMurder: null,
+      },
+      featureFlags: {},
+      token: 'token',
+      recommendationId: '123',
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      `${sharedPaths.recommendations}/123/${ppPaths.suitabilityForFixedTermRecall}`,
+    )
+  })
+
+  it('does not resest existing data when the previously selected option has stayed the same', async () => {
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        isRecalledOnNewChargedOrConvictedOffence: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation: RecommendationResponseGenerator.generate({
+          isRecalledOnNewChargedOrConvictedOffence: {
+            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+          },
+        }),
+      },
+    })
+
+    await chargedWithOffenceController.post(req, res, mockNext())
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      valuesToSave: {
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+          allOptions: [
+            ...chargedWithOffenceOptions.map(option => ({ value: option.value, text: stripHtmlTags(option.html) })),
+          ],
+        },
       },
       featureFlags: {},
       token: 'token',

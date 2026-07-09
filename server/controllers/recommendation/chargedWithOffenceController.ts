@@ -56,7 +56,6 @@ async function post(req: Request, res: Response, next: NextFunction) {
       wasRepatriatedForMurder: null,
       isServingSOPCSentence: null,
       isServingDCRSentence: null,
-      isChargedWithOffence: null,
       isServingTerroristOrNationalSecurityOffence: null,
       isAtRiskOfInvolvedInForeignPowerThreat: null,
       isYouthSentenceOver12Months: null,
