@@ -18,7 +18,10 @@ import { BookingMementoGenerator, BookingMementoOptions } from './bookingMemento
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { CustodyStatusGenerator, CustodyStatusOptions } from './custodyStatusGenerator'
 import regionEnum from '../../server/controllers/recommendations/formOptions/region'
-import { IsRecalledOnNewChargedOrConvictedOffenceOptions } from './isRecalledOnNewChargedOrConvictedOffenceGenerator'
+import {
+  isRecalledOnNewChargedOrConvictedOffenceGenerator,
+  IsRecalledOnNewChargedOrConvictedOffenceOptions,
+} from './isRecalledOnNewChargedOrConvictedOffenceGenerator'
 import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 /*
@@ -272,11 +275,8 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     isYouthSentenceOver12Months: options?.isYouthSentenceOver12Months,
     isYouthChargedWithSeriousOffence: options?.isYouthChargedWithSeriousOffence,
     isRecalledOnNewChargedOrConvictedOffence:
-      (options?.isRecalledOnNewChargedOrConvictedOffence ?? true)
-        ? {
-            selected: faker.helpers.enumValue(IsRecalledOnNewChargedOrConvictedOffence.selected),
-            allOptions: [],
-          }
+      options?.isRecalledOnNewChargedOrConvictedOffence !== 'none'
+        ? isRecalledOnNewChargedOrConvictedOffenceGenerator.generate(options?.isRecalledOnNewChargedOrConvictedOffence)
         : undefined,
   }),
 }
