@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, getSupportingDocuments, updateStatuses } from '../../data/makeDecisionApiClient'
 import bookToPpudController from './bookToPpudController'
@@ -199,7 +198,7 @@ describe('post', () => {
     const recommendation = {
       id: '12345',
     }
-    const flags = { flagFTR56Enabled: faker.datatype.boolean() }
+    const flags = {}
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 

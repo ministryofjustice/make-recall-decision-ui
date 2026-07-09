@@ -73,14 +73,13 @@ describe('Sentence Information Controller', () => {
     expect(res.locals.pageData.backLinkUrl).toEqual(`${res.locals.urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
   })
 
-  it('returns undefined for the backLinkUrl when the fromPageId is set to anything but task-list-consider-recall and FTR56flag is enabled', async () => {
+  it('returns undefined for the backLinkUrl when the fromPageId is set to anything but task-list-consider-recall', async () => {
     const recommendation = RecommendationResponseGenerator.generate()
     const urlInfo = UrlInfoGenerator.generate()
     const res = mockRes({
       locals: {
         recommendation,
         statuses: [],
-        flags: { flagFTR56Enabled: true },
         urlInfo,
       },
     })
@@ -102,14 +101,13 @@ describe('Sentence Information Controller', () => {
     expect(res.locals.pageData.backLinkUrl).toBe(undefined)
   })
 
-  it('returns undefined for the backLinkUrl when the FTR56flag is enabled and its an OOH recall', async () => {
+  it('returns undefined for the backLinkUrl when its an OOH recall', async () => {
     const recommendation = RecommendationResponseGenerator.generate()
     const urlInfo = UrlInfoGenerator.generate()
     const res = mockRes({
       locals: {
         recommendation,
         statuses: [{ name: STATUSES.AP_RECORDED_RATIONALE, active: true }],
-        flags: { flagFTR56Enabled: true },
         urlInfo,
       },
     })

@@ -20,61 +20,85 @@ describe("SPO review practitioner's concerns page", () => {
     })
   })
 
-  describe('with FTR56 flag disabled', () => {
-    it('should load the page correctly', () => {
+  const recommendation = RecommendationResponseGenerator.generate()
+
+  const otherRecommendationProperties = {
+    recallConsideredList: null,
+    licenceConditionsBreached: {
+      standardLicenceConditions: {
+        selected: ['FOO'],
+        allOptions: [
+          {
+            value: 'FOO',
+            text: 'BAR',
+          },
+        ],
+      },
+      additionalLicenceConditions: {
+        selected: [],
+        allOptions: [],
+      },
+    },
+    indeterminateSentenceType: {
+      selected: 'LIFE',
+      allOptions: [
+        {
+          value: 'LIFE',
+          text: 'Life sentence',
+        },
+      ],
+    },
+  }
+
+  ;[
+    {
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+      sentenceGroupName: 'Adult determinate sentence',
+    },
+    {
+      sentenceGroup: SentenceGroup.YOUTH_SDS,
+      sentenceGroupName: 'Youth determinate sentence',
+    },
+    {
+      sentenceGroup: SentenceGroup.EXTENDED,
+      sentenceGroupName: 'Extended sentence',
+    },
+    {
+      sentenceGroup: SentenceGroup.INDETERMINATE,
+      sentenceGroupName: 'Indeterminate',
+      sentenceType: 'Life sentence',
+    },
+  ].forEach(testCase => {
+    it(`should display correctly for ${testCase.sentenceGroup}`, () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...recommendation,
+          sentenceGroup: testCase.sentenceGroup,
+          ...otherRecommendationProperties,
+          isIndeterminateSentence: testCase.sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
+        },
+      })
+
       cy.visit(`${sharedPaths.recommendations}/1/review-practitioners-concerns`)
 
       cy.pageHeading().should('equal', "Review practitioner's concerns")
       cy.getElement('Review these details and discuss the case with the practitioner.').should('exist')
 
-      cy.getElement('What has made you consider recalling Jane Bloggs?').should('exist')
+      cy.getElement(`What has made you consider recalling ${recommendation.personOnProbation.name}?`).should('exist')
       cy.get('.govuk-details')
         .eq(0)
         .within(() => {
           cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
-          cy.get('.govuk-details__text').should('contain.text', completeRecommendationResponse.triggerLeadingToRecall)
+          cy.get('.govuk-details__text').should('contain.text', recommendation.triggerLeadingToRecall)
         })
 
-      cy.getElement('What licence conditions has Jane Bloggs breached?').should('exist')
+      cy.getElement(`What licence conditions has ${recommendation.personOnProbation.name} breached?`).should('exist')
       cy.get('.govuk-details')
         .eq(1)
         .within(() => {
           cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
-
-          const { licenceConditionsBreached: breached } = completeRecommendationResponse
-
-          const expectedText = [
-            ...breached.standardLicenceConditions.selected.reduce((acc, selectedValue) => {
-              acc.push(
-                breached.standardLicenceConditions.allOptions.find(actualValue => selectedValue === actualValue.value)
-                  .text,
-              )
-              return acc
-            }, []),
-            ...breached.additionalLicenceConditions.selectedOptions.reduce<string[]>((acc, selectedValue) => {
-              const foundVal = breached.additionalLicenceConditions.allOptions.find(
-                actualValue =>
-                  actualValue.mainCatCode === selectedValue.mainCatCode &&
-                  actualValue.subCatCode === selectedValue.subCatCode,
-              )
-
-              acc.push(foundVal.title)
-              acc.push(foundVal.details)
-              acc.push('Notes')
-              acc.push(foundVal.note)
-
-              return acc
-            }, []),
-          ]
-          cy.get('.govuk-details__text')
-            .invoke('text')
-            .then(receivedText => {
-              // So many weird characters because of the <pre>, it's easiest to just smush it all together
-              // with no spaces or newlines
-              expect(receivedText.replace(/\s+/g, '').replace('&nbsp;', '')).to.contain(
-                expectedText.join('').replace(/\s+/g, ''),
-              )
-            })
+          cy.get('.govuk-details__text').should('contain.text', 'BAR')
         })
 
       cy.getElement('What alternatives have been tried already?').should('exist')
@@ -83,14 +107,14 @@ describe("SPO review practitioner's concerns page", () => {
         .within(() => {
           cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
 
-          const { alternativesToRecallTried } = completeRecommendationResponse
+          const { alternativesToRecallTried } = recommendation
 
           const expectedText = [
             ...alternativesToRecallTried.selected.reduce((acc, selectedValue) => {
               acc.push(
                 alternativesToRecallTried.allOptions.find(
                   allOptionsValue => allOptionsValue.value === selectedValue.value,
-                ).text,
+                )?.text,
               )
               acc.push('More details')
               acc.push(selectedValue.details)
@@ -105,134 +129,19 @@ describe("SPO review practitioner's concerns page", () => {
             })
         })
 
-      cy.getElement('Continue').should('exist')
-    })
-  })
+      cy.getElement(`Which sentence group does ${recommendation.personOnProbation.name}'s sentence type fall into?`)
+        .should('exist')
+        .next()
+        .should('contain.text', testCase.sentenceGroupName)
 
-  describe('with FTR56 flag enabled', () => {
-    const recommendation = RecommendationResponseGenerator.generate()
-
-    const otherRecommendationProperties = {
-      recallConsideredList: null,
-      licenceConditionsBreached: {
-        standardLicenceConditions: {
-          selected: ['FOO'],
-          allOptions: [
-            {
-              value: 'FOO',
-              text: 'BAR',
-            },
-          ],
-        },
-        additionalLicenceConditions: {
-          selected: [],
-          allOptions: [],
-        },
-      },
-      indeterminateSentenceType: {
-        selected: 'LIFE',
-        allOptions: [
-          {
-            value: 'LIFE',
-            text: 'Life sentence',
-          },
-        ],
-      },
-    }
-
-    ;[
-      {
-        sentenceGroup: SentenceGroup.ADULT_SDS,
-        sentenceGroupName: 'Adult determinate sentence',
-      },
-      {
-        sentenceGroup: SentenceGroup.YOUTH_SDS,
-        sentenceGroupName: 'Youth determinate sentence',
-      },
-      {
-        sentenceGroup: SentenceGroup.EXTENDED,
-        sentenceGroupName: 'Extended sentence',
-      },
-      {
-        sentenceGroup: SentenceGroup.INDETERMINATE,
-        sentenceGroupName: 'Indeterminate',
-        sentenceType: 'Life sentence',
-      },
-    ].forEach(testCase => {
-      it(`should display correctly for ${testCase.sentenceGroup}`, () => {
-        cy.task('getRecommendation', {
-          statusCode: 200,
-          response: {
-            ...recommendation,
-            sentenceGroup: testCase.sentenceGroup,
-            ...otherRecommendationProperties,
-            isIndeterminateSentence: testCase.sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No',
-          },
-        })
-
-        cy.visit(`${sharedPaths.recommendations}/1/review-practitioners-concerns?flagFTR56Enabled=1`)
-
-        cy.pageHeading().should('equal', "Review practitioner's concerns")
-        cy.getElement('Review these details and discuss the case with the practitioner.').should('exist')
-
-        cy.getElement(`What has made you consider recalling ${recommendation.personOnProbation.name}?`).should('exist')
-        cy.get('.govuk-details')
-          .eq(0)
-          .within(() => {
-            cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
-            cy.get('.govuk-details__text').should('contain.text', recommendation.triggerLeadingToRecall)
-          })
-
-        cy.getElement(`What licence conditions has ${recommendation.personOnProbation.name} breached?`).should('exist')
-        cy.get('.govuk-details')
-          .eq(1)
-          .within(() => {
-            cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
-            cy.get('.govuk-details__text').should('contain.text', 'BAR')
-          })
-
-        cy.getElement('What alternatives have been tried already?').should('exist')
-        cy.get('.govuk-details')
-          .eq(2)
-          .within(() => {
-            cy.get('.govuk-details__summary-text').should('contain.text', 'View Answer')
-
-            const { alternativesToRecallTried } = recommendation
-
-            const expectedText = [
-              ...alternativesToRecallTried.selected.reduce((acc, selectedValue) => {
-                acc.push(
-                  alternativesToRecallTried.allOptions.find(
-                    allOptionsValue => allOptionsValue.value === selectedValue.value,
-                  )?.text,
-                )
-                acc.push('More details')
-                acc.push(selectedValue.details)
-                return acc
-              }, []),
-            ]
-
-            cy.get('.govuk-details__text')
-              .invoke('text')
-              .then(receivedText => {
-                expect(receivedText.replace(/\s+/g, '')).to.contain(expectedText.join('').replace(/\s+/g, ''))
-              })
-          })
-
-        cy.getElement(`Which sentence group does ${recommendation.personOnProbation.name}'s sentence type fall into?`)
+      if (testCase.sentenceGroup === SentenceGroup.INDETERMINATE) {
+        cy.getElement(`What type of sentence is ${recommendation.personOnProbation.name} on?`)
           .should('exist')
           .next()
-          .should('contain.text', testCase.sentenceGroupName)
-
-        if (testCase.sentenceGroup === SentenceGroup.INDETERMINATE) {
-          cy.getElement(`What type of sentence is ${recommendation.personOnProbation.name} on?`)
-            .should('exist')
-            .next()
-            .should('contain.text', testCase.sentenceType)
-        } else {
-          cy.getElement(`What type of sentence is ${recommendation.personOnProbation.name} on?`).should('not.exist')
-        }
-      })
+          .should('contain.text', testCase.sentenceType)
+      } else {
+        cy.getElement(`What type of sentence is ${recommendation.personOnProbation.name} on?`).should('not.exist')
+      }
     })
   })
 })

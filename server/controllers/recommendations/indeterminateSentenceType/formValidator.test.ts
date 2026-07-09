@@ -21,7 +21,7 @@ describe('validateIndeterminateSentenceType', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       indeterminateSentenceType: {
-        allOptions: formOptions.indeterminateSentenceType,
+        allOptions: formOptions.indeterminateSentenceType.map(({ value, text }) => ({ value, text })),
         selected: 'LIFE',
       },
     })
@@ -32,27 +32,8 @@ describe('validateIndeterminateSentenceType', () => {
       indeterminateSentenceType: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody, recommendationId })
-    expect(valuesToSave).toBeUndefined()
-    expect(errors).toEqual([
-      {
-        href: '#indeterminateSentenceType',
-        name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelected',
-      },
-    ])
-  })
-
-  it('Ftr56: returns an error, if not set, and no valuesToSave', async () => {
-    const ftr56Enabled = true
-    const requestBody = {
-      indeterminateSentenceType: '',
-      crn: 'X34534',
-    }
     const { errors, valuesToSave } = await validateIndeterminateSentenceType({
       requestBody,
-      ftr56Enabled,
     })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
@@ -60,7 +41,7 @@ describe('validateIndeterminateSentenceType', () => {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
         text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
+        errorId: 'noIndeterminateSentenceTypeSelected',
       },
     ])
   })
@@ -70,35 +51,14 @@ describe('validateIndeterminateSentenceType', () => {
       indeterminateSentenceType: 'VALUE',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody, recommendationId })
-    expect(valuesToSave).toBeUndefined()
-    expect(errors).toEqual([
-      {
-        href: '#indeterminateSentenceType',
-        name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelected',
-      },
-    ])
-  })
-
-  it('Ftr56: returns an error, if set to an invalid value, and no valuesToSave', async () => {
-    const ftr56Enabled = true
-    const requestBody = {
-      indeterminateSentenceType: 'VALUE',
-      crn: 'X34534',
-    }
-    const { errors, valuesToSave } = await validateIndeterminateSentenceType({
-      requestBody,
-      ftr56Enabled,
-    })
+    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
         text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
-        errorId: 'noIndeterminateSentenceTypeSelectedFtr56',
+        errorId: 'noIndeterminateSentenceTypeSelected',
       },
     ])
   })

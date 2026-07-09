@@ -71,11 +71,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
   }
 
-  let triggerLeadingToRecall = true
-
-  if (_featureFlags?.flagFTR56Enabled) {
-    triggerLeadingToRecall = statuses.triggerLeadingToRecall
-  }
+  const { triggerLeadingToRecall } = statuses
 
   const isAdultSDSSuitabilityCriteriaSet =
     statuses.isChargedWithOffence &&
@@ -91,12 +87,10 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
 
   let suitabilityForRecallValidation = true
 
-  if (_featureFlags?.flagFTR56Enabled) {
-    if (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
-      suitabilityForRecallValidation = isAdultSDSSuitabilityCriteriaSet
-    } else if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
-      suitabilityForRecallValidation = isYouthSDSSuitabilityCriteriaSet
-    }
+  if (recommendation.sentenceGroup === SentenceGroup.ADULT_SDS) {
+    suitabilityForRecallValidation = isAdultSDSSuitabilityCriteriaSet
+  } else if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+    suitabilityForRecallValidation = isYouthSDSSuitabilityCriteriaSet
   }
 
   const indeterminateSentenceValidation =
@@ -111,8 +105,8 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
 
     let mappaReviewed = true
 
-    if (_featureFlags?.flagFTR56Enabled && isAdultSDS) {
-      mappaReviewed = recommendation.personOnProbation.ftr56MappaReviewed
+    if (isAdultSDS) {
+      mappaReviewed = recommendation.personOnProbation?.ftr56MappaReviewed
     }
 
     return {
@@ -129,7 +123,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
         mappaReviewed &&
         statuses.alternativesToRecallTried &&
         statuses.recallType &&
-        (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
+        statuses.sentenceGroup &&
         statuses.licenceConditionsBreached &&
         indeterminateSentenceValidation &&
         whyConsideredRecall &&
@@ -178,7 +172,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isReadyForCounterSignature:
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
-      (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
+      statuses.sentenceGroup &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&
@@ -205,7 +199,7 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       statuses.alternativesToRecallTried &&
       statuses.recallType &&
       statuses.decisionDateTime &&
-      (!_featureFlags?.flagFTR56Enabled || statuses.sentenceGroup) &&
+      statuses.sentenceGroup &&
       suitabilityForRecallValidation &&
       statuses.licenceConditionsBreached &&
       statuses.custodyStatus &&

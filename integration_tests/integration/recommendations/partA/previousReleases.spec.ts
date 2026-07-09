@@ -14,7 +14,7 @@ context('Release details screen', () => {
 
   describe('Page data', () => {
     it('should load correctly', () => {
-      cy.visit(`${testPageUrl}?flagFTR56Enabled=1`)
+      cy.visit(`${testPageUrl}`)
 
       cy.getElement('Release details').should('exist')
 

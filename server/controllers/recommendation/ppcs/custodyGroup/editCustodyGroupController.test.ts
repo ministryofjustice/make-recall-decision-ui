@@ -36,7 +36,6 @@ describe('get', () => {
         recommendation: {
           bookRecallToPpud: initialBookRecallToPpud,
         },
-        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const next = mockNext()
@@ -56,10 +55,7 @@ describe('get', () => {
         partACustodyGroup,
       },
     })
-    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(
-      res.locals.recommendation,
-      res.locals.flags.flagFTR56Enabled,
-    )
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(res.locals.recommendation)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/editCustodyGroup')
     expect(next).toHaveBeenCalled()
   })
@@ -72,7 +68,6 @@ describe('get', () => {
         recommendation: {
           bookRecallToPpud: bookRecallToPpud(),
         },
-        flags: { flagFTR56Enabled: faker.datatype.boolean() },
       },
     })
     const next = mockNext()
@@ -93,10 +88,7 @@ describe('get', () => {
         partACustodyGroup,
       },
     })
-    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(
-      res.locals.recommendation,
-      res.locals.flags.flagFTR56Enabled,
-    )
+    expect(calculatePartACustodyGroup).toHaveBeenCalledWith(res.locals.recommendation)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/editCustodyGroup')
     expect(next).toHaveBeenCalled()
   })

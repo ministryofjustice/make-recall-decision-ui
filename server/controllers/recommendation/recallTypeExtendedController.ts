@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
@@ -39,7 +38,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const errors = []
 
   if (!recallType || !isValueValid(recallType as string, 'recallTypeExtended')) {
-    const errorId = flags.flagFTR56Enabled ? 'noRecallTypeExtendedSelectedFTR56' : 'noRecallTypeExtendedSelected'
+    const errorId = 'noRecallTypeExtendedSelected'
     errors.push(
       makeErrorObject({
         id: 'recallType',
@@ -102,15 +101,10 @@ async function post(req: Request, res: Response, _: NextFunction) {
     )
   }
 
-  if (flags.flagFTR56Enabled) {
-    return res.redirect(
-      303,
-      `${urlInfo.basePath}${recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'}`,
-    )
-  }
-
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
-  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(
+    303,
+    `${urlInfo.basePath}${recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'}`,
+  )
 }
 
 export default { get, post }

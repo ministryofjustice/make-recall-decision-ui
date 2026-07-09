@@ -1,21 +1,6 @@
 import { IndeterminateSentenceType } from '../../../@types/make-recall-decision-api/models/IndeterminateSentenceType'
 
-export const indeterminateSentenceType = [
-  {
-    value: IndeterminateSentenceType.selected.LIFE,
-    text: 'Life sentence',
-  },
-  {
-    value: IndeterminateSentenceType.selected.IPP,
-    text: 'Imprisonment for Public Protection (IPP) sentence',
-  },
-  {
-    value: IndeterminateSentenceType.selected.DPP,
-    text: 'Detention for Public Protection (DPP) sentence',
-  },
-]
-
-export const indeterminateSentenceTypeFtr56 = [
+const indeterminateSentenceType = [
   {
     value: IndeterminateSentenceType.selected.LIFE,
     text: 'Life sentence',
@@ -34,3 +19,5 @@ export const indeterminateSentenceTypeFtr56 = [
     hint: 'Youth indeterminate sentence',
   },
 ]
+
+export default indeterminateSentenceType
