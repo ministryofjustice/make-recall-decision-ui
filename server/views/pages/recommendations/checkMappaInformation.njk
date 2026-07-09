@@ -45,7 +45,7 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         <input type="hidden" name="isMappaLevel2Or3" value="{{ true if (not mappaData.error and mappaData.level > 1) else false }}" />
         <input type="hidden" name="isMappaCategory4" value="{{ true if (not mappaData.error and mappaData.category == 4) else false }}" />
-
+        
         {{ heading(pageHeadings[page.id]) }}
         {{ appSummaryCard({
                 titleText: 'MAPPA information',

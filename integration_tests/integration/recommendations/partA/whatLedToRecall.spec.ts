@@ -13,7 +13,7 @@ context('What led to recall screen', () => {
     })
 
     it('should load the page correctly', () => {
-      cy.visit('/recommendations/123/what-led?flagFTR56Enabled=1')
+      cy.visit('/recommendations/123/what-led')
 
       cy.getElement('What has led to this recall?').should('exist')
       cy.getElement('Explain why you think the risk cannot be managed in the community.').should('exist')
@@ -64,7 +64,7 @@ context('What led to recall screen', () => {
     })
 
     it('should show a validation error when textarea is blank', () => {
-      cy.visit('/recommendations/123/what-led?flagFTR56Enabled=1')
+      cy.visit('/recommendations/123/what-led')
       cy.clickButton('Continue')
 
       testForErrorSummary([

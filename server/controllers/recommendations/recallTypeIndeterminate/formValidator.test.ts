@@ -114,7 +114,7 @@ describe('validateRecallTypeIndeterminate', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'Select whether you recommend a recall or not',
+          text: 'Select a recall recommendation',
           errorId: 'noRecallTypeIndeterminateSelected',
         },
       ])
@@ -131,7 +131,7 @@ describe('validateRecallTypeIndeterminate', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'Select whether you recommend a recall or not',
+          text: 'Select a recall recommendation',
           errorId: 'noRecallTypeIndeterminateSelected',
         },
       ])

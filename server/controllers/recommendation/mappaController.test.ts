@@ -11,6 +11,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },
+        flags: {},
       },
     })
     const next = mockNext()
@@ -24,40 +25,6 @@ describe('get', () => {
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       featureFlags: {},
-      propertyToRefresh: 'mappa',
-      recommendationId: '123',
-      token: 'token',
-    })
-
-    expect(updatePageReviewedStatus).toHaveBeenCalledWith({
-      recommendationId: '123',
-      reviewedProperty: 'mappa',
-      token: 'token',
-    })
-
-    expect(res.locals.page).toEqual({ id: 'mappa' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/mappa')
-    expect(next).toHaveBeenCalled()
-  })
-
-  it('load with no data, with FTR56 enabled', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },
-        flags: { flagFTR56Enabled: true },
-      },
-    })
-    const next = mockNext()
-    await mappaController.get(
-      mockReq({
-        params: { recommendationId: '123' },
-      }),
-      res,
-      next,
-    )
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      featureFlags: { flagFTR56Enabled: true },
       propertyToRefresh: 'mappa',
       recommendationId: '123',
       token: 'token',
@@ -138,7 +105,7 @@ describe('get', () => {
               id: '123',
               personOnProbation: { name: 'Joe Bloggs', mappa: { ...testCase.mappaData } },
             },
-            flags: { flagFTR56Enabled: true },
+            flags: {},
           },
         })
         const next = mockNext()
@@ -152,7 +119,7 @@ describe('get', () => {
         )
 
         expect(updateRecommendation).toHaveBeenCalledWith({
-          featureFlags: { flagFTR56Enabled: true },
+          featureFlags: {},
           valuesToSave: {
             isMappaCategory4: testCase.expected.isMappaCategory4,
             isMappaLevel2Or3: testCase.expected.isMappaLevel2Or3,

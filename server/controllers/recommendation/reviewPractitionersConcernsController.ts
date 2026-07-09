@@ -6,7 +6,7 @@ import { AdditionalLicenceConditionOption } from '../../@types/make-recall-decis
 import logger from '../../../logger'
 import { isDefined } from '../../utils/utils'
 import { SentenceGroup, sentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import { indeterminateSentenceTypeFtr56 } from '../recommendations/indeterminateSentenceType/formOptions'
+import indeterminateSentenceType from '../recommendations/indeterminateSentenceType/formOptions'
 
 function extractStandardLicenceConditions(recommendation: RecommendationDecorated): Array<string> {
   if (recommendation.licenceConditionsBreached && recommendation.licenceConditionsBreached.standardLicenceConditions) {
@@ -133,7 +133,7 @@ function extractAlternativeTried(recommendation: RecommendationDecorated) {
 }
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation, flags } = res.locals
+  const { recommendation } = res.locals
 
   const alternativesToRecallTried = extractAlternativeTried(recommendation)
   const standardLicenceConditions = extractStandardLicenceConditions(recommendation)
@@ -148,9 +148,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     page: {
       id: 'reviewPractitionersConcerns',
     },
-    sentenceGroupHumanReadable: flags.flagFTR56Enabled
-      ? sentenceGroup.find(group => group.value === recommendation.sentenceGroup)?.text
-      : null,
+    sentenceGroupHumanReadable: sentenceGroup.find(group => group.value === recommendation.sentenceGroup)?.text,
     offenderName: recommendation.personOnProbation.name,
     triggerLeadingToRecall: recommendation.triggerLeadingToRecall,
     standardLicenceConditions,
@@ -161,8 +159,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
     isIndeterminateSentence,
     isExtendedSentence,
     indeterminateSentenceHumanReadable:
-      flags.flagFTR56Enabled && isIndeterminateSentence === 'Yes'
-        ? indeterminateSentenceTypeFtr56.find(
+      isIndeterminateSentence === 'Yes'
+        ? indeterminateSentenceType.find(
             sentenceType => sentenceType.value === recommendation.indeterminateSentenceType?.selected,
           )?.text
         : undefined,
