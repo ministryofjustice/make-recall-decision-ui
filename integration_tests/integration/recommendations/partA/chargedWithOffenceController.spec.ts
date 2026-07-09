@@ -75,7 +75,10 @@ context('Charged with new offence', () => {
     it('Should remember a previously selected option', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
-        response: { ...mockRecommendation, isRecalledOnNewChargedOrConvictedOffence: 'NO' },
+        response: {
+          ...mockRecommendation,
+          isRecalledOnNewChargedOrConvictedOffence: { selected: IsRecalledOnNewChargedOrConvictedOffence.selected.NO },
+        },
       })
 
       cy.visit(testPageUrl)
