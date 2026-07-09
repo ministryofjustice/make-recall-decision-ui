@@ -22,7 +22,6 @@ import {
   isRecalledOnNewChargedOrConvictedOffenceGenerator,
   IsRecalledOnNewChargedOrConvictedOffenceOptions,
 } from './isRecalledOnNewChargedOrConvictedOffenceGenerator'
-import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
