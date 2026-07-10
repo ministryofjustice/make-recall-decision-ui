@@ -11,6 +11,7 @@ import { RecommendationResponseGenerator } from '../../../data/recommendations/r
 import { CustodyStatus } from '../../@types/make-recall-decision-api/models/CustodyStatus'
 import selected = CustodyStatus.selected
 import { RecallTypeSelectedValue } from '../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
@@ -198,7 +199,6 @@ describe('get', () => {
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
       isReadyForCounterSignature: true,
-
       areAllComplete: false,
     })
 
@@ -353,6 +353,53 @@ describe('get', () => {
     await taskListController.get(mockReq(), res, next)
 
     expect(res.locals.isSpo).toEqual(true)
+  })
+
+  it('present - tasks complete with ftr56SentenceConviction enabled', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...recommendationTemplate,
+          isRecalledOnNewChargedOrConvictedOffence: {
+            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+          },
+        },
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
+        flags: {
+          ftr56SentenceConviction: true,
+        },
+      },
+    })
+
+    const next = mockNext()
+    await taskListController.get(mockReq(), res, next)
+
+    expect(res.locals.page).toEqual({ id: 'taskList' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
+    expect(res.locals.recommendation).toEqual({
+      ...recommendationTemplate,
+      isRecalledOnNewChargedOrConvictedOffence: {
+        selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+      },
+    })
+    expect(res.locals.taskCompleteness).toEqual({
+      ...taskCompleteness,
+      statuses: {
+        ...taskCompleteness.statuses,
+        isRecalledOnNewChargedOrConvictedOffence: true,
+      },
+      isReadyForCounterSignature: true,
+      areAllComplete: false,
+    })
+
+    expect(res.locals.lineManagerCountersignLink).toEqual(true)
+    expect(res.locals.seniorManagerCountersignLink).toEqual(false)
+    expect(res.locals.lineManagerCountersignLabel).toEqual('To do')
+    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
+    expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
   })
 
   describe('VulnerabilitiesRequireDetails', () => {

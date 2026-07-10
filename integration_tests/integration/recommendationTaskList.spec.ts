@@ -13,6 +13,7 @@ import { SentenceGroup } from '../../server/controllers/recommendations/sentence
 import recallTypeValues = RecallTypeSelectedValue.value
 import selected = CustodyStatus.selected
 import { NoneOrOption } from '../../data/@generators/dataGenerators'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 context('Recommendation - task list', () => {
   beforeEach(() => {
@@ -279,6 +280,76 @@ context('Recommendation - task list', () => {
     })
   })
 
+  describe('task list - with ftr56SentenceConviction enabled', () => {
+    it('shows isRecalledOnNewChargedOrConvictedOffence as to do', () => {
+      const response = {
+        ...recommendationResponse,
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+          },
+        },
+        sentenceGroup: SentenceGroup.ADULT_SDS,
+      }
+      setUp(response as RecommendationResponse, [], ['ftr56SentenceConviction'])
+
+      cy.getElement('New offence charges or convictions To do').should('exist')
+    })
+
+    it('shows isRecalledOnNewChargedOrConvictedOffence as complete', () => {
+      const response = {
+        ...recommendationResponse,
+        recallType: {
+          selected: {
+            value: 'FIXED_TERM',
+          },
+        },
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+        },
+        sentenceGroup: SentenceGroup.ADULT_SDS,
+      }
+      setUp(response as RecommendationResponse, [], ['ftr56SentenceConviction'])
+
+      cy.getElement('New offence charges or convictions Completed').should('exist')
+    })
+
+    describe('DNTR flow', () => {
+      it('shows isRecalledOnNewChargedOrConvictedOffence as to do', () => {
+        const response = {
+          ...recommendationResponse,
+          recallType: {
+            selected: {
+              value: 'NO_RECALL',
+            },
+          },
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+        }
+        setUp(response as RecommendationResponse, [], ['ftr56SentenceConviction'])
+
+        cy.getElement('New offence charges or convictions To do').should('exist')
+      })
+
+      it('shows isRecalledOnNewChargedOrConvictedOffence as complete', () => {
+        const response = {
+          ...recommendationResponse,
+          recallType: {
+            selected: {
+              value: 'NO_RECALL',
+            },
+          },
+          isRecalledOnNewChargedOrConvictedOffence: {
+            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+          },
+          sentenceGroup: SentenceGroup.ADULT_SDS,
+        }
+        setUp(response as RecommendationResponse, [], ['ftr56SentenceConviction'])
+
+        cy.getElement('New offence charges or convictions Completed').should('exist')
+      })
+    })
+  })
+
   describe('Task list', () => {
     describe('recommendations', () => {
       ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
@@ -291,6 +362,15 @@ context('Recommendation - task list', () => {
         it(`does not show Suitability item for ${sentenceGroup}`, () => {
           setUp({ ...recommendationResponse, sentenceGroup }, [], [])
           cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
+        })
+      })
+
+      describe('with ftr56SentenceConviction enabled', () => {
+        ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+          it(`does not show isRecalledOnNewChargedOrConvictedOffence item for ${sentenceGroup}`, () => {
+            setUp({ ...recommendationResponse, sentenceGroup }, [], ['ftr56SentenceConviction'])
+            cy.getElement('New offence charges or convictions').should('not.exist')
+          })
         })
       })
     })
