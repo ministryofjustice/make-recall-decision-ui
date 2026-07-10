@@ -150,6 +150,8 @@ const strings: Record<string, Record<string, string>> = {
       "Something went wrong. PPUD does not recognise the indeterminate sentence you've selected. Refresh the page and try again. If the problem continues, contact the support team.",
     missingSentencingCourt: 'Select a sentencing court from the list',
     missingChangeOffenceOrAddComment: 'Select an option',
+    missingisRecalledOnNewChargedOrConvictedOffence:
+      'Select if {{ fullName }} has been charged or convicted for an offence',
   },
   errorCodesFromApi: {
     DELIUS_CONTACT_CREATION_FAILED: 'An error occurred creating a contact in NDelius',
@@ -294,6 +296,7 @@ const strings: Record<string, Record<string, string>> = {
     areOffenceChangesNeeded: 'Do you need to change the index offence or add a comment?',
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
+    chargedWithOffence: 'Is {{ fullName }} being recalled because of being charged or convicted for an offence?',
   },
   labels: {
     yes: 'Yes',

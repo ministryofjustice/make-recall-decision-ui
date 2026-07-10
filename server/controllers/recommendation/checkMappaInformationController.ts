@@ -4,6 +4,7 @@ import { RiskResponse } from '../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import updatePageReviewedStatus from '../recommendations/helpers/updatePageReviewedStatus'
 import { sharedPaths } from '../../routes/paths/shared.paths'
+import ppPaths from '../../routes/paths/pp.paths'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -49,7 +50,15 @@ async function post(req: Request, res: Response, next: NextFunction) {
     token,
   })
 
-  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/suitability-for-fixed-term-recall`
+  let nextPageUrl
+
+  if (featureFlags?.ftr56SentenceConviction) {
+    nextPageUrl = ppPaths.chargedWithOffence
+  } else {
+    nextPageUrl = ppPaths.suitabilityForFixedTermRecall
+  }
+
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/${nextPageUrl}`
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

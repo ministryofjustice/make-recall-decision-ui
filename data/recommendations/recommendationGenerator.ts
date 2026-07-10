@@ -18,6 +18,10 @@ import { BookingMementoGenerator, BookingMementoOptions } from './bookingMemento
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { CustodyStatusGenerator, CustodyStatusOptions } from './custodyStatusGenerator'
 import regionEnum from '../../server/controllers/recommendations/formOptions/region'
+import {
+  isRecalledOnNewChargedOrConvictedOffenceGenerator,
+  IsRecalledOnNewChargedOrConvictedOffenceOptions,
+} from './isRecalledOnNewChargedOrConvictedOffenceGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -77,6 +81,7 @@ export type RecommendationOptions = {
   isAtRiskOfInvolvedInForeignPowerThreat?: boolean
   isYouthSentenceOver12Months?: boolean
   isYouthChargedWithSeriousOffence?: boolean
+  isRecalledOnNewChargedOrConvictedOffence?: NoneOrOption<IsRecalledOnNewChargedOrConvictedOffenceOptions>
 }
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
@@ -258,5 +263,9 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     isAtRiskOfInvolvedInForeignPowerThreat: options?.isAtRiskOfInvolvedInForeignPowerThreat,
     isYouthSentenceOver12Months: options?.isYouthSentenceOver12Months,
     isYouthChargedWithSeriousOffence: options?.isYouthChargedWithSeriousOffence,
+    isRecalledOnNewChargedOrConvictedOffence:
+      options?.isRecalledOnNewChargedOrConvictedOffence !== 'none'
+        ? isRecalledOnNewChargedOrConvictedOffenceGenerator.generate(options?.isRecalledOnNewChargedOrConvictedOffence)
+        : undefined,
   }),
 }
