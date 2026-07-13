@@ -10,9 +10,11 @@ import TestModule from '../pages/TestModule'
 export default function ModuleLoader() {
   const routes = [...TestModule.routes]
   const paths = [TestModule.path]
+  const strings = [TestModule.strings]
 
   return {
     paths,
     routes,
+    strings,
   }
 }

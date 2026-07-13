@@ -15,7 +15,7 @@ import { ppRoutes } from './routeDefinitions/pp.routes'
 import { sharedRoutes } from './routeDefinitions/shared.routes'
 import spoRoutes from './routeDefinitions/spo.routes'
 
-export default function routes(router: Router): Router {
+export default function routes(router: Router, moduleRoutes: RouteDefinition[]): Router {
   router.use(setUpMaintenance())
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
@@ -50,8 +50,8 @@ export default function routes(router: Router): Router {
     )
   }
 
-  const routeSets = [sharedRoutes, ppcsRoutes, ppRoutes, spoRoutes, apRoutes]
-  routeSets.map(routeSet => routeSet.map(routeDetails => route(routeDetails)))
+  const routeSets = [sharedRoutes, ppcsRoutes, ppRoutes, spoRoutes, apRoutes, moduleRoutes]
+  routeSets.map(routeSet => routeSet?.map(routeDetails => route(routeDetails)))
 
   return router
 }

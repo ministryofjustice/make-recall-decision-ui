@@ -1,4 +1,6 @@
-const strings: Record<string, Record<string, string>> = {
+import type { StringsDefinition } from '../@types/strings'
+
+const strings: StringsDefinition = {
   errors: {
     noSpoRecallTypeSelected: 'Select whether you have decided to recall or made a decision not to recall',
     missingDeleteDntrRationale: "Explain why you're deleting this decision not to recall",

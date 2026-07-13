@@ -1,7 +1,30 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.cypress.json" }
-  ]
+  "extends": "@tsconfig/node24/tsconfig.json",
+  "compileOnSave": true,
+  "compilerOptions": {
+    "isolatedModules": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "noEmit": false,
+    "allowJs": false,
+    "strict": false,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "experimentalDecorators": true,
+    "typeRoots": ["./server/@types", "./node_modules/@types"]
+  },
+  "exclude": [
+    "node_modules",
+    "assets/**/*.js",
+    "integration_tests",
+    "cypress_shared",
+    "dist",
+    "scripts",
+    "coverage",
+    "esbuild",
+    "**/tests/integration/**",
+    "**/*.spec.ts"
+  ],
+  "include": ["**/*.js", "**/*.ts"]
 }

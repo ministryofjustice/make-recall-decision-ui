@@ -60,6 +60,7 @@ function appSetup(route: Router): Express {
 }
 
 export default function appWithAllRoutes(): Express {
+  const { routes: moduleRoutes } = ModuleLoader()
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
-  return appSetup(allRoutes(standardRouter(new MockUserService())))
+  return appSetup(allRoutes(standardRouter(new MockUserService()), moduleRoutes))
 }
