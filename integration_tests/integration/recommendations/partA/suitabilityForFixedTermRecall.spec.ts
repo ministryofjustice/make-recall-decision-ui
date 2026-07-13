@@ -43,133 +43,143 @@ context('Suitability for fixed term recall page', () => {
   })
 
   describe('when sentence group is ADULT_SDS', () => {
-    const recommendation = RecommendationResponseGenerator.generate({ sentenceGroup: SentenceGroup.ADULT_SDS })
-    beforeEach(() => {
-      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.signIn()
-    })
+    ;[true, false].forEach(ftr56SentenceConviction => {
+      describe(`and ftr56SentenceConviction is ${ftr56SentenceConviction}`, () => {
+        const recommendation = RecommendationResponseGenerator.generate({ sentenceGroup: SentenceGroup.ADULT_SDS })
+        beforeEach(() => {
+          cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+          cy.task('getStatuses', { statusCode: 200, response: [] })
+          cy.signIn()
+        })
 
-    it('should display correctly', () => {
-      cy.visit(`${testPageUrl}`)
-      cy.title().should(
-        'equal',
-        `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
-      )
-      cy.getElement(
-        `Check ${recommendation.personOnProbation.name}'s suitability for a standard or fixed term recall`,
-      ).should('exist')
-      cy.getElement(
-        `Answer the following questions to assess what recall type is appropriate for ${recommendation.personOnProbation.name}.`,
-      ).should('exist')
-      cy.get('.app-summary-card').within(() => {
-        cy.get('h2').should('contain.text', 'Fixed term recall exclusion criteria')
-        cy.get('h3').should('contain.text', 'Sentence group')
-        cy.get('p.govuk-body').should('contain.text', 'Selected in sentence information step')
-        cy.get('.govuk-grid-column-two-thirds').should('contain.text', 'Adult determinate sentence')
-      })
-      cy.get('.moj-banner--warning').should('not.exist')
-      ;[
-        {
-          label: `Is ${recommendation.personOnProbation.name} being recalled because of being charged with an offence?`,
-          fieldId: 'isChargedWithOffence',
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name} serving a sentence for a terrorist or national security offence?`,
-          fieldId: 'isServingTerroristOrNationalSecurityOffence',
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name} considered to be a person at risk of being involved in foreign power threat activity?`,
-          fieldId: 'isAtRiskOfInvolvedInForeignPowerThreat',
-        },
-        {
-          label: `Was ${recommendation.personOnProbation.name} referred to the Parole Board under section 244ZB (power to detain) on this sentence?`,
-          fieldId: 'wasReferredToParoleBoard244ZB',
-        },
-        {
-          label: `Has ${recommendation.personOnProbation.name} been repatriated to the UK following a sentence for murder?`,
-          fieldId: 'wasRepatriatedForMurder',
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name} serving a Sentence for offenders of particular concern (SOPC)?`,
-          fieldId: 'isServingSOPCSentence',
-        },
-        {
-          label: `Is ${recommendation.personOnProbation.name} serving a Discretionary conditional release (DCR) sentence?`,
-          fieldId: 'isServingDCRSentence',
-        },
-      ].forEach((testCase, index) => {
-        testRadioButtons(cy.get('.govuk-form-group').eq(index), {
-          legend: {
-            text: testCase.label,
-          },
-          options: [
+        it('should display correctly', () => {
+          cy.visit(`${testPageUrl}?ftr56SentenceConviction=${ftr56SentenceConviction ? '1' : '0'}`)
+          cy.title().should(
+            'equal',
+            `Check the person's suitability for a standard or fixed term recall - ${config.applicationName}`,
+          )
+          cy.getElement(
+            `Check ${recommendation.personOnProbation.name}'s suitability for a standard or fixed term recall`,
+          ).should('exist')
+          cy.getElement(
+            `Answer the following questions to assess what recall type is appropriate for ${recommendation.personOnProbation.name}.`,
+          ).should('exist')
+          cy.get('.app-summary-card').within(() => {
+            cy.get('h2').should('contain.text', 'Fixed term recall exclusion criteria')
+            cy.get('h3').should('contain.text', 'Sentence group')
+            cy.get('p.govuk-body').should('contain.text', 'Selected in sentence information step')
+            cy.get('.govuk-grid-column-two-thirds').should('contain.text', 'Adult determinate sentence')
+          })
+          cy.get('.moj-banner--warning').should('not.exist')
+          const expectedQuestions = [
             {
-              input: {
-                id: testCase.fieldId,
-                value: 'YES',
-              },
-              label: {
-                text: 'Yes',
-              },
+              label: `Is ${recommendation.personOnProbation.name} serving a sentence for a terrorist or national security offence?`,
+              fieldId: 'isServingTerroristOrNationalSecurityOffence',
             },
             {
-              input: {
-                id: `${testCase.fieldId}-2`,
-                value: 'NO',
-              },
-              label: {
-                text: 'No',
-              },
+              label: `Is ${recommendation.personOnProbation.name} considered to be a person at risk of being involved in foreign power threat activity?`,
+              fieldId: 'isAtRiskOfInvolvedInForeignPowerThreat',
             },
-          ],
+            {
+              label: `Was ${recommendation.personOnProbation.name} referred to the Parole Board under section 244ZB (power to detain) on this sentence?`,
+              fieldId: 'wasReferredToParoleBoard244ZB',
+            },
+            {
+              label: `Has ${recommendation.personOnProbation.name} been repatriated to the UK following a sentence for murder?`,
+              fieldId: 'wasRepatriatedForMurder',
+            },
+            {
+              label: `Is ${recommendation.personOnProbation.name} serving a Sentence for offenders of particular concern (SOPC)?`,
+              fieldId: 'isServingSOPCSentence',
+            },
+            {
+              label: `Is ${recommendation.personOnProbation.name} serving a Discretionary conditional release (DCR) sentence?`,
+              fieldId: 'isServingDCRSentence',
+            },
+          ]
+          if (!ftr56SentenceConviction) {
+            expectedQuestions.unshift({
+              label: `Is ${recommendation.personOnProbation.name} being recalled because of being charged with an offence?`,
+              fieldId: 'isChargedWithOffence',
+            })
+          }
+          expectedQuestions.forEach((testCase, index) => {
+            testRadioButtons(cy.get('.govuk-form-group').eq(index), {
+              legend: {
+                text: testCase.label,
+              },
+              options: [
+                {
+                  input: {
+                    id: testCase.fieldId,
+                    value: 'YES',
+                  },
+                  label: {
+                    text: 'Yes',
+                  },
+                },
+                {
+                  input: {
+                    id: `${testCase.fieldId}-2`,
+                    value: 'NO',
+                  },
+                  label: {
+                    text: 'No',
+                  },
+                },
+              ],
+            })
+          })
+        })
+
+        it('should handle form errors', () => {
+          cy.visit(`${testPageUrl}?ftr56SentenceConviction=${ftr56SentenceConviction ? '1' : '0'}`)
+
+          cy.get('button').click()
+
+          testForErrorPageTitle()
+          const expectedErrors = [
+            {
+              href: 'isServingTerroristOrNationalSecurityOffence',
+              message: `Select whether ${recommendation.personOnProbation.name} is serving a sentence for a terrorist or national security offence`,
+              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+            },
+            {
+              href: 'isAtRiskOfInvolvedInForeignPowerThreat',
+              message: `Select whether ${recommendation.personOnProbation.name} is considered to be a person at risk of being involved in foreign power threat activity`,
+              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+            },
+            {
+              href: 'wasReferredToParoleBoard244ZB',
+              message: `Select whether ${recommendation.personOnProbation.name} was referred to the Parole Board under section 244ZB (power to detain) on this sentence`,
+              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+            },
+            {
+              href: 'wasRepatriatedForMurder',
+              message: `Select whether ${recommendation.personOnProbation.name} has been repatriated to the UK following a sentence for murder`,
+              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+            },
+            {
+              href: 'isServingSOPCSentence',
+              message: `Select whether ${recommendation.personOnProbation.name} is serving a Sentence for offenders of particular concern (SOPC)`,
+              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+            },
+            {
+              href: 'isServingDCRSentence',
+              message: `Select whether ${recommendation.personOnProbation.name} is serving a Discretionary conditional release (DCR) sentence`,
+              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+            },
+          ]
+          if (!ftr56SentenceConviction) {
+            expectedErrors.unshift({
+              href: 'isChargedWithOffence',
+              message: `Select whether ${recommendation.personOnProbation.name} is being recalled because of being charged with an offence`,
+              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
+            })
+          }
+          testForErrorSummary(expectedErrors)
         })
       })
-    })
-
-    it('should handle form errors', () => {
-      cy.visit(`${testPageUrl}`)
-
-      cy.get('button').click()
-
-      testForErrorPageTitle()
-      testForErrorSummary([
-        {
-          href: 'isChargedWithOffence',
-          message: `Select whether ${recommendation.personOnProbation.name} is being recalled because of being charged with an offence`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isServingTerroristOrNationalSecurityOffence',
-          message: `Select whether ${recommendation.personOnProbation.name} is serving a sentence for a terrorist or national security offence`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isAtRiskOfInvolvedInForeignPowerThreat',
-          message: `Select whether ${recommendation.personOnProbation.name} is considered to be a person at risk of being involved in foreign power threat activity`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'wasReferredToParoleBoard244ZB',
-          message: `Select whether ${recommendation.personOnProbation.name} was referred to the Parole Board under section 244ZB (power to detain) on this sentence`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'wasRepatriatedForMurder',
-          message: `Select whether ${recommendation.personOnProbation.name} has been repatriated to the UK following a sentence for murder`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isServingSOPCSentence',
-          message: `Select whether ${recommendation.personOnProbation.name} is serving a Sentence for offenders of particular concern (SOPC)`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-        {
-          href: 'isServingDCRSentence',
-          message: `Select whether ${recommendation.personOnProbation.name} is serving a Discretionary conditional release (DCR) sentence`,
-          checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-        },
-      ])
     })
   })
 
