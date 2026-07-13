@@ -10,13 +10,11 @@ function get(req: Request, res: Response, next: NextFunction) {
   const {
     recommendation,
     urlInfo: { basePath },
-    flags,
   } = res.locals
 
-  const { flagFTR56Enabled } = flags
   let backLinkUrl
 
-  if (flagFTR56Enabled && req.query?.fromPageId !== 'task-list-no-recall') {
+  if (req.query?.fromPageId !== 'task-list-no-recall') {
     backLinkUrl = `${basePath}${ppPaths.taskListConsiderRecall}`
   }
 
@@ -30,7 +28,6 @@ function get(req: Request, res: Response, next: NextFunction) {
         errors: res.locals.errors,
         value: res.locals.errors?.triggerLeadingToRecall ? '' : recommendation.triggerLeadingToRecall,
       },
-      flagFTR56Enabled,
       backLinkUrl,
       recommendation,
     },
@@ -79,7 +76,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   return res.redirect(
     303,
     nextPageLinkUrl({
-      nextPageId: res.locals.flags.flagFTR56Enabled ? ppPaths.licenceConditions : ppPaths.taskListConsiderRecall,
+      nextPageId: ppPaths.licenceConditions,
       urlInfo,
     }),
   )

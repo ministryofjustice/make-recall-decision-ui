@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import nunjucks from 'nunjucks'
+import * as nunjucks from 'nunjucks'
 import express from 'express'
 import fs from 'node:fs'
 import * as pathModule from 'path'
@@ -69,7 +69,7 @@ export default function nunjucksSetup(
     })
   }
 
-  const moduleViewPaths = modulePaths.map(modulePath => path.join(modulePath, 'views'))
+  const moduleViewPaths = modulePaths?.map(modulePath => path.join(modulePath, 'views'))
 
   const njkEnv = nunjucks.configure(
     [

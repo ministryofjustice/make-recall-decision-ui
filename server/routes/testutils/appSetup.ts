@@ -10,6 +10,7 @@ import errorHandler from '../../errorHandler'
 import standardRouter from '../standardRouter'
 import UserService from '../../services/userService'
 import * as auth from '../../authentication/auth'
+import ModuleLoader from '../../services/moduleLoader'
 
 const user = {
   name: 'joe bloggs',
@@ -38,7 +39,8 @@ function appSetup(route: Router): Express {
 
   app.set('view engine', 'njk')
 
-  nunjucksSetup(app, path)
+  const { paths: modulePaths } = ModuleLoader()
+  nunjucksSetup(app, path, modulePaths)
 
   app.use((req, res, next) => {
     res.locals = {}

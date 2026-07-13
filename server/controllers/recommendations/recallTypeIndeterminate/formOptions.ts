@@ -1,9 +1,4 @@
 export const recallTypeIndeterminate = [
-  { value: 'EMERGENCY', text: 'Emergency recall' },
-  { value: 'NO_RECALL', text: 'No recall' },
-]
-
-export const recallTypeIndeterminateFTR56 = [
   { value: 'EMERGENCY', text: 'Emergency standard recall' },
   { value: 'NO_RECALL', text: 'No recall - create a decision not to recall letter' },
 ]

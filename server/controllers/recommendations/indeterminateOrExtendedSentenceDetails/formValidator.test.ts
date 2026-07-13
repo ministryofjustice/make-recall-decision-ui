@@ -67,8 +67,10 @@ describe('validateIndeterminateDetails', () => {
       {
         href: '#option-1',
         name: 'indeterminateOrExtendedSentenceDetails',
-        text: 'Select at least one of the criteria',
+        text: 'Select all the criteria that apply to {{ fullName }}',
         errorId: 'noIndeterminateDetailsSelected',
+        values: undefined,
+        invalidParts: undefined,
       },
     ])
   })
@@ -104,8 +106,7 @@ describe('validateIndeterminateDetails', () => {
     ])
   })
 
-  it('ftr56: returns an error, if a selected checkbox is missing details, and no valuesToSave', async () => {
-    const ftr56Enabled = true
+  it('returns an error, if a selected checkbox is missing details, and no valuesToSave', async () => {
     const requestBody = {
       crn: 'X514364',
       indeterminateOrExtendedSentenceDetails: ['BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE'],
@@ -114,7 +115,6 @@ describe('validateIndeterminateDetails', () => {
     const { errors, unsavedValues, valuesToSave } = await validateIndeterminateDetails({
       requestBody,
       urlInfo,
-      ftr56Enabled,
     })
     expect(valuesToSave).toBeUndefined()
     expect(unsavedValues).toEqual({

@@ -19,7 +19,15 @@ generic-service:
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "dev"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
-    FEATURE_FLAGFTR56ENABLED: "2026-03-30T23:00Z" # Midnight BST on 31st March 2026
+
+  allowlist:
+    north_shields_user: 194.33.192.1/24
+    kettering_user: 194.33.196.4/24
+    ark-dom1-farnborough: 194.33.192.0/24
+    groups:
+      - internal
+      - prisons # do not remove, the prisons group also covers probation
+      - probation
 
   scheduledDowntime:
     enabled: true

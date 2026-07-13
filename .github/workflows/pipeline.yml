@@ -103,6 +103,7 @@ jobs:
     name: Sentry release and deploy to dev
     if: github.ref == 'refs/heads/main'
     needs:
+      - build
       - deploy_dev
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/sentry_release_and_deploy.yml@v2
     secrets: inherit
@@ -135,6 +136,7 @@ jobs:
     name: Sentry release and deploy to preprod
     if: github.ref == 'refs/heads/main'
     needs:
+      - build
       - deploy_preprod
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/sentry_release_and_deploy.yml@v2
     secrets: inherit
@@ -158,7 +160,8 @@ jobs:
     name: Sentry release and deploy to prod
     if: github.ref == 'refs/heads/main'
     needs:
-      - deploy_preprod
+      - build
+      - deploy_prod
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/sentry_release_and_deploy.yml@v2
     secrets: inherit
     with:

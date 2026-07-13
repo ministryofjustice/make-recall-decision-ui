@@ -18,6 +18,10 @@ import { BookingMementoGenerator, BookingMementoOptions } from './bookingMemento
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { CustodyStatusGenerator, CustodyStatusOptions } from './custodyStatusGenerator'
 import regionEnum from '../../server/controllers/recommendations/formOptions/region'
+import {
+  isRecalledOnNewChargedOrConvictedOffenceGenerator,
+  IsRecalledOnNewChargedOrConvictedOffenceOptions,
+} from './isRecalledOnNewChargedOrConvictedOffenceGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -66,13 +70,8 @@ export type RecommendationOptions = {
   nomisIndexOffence?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: NoneOrOption<PpudOffenderOptions>
   bookingMemento?: NoneOrOption<BookingMementoOptions>
-  isUnder18?: boolean
-  isSentence48MonthsOrOver?: boolean
   isMappaCategory4?: boolean
   isMappaLevel2Or3?: boolean
-  isRecalledOnNewChargedOffence?: boolean
-  isServingFTSentenceForTerroristOffence?: boolean
-  hasBeenChargedWithTerroristOrStateThreatOffence?: boolean
   wasReferredToParoleBoard244ZB?: boolean
   wasRepatriatedForMurder?: boolean
   isServingSOPCSentence?: boolean
@@ -82,6 +81,7 @@ export type RecommendationOptions = {
   isAtRiskOfInvolvedInForeignPowerThreat?: boolean
   isYouthSentenceOver12Months?: boolean
   isYouthChargedWithSeriousOffence?: boolean
+  isRecalledOnNewChargedOrConvictedOffence?: NoneOrOption<IsRecalledOnNewChargedOrConvictedOffenceOptions>
 }
 
 export const RecommendationResponseGenerator: DataGenerator<RecommendationResponse, RecommendationOptions> = {
@@ -252,13 +252,8 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),
     bookingMemento:
       options?.bookingMemento === 'none' ? undefined : BookingMementoGenerator.generate(options?.bookingMemento),
-    isUnder18: options?.isUnder18,
-    isSentence48MonthsOrOver: options?.isSentence48MonthsOrOver,
     isMappaCategory4: options?.isMappaCategory4,
     isMappaLevel2Or3: options?.isMappaLevel2Or3,
-    isRecalledOnNewChargedOffence: options?.isRecalledOnNewChargedOffence,
-    isServingFTSentenceForTerroristOffence: options?.isServingFTSentenceForTerroristOffence,
-    hasBeenChargedWithTerroristOrStateThreatOffence: options?.hasBeenChargedWithTerroristOrStateThreatOffence,
     wasReferredToParoleBoard244ZB: options?.wasReferredToParoleBoard244ZB,
     wasRepatriatedForMurder: options?.wasRepatriatedForMurder,
     isServingSOPCSentence: options?.isServingSOPCSentence,
@@ -268,5 +263,9 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     isAtRiskOfInvolvedInForeignPowerThreat: options?.isAtRiskOfInvolvedInForeignPowerThreat,
     isYouthSentenceOver12Months: options?.isYouthSentenceOver12Months,
     isYouthChargedWithSeriousOffence: options?.isYouthChargedWithSeriousOffence,
+    isRecalledOnNewChargedOrConvictedOffence:
+      options?.isRecalledOnNewChargedOrConvictedOffence !== 'none'
+        ? isRecalledOnNewChargedOrConvictedOffenceGenerator.generate(options?.isRecalledOnNewChargedOrConvictedOffence)
+        : undefined,
   }),
 }

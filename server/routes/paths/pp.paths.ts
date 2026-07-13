@@ -6,6 +6,7 @@ export default {
   alternativesTried: 'alternatives-tried',
   appointmentNoRecall: 'appointment-no-recall',
   arrestIssues: 'arrest-issues',
+  chargedWithOffence: 'charged-with-offence',
   checkMappaInformation: 'check-mappa-information',
   confirmationNoRecall: 'confirmation-no-recall',
   confirmationPartA: 'confirmation-part-a',

@@ -5,14 +5,15 @@ on: [workflow_call,workflow_dispatch]
 jobs:
   e2e_dev_tests:
     name: e2e dev tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, hmpps-github-actions-runner]
     environment: dev
     steps:
       - name: Checkout make-recall-decision-e2e-tests repo
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: 'ministryofjustice/make-recall-decision-e2e-tests'
           path: 'make-recall-decision-e2e-tests'
+          persist-credentials: false
       - name: Use Node.js .nvmrc
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
@@ -20,7 +21,15 @@ jobs:
       - name: Install npm
         working-directory: make-recall-decision-e2e-tests
         shell: bash
-        run: sudo npm install -g npm@11
+        run: npm install -g npm@11
+      # Starting with v25.0.0 of badeball/cypress-cucumber-preprocessor, used by the e2e-tests repo, the tags
+      # environment variable must be passed in lowercase. The 'env' option in GitHub Actions (which we are using in the
+      # step following this one) always converts environment variable names to uppercase, so we need to set the tags
+      # environment variable in a separate step to avoid it being converted to uppercase.
+      - name: Set tags environment variable
+        working-directory: make-recall-decision-e2e-tests
+        run: |
+          echo "tags=@E2E" >> $GITHUB_ENV
       - name: Run the tests against dev
         id: e2e_tests
         uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
@@ -32,8 +41,6 @@ jobs:
           config: baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
           install-command: npm run setup
         env:
-          # filter to specify what types of tests to run
-          TAGS: '@E2E'
           # used by the tests to determine which CRNs to use
           ENV: 'dev' # I expected to need to set CYPRESS_ENV here, but only ENV worked
           # credentials and other config values for running tests against dev environment
@@ -65,7 +72,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: screenshots
+          name: logs
           path: make-recall-decision-e2e-tests/e2e_tests/logs/
       - name: Upload JUnit results
         if: ${{ !cancelled() }}
