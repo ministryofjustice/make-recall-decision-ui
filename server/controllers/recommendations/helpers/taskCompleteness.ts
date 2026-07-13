@@ -92,7 +92,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
 
   if (_featureFlags?.ftr56SentenceConviction) {
     isAdultSDSSuitabilityCriteriaSet =
-      statuses.isChargedWithOffence &&
       statuses.isServingTerroristOrNationalSecurityOffence &&
       statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
       statuses.wasReferredToParoleBoard244ZB &&

@@ -932,7 +932,7 @@ describe('taskCompleteness', () => {
       expect(areAllComplete).toEqual(true)
     })
 
-    it('returns areAllComplete when isRecalledOnNewChargedOrConvictedOffence is missing and ftr56SentenceConviction is enabled', () => {
+    it('returns areAllComplete false when isRecalledOnNewChargedOrConvictedOffence is missing and ftr56SentenceConviction is enabled', () => {
       const { areAllComplete } = taskCompleteness(
         {
           ...adultSDSBase,

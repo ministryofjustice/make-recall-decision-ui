@@ -34,7 +34,7 @@
                     </span>
                     <span id='task-list-status-mappa'>{{ taskStatus({ hasBeenReviewed: recommendation.personOnProbation.ftr56MappaReviewed === true }) }}</span>
                 </li>
-                {% if flags.ftr56SentenceConviction and recommendation.sentenceGroup == 'ADULT_SDS' %}
+                {% if flags.ftr56SentenceConviction %}
                   <li class="moj-task-list__item">
                       <span class="moj-task-list__task-name">
                           <a aria-describedby="task-list-charged-with-new-offence" href="{{ changeLinkUrl({ pageUrlSlug: 'charged-with-offence', urlInfo: urlInfo, fromAnchor: 'heading-recommendation'   }) }}">New offence charges or convictions</a>
