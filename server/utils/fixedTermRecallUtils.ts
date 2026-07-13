@@ -14,7 +14,7 @@ export const isFixedTermRecallMandatoryForRecommendation = (
       isServingSOPCSentence: recommendation?.isServingSOPCSentence,
       isServingDCRSentence: recommendation?.isServingDCRSentence,
       isChargedWithOffence: recommendation?.isChargedWithOffence,
-      isRecalledOnNewChargedOrConvictedOffence: recommendation?.isRecalledOnNewChargedOrConvictedOffence.selected,
+      isRecalledOnNewChargedOrConvictedOffence: recommendation?.isRecalledOnNewChargedOrConvictedOffence?.selected,
       isServingTerroristOrNationalSecurityOffence: recommendation?.isServingTerroristOrNationalSecurityOffence,
       isAtRiskOfInvolvedInForeignPowerThreat: recommendation?.isAtRiskOfInvolvedInForeignPowerThreat,
       isYouthSentenceOver12Months: recommendation?.isYouthSentenceOver12Months,
