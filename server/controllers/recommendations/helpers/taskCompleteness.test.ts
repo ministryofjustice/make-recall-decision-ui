@@ -9,6 +9,7 @@ import { VictimsInContactScheme } from '../../../@types/make-recall-decision-api
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../vulnerabilitiesDetails/formValidator'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../../@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 jest.mock('../vulnerabilitiesDetails/formValidator')
 
@@ -915,6 +916,31 @@ describe('taskCompleteness', () => {
       'isServingDCRSentence',
     ] as const)('returns areAllComplete false when %s is missing', missingField => {
       const { areAllComplete } = taskCompleteness({ ...adultSDSBase, [missingField]: undefined })
+      expect(areAllComplete).toEqual(false)
+    })
+
+    it('returns areAllComplete true when ftr56SentenceConviction flag is enabled', () => {
+      const { areAllComplete } = taskCompleteness(
+        {
+          ...adultSDSBase,
+          isRecalledOnNewChargedOrConvictedOffence: {
+            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+          },
+        },
+        { ftr56SentenceConviction: true },
+      )
+      expect(areAllComplete).toEqual(true)
+    })
+
+    it('returns areAllComplete false when isRecalledOnNewChargedOrConvictedOffence is missing and ftr56SentenceConviction is enabled', () => {
+      const { areAllComplete } = taskCompleteness(
+        {
+          ...adultSDSBase,
+          isRecalledOnNewChargedOrConvictedOffence: undefined,
+        },
+        { ftr56SentenceConviction: true },
+      )
+
       expect(areAllComplete).toEqual(false)
     })
   })
