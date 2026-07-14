@@ -120,5 +120,5 @@ updates:
       default-days: 7
     open-pull-requests-limit: 3
     labels:
+      - "dependencies"
       - "pre-commit"
-      - "helm"
