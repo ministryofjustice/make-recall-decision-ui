@@ -5,9 +5,16 @@ import inputDisplayValuesRecallTypeIndeterminate from '../recommendations/recall
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import recallTypePath from '../../utils/routing'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+
+  if (recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE) {
+    const redirectionPath = recallTypePath(recommendation)
+    return res.redirect(303, `${res.locals.urlInfo.basePath}${redirectionPath}`)
+  }
 
   res.locals = {
     ...res.locals,
@@ -22,7 +29,7 @@ function get(req: Request, res: Response, next: NextFunction) {
   }
 
   res.render(`pages/recommendations/recallTypeIndeterminate`)
-  next()
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {

@@ -1,6 +1,7 @@
 import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import setResponsePropertiesToNull from '../support/commands'
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 
 context('Make a recommendation - Branching / redirects', () => {
   const crn = 'X34983'
@@ -12,6 +13,7 @@ context('Make a recommendation - Branching / redirects', () => {
     personOnProbation: {
       name: 'Jane Bloggs',
     },
+    sentenceGroup: SentenceGroup.YOUTH_SDS,
     recallType: { selected: { value: 'STANDARD' } },
     managerRecallDecision: {
       isSentToDelius: true,
@@ -54,14 +56,18 @@ context('Make a recommendation - Branching / redirects', () => {
   })
 
   it('indeterminate recall type - directs "no recall" to the no recall task list', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    const recommendation = {
+      ...recommendationResponse,
+      sentenceGroup: SentenceGroup.INDETERMINATE,
+    }
+    cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendation })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(`${sharedPaths.recommendations}/${recommendationId}/recall-type-indeterminate`)
     cy.selectRadio('Select your recommendation', 'No recall - create a decision not to recall letter')
     cy.task('getRecommendation', {
       statusCode: 200,
-      response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      response: { ...recommendation, recallType: { selected: { value: 'NO_RECALL' } } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
@@ -69,8 +75,12 @@ context('Make a recommendation - Branching / redirects', () => {
   })
 
   it('indeterminate recall type - directs "no recall" to the no recall task list even if coming from task list', () => {
-    cy.task('getRecommendation', { statusCode: 200, response: recommendationResponse })
-    cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
+    const recommendation = {
+      ...recommendationResponse,
+      sentenceGroup: SentenceGroup.INDETERMINATE,
+    }
+    cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+    cy.task('updateRecommendation', { statusCode: 200, response: recommendation })
     cy.task('getStatuses', { statusCode: 200, response: [] })
     cy.visit(
       `${sharedPaths.recommendations}/${recommendationId}/recall-type-indeterminate?fromPageId=task-list&fromAnchor=heading-recommendation`,
@@ -78,7 +88,7 @@ context('Make a recommendation - Branching / redirects', () => {
     cy.selectRadio('Select your recommendation', 'No recall - create a decision not to recall letter')
     cy.task('getRecommendation', {
       statusCode: 200,
-      response: { ...recommendationResponse, recallType: { selected: { value: 'NO_RECALL' } } },
+      response: { ...recommendation, recallType: { selected: { value: 'NO_RECALL' } } },
     })
     cy.task('getStatuses', { statusCode: 200, response: [{ name: 'NO_RECALL_DECIDED', active: true }] })
     cy.clickButton('Continue')
