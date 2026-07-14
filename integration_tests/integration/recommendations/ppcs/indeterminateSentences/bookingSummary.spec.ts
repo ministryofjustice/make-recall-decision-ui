@@ -213,7 +213,7 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
 
         it('displays multi-term sentence rows when there are 2 or more terms', () => {
           const recWithMultiTerms = RecommendationResponseGenerator.generate({
-            bookRecallToPpud: { custodyType: CUSTODY_GROUP.DETERMINATE },
+            bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
           })
 
           const offence = recWithMultiTerms.nomisIndexOffence?.allOptions?.find(

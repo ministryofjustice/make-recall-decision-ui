@@ -3411,7 +3411,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.DETERMINATE },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -3461,7 +3461,7 @@ context('Make a recommendation', () => {
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.DETERMINATE },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -3500,8 +3500,7 @@ context('Make a recommendation', () => {
 
       cy.visit(`/recommendations/252523937/booking-summary`)
       cy.pageHeading().should('contain', 'Booking summary for Joseph Bluggs')
-      cy.getElement('sentenceEndDate').should('not.exist')
-      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
+      cy.getText('sentenceEndDate').should('contain', '-')
     })
 
     it('supporting documents', () => {
