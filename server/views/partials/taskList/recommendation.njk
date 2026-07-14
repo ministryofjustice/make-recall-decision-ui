@@ -2,7 +2,7 @@
 
   {% if recommendation.sentenceGroup == 'ADULT_SDS' %}
     {% set suitabilityForFixedTermRecall =
-      hasData(recommendation.isChargedWithOffence) and
+      (hasData(recommendation.isChargedWithOffence) or flags.ftr56SentenceConviction) and
       hasData(recommendation.isServingTerroristOrNationalSecurityOffence) and
       hasData(recommendation.isAtRiskOfInvolvedInForeignPowerThreat) and
       hasData(recommendation.wasReferredToParoleBoard244ZB) and

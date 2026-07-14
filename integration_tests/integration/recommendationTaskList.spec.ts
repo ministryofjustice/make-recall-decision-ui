@@ -10,10 +10,10 @@ import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
 import strings from '../../server/textStrings/en'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
-import recallTypeValues = RecallTypeSelectedValue.value
-import selected = CustodyStatus.selected
 import { NoneOrOption } from '../../data/@generators/dataGenerators'
 import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
+import recallTypeValues = RecallTypeSelectedValue.value
+import selected = CustodyStatus.selected
 
 context('Recommendation - task list', () => {
   beforeEach(() => {
@@ -225,7 +225,7 @@ context('Recommendation - task list', () => {
           },
           ftr56MappaReviewed: true,
         },
-        isChargedWithOffence: true,
+        isChargedWithOffence: expect?.isRecalledOnNewChargedOrConvictedOffence ? undefined : true,
         isServingTerroristOrNationalSecurityOffence: true,
         isAtRiskOfInvolvedInForeignPowerThreat: true,
         wasReferredToParoleBoard244ZB: true,
@@ -234,9 +234,11 @@ context('Recommendation - task list', () => {
         isServingDCRSentence: true,
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
-        isRecalledOnNewChargedOrConvictedOffence: {
-          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
-        },
+        isRecalledOnNewChargedOrConvictedOffence: expect?.isRecalledOnNewChargedOrConvictedOffence
+          ? {
+              selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+            }
+          : undefined,
       }
       setUp(response as RecommendationResponse, [], flags)
 
