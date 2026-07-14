@@ -67,7 +67,7 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
           cy.get('.govuk-hint').first().should('contain.text', 'Selected for recall.')
         })
 
-        it('displays all sentence summary list fields', () => {
+        it('displays all sentence summary list fields - INDETERMINATE', () => {
           const recWithOffence = RecommendationResponseGenerator.generate({
             bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
           })
@@ -102,12 +102,81 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
             testSummaryList(cy.wrap($summaryList), {
               rows: [
                 {
+                  key: 'Offence',
+                  value: recommendation.bookRecallToPpud.indexOffence ?? '- no value',
+                },
+                {
+                  key: 'Offence date',
+                  value: formatDateTimeFromIsoString({ isoDate: offence.offenceDate }),
+                },
+                {
+                  key: 'Release date',
+                  value: formatDateTimeFromIsoString({ isoDate: offence.releaseDate }),
+                },
+                {
+                  key: 'Sentencing court',
+                  value: offence.courtDescription,
+                },
+                {
+                  key: 'Date of sentence',
+                  value: formatDateTimeFromIsoString({ isoDate: offence.sentenceDate }),
+                },
+                {
+                  key: 'Tariff expiry date',
+                  value: formatDateTimeFromIsoString({ isoDate: offence.licenceExpiryDate }),
+                },
+                {
+                  key: 'Full punishment',
+                  value: expectedSentenceLength,
+                },
+              ],
+            })
+          })
+        })
+
+        it('displays all sentence summary list fields - DETERMINATE', () => {
+          const recWithOffence = RecommendationResponseGenerator.generate({
+            bookRecallToPpud: {
+              custodyGroup: CUSTODY_GROUP.DETERMINATE,
+            },
+          })
+
+          const offence = recWithOffence.nomisIndexOffence?.allOptions?.find(
+            o => o.offenderChargeId === recWithOffence.nomisIndexOffence?.selected,
+          )
+
+          offence.courtDescription = 'Birmingham'
+          offence.offenceDate = faker.date.past().toISOString()
+          offence.releaseDate = faker.date.future().toISOString()
+          offence.sentenceDate = faker.date.past().toISOString()
+          offence.licenceExpiryDate = faker.date.future().toISOString()
+          offence.sentenceEndDate = faker.date.future().toISOString()
+          offence.terms = [
+            {
+              years: 2,
+              months: 2,
+              days: 3,
+              weeks: 2,
+              code: 'T1',
+            },
+          ]
+          const expectedSentenceLength = `${offence.terms[0].years} years, ${offence.terms[0].months} months, ${offence.terms[0].weeks} weeks, ${offence?.terms[0].days} days`
+
+          cy.task('getRecommendation', { statusCode: 200, response: recWithOffence })
+          cy.visit(testPageUrl)
+
+          cy.get('#indeterminate-sentence').as('summaryList')
+
+          cy.get('@summaryList').then($summaryList => {
+            testSummaryList(cy.wrap($summaryList), {
+              rows: [
+                {
                   key: 'Custody type',
-                  value: recommendation.bookRecallToPpud.custodyType ?? '- no value',
+                  value: recWithOffence.bookRecallToPpud.custodyType ?? '- no value',
                 },
                 {
                   key: 'Offence',
-                  value: recommendation.bookRecallToPpud.indexOffence ?? '- no value',
+                  value: recWithOffence.bookRecallToPpud.indexOffence ?? '- no value',
                 },
                 {
                   key: 'Offence date',
@@ -130,53 +199,21 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
                   value: expectedSentenceLength,
                 },
                 {
-                  key: 'Tariff expiry date',
+                  key: 'Licence expiry date',
                   value: formatDateTimeFromIsoString({ isoDate: offence.licenceExpiryDate }),
                 },
                 {
-                  key: 'Full punishment',
-                  value: formatDateTimeFromIsoString({ isoDate: offence.sentenceSequenceExpiryDate }),
+                  key: 'Sentence expiry date',
+                  value: formatDateTimeFromIsoString({ isoDate: offence?.sentenceEndDate }),
                 },
               ],
             })
           })
         })
 
-        it('displays Full punishment date when sentenceEndDate is absent', () => {
-          const recWithNoSentenceEndDate = RecommendationResponseGenerator.generate({
-            bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-          })
-
-          const offence = recWithNoSentenceEndDate.nomisIndexOffence?.allOptions?.find(
-            o => o.offenderChargeId === recWithNoSentenceEndDate.nomisIndexOffence?.selected,
-          )
-
-          if (offence) {
-            offence.sentenceEndDate = ''
-            offence.sentenceSequenceExpiryDate = faker.date.future().toISOString()
-          }
-
-          cy.task('getRecommendation', { statusCode: 200, response: recWithNoSentenceEndDate })
-
-          const altOffenceData = recWithNoSentenceEndDate.nomisIndexOffence.allOptions?.find(
-            o => o.offenderChargeId === recWithNoSentenceEndDate.nomisIndexOffence.selected,
-          )
-
-          cy.visit(testPageUrl)
-
-          cy.get('#indeterminate-sentence').within(() => {
-            cy.contains('.govuk-summary-list__key', 'Full punishment')
-              .siblings('.govuk-summary-list__value')
-              .should(
-                'contain.text',
-                formatDateTimeFromIsoString({ isoDate: altOffenceData.sentenceSequenceExpiryDate }),
-              )
-          })
-        })
-
         it('displays multi-term sentence rows when there are 2 or more terms', () => {
           const recWithMultiTerms = RecommendationResponseGenerator.generate({
-            bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+            bookRecallToPpud: { custodyType: CUSTODY_GROUP.DETERMINATE },
           })
 
           const offence = recWithMultiTerms.nomisIndexOffence?.allOptions?.find(
@@ -209,7 +246,7 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
 
         it('displays all personal detail fields', () => {
           const recWithPersonalDetails = RecommendationResponseGenerator.generate({
-            bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
+            bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
           })
 
           const { bookRecallToPpud } = recWithPersonalDetails
