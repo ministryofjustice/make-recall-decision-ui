@@ -22,6 +22,14 @@ jobs:
         working-directory: make-recall-decision-e2e-tests
         shell: bash
         run: npm install -g npm@11
+      # Starting with v25.0.0 of badeball/cypress-cucumber-preprocessor, used by the e2e-tests repo, the tags
+      # environment variable must be passed in lowercase. The 'env' option in GitHub Actions (which we are using in the
+      # step following this one) always converts environment variable names to uppercase, so we need to set the tags
+      # environment variable in a separate step to avoid it being converted to uppercase.
+      - name: Set tags environment variable
+        working-directory: make-recall-decision-e2e-tests
+        run: |
+          echo "tags=@E2E" >> $GITHUB_ENV
       - name: Run the tests against dev
         id: e2e_tests
         uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
@@ -33,8 +41,6 @@ jobs:
           config: baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
           install-command: npm run setup
         env:
-          # filter to specify what types of tests to run
-          TAGS: '@E2E'
           # used by the tests to determine which CRNs to use
           ENV: 'dev' # I expected to need to set CYPRESS_ENV here, but only ENV worked
           # credentials and other config values for running tests against dev environment

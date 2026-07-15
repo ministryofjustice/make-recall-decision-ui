@@ -70,6 +70,14 @@ jobs:
       - uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/actions/cypress/create_timings_file@bd2ccc17cfc6c285638a4be7bbb280527a30c328 # v1.1.0
         with:
           timings: ${{ needs.get-timings.outputs.timings }}
+      # Starting with v25.0.0 of badeball/cypress-cucumber-preprocessor, used by the e2e-tests repo, the tags
+      # environment variable must be passed in lowercase. The 'env' option in GitHub Actions (which we are using in the
+      # step following this one) always converts environment variable names to uppercase, so we need to set the tags
+      # environment variable in a separate step to avoid it being converted to uppercase.
+      - name: Set tags environment variable
+        working-directory: make-recall-decision-e2e-tests
+        run: |
+          echo "tags=not @E2E and not @smoke" >> $GITHUB_ENV
       - name: Run the tests
         id: e2e_tests
         uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
@@ -85,8 +93,6 @@ jobs:
           SPLIT: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
           SPLIT_FILE: 'timings.json'
-          # filter to specify what types of tests to run
-          TAGS: 'not @E2E and not @smoke'
           # credentials and other config values for running tests against local environment
           CYPRESS_USERNAME_PO: ${{secrets.LOCAL_USERNAME_PO}}
           CYPRESS_PASSWORD_PO: ${{secrets.LOCAL_PASSWORD_PO}}
