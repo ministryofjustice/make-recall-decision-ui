@@ -20,8 +20,8 @@ export default [
   },
   {
     name: 'FTR56 Flag',
-    key: 'ui-flagFTR56Enabled',
-    description: 'FTR56 Flag',
+    key: 'ui-ftr56SentenceConviction',
+    description: 'FTR56 Sentence Conviction Flag',
     enabled: false,
   },
 ]
