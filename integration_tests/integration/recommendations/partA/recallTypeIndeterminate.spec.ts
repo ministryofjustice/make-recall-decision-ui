@@ -3,9 +3,12 @@ import { testForErrorSummary } from '../../../componentTests/errors.tests'
 import { sharedPaths } from '../../../../server/routes/paths/shared.paths'
 import testRadioButtons from '../../../componentTests/radioButtons.tests'
 import { RecallTypeSelectedValue } from '../../../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
+import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
 
 describe('recall type indeterminate', () => {
-  const recommendation = RecommendationResponseGenerator.generate()
+  const recommendation = RecommendationResponseGenerator.generate({
+    sentenceGroup: SentenceGroup.INDETERMINATE,
+  })
   const testPageUrl = `${sharedPaths.recommendations}/${recommendation.id}/recall-type-indeterminate`
 
   beforeEach(() => {
@@ -65,6 +68,7 @@ describe('recall type indeterminate', () => {
 
   it('should remember the selected recall type', () => {
     const recommendationWithRecallTypeSelected = RecommendationResponseGenerator.generate({
+      sentenceGroup: SentenceGroup.INDETERMINATE,
       recallType: {
         selected: {
           value: RecallTypeSelectedValue.value.STANDARD,

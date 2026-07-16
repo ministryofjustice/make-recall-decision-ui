@@ -9,325 +9,357 @@ import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/
 import { isRecommendationDiscretionaryRecall } from '../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import ErrorGenerator from '../../../data/common/errorGenerator'
+import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
+import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
+import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
+import ppPaths from '../../routes/paths/pp.paths'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../caseSummary/getCaseSection')
 jest.mock('../recommendations/helpers/urls')
 jest.mock('../../utils/fixedTermRecallUtils')
+jest.mock('../recommendations/suitabilityForFixedTermRecall/formOptions')
+jest.mock('../recommendations/suitabilityForFixedTermRecall/inputDisplayValues')
+jest.mock('../recommendations/helpers/getSentenceGroupDetails')
+;[true, false].forEach(ftr56SentenceConvictionFeatureFlag => {
+  describe(`with ftr56SentenceConvictionFeatureFlag ${ftr56SentenceConvictionFeatureFlag ? 'enabled' : 'disabled'}`, () => {
+    describe('get', () => {
+      const formOptions = {
+        firstOption: { label: faker.lorem.sentence() },
+        secondOption: { label: faker.lorem.sentence() },
+      }
+      const displayValues = {
+        firstOption: { label: faker.lorem.sentence(), value: faker.lorem.word() },
+        secondOption: { label: faker.lorem.sentence(), value: faker.lorem.word() },
+      }
+      const sentenceGroupDetails = {
+        text: faker.lorem.sentence(),
+        value: faker.lorem.word(),
+      }
 
-describe('get', () => {
-  beforeEach(() => {
-    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: { licence: 'case summary data' },
-    })
-    ;(getCaseSection as jest.Mock).mockReturnValueOnce({
-      caseSummary: { mappa: 'mappa summary data' },
-    })
-  })
+      beforeEach(() => {
+        ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+          caseSummary: { licence: 'case summary data' },
+        })
+        ;(getCaseSection as jest.Mock).mockReturnValueOnce({
+          caseSummary: { mappa: 'mappa summary data' },
+        })
+        ;(getFormOptions as jest.Mock).mockReturnValue(formOptions)
+        ;(suitabilityInputDisplayValues as jest.Mock).mockReturnValue(displayValues)
+        ;(getSentenceGroupDetailsFromEnum as jest.Mock).mockReturnValue(sentenceGroupDetails)
+        ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValue(false)
+      })
 
-  it('load with no data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          personOnProbation: {
-            name: faker.person.fullName(),
+      it('load with no data', async () => {
+        const recommendation = RecommendationResponseGenerator.generate({
+          sentenceGroup: faker.helpers.arrayElement(
+            Object.values(SentenceGroup).filter(
+              sentenceGroup => ![SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(sentenceGroup),
+            ),
+          ),
+        })
+        const res = mockRes({
+          locals: {
+            recommendation,
+            token: 'token1',
+            flags: {
+              ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+            },
           },
-          recallType: null,
-        },
-        token: 'token1',
-      },
-    })
-    const next = mockNext()
-    await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
-    expect(res.locals.caseSummary).toEqual({ licence: 'case summary data', mappa: 'mappa summary data' })
-    expect(res.locals.page).toEqual({ id: 'suitabilityForFixedTermRecall' })
+        })
 
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
-    expect(next).toHaveBeenCalled()
-  })
+        const next = mockNext()
+        await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
+        expect(res.locals.caseSummary).toEqual({ licence: 'case summary data', mappa: 'mappa summary data' })
+        expect(res.locals.page).toEqual({ id: 'suitabilityForFixedTermRecall' })
+        expect(res.locals.inputDisplayValues).toEqual(displayValues)
+        expect(res.locals.sentenceGroupDetails).toEqual(sentenceGroupDetails)
 
-  it('load with errors', async () => {
-    const errors = ErrorGenerator.generate()
-    const res = mockRes({
-      locals: {
-        unsavedValues: {
-          isMappaCategory4: 'NO',
-          isMappaLevel2Or3: 'YES',
-        },
-        recommendation: RecommendationResponseGenerator.generate(),
-        token: 'token1',
-        errors,
-      },
-    })
-    const next = mockNext()
-    await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
+        expect(getFormOptions).toHaveBeenCalledWith(
+          recommendation.personOnProbation.name,
+          recommendation.sentenceGroup,
+          ftr56SentenceConvictionFeatureFlag,
+        )
+        expect(suitabilityInputDisplayValues).toHaveBeenCalledWith(formOptions, undefined, recommendation)
+        expect(getSentenceGroupDetailsFromEnum).toHaveBeenCalledWith(recommendation.sentenceGroup)
+        expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
+        expect(next).toHaveBeenCalled()
+      })
 
-    expect(res.locals.errors).toEqual(errors)
-  })
+      it('load with errors', async () => {
+        const errors = ErrorGenerator.generate()
+        const res = mockRes({
+          locals: {
+            unsavedValues: {
+              isMappaCategory4: 'NO',
+              isMappaLevel2Or3: 'YES',
+            },
+            recommendation: RecommendationResponseGenerator.generate(),
+            token: 'token1',
+            errors,
+            flags: {
+              ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+            },
+          },
+        })
+        const next = mockNext()
+        await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
 
-  describe('redirects when sentenceGroup is not Determinate', () => {
-    ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(testCase => {
-      it(`redirects when sentence group is ${testCase}`, async () => {
+        expect(res.locals.errors).toEqual(errors)
+      })
+
+      describe('redirects when sentenceGroup is not Determinate', () => {
+        ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+          it(`redirects when sentence group is ${sentenceGroup}`, async () => {
+            const recommendation = RecommendationResponseGenerator.generate({
+              sentenceGroup,
+            })
+            const res = mockRes({
+              locals: {
+                recommendation,
+                token: 'token1',
+                flags: {
+                  ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+                },
+              },
+            })
+
+            await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+            expect(res.redirect).toHaveBeenCalledWith(
+              303,
+              `/recommendations/${recommendation.id}/${ppPaths.indeterminateDetails}`,
+            )
+          })
+        })
+      })
+
+      it('shows the warning banner when the sentenceGroup is YOUTH_SDS and the recallType is not null', async () => {
+        ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValueOnce(true)
         const res = mockRes({
           locals: {
             recommendation: {
-              id: '1',
-              sentenceGroup: testCase,
+              personOnProbation: {
+                name: 'Test McTest',
+              },
+              sentenceGroup: SentenceGroup.YOUTH_SDS,
+              recallType: '123',
             },
-            token: 'token1',
+            flags: {
+              ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+            },
           },
         })
 
         await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-        expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/indeterminate-details`)
+        expect(res.locals.page.warningPanel).toEqual({
+          body: `Changing your answers could make Test McTest eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
+          title: 'Changes could affect your recall recommendation choices',
+        })
+      })
+
+      it('does not show the warning banner when sentenceGroup is YOUTH_SDS but the recallType is null', async () => {
+        ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValueOnce(true)
+        const res = mockRes({
+          locals: {
+            recommendation: RecommendationResponseGenerator.generate({
+              sentenceGroup: SentenceGroup.YOUTH_SDS,
+              recallType: 'none',
+            }),
+            flags: {
+              ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+            },
+          },
+        })
+
+        await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+        expect(res.locals.page.warningPanel).toBeUndefined()
+      })
+
+      it('does not show the warning banner when sentenceGroup is ADULT_SDS', async () => {
+        const res = mockRes({
+          locals: {
+            recommendation: {
+              personOnProbation: {
+                name: 'Test McTest',
+              },
+              sentenceGroup: SentenceGroup.ADULT_SDS,
+              recallType: '123',
+            },
+            flags: {
+              ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+            },
+          },
+        })
+
+        await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+        expect(res.locals.page.warningPanel).toBeUndefined()
       })
     })
-  })
 
-  it('shows the warning banner when the sentenceGroup is YOUTH_SDS and the recallType is not null', async () => {
-    ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValueOnce(true)
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          personOnProbation: {
-            name: 'Test McTest',
-          },
-          sentenceGroup: SentenceGroup.YOUTH_SDS,
-          recallType: '123',
-        },
-      },
-    })
+    describe('post', () => {
+      const expectedResolvedRedirectUrl = faker.internet.url()
+      beforeEach(() => {
+        ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+        ;(nextPagePreservingFromPageAndAnchor as jest.Mock).mockReturnValue(expectedResolvedRedirectUrl)
+      })
+      const basePath = `/recommendations/123/`
 
-    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+      describe('post with valid data', () => {
+        const formOptions = {
+          firstOption: { label: faker.lorem.sentence() },
+          secondOption: { label: faker.lorem.sentence() },
+        }
+        const formOptionsAnswers = {
+          firstOption: faker.helpers.arrayElement(['YES', 'NO']),
+          secondOption: faker.helpers.arrayElement(['YES', 'NO']),
+        }
+        ;[true, false].forEach(recallTypePreserved => {
+          ;[SentenceGroup.YOUTH_SDS, SentenceGroup.ADULT_SDS].forEach(sentenceGroup => {
+            describe(`with sentence group ${sentenceGroup}`, () => {
+              it(`${recallTypePreserved ? 'does not clear' : 'clears'} the recallType and rationale if the criteria has ${recallTypePreserved ? 'not ' : ''}changed`, async () => {
+                const postBody =
+                  sentenceGroup === SentenceGroup.YOUTH_SDS
+                    ? {
+                        // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
+                        // it's still required in the Part A so we're just checking it's being updated in the API
+                        isMappaCategory4: faker.helpers.arrayElement(['YES', 'NO']),
+                        isMappaLevel2Or3: faker.helpers.arrayElement(['YES', 'NO']),
+                        ...formOptionsAnswers,
+                      }
+                    : formOptionsAnswers
+                const req = mockReq({
+                  params: { recommendationId: '123' },
+                  body: {
+                    ...postBody,
+                  },
+                })
+                const priorRecommendation = RecommendationResponseGenerator.generate({
+                  sentenceGroup,
+                  recallType: 'any',
+                })
+                const previousAnswers = recallTypePreserved
+                  ? {
+                      firstOption: formOptionsAnswers.firstOption === 'YES',
+                      secondOption: formOptionsAnswers.secondOption === 'YES',
+                    }
+                  : {
+                      firstOption: formOptionsAnswers.firstOption !== 'YES',
+                      secondOption: formOptionsAnswers.secondOption !== 'YES',
+                    }
+                const res = mockRes({
+                  token: 'token1',
+                  locals: {
+                    recommendation: {
+                      ...priorRecommendation,
+                      ...previousAnswers,
+                    },
+                    urlInfo: { basePath },
+                    statuses: [],
+                    flags: {
+                      ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+                    },
+                  },
+                })
+                const next = mockNext()
+                ;(getFormOptions as jest.Mock).mockReturnValue(formOptions)
 
-    expect(res.locals.page.warningPanel).toEqual({
-      body: `Changing your answers could make Test McTest eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
-      title: 'Changes could affect your recall recommendation choices',
-    })
-  })
+                await suitabilityForFixedTermRecallController.post(req, res, next)
 
-  it('does not show the warning banner when sentenceGRoup is ADULT_SDS', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          personOnProbation: {
-            name: 'Test McTest',
-          },
-          sentenceGroup: SentenceGroup.ADULT_SDS,
-          recallType: '123',
-        },
-      },
-    })
+                expect(updateRecommendation).toHaveBeenCalledWith({
+                  recommendationId: '123',
+                  token: 'token1',
+                  valuesToSave: {
+                    ...Object.fromEntries(Object.entries(postBody).map(([key, value]) => [key, value === 'YES'])),
+                    ...(!recallTypePreserved
+                      ? {
+                          recallType: {
+                            selected: { value: null },
+                            allOptions: priorRecommendation.recallType.allOptions,
+                          },
+                        }
+                      : {}),
+                  },
+                  featureFlags: {
+                    ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+                  },
+                })
 
-    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+                expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
+                expect(next).not.toHaveBeenCalled() // end of the line for posts.
+              })
+            })
+          })
+        })
+      })
 
-    expect(res.locals.page.warningPanel).toBe(undefined)
-  })
-
-  it('renders the correct template', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          personOnProbation: {
-            name: faker.person.fullName(),
-          },
-        },
-      },
-    })
-
-    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
-
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
-  })
-})
-
-describe('post', () => {
-  const expectedResolvedRedirectUrl = faker.internet.url()
-  beforeEach(() => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(nextPagePreservingFromPageAndAnchor as jest.Mock).mockReturnValue(expectedResolvedRedirectUrl)
-  })
-  const basePath = `/recommendations/123/`
-
-  describe('post with valid data', () => {
-    ;[
-      {
-        recommendationOptions: {
-          sentenceGroup: SentenceGroup.YOUTH_SDS,
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-          isYouthSentenceOver12Months: true,
-          isYouthChargedWithSeriousOffence: true,
-        },
-        postBody: {
-          // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
-          // it's still required in the Part A so we're just checking it's being updated in the API
-          isMappaCategory4: 'YES',
-          isMappaLevel2Or3: 'YES',
-          isYouthSentenceOver12Months: 'YES',
-          isYouthChargedWithSeriousOffence: 'YES',
-        },
-        recallTypePreserved: true,
-      },
-      {
-        recommendationOptions: {
-          sentenceGroup: SentenceGroup.YOUTH_SDS,
-          isMappaCategory4: false,
-          isMappaLevel2Or3: false,
-          isYouthSentenceOver12Months: false,
-          isYouthChargedWithSeriousOffence: false,
-        },
-        postBody: {
-          // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
-          // it's still required in the Part A so we're just checking it's being updated in the API
-          isMappaCategory4: 'YES',
-          isMappaLevel2Or3: 'YES',
-          isYouthSentenceOver12Months: 'YES',
-          isYouthChargedWithSeriousOffence: 'YES',
-        },
-        recallTypePreserved: false,
-      },
-      {
-        recommendationOptions: {
-          sentenceGroup: SentenceGroup.ADULT_SDS,
-          isChargedWithOffence: true,
-          isServingTerroristOrNationalSecurityOffence: true,
-          isAtRiskOfInvolvedInForeignPowerThreat: true,
-          wasReferredToParoleBoard244ZB: true,
-          wasRepatriatedForMurder: true,
-          isServingSOPCSentence: true,
-          isServingDCRSentence: true,
-        },
-        postBody: {
-          isChargedWithOffence: 'YES',
-          isServingTerroristOrNationalSecurityOffence: 'YES',
-          isAtRiskOfInvolvedInForeignPowerThreat: 'YES',
-          wasReferredToParoleBoard244ZB: 'YES',
-          wasRepatriatedForMurder: 'YES',
-          isServingSOPCSentence: 'YES',
-          isServingDCRSentence: 'YES',
-        },
-        recallTypePreserved: true,
-      },
-      {
-        recommendationOptions: {
-          sentenceGroup: SentenceGroup.ADULT_SDS,
-          isChargedWithOffence: true,
-          isServingTerroristOrNationalSecurityOffence: true,
-          isAtRiskOfInvolvedInForeignPowerThreat: true,
-          wasReferredToParoleBoard244ZB: true,
-          wasRepatriatedForMurder: true,
-          isServingSOPCSentence: true,
-          isServingDCRSentence: true,
-        },
-        postBody: {
-          isChargedWithOffence: 'NO',
-          isServingTerroristOrNationalSecurityOffence: 'NO',
-          isAtRiskOfInvolvedInForeignPowerThreat: 'NO',
-          wasReferredToParoleBoard244ZB: 'NO',
-          wasRepatriatedForMurder: 'NO',
-          isServingSOPCSentence: 'NO',
-          isServingDCRSentence: 'NO',
-        },
-        recallTypePreserved: false,
-      },
-    ].forEach(testCase => {
-      it(`${testCase.recallTypePreserved ? 'does not clear' : 'clears'} the recallType and rationale if the criteria has ${testCase.recallTypePreserved ? 'not ' : ''}changed`, async () => {
+      it('post with invalid data', async () => {
         const req = mockReq({
           params: { recommendationId: '123' },
+          originalUrl: 'some-url',
           body: {
-            ...testCase.postBody,
+            isYouthChargedWithSeriousOffence: '',
+            isYouthSentenceOver12Months: '',
           },
         })
-        const priorRecommendation = RecommendationResponseGenerator.generate({
-          recallType: 'any',
-          ...testCase.recommendationOptions,
-        })
+
         const res = mockRes({
           token: 'token1',
           locals: {
-            recommendation: priorRecommendation,
+            recommendation: {
+              personOnProbation: { name: faker.person.fullName() },
+              sentenceGroup: SentenceGroup.YOUTH_SDS,
+            },
             urlInfo: { basePath },
             statuses: [],
+            flags: {
+              ftr56SentenceConviction: ftr56SentenceConvictionFeatureFlag,
+            },
           },
         })
         const next = mockNext()
 
-        await suitabilityForFixedTermRecallController.post(req, res, next)
-
-        expect(updateRecommendation).toHaveBeenCalledWith({
-          recommendationId: '123',
-          token: 'token1',
-          valuesToSave: {
-            ...Object.fromEntries(Object.entries(testCase.postBody).map(([key, value]) => [key, value === 'YES'])),
-            ...(!testCase.recallTypePreserved
-              ? {
-                  recallType: {
-                    selected: { value: null },
-                    allOptions: priorRecommendation.recallType.allOptions,
-                  },
-                }
-              : {}),
+        // we require form option keys for which there is an error entry of the form 'no<fieldKey>',
+        // hence why we use real form options rather than generic values as we have done above
+        ;(getFormOptions as jest.Mock).mockReturnValue({
+          isYouthSentenceOver12Months: {
+            label: `Is ${res.locals.recommendation.personOnProbation.name}'s sentence 12 months or over?`,
           },
-          featureFlags: {},
+          isYouthChargedWithSeriousOffence: {
+            label: `Is ${res.locals.recommendation.personOnProbation.name} being recalled because of being charged with a serious offence?`,
+          },
         })
 
-        expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
-        expect(next).not.toHaveBeenCalled() // end of the line for posts.
+        await suitabilityForFixedTermRecallController.post(req, res, next)
+        expect(updateRecommendation).not.toHaveBeenCalled()
+
+        expect(req.session.errors).toEqual([
+          {
+            name: 'isYouthSentenceOver12Months',
+            text: "Select whether {{ fullName }}'s sentence is 12 months or over",
+            href: '#isYouthSentenceOver12Months',
+            errorId: 'noIsYouthSentenceOver12Months',
+            invalidParts: undefined,
+            values: undefined,
+          },
+          {
+            name: 'isYouthChargedWithSeriousOffence',
+            text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
+            href: '#isYouthChargedWithSeriousOffence',
+            errorId: 'noIsYouthChargedWithSeriousOffence',
+            invalidParts: undefined,
+            values: undefined,
+          },
+        ])
+        expect(req.session.unsavedValues).toEqual({
+          isYouthSentenceOver12Months: '',
+          isYouthChargedWithSeriousOffence: '',
+        })
+        expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
       })
     })
-  })
-
-  it('post with invalid data', async () => {
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      originalUrl: 'some-url',
-      body: {
-        isYouthChargedWithSeriousOffence: '',
-        isYouthSentenceOver12Months: '',
-      },
-    })
-
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        recommendation: {
-          personOnProbation: { name: faker.person.fullName() },
-          sentenceGroup: SentenceGroup.YOUTH_SDS,
-        },
-        urlInfo: { basePath },
-        statuses: [],
-        flags: {},
-      },
-    })
-    const next = mockNext()
-
-    await suitabilityForFixedTermRecallController.post(req, res, next)
-    expect(updateRecommendation).not.toHaveBeenCalled()
-
-    expect(req.session.errors).toEqual([
-      {
-        name: 'isYouthSentenceOver12Months',
-        text: "Select whether {{ fullName }}'s sentence is 12 months or over",
-        href: '#isYouthSentenceOver12Months',
-        errorId: 'noIsYouthSentenceOver12Months',
-        invalidParts: undefined,
-        values: undefined,
-      },
-      {
-        name: 'isYouthChargedWithSeriousOffence',
-        text: 'Select whether {{ fullName }} is being recalled because of being charged with a serious offence',
-        href: '#isYouthChargedWithSeriousOffence',
-        errorId: 'noIsYouthChargedWithSeriousOffence',
-        invalidParts: undefined,
-        values: undefined,
-      },
-    ])
-    expect(req.session.unsavedValues).toEqual({
-      isYouthSentenceOver12Months: '',
-      isYouthChargedWithSeriousOffence: '',
-    })
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 })

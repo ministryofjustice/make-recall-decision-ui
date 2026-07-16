@@ -8,13 +8,27 @@ import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTe
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
 import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import ppcsPaths from '../../server/routes/paths/ppcs.paths'
+import { RecommendationResponse } from '../../server/@types/make-recall-decision-api'
+import { BookRecallToPpud } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
   recallType: { selected: { value: 'NO_RECALL' } },
 }
 
-const urls = [
+const urls: {
+  url: string
+  fullRecommendationData?: boolean
+  validationError?: boolean
+  noRecallData?: boolean
+  statuses?: {
+    name: string
+    active: boolean
+  }[]
+  bookRecallToPpud?: Partial<BookRecallToPpud>
+  customRecommendation?: RecommendationResponse
+}[] = [
   { url: '/' },
   { url: '/search-by-crn' },
   { url: '/search-by-name' },
@@ -46,15 +60,42 @@ const urls = [
   recommendationEndpoint('share-case-with-manager'),
   recommendationEndpoint('share-case-with-admin'),
   recommendationEndpoint('discuss-with-manager'),
-  recommendationEndpoint('recall-type'),
+  recommendationEndpoint(
+    'recall-type',
+    [],
+    false,
+    {},
+    {
+      ...(completeRecommendationResponse as RecommendationResponse),
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+    },
+  ),
   recommendationEndpoint('spo-agree-to-recall'),
   recommendationEndpoint('emergency-recall'),
   recommendationEndpoint('suitability-for-fixed-term-recall'),
   recommendationEndpoint('sensitive-info'),
   recommendationEndpoint('custody-status'),
   recommendationEndpoint('what-led'),
-  recommendationEndpoint('recall-type-indeterminate'),
-  recommendationEndpoint('recall-type-extended'),
+  recommendationEndpoint(
+    'recall-type-indeterminate',
+    [],
+    false,
+    {},
+    {
+      ...(completeRecommendationResponse as RecommendationResponse),
+      sentenceGroup: SentenceGroup.INDETERMINATE,
+    },
+  ),
+  recommendationEndpoint(
+    'recall-type-extended',
+    [],
+    false,
+    {},
+    {
+      ...(completeRecommendationResponse as RecommendationResponse),
+      sentenceGroup: SentenceGroup.EXTENDED,
+    },
+  ),
   recommendationEndpoint('fixed-licence'),
   recommendationEndpoint('indeterminate-details'),
   recommendationEndpoint('vulnerabilities'),
@@ -86,7 +127,15 @@ const urls = [
   recommendationEndpoint('confirmation-part-a'),
   recommendationEndpoint('preview-part-a'),
   recommendationEndpoint('task-list'),
-  { url: `${sharedPaths.recommendations}/456/recall-type`, validationError: true, fullRecommendationData: true },
+  {
+    url: `${sharedPaths.recommendations}/456/recall-type`,
+    validationError: true,
+    fullRecommendationData: false,
+    customRecommendation: {
+      ...(completeRecommendationResponse as RecommendationResponse),
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+    },
+  },
   { url: `${sharedPaths.recommendations}/456/alternatives-tried`, validationError: true },
   { url: `${sharedPaths.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
 ]
@@ -188,9 +237,10 @@ const apUrls = [
 
 function recommendationEndpoint(
   resource: string,
-  statuses = [],
+  statuses: string[] = [],
   fullRecommendationData: boolean = false,
   bookRecallToPpud = {},
+  customRecommendation?: RecommendationResponse,
 ) {
   return {
     url: `${sharedPaths.recommendations}/456/${resource}`,
@@ -199,6 +249,7 @@ function recommendationEndpoint(
     noRecallData: false,
     statuses: statuses.map(name => ({ name, active: true })),
     bookRecallToPpud,
+    customRecommendation,
   }
 }
 
@@ -257,6 +308,8 @@ context('Accessibility (a11y) Checks', () => {
     it(`${item.url}${item.validationError ? ' - error' : ''}`, () => {
       if (item.fullRecommendationData) {
         cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      } else if (item.customRecommendation) {
+        cy.task('getRecommendation', { statusCode: 200, response: item.customRecommendation })
       }
       if (item.noRecallData) {
         cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })

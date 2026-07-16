@@ -16,6 +16,9 @@ import {
   isFixedTermRecallMandatoryForRecommendation,
   isStandardRecallMandatoryForRecommendation,
 } from '../../utils/fixedTermRecallUtils'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
+import recallTypePath from '../../utils/routing'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
@@ -23,82 +26,126 @@ jest.mock('../recommendations/recallType/availableRecallTypes')
 jest.mock('../recommendations/recallType/inputDisplayValues')
 jest.mock('../recommendations/recallType/formValidator')
 jest.mock('../../utils/fixedTermRecallUtils')
+jest.mock('../../utils/routing')
 
 describe('get', () => {
-  const locals = {
-    token: 'token1',
-    recommendation: RecommendationResponseGenerator.generate(),
-    unsavedValues: { recallType: 'STANDARD' },
-    errors: {
-      list: [
-        {
-          name: 'recallTypeDetailsStandard',
-          href: '#recallTypeDetailsStandard',
-          errorId: 'missingRecallTypeDetail',
-          html: 'Explain why you recommend this recall type',
-        },
-      ],
-      recallTypeDetailsStandard: {
-        text: 'Explain why you recommend this recall type',
-        href: '#recallTypeDetailsStandard',
-        errorId: 'missingRecallTypeDetail',
-      },
-    },
-    flags: {},
-  }
-  const next = mockNext()
+  ;[true, false].forEach(ftr56SentenceConviction => {
+    describe(`with FTR56 sentence conviction flag set to ${ftr56SentenceConviction}`, () => {
+      describe('Standard load', () => {
+        const locals = {
+          token: 'token1',
+          recommendation: RecommendationResponseGenerator.generate({
+            sentenceGroup: faker.helpers.arrayElement([SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS]),
+          }),
+          unsavedValues: { recallType: 'STANDARD' },
+          errors: {
+            list: [
+              {
+                name: 'recallTypeDetailsStandard',
+                href: '#recallTypeDetailsStandard',
+                errorId: 'missingRecallTypeDetail',
+                html: 'Explain why you recommend this recall type',
+              },
+            ],
+            recallTypeDetailsStandard: {
+              text: 'Explain why you recommend this recall type',
+              href: '#recallTypeDetailsStandard',
+              errorId: 'missingRecallTypeDetail',
+            },
+          },
+          flags: {
+            ftr56SentenceConviction,
+          },
+        }
+        const next = mockNext()
 
-  const inputDisplayValues = { value: faker.string.alpha(), details: faker.lorem.text() }
+        const inputDisplayValues = { value: faker.string.alpha(), details: faker.lorem.text() }
 
-  const res = mockRes({ locals })
+        const res = mockRes({ locals })
 
-  const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
-  const isFTRMandatory = faker.datatype.boolean()
-  const isStandardMandatory = faker.datatype.boolean()
-  beforeEach(async () => {
-    ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
-    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(isFTRMandatory)
-    ;(availableRecallTypesForRecommendation as jest.Mock).mockReturnValueOnce(expectedAvailableRecallTypes)
-    ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(isStandardMandatory)
-    recallTypeController.get(mockReq(), res, next)
-  })
+        const expectedAvailableRecallTypes = faker.helpers.arrayElements(formOptions.recallType)
+        const isFTRMandatory = faker.datatype.boolean()
+        const isStandardMandatory = faker.datatype.boolean()
+        beforeEach(async () => {
+          ;(inputDisplayValuesRecallType as jest.Mock).mockReturnValueOnce(inputDisplayValues)
+          ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(isFTRMandatory)
+          ;(availableRecallTypesForRecommendation as jest.Mock).mockReturnValueOnce(expectedAvailableRecallTypes)
+          ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(isStandardMandatory)
+          recallTypeController.get(mockReq(), res, next)
+        })
 
-  it('adds correct page to res.locals', async () => {
-    expect(res.locals.page).toEqual({ id: 'recallType' })
-  })
-  it('adds result of inputDisplayValuesRecallType to res.locals', async () => {
-    expect(res.locals.inputDisplayValues).toEqual(inputDisplayValues)
-    expect(inputDisplayValuesRecallType).toHaveBeenCalledWith({
-      errors: res.locals.errors,
-      unsavedValues: res.locals.unsavedValues,
-      apiValues: res.locals.recommendation,
+        it('adds correct page to res.locals', async () => {
+          expect(res.locals.page).toEqual({ id: 'recallType' })
+        })
+        it('adds result of inputDisplayValuesRecallType to res.locals', async () => {
+          expect(res.locals.inputDisplayValues).toEqual(inputDisplayValues)
+          expect(inputDisplayValuesRecallType).toHaveBeenCalledWith({
+            errors: res.locals.errors,
+            unsavedValues: res.locals.unsavedValues,
+            apiValues: res.locals.recommendation,
+          })
+        })
+        it('adds result of availableRecallTypes to res.locals', async () => {
+          expect(res.locals.availableRecallTypes).toEqual(expectedAvailableRecallTypes)
+          expect(availableRecallTypesForRecommendation).toHaveBeenCalledWith(
+            res.locals.recommendation,
+            ftr56SentenceConviction,
+          )
+        })
+        it("adds PoP's name to res.locals", async () => {
+          expect(res.locals.personOnProbationName).toEqual(
+            (locals.recommendation as RecommendationResponse)?.personOnProbation?.fullName,
+          )
+        })
+        it(`adds result of isFixedTermRecallMandatoryForRecommendation to res.locals`, async () => {
+          expect(res.locals.ftrMandatory).toEqual(isFTRMandatory)
+          expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(
+            res.locals.recommendation,
+            ftr56SentenceConviction,
+          )
+        })
+
+        it(`adds result of isStandardRecallMandatoryForRecommendation to res.locals`, async () => {
+          expect(res.locals.standardMandatory).toEqual(isStandardMandatory)
+          expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(
+            res.locals.recommendation,
+            ftr56SentenceConviction,
+          )
+        })
+
+        it(`adds isAdultSentence to res.locals`, async () => {
+          expect(res.locals.isAdultSentence).toEqual(res.locals.recommendation.sentenceGroup === 'ADULT_SDS')
+        })
+        it('renders the recallType page and calls next', async () => {
+          expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
+          expect(next).toHaveBeenCalled()
+        })
+      })
+      describe('unexpected sentence group', () => {
+        Object.values(SentenceGroup)
+          .filter(sentenceGroup => ![SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].includes(sentenceGroup))
+          .forEach(sentenceGroup => {
+            it(`${sentenceGroup} leads to redirect`, async () => {
+              const recommendation = RecommendationResponseGenerator.generate({
+                sentenceGroup,
+              })
+              const res = mockRes({
+                locals: {
+                  recommendation,
+                  urlInfo: UrlInfoGenerator.generate(),
+                },
+              })
+              const redirectionPath = faker.lorem.slug()
+              ;(recallTypePath as jest.Mock).mockReturnValue(redirectionPath)
+
+              recallTypeController.get(mockReq(), res, mockNext())
+
+              expect(recallTypePath).toHaveBeenCalledWith(recommendation)
+              expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}${redirectionPath}`)
+            })
+          })
+      })
     })
-  })
-  it('adds result of availableRecallTypes to res.locals', async () => {
-    expect(res.locals.availableRecallTypes).toEqual(expectedAvailableRecallTypes)
-    expect(availableRecallTypesForRecommendation).toHaveBeenCalledWith(res.locals.recommendation)
-  })
-  it("adds PoP's name to res.locals", async () => {
-    expect(res.locals.personOnProbationName).toEqual(
-      (locals.recommendation as RecommendationResponse)?.personOnProbation?.fullName,
-    )
-  })
-  it(`adds result of isFixedTermRecallMandatoryForRecommendation to res.locals`, async () => {
-    expect(res.locals.ftrMandatory).toEqual(isFTRMandatory)
-    expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(res.locals.recommendation)
-  })
-
-  it(`adds result of isStandardRecallMandatoryForRecommendation to res.locals`, async () => {
-    expect(res.locals.standardMandatory).toEqual(isStandardMandatory)
-    expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(res.locals.recommendation)
-  })
-
-  it(`adds isAdultSentence to res.locals`, async () => {
-    expect(res.locals.isAdultSentence).toEqual(res.locals.recommendation.sentenceGroup === 'ADULT_SDS')
-  })
-  it('renders the recallType page and calls next', async () => {
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/recallType')
-    expect(next).toHaveBeenCalled()
   })
 })
 

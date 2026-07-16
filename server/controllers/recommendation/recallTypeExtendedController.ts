@@ -7,9 +7,16 @@ import { formOptions, isValueValid } from '../recommendations/formOptions/formOp
 import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
 import EVENTS from '../../utils/constants'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import recallTypePath from '../../utils/routing'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+
+  if (recommendation.sentenceGroup !== SentenceGroup.EXTENDED) {
+    const redirectionPath = recallTypePath(recommendation)
+    return res.redirect(303, `${res.locals.urlInfo.basePath}${redirectionPath}`)
+  }
 
   res.locals = {
     ...res.locals,
@@ -22,7 +29,7 @@ function get(req: Request, res: Response, next: NextFunction) {
   }
 
   res.render(`pages/recommendations/recallTypeExtended`)
-  next()
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {

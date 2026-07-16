@@ -71,9 +71,17 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
   }
 
+  if (_featureFlags?.ftr56SentenceConviction) {
+    statuses.isRecalledOnNewChargedOrConvictedOffence = hasValue(
+      recommendation.isRecalledOnNewChargedOrConvictedOffence?.selected,
+    )
+  }
+
   const { triggerLeadingToRecall } = statuses
 
-  const isAdultSDSSuitabilityCriteriaSet =
+  let isAdultSDSSuitabilityCriteriaSet
+
+  isAdultSDSSuitabilityCriteriaSet =
     statuses.isChargedWithOffence &&
     statuses.isServingTerroristOrNationalSecurityOffence &&
     statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
@@ -81,6 +89,17 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     statuses.wasRepatriatedForMurder &&
     statuses.isServingSOPCSentence &&
     statuses.isServingDCRSentence
+
+  if (_featureFlags?.ftr56SentenceConviction) {
+    isAdultSDSSuitabilityCriteriaSet =
+      statuses.isServingTerroristOrNationalSecurityOffence &&
+      statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
+      statuses.wasReferredToParoleBoard244ZB &&
+      statuses.wasRepatriatedForMurder &&
+      statuses.isServingSOPCSentence &&
+      statuses.isServingDCRSentence &&
+      statuses.isRecalledOnNewChargedOrConvictedOffence
+  }
 
   const isYouthSDSSuitabilityCriteriaSet =
     statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence

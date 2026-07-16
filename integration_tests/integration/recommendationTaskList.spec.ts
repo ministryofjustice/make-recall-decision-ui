@@ -10,9 +10,10 @@ import RECOMMENDATION_STATUS from '../../server/middleware/recommendationStatus'
 import strings from '../../server/textStrings/en'
 import { VULNERABILITY } from '../../server/controllers/recommendations/vulnerabilities/formOptions'
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
+import { NoneOrOption } from '../../data/@generators/dataGenerators'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 import recallTypeValues = RecallTypeSelectedValue.value
 import selected = CustodyStatus.selected
-import { NoneOrOption } from '../../data/@generators/dataGenerators'
 
 context('Recommendation - task list', () => {
   beforeEach(() => {
@@ -79,6 +80,20 @@ context('Recommendation - task list', () => {
       },
     },
     {
+      name: 'Adult SDS with ftr56SentenceConviction enabled',
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+      expect: {
+        mappa: true,
+        isRecalledOnNewChargedOrConvictedOffence: true,
+        suitability: true,
+        indeterminateOrExtendedDetails: false,
+        additionalLicenceConditions: true,
+        emergencyRecall: true,
+        indeterminateSentenceType: false,
+      },
+      flags: ['ftr56SentenceConviction'],
+    },
+    {
       name: 'Youth SDS',
       sentenceGroup: SentenceGroup.YOUTH_SDS,
       expect: {
@@ -116,7 +131,7 @@ context('Recommendation - task list', () => {
     },
   ]
 
-  scenarios.forEach(({ name, sentenceGroup, expect }) => {
+  scenarios.forEach(({ name, sentenceGroup, expect, flags = [] }) => {
     it(`task list - To do - ${name}`, () => {
       const response = {
         ...recommendationResponse,
@@ -127,10 +142,12 @@ context('Recommendation - task list', () => {
         },
         sentenceGroup,
       }
-      setUp(response as RecommendationResponse, [], [])
+      setUp(response as RecommendationResponse, [], flags)
 
       cy.getElement('MAPPA information to assess recall type To review').should(expect.mappa ? 'exist' : 'not.exist')
-
+      cy.getElement('New offence charges or convictions To do').should(
+        expect?.isRecalledOnNewChargedOrConvictedOffence ? 'exist' : 'not.exist',
+      )
       cy.getElement('Suitability for standard or fixed term recall To do').should(
         expect.suitability ? 'exist' : 'not.exist',
       )
@@ -208,7 +225,7 @@ context('Recommendation - task list', () => {
           },
           ftr56MappaReviewed: true,
         },
-        isChargedWithOffence: true,
+        isChargedWithOffence: expect?.isRecalledOnNewChargedOrConvictedOffence ? undefined : true,
         isServingTerroristOrNationalSecurityOffence: true,
         isAtRiskOfInvolvedInForeignPowerThreat: true,
         wasReferredToParoleBoard244ZB: true,
@@ -217,11 +234,18 @@ context('Recommendation - task list', () => {
         isServingDCRSentence: true,
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
+        isRecalledOnNewChargedOrConvictedOffence: expect?.isRecalledOnNewChargedOrConvictedOffence
+          ? {
+              selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+            }
+          : undefined,
       }
-      setUp(response as RecommendationResponse, [], [])
+      setUp(response as RecommendationResponse, [], flags)
 
       cy.getElement('MAPPA information to assess recall type Reviewed').should(expect.mappa ? 'exist' : 'not.exist')
-
+      cy.getElement('New offence charges or convictions Completed').should(
+        expect?.isRecalledOnNewChargedOrConvictedOffence ? 'exist' : 'not.exist',
+      )
       cy.getElement('Suitability for standard or fixed term recall Completed').should(
         expect.suitability ? 'exist' : 'not.exist',
       )
@@ -291,6 +315,15 @@ context('Recommendation - task list', () => {
         it(`does not show Suitability item for ${sentenceGroup}`, () => {
           setUp({ ...recommendationResponse, sentenceGroup }, [], [])
           cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
+        })
+      })
+
+      describe('with ftr56SentenceConviction enabled', () => {
+        ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+          it(`does not show isRecalledOnNewChargedOrConvictedOffence item for ${sentenceGroup}`, () => {
+            setUp({ ...recommendationResponse, sentenceGroup }, [], ['ftr56SentenceConviction'])
+            cy.getElement('New offence charges or convictions').should('not.exist')
+          })
         })
       })
     })

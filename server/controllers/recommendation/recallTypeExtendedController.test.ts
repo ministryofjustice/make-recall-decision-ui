@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
@@ -6,16 +7,22 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import recallTypeExtendedController from './recallTypeExtendedController'
 import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import recallTypePath from '../../utils/routing'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/helpers/urls')
+jest.mock('../../utils/routing')
 
 describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: {},
+        recommendation: {
+          sentenceGroup: SentenceGroup.EXTENDED,
+        },
         token: 'token1',
       },
     })
@@ -33,6 +40,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
+          sentenceGroup: SentenceGroup.EXTENDED,
           recallType: {
             selected: { value: 'STANDARD', details: null },
             allOptions: [
@@ -70,6 +78,7 @@ describe('get', () => {
           },
         },
         recommendation: {
+          sentenceGroup: SentenceGroup.EXTENDED,
           recallType: '',
         },
         token: 'token1',
@@ -93,6 +102,31 @@ describe('get', () => {
         },
       ],
     })
+  })
+
+  describe('unexpected sentence group', () => {
+    Object.values(SentenceGroup)
+      .filter(sentenceGroup => sentenceGroup !== SentenceGroup.EXTENDED)
+      .forEach(sentenceGroup => {
+        it(`${sentenceGroup} leads to redirect`, async () => {
+          const recommendation = RecommendationResponseGenerator.generate({
+            sentenceGroup,
+          })
+          const res = mockRes({
+            locals: {
+              recommendation,
+              urlInfo: UrlInfoGenerator.generate(),
+            },
+          })
+          const redirectionPath = faker.lorem.slug()
+          ;(recallTypePath as jest.Mock).mockReturnValue(redirectionPath)
+
+          recallTypeExtendedController.get(mockReq(), res, mockNext())
+
+          expect(recallTypePath).toHaveBeenCalledWith(recommendation)
+          expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}${redirectionPath}`)
+        })
+      })
   })
 })
 

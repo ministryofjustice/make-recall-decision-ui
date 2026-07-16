@@ -96,7 +96,7 @@ context('Recall Type Page', () => {
         cy.pageHeading().should('equal', 'What do you recommend?')
 
         cy.get('.moj-ticket-panel').within(() => {
-          cy.get('h3').should(
+          cy.get('h2').should(
             'contain.text',
             `${recommendationWithExceptionCriteria.personOnProbation.name} must be given a standard recall, if recalled`,
           )
@@ -158,7 +158,7 @@ context('Recall Type Page', () => {
         cy.pageHeading().should('equal', 'What do you recommend?')
 
         cy.get('.moj-ticket-panel').within(() => {
-          cy.get('h3').should(
+          cy.get('h2').should(
             'contain.text',
             `${recommendationWithoutExceptionCriteria.personOnProbation.name} must be given a fixed term recall, if recalled`,
           )
@@ -372,7 +372,7 @@ context('Recall Type Page', () => {
         cy.pageHeading().should('equal', 'What do you recommend?')
 
         cy.get('.moj-ticket-panel').within(() => {
-          cy.get('h3').should(
+          cy.get('h2').should(
             'contain.text',
             `${recommendationWithoutExceptionCriteria.personOnProbation.name} must be given a fixed term recall, if recalled`,
           )
