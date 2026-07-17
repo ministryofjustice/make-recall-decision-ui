@@ -77,16 +77,19 @@ describe('readFeatureFlags', () => {
     })
   })
 
-  describe('When FEATURE_FLAG_QUERY_PARAMETERS_ENABLED is enabled', () => {
+  describe('When the .env feature flag override is not enabled', () => {
     invalidFeatureDateValueCases.forEach(({ name, value }) => {
       let featureDisabledProcessEnv: NodeJS.ProcessEnv
 
       beforeEach(() => {
         jest.clearAllMocks()
+        // The env feature flag override will always be false as we're using invalid cases
         process.env[featureKey('testFlag')] = `${value}`
+        // But we allow it to be overridden using the cookies/params method
         process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED = `${true}`
-        featureDisabledProcessEnv = process.env
+        // This will set the "default" value of the test feature flag to true
         mockFFServiceGetAll.mockResolvedValueOnce([{ ...testFlag(true) }])
+        featureDisabledProcessEnv = process.env
       })
 
       afterEach(() => {
@@ -95,7 +98,6 @@ describe('readFeatureFlags', () => {
 
       describe(`- Not enabled value: ${name} - ${value}`, () => {
         it('Overrides a default of true if flag is "0" in request query', async () => {
-          process.env[featureKey('testFlag')] = `${true}`
           await readFeatureFlags()(queryReq(false), resultRes, next)
           expect(resultRes.locals.flags).toEqual({
             testFlag: false,
@@ -103,7 +105,6 @@ describe('readFeatureFlags', () => {
         })
 
         it('Overrides a default of true if flag is "0" in request cookies', async () => {
-          process.env[featureKey('testFlag')] = `${true}`
           await readFeatureFlags()(cookieReq(false), resultRes, next)
           expect(resultRes.locals.flags).toEqual({
             testFlag: false,
@@ -117,7 +118,8 @@ describe('readFeatureFlags', () => {
           })
         })
 
-        it('overrides a default of false when its set to true in the query', async () => {
+        it('Overrides a default of false if flag is "1" in request query', async () => {
+          mockFFServiceGetAll.mockResolvedValueOnce([{ ...testFlag(false) }])
           await readFeatureFlags()(queryReq(true), resultRes, next)
           expect(resultRes.locals.flags).toEqual({
             testFlag: true,
@@ -155,7 +157,7 @@ describe('readFeatureFlags', () => {
     })
   })
 
-  describe('When environment FEATURE_FLAG_QUERY_PARAMETERS_ENABLED is disabled (undefined)', () => {
+  describe('When the .env feature flag override is enabled', () => {
     let featureEnabledProcessEnv: NodeJS.ProcessEnv
     beforeEach(() => {
       process.env[featureKey('testFlag')] = faker.date.past().toISOString()
