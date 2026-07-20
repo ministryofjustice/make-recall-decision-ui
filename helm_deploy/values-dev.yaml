@@ -18,6 +18,8 @@ generic-service:
     COMPONENT_API_URL: "https://probation-frontend-components-dev.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "dev"
+    FLIPT_SERVER_URL: "https://feature-toggles-dev.hmpps.service.justice.gov.uk/"
+    FLIPT_NAMESPACE: "consider-a-recall"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
 
   allowlist:
@@ -35,4 +37,3 @@ generic-service:
 generic-prometheus-alerts:
   businessHoursOnly: true
   alertSeverity: make-recall-decision-nonprod
-

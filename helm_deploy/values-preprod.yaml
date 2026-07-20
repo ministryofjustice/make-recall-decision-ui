@@ -13,6 +13,8 @@ generic-service:
     MANAGE_USERS_API_URL: "https://manage-users-api-preprod.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-preprod.hmpps.service.justice.gov.uk"
     COMPONENT_API_URL: "https://probation-frontend-components-preprod.hmpps.service.justice.gov.uk"
+    FLIPT_SERVER_URL: "https://feature-toggles-preprod.hmpps.service.justice.gov.uk/"
+    FLIPT_NAMESPACE: "consider-a-recall"
     SENTRY_ENVIRONMENT: "PRE-PROD"
     ENVIRONMENT: "preprod"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true

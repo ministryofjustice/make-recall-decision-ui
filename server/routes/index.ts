@@ -2,9 +2,9 @@ import { Router } from 'express'
 import bodyParser from 'body-parser'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import { authorisationCheck, hasRole, not, or } from '../middleware/check'
-import { featureFlagsDefaults, readFeatureFlags } from '../middleware/featureFlags'
 import getStoredSessionData from '../middleware/getStoredSessionData'
+import { readFeatureFlags } from '../middleware/featureFlags'
+import { authorisationCheck, hasRole, not, or } from '../middleware/check'
 import parseUrl from '../middleware/parseUrl'
 import setUpMaintenance from '../middleware/setUpMaintenance'
 import nothingMore from './nothing-more'
@@ -19,7 +19,7 @@ export default function routes(router: Router): Router {
   router.use(setUpMaintenance())
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
-  router.use(parseUrl, getStoredSessionData, readFeatureFlags(featureFlagsDefaults))
+  router.use(parseUrl, getStoredSessionData, readFeatureFlags())
 
   const route = ({
     path,
