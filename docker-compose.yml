@@ -38,6 +38,19 @@ services:
     volumes:
       - ./fake-manage-users-api:/home/wiremock
 
+  mock-flipt-api:
+    image: wiremock/wiremock
+    networks:
+      - hmpps
+    container_name: mock-flipt-api
+    ports:
+      - "7070:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/ping" ]
+    command: --verbose --local-response-templating
+    volumes:
+      - ./mock-flipt-api:/home/wiremock
+
   make-recall-decision-ui:
     build:
       context: .
