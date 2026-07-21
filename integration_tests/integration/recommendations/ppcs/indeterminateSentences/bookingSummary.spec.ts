@@ -60,6 +60,13 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
         cy.get('a.govuk-link').should('contain.text', 'Go to PPUD (opens in new tab)')
       })
 
+      it('Go to PPUD takes to Check booking details', () => {
+        cy.visit(testPageUrl)
+
+        cy.clickLink('Go to PPUD (opens in new tab)')
+        cy.get('h1').contains('Check booking details')
+      })
+
       describe('Sentence section', () => {
         it('displays the Sentence heading and hint', () => {
           cy.visit(testPageUrl)
