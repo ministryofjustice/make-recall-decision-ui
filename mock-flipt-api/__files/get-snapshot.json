@@ -1,0 +1,66 @@
+{
+  "namespace": {
+    "key": "consider-a-recall"
+  },
+  "flags": [
+    {
+      "key": "ui-flagRecommendationsPage",
+      "name": "",
+      "description": "",
+      "enabled": true,
+      "type": "BOOLEAN_FLAG_TYPE",
+      "createdAt": "2026-07-21T14:56:55.272567Z",
+      "updatedAt": "2026-07-21T14:56:55.272567Z",
+      "rules": [],
+      "rollouts": []
+    },
+    {
+      "key": "ui-flagDeleteRecommendation",
+      "name": "",
+      "description": "",
+      "enabled": true,
+      "type": "BOOLEAN_FLAG_TYPE",
+      "createdAt": "2026-07-21T14:56:55.272567Z",
+      "updatedAt": "2026-07-21T14:56:55.272567Z",
+      "rules": [],
+      "rollouts": []
+    },
+    {
+      "key": "ui-ftr56SentenceConviction",
+      "name": "",
+      "description": "",
+      "enabled": false,
+      "type": "BOOLEAN_FLAG_TYPE",
+      "createdAt": "2026-07-21T14:56:55.272567Z",
+      "updatedAt": "2026-07-21T14:56:55.272567Z",
+      "rules": [],
+      "rollouts": [
+        {
+          "type": "SEGMENT_ROLLOUT_TYPE",
+          "rank": 1,
+          "segment": {
+            "value": true,
+            "segmentOperator": "OR_SEGMENT_OPERATOR",
+            "segments": [
+              {
+                "key": "FTR56-SentenceConvictionDateRollout",
+                "name": "",
+                "description": "",
+                "matchType": "ALL_SEGMENT_MATCH_TYPE",
+                "constraints": [
+                  {
+                    "type": "DATETIME_CONSTRAINT_COMPARISON_TYPE",
+                    "property": "Time",
+                    "operator": "gte",
+                    "value": "2026-07-28T23:00:00Z"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "digest": "1effa58b944215b838242961df8cb786d0293703"
+}

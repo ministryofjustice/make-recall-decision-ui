@@ -1,11 +1,11 @@
 {
   "request": {
     "method": "GET",
-    "urlPathPattern": "/flipt/.*"
+    "urlPathPattern": "/internal/v1/evaluation/snapshot/namespace/consider-a-recall"
   },
   "response": {
     "status": 200,
-    "bodyFileName": "get-flags.json",
+    "bodyFileName": "get-snapshot.json",
     "headers": {
       "Content-Type": "application/json"
     }
