@@ -133,6 +133,12 @@ context('Contact history', () => {
           fileName: pdfFileName,
           contentType: 'application/pdf',
         })
+        cy.downloadFile('v1-1.pdf').then(response => {
+          cy.task(
+            'log',
+            `DEBUG downloadFile response: status=${response.status}, content-type=${response.headers['content-type']}, body-type=${typeof response.body}, body-start=${String(response.body).substring(0, 100)}`,
+          )
+        })
         cy.downloadPdf('v1-1.pdf').then(pdfText => {
           cy.task(
             'log',
