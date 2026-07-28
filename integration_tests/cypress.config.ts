@@ -86,11 +86,6 @@ export default defineConfig({
         searchMappedUsers,
         ppudSearchActiveUsers,
         getFlags,
-        log(message) {
-          // eslint-disable-next-line no-console
-          console.log(message)
-          return null
-        },
       })
       return config
     },

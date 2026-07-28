@@ -120,10 +120,11 @@ context('Contact history', () => {
       cy.visit(`${sharedPaths.cases}/${crn}/contact-history`)
 
       cy.log('Documents sorted by last modified date (newest first)')
-      cy.getListLabels('contact-document-label', { parent: '[data-qa="contact-2"]' }).then(labels => {
-        cy.task('log', `DEBUG getListLabels result type: ${typeof labels}, value: ${JSON.stringify(labels)}`)
-        cy.wrap(labels).should('deep.equal', ['my.doc.docx', 'v1-1.pdf', 'v1.txt'])
-      })
+      cy.getListLabels('contact-document-label', { parent: '[data-qa="contact-2"]' }).should('deep.equal', [
+        'my.doc.docx',
+        'v1-1.pdf',
+        'v1.txt',
+      ])
 
       cy.log('Download a PDF')
       const pdfFileName = 'v1-1.pdf'
@@ -133,19 +134,7 @@ context('Contact history', () => {
           fileName: pdfFileName,
           contentType: 'application/pdf',
         })
-        cy.downloadFile('v1-1.pdf').then(response => {
-          cy.task(
-            'log',
-            `DEBUG downloadFile response: status=${response.status}, content-type=${response.headers['content-type']}, body-type=${typeof response.body}, body-start=${String(response.body).substring(0, 100)}`,
-          )
-        })
-        cy.downloadPdf('v1-1.pdf').then(pdfText => {
-          cy.task(
-            'log',
-            `DEBUG downloadPdf result type: ${typeof pdfText}, value: ${JSON.stringify(pdfText)?.substring(0, 200)}`,
-          )
-          cy.wrap(pdfText).should('contain', 'This is a test PDF document')
-        })
+        cy.downloadPdf('v1-1.pdf').should('contain', 'This is a test PDF document')
       })
 
       cy.log('Download a .docx')
@@ -156,13 +145,7 @@ context('Contact history', () => {
           fileName: docFileName,
           contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         })
-        cy.downloadDocX('my.doc.docx').then(docText => {
-          cy.task(
-            'log',
-            `DEBUG downloadDocX result type: ${typeof docText}, value: ${JSON.stringify(docText)?.substring(0, 200)}`,
-          )
-          cy.wrap(docText).should('contain', 'Lorem ipsum')
-        })
+        cy.downloadDocX('my.doc.docx').should('contain', 'Lorem ipsum')
       })
     })
   })
