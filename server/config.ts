@@ -139,4 +139,5 @@ export default {
     startDateTime: get('MAINTENANCE_BANNER_START_DATE_TIME', null),
     endDateTime: get('MAINTENANCE_BANNER_END_DATE_TIME', null),
   },
+  ppud: get('PPUD_URL', 'http://localhost:3000', requiredInProduction),
 }

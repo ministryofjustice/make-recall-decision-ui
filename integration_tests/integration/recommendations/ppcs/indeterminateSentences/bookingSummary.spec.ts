@@ -63,8 +63,28 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
       it('Go to PPUD takes to Check booking details', () => {
         cy.visit(testPageUrl)
 
-        cy.clickLink('Go to PPUD (opens in new tab)')
-        cy.get('h1').contains('Check booking details')
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: {
+            ...recommendation,
+            bookRecallToPpud: {
+              receivedDateTime: '2024-01-31T15:17:58Z',
+            },
+            prisonOffender: {},
+          },
+        })
+        cy.task('getStatuses', {
+          statusCode: 200,
+          response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+        })
+        cy.task('updateRecommendation', { statusCode: 200, response: recommendation })
+        cy.get('a')
+          .contains('Go to PPUD (opens in new tab)')
+          .should('have.attr', 'target', '_blank')
+          .and('have.attr', 'href')
+          .then(href => {
+            expect(href).to.include('http://localhost:3000')
+          })
       })
 
       describe('Sentence section', () => {

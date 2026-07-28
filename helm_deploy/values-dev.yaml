@@ -21,6 +21,8 @@ generic-service:
     FLIPT_SERVER_URL: "https://feature-toggles-dev.hmpps.service.justice.gov.uk/"
     FLIPT_NAMESPACE: "consider-a-recall"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
+    PPUD_URL: "https://internaltest.ppud.justice.gov.uk"
+
 
   allowlist:
     north_shields_user: 194.33.192.1/24
