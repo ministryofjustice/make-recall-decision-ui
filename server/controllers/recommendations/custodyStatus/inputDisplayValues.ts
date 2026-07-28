@@ -1,6 +1,7 @@
-import { booleanToYesNo, getProperty, isDefined } from '../../../utils/utils'
+import { getProperty, isDefined } from '../../../utils/utils'
 import { CustodyStatus, RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import { InputDisplayValuesArgs, ValueWithDetails } from '../../../@types/pagesForms'
+import { booleanToYesNo } from '../formOptions/yesNo'
 
 export const inputDisplayValuesCustodyStatus = ({
   errors = {},
@@ -18,7 +19,7 @@ export const inputDisplayValuesCustodyStatus = ({
     if (!isDefined(errors.custodyStatusDetailsYesPolice)) {
       inputDisplayValues.details = getProperty<RecommendationResponse, string>(
         apiValues,
-        'custodyStatus.details'
+        'custodyStatus.details',
       ) as string
     }
   }
@@ -41,7 +42,7 @@ export const inputDisplayValuesArrestIssues = ({
     if (!isDefined(errors.hasArrestIssuesDetailsYes)) {
       inputDisplayValues.details = getProperty<RecommendationResponse, string>(
         apiValues,
-        'hasArrestIssues.details'
+        'hasArrestIssues.details',
       ) as string
     }
   }

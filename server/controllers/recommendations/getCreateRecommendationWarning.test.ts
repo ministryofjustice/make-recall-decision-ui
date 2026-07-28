@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getCreateRecommendationWarning } from './getCreateRecommendationWarning'
+import getCreateRecommendationWarning from './getCreateRecommendationWarning'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { AuditService } from '../../services/auditService'
+import AuditService from '../../services/auditService'
 
 jest.mock('../../monitoring/azureAppInsights')
 
@@ -35,7 +35,7 @@ describe('getCreateRecommendationWarning', () => {
         pageUrlSlug: 'create-recommendation-warning',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
   })
 

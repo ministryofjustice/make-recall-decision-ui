@@ -135,7 +135,7 @@ describe('post', () => {
       },
       {
         zone: europeLondon,
-      }
+      },
     )
     const req = mockReq({
       params: { recommendationId: '123' },

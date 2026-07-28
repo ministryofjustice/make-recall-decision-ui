@@ -1,4 +1,4 @@
-import { validatePersonSearch } from './validatePersonSearch'
+import validatePersonSearch from './validatePersonSearch'
 
 describe('validatePersonSearch', () => {
   it('returns an error if CRN is undefined', () => {

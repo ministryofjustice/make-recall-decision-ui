@@ -1,5 +1,5 @@
 import { mockNext, mockReq, mockRes } from './testutils/mockRequestUtils'
-import { guardAgainstModifyingClosedRecommendation } from './guardAgainstModifyingClosedRecommendation'
+import guardAgainstModifyingClosedRecommendation from './guardAgainstModifyingClosedRecommendation'
 
 describe('guardAgainstModifyingClosedRecommendation', () => {
   it('let through any normal request', () => {

@@ -1,5 +1,5 @@
 import { createClient } from 'redis'
-import { getCaseSection } from './getCaseSection'
+import getCaseSection from './getCaseSection'
 import { getCaseSummary, getCaseSummaryV2 } from '../../data/makeDecisionApiClient'
 import {
   ContactHistoryResponse,
@@ -58,7 +58,7 @@ describe('getCaseSection', () => {
     await getCaseSection('contact-history', crn, token, userId, {}, {})
     expect(redisSet).toHaveBeenCalledWith(
       'contactHistory:A1234AB',
-      JSON.stringify({ userIds: [userId], data: apiResponse })
+      JSON.stringify({ userIds: [userId], data: apiResponse }),
     )
   })
 

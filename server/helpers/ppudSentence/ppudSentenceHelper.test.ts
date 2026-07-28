@@ -1,8 +1,10 @@
 import { PpudDetailsSentence } from '../../@types/make-recall-decision-api/models/PpudDetailsResponse'
-import { getDeterminateSentences, getIndeterminateSentences, calculatePartACustodyGroup } from './ppudSentenceHelper'
+import { calculatePartACustodyGroup, getDeterminateSentences, getIndeterminateSentences } from './ppudSentenceHelper'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { ppudDetailsSentence } from '../../@types/make-recall-decision-api/models/ppud/PpudDetailsResponse.testFactory'
+import randomEnum from '../../@types/enum.testFactory'
+import { SentenceGroup } from '../../controllers/recommendations/sentenceInformation/formOptions'
 
 const DETERMINATE_SENTENCE: PpudDetailsSentence = ppudDetailsSentence({
   id: '1',
@@ -142,46 +144,21 @@ describe('getIndeterminateSentences', () => {
 })
 
 describe('getSentenceType', () => {
-  it('returns DETERMINATE when indeterminate flag set to false', () => {
+  it('returns DETERMINATE when SDS sentence group selected', () => {
     const recommendation: RecommendationResponse = {
-      isIndeterminateSentence: false,
+      sentenceGroup: randomEnum(SentenceGroup, [SentenceGroup.INDETERMINATE]),
     }
     const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
 
-  it('returns INDETERMINATE when indeterminate flag set to true', () => {
+  it('returns INDETERMINATE when Indeterminate sentence group selected', () => {
     const recommendation: RecommendationResponse = {
-      isIndeterminateSentence: true,
+      sentenceGroup: SentenceGroup.INDETERMINATE,
     }
     const actualSentenceType = calculatePartACustodyGroup(recommendation)
 
     expect(actualSentenceType).toEqual(CUSTODY_GROUP.INDETERMINATE)
-  })
-
-  it('returns DETERMINATE when indeterminate flag not present', () => {
-    const recommendation: RecommendationResponse = {}
-    const actualSentenceType = calculatePartACustodyGroup(recommendation)
-
-    expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
-  })
-
-  it('returns DETERMINATE when indeterminate flag set to null', () => {
-    const recommendation: RecommendationResponse = {
-      isIndeterminateSentence: null,
-    }
-    const actualSentenceType = calculatePartACustodyGroup(recommendation)
-
-    expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
-  })
-
-  it('returns DETERMINATE when indeterminate flag set to undefined', () => {
-    const recommendation: RecommendationResponse = {
-      isIndeterminateSentence: undefined,
-    }
-    const actualSentenceType = calculatePartACustodyGroup(recommendation)
-
-    expect(actualSentenceType).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
 })

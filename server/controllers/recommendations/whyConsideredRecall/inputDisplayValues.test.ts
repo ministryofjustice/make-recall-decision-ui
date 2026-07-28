@@ -1,6 +1,6 @@
-import { inputDisplayValuesWhyConsideredRecall } from './inputDisplayValues'
+import inputDisplayValuesWhyConsideredRecall from './inputDisplayValues'
 import { formOptions } from '../formOptions/formOptions'
-import { WhyConsideredRecall } from '../../../@types/make-recall-decision-api/models/WhyConsideredRecall'
+import type { WhyConsideredRecall } from '../../../@types/make-recall-decision-api/models/WhyConsideredRecall'
 
 describe('inputDisplayValuesVictimContactScheme', () => {
   const apiValues = {

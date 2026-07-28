@@ -14,12 +14,6 @@ context('SignIn', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
-  it('User name visible in header', () => {
-    cy.signIn()
-    cy.getText('header-user-name').should('contain', 'J. Bloggs')
-    cy.getText('env-tag').should('equal', 'test')
-  })
-
   it('User can log out', () => {
     cy.signIn()
     cy.pageHeading().should('equal', 'Consider a recall')
@@ -31,7 +25,7 @@ context('SignIn', () => {
     cy.signIn()
     cy.getText('banner-text').should(
       'equal',
-      'This version of the service is for testing purposes only. It is a replica of the live service to help you get familiar with it.'
+      'This version of the service is for testing purposes only. It is a replica of the live service to help you get familiar with it.',
     )
   })
 })

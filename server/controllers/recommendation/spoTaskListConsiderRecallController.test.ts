@@ -27,7 +27,7 @@ describe('get', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.locals.page).toEqual({ id: 'spoTaskListConsiderRecall' })
@@ -46,7 +46,7 @@ describe('get', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
 
     expect(next).toHaveBeenCalled()
@@ -98,7 +98,7 @@ describe('get', () => {
         },
       }),
       res,
-      next
+      next,
     )
   })
 })

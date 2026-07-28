@@ -1,6 +1,6 @@
-import { validateRecallTypeIndeterminate } from './formValidator'
+import validateRecallTypeIndeterminate from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
-import { EVENTS } from '../../../utils/constants'
+import EVENTS from '../../../utils/constants'
 
 describe('validateRecallTypeIndeterminate', () => {
   const recommendationId = '456'
@@ -114,7 +114,7 @@ describe('validateRecallTypeIndeterminate', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'Select whether you recommend a recall or not',
+          text: 'Select a recall recommendation',
           errorId: 'noRecallTypeIndeterminateSelected',
         },
       ])
@@ -131,7 +131,7 @@ describe('validateRecallTypeIndeterminate', () => {
         {
           href: '#recallType',
           name: 'recallType',
-          text: 'Select whether you recommend a recall or not',
+          text: 'Select a recall recommendation',
           errorId: 'noRecallTypeIndeterminateSelected',
         },
       ])

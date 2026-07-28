@@ -1,0 +1,94 @@
+#part-a-confirmaton-number-bullet {
+  display:inline-block;
+  vertical-align: middle;
+  margin: 1px;
+}
+
+.govuk-heading-xl-no-bottom-margin {
+  color:#0b0c0c;
+  font-family:"GDS Transport",arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  font-weight:700;
+  font-size:48px;
+  line-height:1.09375;
+  display:block;
+  margin-top:0;
+  margin-bottom:10px
+}
+
+#ppud-crn {
+   font-size: 70%;
+   font-weight: lighter;
+}
+
+#part-a-confirmaton-text {
+  white-space: pre;
+  margin: 0px;
+}
+
+.govuk-main-wrapper {
+  min-height: 600px
+}
+
+.govuk-width-container--full-width {
+  max-width: none;
+  position: relative;
+}
+
+.govuk-table--fixed {
+  table-layout: fixed;
+}
+
+.govuk-date-input__item:last-child {
+  margin-right: 0;
+}
+
+.govuk-summary-list__key--wide {
+  width: 40%;
+}
+
+.govuk-notification-banner--full-width .govuk-notification-banner__content > * {
+  max-width: none;
+}
+
+.info-panel__body .govuk-link:link,
+.info-panel__body .govuk-link:visited {
+  color: govuk-colour("white");
+}
+
+.govuk-tag--lower {
+  text-transform: none;
+}
+
+.moj-task-list__items {
+  @include govuk-media-query($from: tablet) {
+    padding-left: 0 !important;
+  }
+}
+
+.moj-task-list__item {
+  @include govuk-font($size: 19);
+}
+
+.moj-scrollable-pane {
+  position: relative;
+}
+
+.moj-summary-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.moj-question {
+  color: #505a5f; /* govuk-secondary-text */
+}
+
+.moj-last-updated {
+  font-size: 16px;
+  color: #505a5f;
+  white-space: nowrap;
+}
+

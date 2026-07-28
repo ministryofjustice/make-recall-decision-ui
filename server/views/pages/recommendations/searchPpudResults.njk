@@ -56,14 +56,12 @@
                     <li>use this service to create a PPUD record for a determinate sentence</li>
                     <li>go to PPUD to complete the booking for an indeterminate sentence</li>
                 </ul>
-                
-                {{ 
-                    govukButton({
-                        text: "Create a determinate PPUD record",
-                        classes: "govuk-button--secondary",
-                        href: urlInfo.basePath + "check-booking-details"
-                    })
-                }}
+                <form novalidate method="post">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                    <button class="govuk-button govuk-button--secondary" type="submit">
+                        Create a determinate PPUD record
+                    </button>
+                </form>
             {% endset %}
 
             {{ 

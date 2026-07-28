@@ -1,4 +1,4 @@
-import { inputDisplayValuesOffenceAnalysis } from './inputDisplayValues'
+import inputDisplayValuesOffenceAnalysis from './inputDisplayValues'
 
 describe('inputDisplayValuesOffenceAnalysis', () => {
   const apiValues = {

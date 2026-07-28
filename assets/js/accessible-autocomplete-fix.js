@@ -8,10 +8,10 @@
 
 $(function () {
   $('[data-gov-select-autocomplete]').each(function () {
-    var selectFieldName = $(this).attr('id').replace('[', '\\[').replace(']', '\\]')
+    const selectFieldName = $(this).attr('id').replace('[', '\\[').replace(']', '\\]')
     // The autocomplete component takes the select element's id for the input element it creates, and appends
     // '-select' to the existing . Here we go in reverse, from the select to the input.
-    var autocompleteInputFieldName = selectFieldName.replace('-select', '')
+    const autocompleteInputFieldName = selectFieldName.replace('-select', '')
 
     const autocompleteInputField = document.getElementById(autocompleteInputFieldName)
     const docSelectField = document.getElementById(selectFieldName)

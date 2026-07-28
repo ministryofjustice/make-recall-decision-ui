@@ -1,6 +1,6 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { updatePageReviewedStatus } from '../recommendations/helpers/updatePageReviewedStatus'
+import updatePageReviewedStatus from '../recommendations/helpers/updatePageReviewedStatus'
 import mappaController from './mappaController'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -11,6 +11,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: { id: '123', personOnProbation: { name: 'Joe Bloggs' } },
+        flags: {},
       },
     })
     const next = mockNext()
@@ -19,7 +20,7 @@ describe('get', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(updateRecommendation).toHaveBeenCalledWith({
@@ -27,6 +28,10 @@ describe('get', () => {
       propertyToRefresh: 'mappa',
       recommendationId: '123',
       token: 'token',
+      valuesToSave: {
+        isMappaCategory4: false,
+        isMappaLevel2Or3: false,
+      },
     })
 
     expect(updatePageReviewedStatus).toHaveBeenCalledWith({
@@ -38,5 +43,92 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'mappa' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/mappa')
     expect(next).toHaveBeenCalled()
+  })
+
+  describe('updates the recommendation with the correct MAPPA properties', () => {
+    ;[
+      {
+        mappaData: {
+          category: 0,
+          mappaLevel: 1,
+        },
+        expected: {
+          isMappaCategory4: false,
+          isMappaLevel2Or3: false,
+        },
+      },
+      {
+        mappaData: {
+          category: 1,
+          mappaLevel: 2,
+        },
+        expected: {
+          isMappaCategory4: false,
+          isMappaLevel2Or3: true,
+        },
+      },
+      {
+        mappaData: {
+          category: 2,
+          mappaLevel: 3,
+        },
+        expected: {
+          isMappaCategory4: false,
+          isMappaLevel2Or3: true,
+        },
+      },
+      {
+        mappaData: {
+          category: 4,
+          mappaLevel: 3,
+        },
+        expected: {
+          isMappaCategory4: true,
+          isMappaLevel2Or3: true,
+        },
+      },
+      {
+        mappaData: {
+          category: 4,
+          mappaLevel: 1,
+        },
+        expected: {
+          isMappaCategory4: true,
+          isMappaLevel2Or3: false,
+        },
+      },
+    ].forEach(testCase => {
+      it(`gets the correct values when MAPPA category is: ${testCase.mappaData.category} and MAPPA level is: ${testCase.mappaData.mappaLevel}`, async () => {
+        const res = mockRes({
+          locals: {
+            recommendation: {
+              id: '123',
+              personOnProbation: { name: 'Joe Bloggs', mappa: { ...testCase.mappaData } },
+            },
+            flags: {},
+          },
+        })
+        const next = mockNext()
+
+        await mappaController.get(
+          mockReq({
+            params: { recommendationId: '123' },
+          }),
+          res,
+          next,
+        )
+
+        expect(updateRecommendation).toHaveBeenCalledWith({
+          featureFlags: {},
+          valuesToSave: {
+            isMappaCategory4: testCase.expected.isMappaCategory4,
+            isMappaLevel2Or3: testCase.expected.isMappaLevel2Or3,
+          },
+          propertyToRefresh: 'mappa',
+          recommendationId: '123',
+          token: 'token',
+        })
+      })
+    })
   })
 })

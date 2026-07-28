@@ -1,19 +1,21 @@
 import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
 import { performance } from 'perf_hooks'
-import applicationVersion from '../applicationVersion'
+import applicationPackageInfo from '../applicationPackageInfo'
+import appConfig from '../config'
 
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
+import logger from '../../logger'
 
 export function defaultName(): string {
   const {
     packageData: { name },
-  } = applicationVersion
+  } = applicationPackageInfo
   return name
 }
 
 function version(): string {
-  const { buildNumber } = applicationVersion
+  const { buildNumber } = appConfig
   return buildNumber
 }
 
@@ -41,10 +43,16 @@ export const appInsightsEvent = (
   eventName: string,
   userName: string,
   eventData: Record<string, unknown>,
-  _: FeatureFlags
+  _: FeatureFlags,
 ) => {
   if (defaultClient && eventName) {
-    defaultClient.trackEvent({ name: eventName, properties: { ...eventData, userName } })
+    try {
+      defaultClient.trackEvent({ name: eventName, properties: { ...eventData, userName } })
+    } catch (err) {
+      logger.warn('AppInsights error:', err)
+    }
+  } else {
+    logger.warn('No default client found for appInsights')
   }
 }
 

@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesIndeterminateDetails } from '../recommendations/indeterminateOrExtendedSentenceDetails/inputDisplayValues'
-import { validateIndeterminateDetails } from '../recommendations/indeterminateOrExtendedSentenceDetails/formValidator'
+import inputDisplayValuesIndeterminateDetails from '../recommendations/indeterminateOrExtendedSentenceDetails/inputDisplayValues'
+import validateIndeterminateDetails from '../recommendations/indeterminateOrExtendedSentenceDetails/formValidator'
+import indeterminateOrExtendedSentenceDetails from '../recommendations/indeterminateOrExtendedSentenceDetails/formOptions'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -20,6 +22,10 @@ function get(req: Request, res: Response, next: NextFunction) {
     apiValues: recommendation,
   })
 
+  res.locals.fullName = recommendation.personOnProbation?.name
+
+  res.locals.indeterminateOrExtendedSentenceDetails = indeterminateOrExtendedSentenceDetails
+
   res.render(`pages/recommendations/indeterminateOrExtendedSentenceDetails`)
   next()
 }
@@ -27,6 +33,7 @@ function get(req: Request, res: Response, next: NextFunction) {
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
   const {
+    recommendation,
     flags,
     user: { token },
     urlInfo,
@@ -51,8 +58,15 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+
+  let nextPageId = 'sensitive-info'
+
+  if (recommendation.sentenceGroup === SentenceGroup.EXTENDED) {
+    nextPageId = 'emergency-recall'
+  }
+
+  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

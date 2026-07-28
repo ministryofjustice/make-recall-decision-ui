@@ -1,37 +1,64 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import discussWithManagerController from './discussWithManagerController'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 describe('get', () => {
-  it('present with suitability for standard or fixed term recall ', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { isIndeterminateSentence: false, isExtendedSentence: false },
-      },
-    })
-    const next = mockNext()
-    await discussWithManagerController.get(mockReq(), res, next)
+  describe('Discuss with Manager', () => {
+    it('present with Youth SDS', async () => {
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            sentenceGroup: SentenceGroup.YOUTH_SDS,
+          },
+          flags: {},
+        },
+      })
+      const next = mockNext()
+      await discussWithManagerController.get(mockReq(), res, next)
 
-    expect(res.locals.page).toEqual({ id: 'discussWithManager' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/discussWithManager')
-    expect(res.locals.nextPageId).toEqual('suitability-for-fixed-term-recall')
-    expect(next).toHaveBeenCalled()
-  })
-  it('present with indeterminate', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { isIndeterminateSentence: true, isExtendedSentence: false },
-      },
+      expect(res.locals.page).toEqual({ id: 'discussWithManager' })
+      expect(res.render).toHaveBeenCalledWith('pages/recommendations/discussWithManager')
+      expect(res.locals.nextPageId).toEqual('suitability-for-fixed-term-recall')
+      expect(next).toHaveBeenCalled()
     })
-    await discussWithManagerController.get(mockReq(), res, mockNext())
-    expect(res.locals.nextPageId).toEqual('recall-type-indeterminate')
-  })
-  it('present with extended', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { isIndeterminateSentence: false, isExtendedSentence: true },
-      },
+
+    it('present with Adult SDS', async () => {
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            sentenceGroup: SentenceGroup.ADULT_SDS,
+          },
+          flags: {},
+        },
+      })
+      await discussWithManagerController.get(mockReq(), res, mockNext())
+      expect(res.locals.nextPageId).toEqual('check-mappa-information')
     })
-    await discussWithManagerController.get(mockReq(), res, mockNext())
-    expect(res.locals.nextPageId).toEqual('recall-type-extended')
+
+    it('present with indeterminate', async () => {
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            sentenceGroup: SentenceGroup.INDETERMINATE,
+          },
+          flags: {},
+        },
+      })
+      await discussWithManagerController.get(mockReq(), res, mockNext())
+      expect(res.locals.nextPageId).toEqual('recall-type-indeterminate')
+    })
+
+    it('present with extended', async () => {
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            sentenceGroup: SentenceGroup.EXTENDED,
+          },
+          flags: {},
+        },
+      })
+      await discussWithManagerController.get(mockReq(), res, mockNext())
+      expect(res.locals.nextPageId).toEqual('recall-type-extended')
+    })
   })
 })

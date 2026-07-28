@@ -2,11 +2,11 @@
 
 [![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/make-recall-decision-ui/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/make-recall-decision-ui)
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/ministryofjustice/make-recall-decision-ui/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ministryofjustice/make-recall-decision-ui/tree/main)
+[![GitHub Actions](https://github.com/ministryofjustice/make-recall-decision-ui/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ministryofjustice/make-recall-decision-ui)
 
 If a person on probation breaches their licence conditions, they could be recalled to prison. This service helps a
 probation officer to review case information and make the decision to recall or not.
-Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD/overview).
+Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/CARC1/overview).
 
 ## Running the app locally
 
@@ -28,7 +28,6 @@ Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD
 ## Support / deployment / configuration
 
 * [Environment variables](./docs/env-vars.md) - including notes on changing secrets
-* [NPM dependency Checks](./docs/npm-dependency-checks.md)
 * [Deployment / Helm](./docs/helm-deploy.md) - including how to roll back a deployment
 * [Runbook](./RUNBOOK.md)
 
@@ -38,8 +37,8 @@ Read more on the [Confluence space](https://dsdmoj.atlassian.net/wiki/spaces/MRD
 
 * Display a notification info box on the homepage to make users aware of any planned outages four environment variables
   are required. These are available for each environment in the helm_deploy folder -
-    * **MAINTENANCE_HEADER** - optional header of the banner
-    * **MAINTENANCE_BODY** - mandatory text in the body of the banner. This must conform to GDS
+    * **MAINTENANCE_BANNER_HEADER** - optional header of the banner
+    * **MAINTENANCE_BANNER_BODY** - mandatory text in the body of the banner. This must conform to GDS
       standards [see link](https://design-system.service.gov.uk/components/notification-banner/)
     * **MAINTENANCE_BANNER_START_DATE_TIME** - must be written in ISO format eg/YYYY-MM-DDTHH:MM:SS, the banner will
       only be
@@ -81,10 +80,10 @@ These should be ordered by priority, for example if there's a different banner f
 
 ### Dashboards
 
-* MI dashboard (AppInsights) - useful if you want to see the user activity for a given CRN
+* MI dashboard (AppInsights) - useful if you want to see the user activity for a given CRN (SC clearance needed to access)
     * [Prod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/302220ae-7f13-458d-9149-9c9b40cf6465)
     * [Preprod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/302220ae-7f13-458d-9149-9c9b40cf656d)
-* Developer dashboard (AppInsights)
+* Developer dashboard (AppInsights) (SC clearance needed to access)
     * [Prod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/c920c355-b321-4048-8795-230b9c5a2728)
     * [Preprod](https://portal.azure.com/#@nomsdigitechoutlook.onmicrosoft.com/dashboard/arm/subscriptions/a5ddf257-3b21-4ba9-a28c-ab30f751b383/resourcegroups/dashboards/providers/microsoft.portal/dashboards/c920c355-b321-4048-8795-230b9c5a24b2)
-* [Monitoring & operability (Confluence)](https://dsdmoj.atlassian.net/wiki/spaces/MRD/pages/3987210241/Monitoring+Operability)
+* [Monitoring & operability (Confluence)](https://dsdmoj.atlassian.net/wiki/spaces/CARC1/pages/5055185029/Monitoring+Operability)

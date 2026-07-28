@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../../../data/makeDecisionApiClient'
-import { CUSTODY_GROUP } from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import { BookRecallToPpud } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { calculatePartACustodyGroup } from '../../../../helpers/ppudSentence/ppudSentenceHelper'
@@ -86,6 +86,7 @@ function removeOffenceAndSentenceData(bookRecallToPpud: BookRecallToPpud) {
   delete bookRecallToPpud.ppudSentenceId
   delete bookRecallToPpud.ppudIndeterminateSentenceData
   delete bookRecallToPpud.custodyType
+  delete bookRecallToPpud.changeOffenceOrAddComment
   /* eslint-enable no-param-reassign */
 }
 

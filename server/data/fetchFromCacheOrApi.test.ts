@@ -45,7 +45,7 @@ describe('fetchFromCacheOrApi', () => {
         JSON.stringify({
           userIds: ['other-user', currentUserId],
           data: cachedData,
-        })
+        }),
       )
       fetchDataFn.mockResolvedValue(apiData)
       const data = await fetchFromCacheOrApi({
@@ -65,7 +65,7 @@ describe('fetchFromCacheOrApi', () => {
           JSON.stringify({
             userIds: [currentUserId, 'other-user'],
             data: apiData,
-          })
+          }),
         )
       })
     })
@@ -86,7 +86,7 @@ describe('fetchFromCacheOrApi', () => {
         JSON.stringify({
           userIds: [currentUserId],
           data: apiData,
-        })
+        }),
       )
       expect(redisExpire).toHaveBeenCalledWith(redisKey, 86400)
     })
@@ -96,7 +96,7 @@ describe('fetchFromCacheOrApi', () => {
         JSON.stringify({
           userIds: ['other-user'],
           data: cachedData,
-        })
+        }),
       )
       fetchDataFn.mockResolvedValue(apiData)
       const data = await fetchFromCacheOrApi({
@@ -111,7 +111,7 @@ describe('fetchFromCacheOrApi', () => {
         JSON.stringify({
           userIds: [currentUserId, 'other-user'],
           data: apiData,
-        })
+        }),
       )
     })
 
@@ -132,7 +132,7 @@ describe('fetchFromCacheOrApi', () => {
         JSON.stringify({
           userIds: [currentUserId],
           data: apiData,
-        })
+        }),
       )
       expect(redisExpire).toHaveBeenCalledWith(redisKey, 5)
     })
@@ -157,7 +157,7 @@ describe('fetchFromCacheOrApi', () => {
           JSON.stringify({
             userIds: ['x987-y654'],
             data: cachedData,
-          })
+          }),
         )
         fetchDataFn.mockResolvedValue(apiData)
         const data = await fetchFromCacheOrApi({
@@ -180,7 +180,7 @@ describe('fetchFromCacheOrApi', () => {
           JSON.stringify({
             userIds: [currentUserId],
             data: cachedData,
-          })
+          }),
         )
         fetchDataFn.mockResolvedValue({
           userExcluded: true,

@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesWhatLedToRecall } from '../recommendations/whatLedToRecall/inputDisplayValues'
-import { validateWhatLedToRecall } from '../recommendations/whatLedToRecall/formValidator'
-import { routeUrls } from '../../routes/routeUrls'
+import inputDisplayValuesWhatLedToRecall from '../recommendations/whatLedToRecall/inputDisplayValues'
+import validateWhatLedToRecall from '../recommendations/whatLedToRecall/formValidator'
+import { sharedPaths } from '../../routes/paths/shared.paths'
+import recommendationUtils from '../../utils/recommendationUtils'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -11,6 +12,7 @@ function get(req: Request, res: Response, next: NextFunction) {
     ...res.locals,
     page: {
       id: 'whatLedToRecall',
+      isOutOfHoursRecall: recommendationUtils.isOutOfHoursRecall(res.locals.statuses),
     },
     inputDisplayValues: inputDisplayValuesWhatLedToRecall({
       errors: res.locals.errors,
@@ -50,8 +52,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-circumstances`
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-circumstances`
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

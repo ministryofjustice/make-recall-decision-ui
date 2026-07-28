@@ -3,36 +3,35 @@ import { hasData } from '../../utils/utils'
 import { getStatuses, updateStatuses } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
 
   const triggerLeadingToRecallCompleted = hasData(recommendation.triggerLeadingToRecall)
-  const responseToProbationCompleted = hasData(recommendation.responseToProbation)
   const licenceConditionsBreachedCompleted =
     hasData(recommendation.licenceConditionsBreached) ||
     hasData(recommendation.cvlLicenceConditionsBreached) ||
     !!recommendation.additionalLicenceConditionsText?.length
   const alternativesToRecallTriedCompleted = hasData(recommendation.alternativesToRecallTried)
-  const isExtendedSentenceCompleted = hasData(recommendation.isExtendedSentence)
-  const isIndeterminateSentenceCompleted = hasData(recommendation.isIndeterminateSentence)
+  const sentenceGroupCompleted = hasData(recommendation.sentenceGroup)
+  const indeterminateSentenceTypeCompleted = hasData(recommendation.indeterminateSentenceType)
 
   const allTasksCompleted =
     triggerLeadingToRecallCompleted &&
-    responseToProbationCompleted &&
     licenceConditionsBreachedCompleted &&
     alternativesToRecallTriedCompleted &&
-    isExtendedSentenceCompleted &&
-    isIndeterminateSentenceCompleted
-
+    sentenceGroupCompleted &&
+    (recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE || indeterminateSentenceTypeCompleted)
   res.locals = {
     ...res.locals,
+    backLinkUrl: `/cases/${recommendation.crn}/overview`,
+    isIndeterminateSentence: recommendation.sentenceGroup === SentenceGroup.INDETERMINATE,
     triggerLeadingToRecallCompleted,
-    responseToProbationCompleted,
     licenceConditionsBreachedCompleted,
     alternativesToRecallTriedCompleted,
-    isExtendedSentenceCompleted,
-    isIndeterminateSentenceCompleted,
+    sentenceGroupCompleted,
+    indeterminateSentenceTypeCompleted,
     allTasksCompleted,
     page: {
       id: 'taskListConsiderRecall',

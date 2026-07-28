@@ -2,8 +2,8 @@ import vulnerabilitiesDetailsController from './vulnerabilitiesDetailsController
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { vulnerabilitiesToDisplay } from '../recommendations/vulnerabilitiesDetails/vulnerabilitiesToDisplay'
-import { inputDisplayValuesVulnerabilitiesDetails } from '../recommendations/vulnerabilitiesDetails/inputDisplayValues'
+import vulnerabilitiesToDisplay from '../recommendations/vulnerabilitiesDetails/vulnerabilitiesToDisplay'
+import inputDisplayValuesVulnerabilitiesDetails from '../recommendations/vulnerabilitiesDetails/inputDisplayValues'
 import { validateVulnerabilitiesDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
 import { cleanseUiList } from '../../utils/lists'
 import { formOptions } from '../recommendations/formOptions/formOptions'
@@ -25,9 +25,6 @@ describe('get', () => {
           vulnerabilities: null,
         },
         token: 'token1',
-        flags: {
-          flagRiskToSelfEnabled: true,
-        },
       },
     })
     const next = mockNext()
@@ -61,9 +58,6 @@ describe('get', () => {
           vulnerabilities: recommendationApiResponse.vulnerabilities,
         },
         token: 'token1',
-        flags: {
-          flagRiskToSelfEnabled: true,
-        },
       },
     })
     const next = mockNext()
@@ -119,9 +113,6 @@ describe('get', () => {
         ],
         recommendation: {},
         token: 'token1',
-        flags: {
-          flagRiskToSelfEnabled: true,
-        },
       },
     })
 
@@ -209,9 +200,6 @@ describe('post', () => {
           },
         },
         urlInfo: { basePath },
-        flags: {
-          flagRiskToSelfEnabled: true,
-        },
       },
     })
     const next = mockNext()
@@ -231,83 +219,12 @@ describe('post', () => {
       recommendationId: '123',
       valuesToSave: {
         vulnerabilities: {
-          allOptions: [
-            {
-              value: VULNERABILITY.NONE,
-              text: 'None',
-            },
-            {
-              value: VULNERABILITY.NOT_KNOWN,
-              text: 'Not known',
-            },
-            {
-              value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM,
-              text: 'Risk of suicide or self-harm',
-            },
-            {
-              value: VULNERABILITY.RELATIONSHIP_BREAKDOWN,
-              text: 'Relationship breakdown',
-            },
-            {
-              value: VULNERABILITY.DOMESTIC_ABUSE,
-              text: 'Domestic abuse',
-            },
-            {
-              value: VULNERABILITY.DRUG_OR_ALCOHOL_USE,
-              text: 'Drug or alcohol abuse',
-            },
-            {
-              value: VULNERABILITY.BULLYING_OTHERS,
-              text: 'Bullying others',
-            },
-            {
-              value: VULNERABILITY.BEING_BULLIED_BY_OTHERS,
-              text: 'Being bullied by others',
-            },
-            {
-              value: VULNERABILITY.BEING_AT_RISK_OF_SERIOUS_HARM_FROM_OTHERS,
-              text: 'Being at risk of serious harm from others',
-            },
-            {
-              value: VULNERABILITY.ADULT_OR_CHILD_SAFEGUARDING_CONCERNS,
-              text: 'Adult or child safeguarding concerns',
-            },
-            {
-              value: VULNERABILITY.MENTAL_HEALTH_CONCERNS,
-              text: 'Mental health concerns',
-            },
-            {
-              value: VULNERABILITY.PHYSICAL_HEALTH_CONCERNS,
-              text: 'Physical health concerns',
-            },
-            {
-              value: VULNERABILITY.MEDICATION_TAKEN_INCLUDING_COMPLIANCE_WITH_MEDICATION,
-              text: 'Medication taken, including compliance with medication',
-            },
-            {
-              value: VULNERABILITY.BEREAVEMENT_ISSUES,
-              text: 'Bereavement issues',
-            },
-            {
-              value: VULNERABILITY.LEARNING_DIFFICULTIES,
-              text: 'Learning difficulties',
-            },
-            {
-              value: VULNERABILITY.PHYSICAL_DISABILITIES,
-              text: 'Physical disabilities',
-            },
-            {
-              value: VULNERABILITY.CULTURAL_OR_LANGUAGE_DIFFERENCES,
-              text: 'Cultural or language differences',
-            },
-          ],
+          allOptions: cleanseUiList(formOptions.vulnerabilities),
           selected: [{ value: VULNERABILITY.RISK_OF_SUICIDE_OR_SELF_HARM, details: 'test' }],
         },
       },
       token: 'token1',
-      featureFlags: {
-        flagRiskToSelfEnabled: true,
-      },
+      featureFlags: {},
     })
     expect(res.redirect).toHaveBeenCalledWith(303, '/recommendations/123/task-list#heading-vulnerability')
   })

@@ -1,36 +1,30 @@
 import { NextFunction, Request, Response } from 'express'
-import { inputDisplayValuesVulnerabilitiesDetails } from '../recommendations/vulnerabilitiesDetails/inputDisplayValues'
+import inputDisplayValuesVulnerabilitiesDetails from '../recommendations/vulnerabilitiesDetails/inputDisplayValues'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { routeUrls } from '../../routes/routeUrls'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { validateVulnerabilitiesDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
 import { ValueWithDetails } from '../../@types/make-recall-decision-api'
-import { vulnerabilitiesToDisplay } from '../recommendations/vulnerabilitiesDetails/vulnerabilitiesToDisplay'
+import vulnerabilitiesToDisplay from '../recommendations/vulnerabilitiesDetails/vulnerabilitiesToDisplay'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation, flags, urlInfo } = res.locals
-  const { recommendationId } = req.params
+  const { recommendation } = res.locals
 
-  if (!flags.flagRiskToSelfEnabled) {
-    const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`
-    res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
-  } else {
-    res.locals = {
-      ...res.locals,
-      page: {
-        id: 'vulnerabilitiesDetails',
-      },
-      vulnerabilitiesToDisplay: vulnerabilitiesToDisplay(recommendation.vulnerabilities),
-    }
-
-    res.locals.inputDisplayValues = inputDisplayValuesVulnerabilitiesDetails({
-      errors: res.locals.errors,
-      unsavedValues: res.locals.unsavedValues,
-      apiValues: recommendation,
-    })
-
-    res.render(`pages/recommendations/vulnerabilitiesDetails`)
+  res.locals = {
+    ...res.locals,
+    page: {
+      id: 'vulnerabilitiesDetails',
+    },
+    vulnerabilitiesToDisplay: vulnerabilitiesToDisplay(recommendation.vulnerabilities),
   }
+
+  res.locals.inputDisplayValues = inputDisplayValuesVulnerabilitiesDetails({
+    errors: res.locals.errors,
+    unsavedValues: res.locals.unsavedValues,
+    apiValues: recommendation,
+  })
+
+  res.render(`pages/recommendations/vulnerabilitiesDetails`)
 
   next()
 }
@@ -77,8 +71,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/task-list#heading-vulnerability`
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/task-list#heading-vulnerability`
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

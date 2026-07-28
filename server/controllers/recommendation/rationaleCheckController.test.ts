@@ -41,7 +41,7 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(
       303,
-      `/recommendations/123/spo-task-list-consider-recall?fromPageId=rationale-check`
+      `/recommendations/123/spo-task-list-consider-recall?fromPageId=rationale-check`,
     )
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })

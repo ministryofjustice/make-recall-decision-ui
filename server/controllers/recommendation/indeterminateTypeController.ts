@@ -1,18 +1,29 @@
 import { NextFunction, Request, Response } from 'express'
-import { renderStrings } from '../recommendations/helpers/renderStrings'
-import { strings } from '../../textStrings/en'
+import renderStrings from '../recommendations/helpers/renderStrings'
+import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { inputDisplayValuesIndeterminateSentenceType } from '../recommendations/indeterminateSentenceType/inputDisplayValues'
-import { validateIndeterminateSentenceType } from '../recommendations/indeterminateSentenceType/formValidator'
+import inputDisplayValuesIndeterminateSentenceType from '../recommendations/indeterminateSentenceType/inputDisplayValues'
+import validateIndeterminateSentenceType from '../recommendations/indeterminateSentenceType/formValidator'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
+import indeterminateSentenceType from '../recommendations/indeterminateSentenceType/formOptions'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import ppPaths from '../../routes/paths/pp.paths'
 
 function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    urlInfo: { basePath },
+  } = res.locals
 
   const stringRenderParams = {
     fullName: recommendation.personOnProbation.name,
+  }
+
+  if (!recommendation.sentenceGroup || recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE) {
+    res.redirect(303, `${basePath}${ppPaths.sentenceInformation}`)
+    return
   }
 
   res.locals = {
@@ -29,6 +40,8 @@ function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues: res.locals.unsavedValues,
     apiValues: recommendation,
   })
+
+  res.locals.indeterminateSentenceTypeOptions = indeterminateSentenceType
 
   res.render(`pages/recommendations/indeterminateSentenceType`)
   next()
@@ -64,7 +77,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const isApRationalRecorded = (res.locals.statuses as RecommendationStatusResponse[]).find(
-    status => status.name === STATUSES.AP_RECORDED_RATIONALE && status.active
+    status => status.name === STATUSES.AP_RECORDED_RATIONALE && status.active,
   )
 
   let nextPageId
@@ -74,7 +87,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     nextPageId = 'task-list-consider-recall'
   }
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
 }
 
 export default { get, post }

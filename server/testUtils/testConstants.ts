@@ -1,1 +1,3 @@
-export const productionEnvValues = ['preprod', 'prod']
+const productionEnvValues = ['preprod', 'prod']
+
+export default productionEnvValues

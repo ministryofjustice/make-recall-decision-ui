@@ -1,13 +1,13 @@
 import { ContactSummaryResponse } from '../../../@types/make-recall-decision-api'
 import { ContactGroupResponse } from '../../../@types/make-recall-decision-api/models/ContactGroupResponse'
 import { ContactHistoryFilters, ContactTypeGroupDecorated } from '../../../@types/contacts'
-import { decorateSelectedFilters } from './helpers/decorateSelectedFilters'
-import { decorateGroups } from './helpers/decorateGroups'
-import { decorateAllContactTypes } from './helpers/decorateAllContactTypes'
-import { listSelectedContactTypeCodes } from './helpers/listSelectedContactTypeCodes'
-import { filterContactsBySelected } from './helpers/filterContactsBySelected'
+import decorateSelectedFilters from './helpers/decorateSelectedFilters'
+import decorateGroups from './helpers/decorateGroups'
+import decorateAllContactTypes from './helpers/decorateAllContactTypes'
+import listSelectedContactTypeCodes from './helpers/listSelectedContactTypeCodes'
+import filterContactsBySelected from './helpers/filterContactsBySelected'
 
-export const filterContactsByContactType = ({
+const filterContactsByContactType = ({
   filteredContacts,
   allContacts,
   contactTypeGroups,
@@ -35,3 +35,5 @@ export const filterContactsByContactType = ({
     selectedIds: selectedContactTypes,
   }
 }
+
+export default filterContactsByContactType

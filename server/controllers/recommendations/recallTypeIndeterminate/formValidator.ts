@@ -1,13 +1,10 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
-import { EVENTS } from '../../../utils/constants'
+import strings from '../../../textStrings/en'
+import EVENTS from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateRecallTypeIndeterminate = async ({
-  requestBody,
-  urlInfo,
-}: FormValidatorArgs): FormValidatorReturn => {
+const validateRecallTypeIndeterminate = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { recallType } = requestBody
   const invalidRecallTypeIndeterminate = !isValueValid(recallType as string, 'recallTypeIndeterminate')
   const hasError = !recallType || invalidRecallTypeIndeterminate
@@ -21,7 +18,7 @@ export const validateRecallTypeIndeterminate = async ({
           id: 'recallType',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -56,3 +53,5 @@ export const validateRecallTypeIndeterminate = async ({
     },
   }
 }
+
+export default validateRecallTypeIndeterminate

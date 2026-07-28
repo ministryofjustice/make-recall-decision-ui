@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   res.locals = {

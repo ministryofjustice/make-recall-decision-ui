@@ -1,4 +1,4 @@
-import { validateWhatLedToRecall } from './formValidator'
+import validateWhatLedToRecall from './formValidator'
 
 describe('validateWhatLedToRecall', () => {
   const recommendationId = '34'

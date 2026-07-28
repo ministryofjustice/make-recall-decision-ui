@@ -1,4 +1,4 @@
-import { inputDisplayValuesRosh } from './inputDisplayValues'
+import inputDisplayValuesRosh from './inputDisplayValues'
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 
 describe('inputDisplayValuesRosh', () => {

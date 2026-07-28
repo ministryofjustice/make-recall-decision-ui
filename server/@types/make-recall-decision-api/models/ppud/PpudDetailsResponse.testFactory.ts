@@ -6,7 +6,7 @@ import {
   PpudDetailsSentence,
   PpudDetailsSentenceLength,
 } from '../PpudDetailsResponse'
-import { randomDate } from '../../../dates.testFactory'
+import randomDate from '../../../dates.testFactory'
 
 export function ppudDetailsOffender(
   {
@@ -75,18 +75,18 @@ export function ppudDetailsSentence(
     sentenceLength = ppudDetailsSentenceLength(),
     sentencingCourt = randomUUID(),
   }:
-    {
-      id?: string,
-      sentenceExpiryDate?: Date,
-      dateOfSentence?: Date,
-      custodyType?: string,
-      mappaLevel?: number,
-      licenceExpiryDate?: Date,
-      offence?: PpudDetailsOffence,
-      releaseDate?: Date,
-      sentenceLength?: PpudDetailsSentenceLength,
-      sentencingCourt?: string,
-    } = {},
+  {
+    id?: string,
+    sentenceExpiryDate?: Date,
+    dateOfSentence?: Date,
+    custodyType?: string,
+    mappaLevel?: number,
+    licenceExpiryDate?: Date,
+    offence?: PpudDetailsOffence,
+    releaseDate?: Date,
+    sentenceLength?: PpudDetailsSentenceLength,
+    sentencingCourt?: string,
+  } = {},
 ): PpudDetailsSentence {
   return {
     id,

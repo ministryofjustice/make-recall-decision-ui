@@ -3,7 +3,7 @@ import { getStatuses, updateRecommendation, updateStatuses } from '../../data/ma
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, user } = res.locals

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { removeFutureContacts } from './removeFutureContacts'
+import removeFutureContacts from './removeFutureContacts'
 
 describe('removeFutureContacts', () => {
   const plusOneMinute = DateTime.now().plus({ minute: 1 }).toISO()

@@ -17,19 +17,19 @@
                           aria-describedby="date-of-birth-hint appointment-time-hint{% if errors.dateOfBirth %} error{% endif %}">
                     <div class="govuk-body">
                         {% if recommendation.prisonOffender.dateOfBirth %}
-                            <div class="govuk-text-list">
+                            <div class="car-text-list">
                                 <h3 class='govuk-heading-m'>From NOMIS</h3>
-                                <div class="govuk-text-list__row">
-                                    <dt class="govuk-text-list__key">Date of birth</dt>
-                                    <dd class="govuk-text-list__value" data-qa="nomisDateOfBirth">{{ formatDateTimeFromIsoString({isoDate: recommendation.prisonOffender.dateOfBirth})  }}</dd>
+                                <div class="car-text-list__row">
+                                    <dt class="car-text-list__key">Date of birth</dt>
+                                    <dd class="car-text-list__value" data-qa="nomisDateOfBirth">{{ formatDateTimeFromIsoString({isoDate: recommendation.prisonOffender.dateOfBirth})  }}</dd>
                                 </div>
                             </div>
                         {% endif %}
                         {% if recommendation.ppudOffender.dateOfBirth %}
-                            <div class="govuk-text-list"><h3 class='govuk-heading-m'>From PPUD</h3>
-                                <div class="govuk-text-list__row">
-                                    <dt class="govuk-text-list__key">Date of birth</dt>
-                                    <dd class="govuk-text-list__value" data-qa="ppudDateOfBirth" >{{ formatDateTimeFromIsoString({isoDate: recommendation.ppudOffender.dateOfBirth})  }}</dd>
+                            <div class="car-text-list"><h3 class='govuk-heading-m'>From PPUD</h3>
+                                <div class="car-text-list__row">
+                                    <dt class="car-text-list__key">Date of birth</dt>
+                                    <dd class="car-text-list__value" data-qa="ppudDateOfBirth" >{{ formatDateTimeFromIsoString({isoDate: recommendation.ppudOffender.dateOfBirth})  }}</dd>
                                 </div>
                             </div>
                         {% endif %}

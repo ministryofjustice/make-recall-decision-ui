@@ -1,7 +1,8 @@
 import updateRecall from './updateRecall'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { ppudCreateRecall, updateRecommendation } from '../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -36,20 +37,21 @@ describe('update recall', () => {
         probationArea: 'london',
         receivedDateTime: '2024-01-29T16:15:39',
       },
-      isExtendedSentence: true,
+      sentenceGroup: SentenceGroup.EXTENDED,
       hasContrabandRisk: {
         selected: true,
         details: 'Contraband detail...',
       },
     } as unknown as RecommendationResponse
 
+    const featureFlags = {}
+
     ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
 
-    const result = await updateRecall(bookingMemento, recommendation, 'token', { xyz: true })
+    const result = await updateRecall(bookingMemento, recommendation, 'token', featureFlags)
 
     expect(ppudCreateRecall).toHaveBeenCalledWith('token', '767', '555', {
       decisionDateTime: '2024-01-29T16:15:39',
-      isExtendedSentence: true,
       isInCustody: false,
       mappaLevel: 'Level 2 - local inter-agency management',
       policeForce: 'Bethnal Green Police Force',
@@ -70,9 +72,7 @@ describe('update recall', () => {
         },
       },
       token: 'token',
-      featureFlags: {
-        xyz: true,
-      },
+      featureFlags,
     })
     expect(result).toEqual({
       offenderId: '767',

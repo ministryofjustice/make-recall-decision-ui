@@ -88,7 +88,7 @@
                         }) }}
                 </div>
             </div>
-            
+
             <hr class="govuk-section-break govuk-section-break--visible" />
         </div>
     </div>
@@ -140,6 +140,20 @@
             {% endif %}
         {% endset %}
 
+        {% set determinateOrIndeterminateRow = {
+            key: "Determinate or indeterminate",
+            value: recommendation.bookRecallToPpud.custodyGroup
+        } %}
+        {# If there's an existing PPUD record, allow the user to edit the custody group.
+           Otherwise, don't show the edit link as new PPUD records can only be determinate.#}
+        {% if recommendation.ppudOffender %}
+            {% set determinateOrIndeterminateRow = determinateOrIndeterminateRow | merge({
+                    value: '<span id="custodyGroup"></span>' + blankSafe(recommendation.bookRecallToPpud.custodyGroup, true, 'You must enter determinate or indeterminate'),
+                    actions: [{ id: editIdPrefix+'custodygroup', text: editText, href: 'edit-custody-group', visuallyHidden: 'custody group' }],
+                    error: errors.custodyGroup
+                })
+            %}
+        {% endif %}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 {{
@@ -147,7 +161,7 @@
                         id: "check-booking-custody-details-list",
                         rows: [
                             { key: "Custody status", value: custodyStatusBlock },
-                            { key: 'Determinate or indeterminate', value: '<span id="custodyGroup"></span>' + blankSafe(recommendation.bookRecallToPpud.custodyGroup, true, 'You must enter determinate or indeterminate'), actions: [{ id: editIdPrefix+'custodygroup', text: editText, href: 'edit-custody-group', visuallyHidden: 'custody group' }], error: errors.custodyGroup },
+                            determinateOrIndeterminateRow,
                             { key: 'Current establishment', value: '<span id="currentEstablishment"></span>' + blankSafe(recommendation.bookRecallToPpud.currentEstablishment, true, 'Enter an establishment'), actions: [{ id: editIdPrefix+'currentestablishment', text: editText, href: 'edit-current-establishment', visuallyHidden: 'current establishment' }], error: errors.currentEstablishment }
                         ]
                     })
@@ -173,7 +187,7 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                {{ 
+                {{
                     summaryList({
                         id: "check-booking-prison-and-licence-details-list",
                         rows: prisonAndLicenceInformationRows
@@ -222,8 +236,8 @@
                     summaryList({
                         id: "check-booking-recall-information-list",
                         rows: [
-                            { key: 'Recall received date', value: formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, dateOnly: true }), actions: [{ id: editIdPrefix+'recallreceiveddate', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received date' }] },
-                            { key: 'Recall received time', value: formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, timeOnly: true }), actions: [{ id: editIdPrefix+'recallreceivedtime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received time' }] },
+                            { key: 'Recall received date', value: '<span id="receivedDateTime"></span>' + blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, dateOnly: true }), true, 'You must enter a date'), actions: [{ id: editIdPrefix+'receivedDateTime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received date' }], error: errors.receivedDateTime },
+                            { key: 'Recall received time', value: blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, timeOnly: true }), true, 'You must enter a time'), actions: [{ id: editIdPrefix+'receivedDateTime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received time' }], error: errors.missingReceivedDateTime },
                             { key: 'Recall decision date', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, dateOnly: true }) },
                             { key: 'Recall decision time', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, timeOnly: true }) }
                         ]
@@ -236,8 +250,8 @@
     {% set probationDetailsHtml %}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                {{ 
-                    summaryList({ 
+                {{
+                    summaryList({
                         id: "check-booking-probation-details-list",
                         rows: [
                             { key: 'Probation area', value: '<span id="probationArea"></span>' + blankSafe(recommendation.bookRecallToPpud.probationArea, true, 'Enter a probation area'), actions: [{ id: editIdPrefix+'probationarea', text: editText, href: 'edit-probation-area', visuallyHidden: 'probation area' }], error: errors.probationArea },

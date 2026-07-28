@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { validateRecallReceived } from './formValidator'
+import validateRecallReceived from './formValidator'
 
 describe('validateRecallReceived', () => {
   const recommendationId = '34'

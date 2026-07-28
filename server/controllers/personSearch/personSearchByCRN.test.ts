@@ -1,4 +1,4 @@
-import { personSearchByCRN } from './personSearchByCRN'
+import personSearchByCRN from './personSearchByCRN'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 
 describe('personSearchByCRN', () => {

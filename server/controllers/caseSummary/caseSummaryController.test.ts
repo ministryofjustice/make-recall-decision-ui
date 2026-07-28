@@ -18,18 +18,18 @@ import caseVulnerabilitiesResponse from '../../../api/responses/get-case-vulnera
 import caseRecommendationsResponse from '../../../api/responses/get-case-recommendations.json'
 import excludedResponse from '../../../api/responses/get-case-excluded.json'
 import restrictedResponse from '../../../api/responses/get-case-restricted.json'
-import { AuditService } from '../../services/auditService'
+import AuditService from '../../services/auditService'
 import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { createRedisClient, RedisClient } from '../../data/redisClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
-import { createRecommendationBanner } from '../../utils/bannerUtils'
+import createRecommendationBanner from '../../utils/bannerUtils'
 import config from '../../config'
 import { isDateTimeRangeCurrent } from '../../utils/utils'
 import { Notification } from '../../@types/notification'
-import { notifications } from '../../content/notifications'
+import notifications from '../../content/notifications'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -92,7 +92,7 @@ describe('get', () => {
     await caseSummaryController.get(req, res, next)
     expect(getCaseSummaryV2).toHaveBeenCalledWith(crn.trim(), 'licence-conditions', token)
     expect(res.locals.caseSummary.licenceConvictions.activeCustodial).toStrictEqual(
-      caseLicenceConditionsResponse.activeConvictions.filter(conviction => conviction.sentence?.isCustodial)
+      caseLicenceConditionsResponse.activeConvictions.filter(conviction => conviction.sentence?.isCustodial),
     )
     expect(res.locals.caseSummary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
     expect(res.locals.caseSummary.activeConvictions).toBe(caseLicenceConditionsResponse.activeConvictions)
@@ -101,7 +101,7 @@ describe('get', () => {
       true,
       { roles: ['ROLE_MAKE_RECALL_DECISION'], token: 'token', username: 'Dave' },
       'A1234AB',
-      {}
+      {},
     )
   })
 
@@ -960,7 +960,7 @@ describe('get', () => {
                 dataAnalyticsEventCategory: 'spo_delete_part_a_click',
                 linkText: 'Delete the Part A',
                 text: 'started a Part A for',
-              })
+              }),
             )
           })
           it('should display a banner for PO', async () => {
@@ -998,7 +998,7 @@ describe('get', () => {
                 display: true,
                 linkText: '',
                 text: 'started a Part A for',
-              })
+              }),
             )
           })
         })
@@ -1040,7 +1040,7 @@ describe('get', () => {
                 dataAnalyticsEventCategory: 'spo_delete_dntr_click',
                 linkText: 'Delete the decision not to recall',
                 text: 'started a decision not to recall letter for',
-              })
+              }),
             )
           })
           it('should display a banner for PO', async () => {
@@ -1078,7 +1078,7 @@ describe('get', () => {
                 display: true,
                 dataAnalyticsEventCategory: 'spo_delete_dntr_click',
                 text: 'started a decision not to recall letter for',
-              })
+              }),
             )
           })
         })

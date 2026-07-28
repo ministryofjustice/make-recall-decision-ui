@@ -9,7 +9,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const recommendationResponse = recommendation as RecommendationResponse
 
   const offence = recommendationResponse.nomisIndexOffence.allOptions.find(
-    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected
+    o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
 
   const sentences = recommendation.ppudOffender.sentences as PpudSentence[]

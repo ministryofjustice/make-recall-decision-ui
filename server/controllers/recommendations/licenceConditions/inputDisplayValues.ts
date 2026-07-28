@@ -1,7 +1,7 @@
 import { isDefined } from '../../../utils/utils'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: InputDisplayValuesArgs) => {
+const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: InputDisplayValuesArgs) => {
   if (!isDefined(errors) && apiValues.licenceConditionsBreached) {
     const { standardLicenceConditions, additionalLicenceConditions } = apiValues.licenceConditionsBreached
     return {
@@ -34,3 +34,5 @@ export const inputDisplayValuesLicenceConditions = ({ errors, apiValues }: Input
     additionalLicenceConditionsText: undefined,
   }
 }
+
+export default inputDisplayValuesLicenceConditions

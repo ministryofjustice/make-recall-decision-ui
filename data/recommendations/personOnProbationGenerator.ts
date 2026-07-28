@@ -21,6 +21,7 @@ export type PersonOnProbationOptions = {
   addresses?: Array<AnyNoneOrOption<AddressOptions>>
   primaryLanguage?: string
   hasBeenReviewed?: boolean
+  ftr56MappaReviewed?: boolean
 }
 
 export const PersonOnProbationGenerator: DataGenerator<
@@ -57,6 +58,7 @@ export const PersonOnProbationGenerator: DataGenerator<
           },
         ],
         hasBeenReviewed: faker.datatype.boolean(),
+        ftr56MappaReviewed: faker.datatype.boolean(),
       }
     }
 
@@ -81,6 +83,7 @@ export const PersonOnProbationGenerator: DataGenerator<
       addresses: AddressGenerator.generateSeries(options.addresses ?? ['any']),
       primaryLanguage: options.primaryLanguage,
       hasBeenReviewed: options.hasBeenReviewed,
+      ftr56MappaReviewed: options.ftr56MappaReviewed,
     }
   },
 }

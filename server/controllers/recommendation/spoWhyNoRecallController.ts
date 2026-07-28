@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { strings } from '../../textStrings/en'
+import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../utils/errors'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
@@ -40,7 +40,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'spoNoRecallRationale',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -59,7 +59,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-senior-manager-endorsement', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'spo-senior-manager-endorsement', urlInfo }))
 }
 
 export default { get, post }

@@ -6,7 +6,7 @@ generic-service:
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/make-recall-decision-ui
+    repository: ghcr.io/ministryofjustice/make-recall-decision-ui
     tag: app_version    # override at deployment time
     port: 3000
 
@@ -40,18 +40,17 @@ generic-service:
     NODE_ENV: "production"
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
-    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
     SENTRY_DSN: https://5c9e4014e8064f8c846bfbeb1810a32f@o345774.ingest.sentry.io/6360608
     AUDIT_SERVICE_NAME: "make-recall-decision"
     AUDIT_SQS_REGION: "eu-west-2"
     MAINTENANCE_BANNER_HEADER: "Scheduled maintenance"
-    MAINTENANCE_BANNER_BODY: "Consider a recall will be unavailable between 6pm and 6:30pm on Monday 11 March 2024. This is so we can update our database."
+    MAINTENANCE_BANNER_BODY: "Consider a recall will be unavailable between 8pm and 11pm on Tuesday 10th February 2025. This is so we can update our database."
     # datetimes must be written in ISO format eg/YYYY-MM-DDTHH:MM:SS
-    MAINTENANCE_BANNER_START_DATE_TIME: "2024-08-11T08:00:00"
-    MAINTENANCE_BANNER_END_DATE_TIME: "2024-08-12T18:00:00"
-    MAINTENANCE_PAGE_TEXT: Please follow your business continuity procedures to deal with recalls.
-    MAINTENANCE_PAGE_START_DATE_TIME: 2019-09-27T04:00:00
-    MAINTENANCE_PAGE_END_DATE_TIME: 2019-09-27T18:00:00
+    MAINTENANCE_BANNER_START_DATE_TIME: "2026-02-03T20:00:00"
+    MAINTENANCE_BANNER_END_DATE_TIME: "2026-02-10T20:00:00"
+    MAINTENANCE_PAGE_BODY: Please follow your business continuity procedures to deal with recalls.
+    MAINTENANCE_PAGE_START_DATE_TIME: 2026-02-10T20:00:00
+    MAINTENANCE_PAGE_END_DATE_TIME: 2026-02-10T23:00:00
     HMPPS_SQS_USE_WEB_TOKEN: "true"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
@@ -73,6 +72,8 @@ generic-service:
     sqs-hmpps-audit-secret:
       AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
       AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
+    make-recall-decision-ui-application-insights:
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
 
 generic-prometheus-alerts:
   targetApplication: make-recall-decision-ui

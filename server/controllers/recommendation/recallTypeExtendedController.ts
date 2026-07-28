@@ -1,16 +1,22 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { formOptions, isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { EVENTS } from '../../utils/constants'
+import strings from '../../textStrings/en'
+import EVENTS from '../../utils/constants'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import recallTypePath from '../../utils/routing'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+
+  if (recommendation.sentenceGroup !== SentenceGroup.EXTENDED) {
+    const redirectionPath = recallTypePath(recommendation)
+    return res.redirect(303, `${res.locals.urlInfo.basePath}${redirectionPath}`)
+  }
 
   res.locals = {
     ...res.locals,
@@ -23,7 +29,7 @@ function get(req: Request, res: Response, next: NextFunction) {
   }
 
   res.render(`pages/recommendations/recallTypeExtended`)
-  next()
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
@@ -45,7 +51,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         id: 'recallType',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -87,9 +93,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'emergency-recall'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
-
   const crn = normalizeCrn(req.body.crn)
   if (!isEmptyStringOrWhitespace(crn)) {
     appInsightsEvent(
@@ -101,9 +104,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
+
+  return res.redirect(
+    303,
+    `${urlInfo.basePath}${recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'}`,
+  )
 }
 
 export default { get, post }

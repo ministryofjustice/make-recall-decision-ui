@@ -1,7 +1,7 @@
 import { ValidationError } from '../@types/dates'
 import { MIN_VALUE_YEAR } from './dates/conversion'
 import { listToString } from './utils'
-import { strings } from '../textStrings/en'
+import strings from '../textStrings/en'
 import { SanitisedError } from '../sanitisedError'
 import { renderTemplateString } from './nunjucks'
 import { FormError, KeyedFormErrors, NamedFormError } from '../@types/pagesForms'
@@ -99,7 +99,7 @@ export const saveErrorWithDetails = ({ err, isProduction }: { err: SanitisedErro
 
 export const renderErrorMessages = (
   errors: KeyedFormErrors,
-  locals: Record<string, unknown>
+  locals: Record<string, unknown>,
 ): KeyedFormErrors | undefined => {
   if (!errors) {
     return undefined
@@ -119,6 +119,6 @@ export const renderErrorMessages = (
       }
       return acc
     },
-    { list: [] }
+    { list: [] },
   ) as KeyedFormErrors
 }

@@ -17,12 +17,12 @@ export const NomisIndexGenerator: DataGenerator<NomisIndexOffence, NomisIndexOff
     }
     if (options?.selectedIndex && options.selectedIndex <= offences.length) {
       return {
-        selected: offences.at(options.selectedIndex).offenderChargeId,
+        selected: offences?.[options.selectedIndex].offenderChargeId,
         allOptions: offences,
       }
     }
     return {
-      selected: offences.at(0).offenderChargeId,
+      selected: offences?.[0].offenderChargeId,
       allOptions: offences,
     }
   },

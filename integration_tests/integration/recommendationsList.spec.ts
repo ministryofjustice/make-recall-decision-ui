@@ -1,5 +1,6 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import getRecommendationsResponse from '../../api/responses/get-case-recommendations.json'
+import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
 
 context('Recommendations tab in case summary', () => {
   const crn = 'X34983'
@@ -79,6 +80,7 @@ context('Recommendations tab in case summary', () => {
   it('if signed in user is a PO - lists all recommendations with actions', () => {
     cy.signIn()
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', { statusCode: 200, response: RecommendationResponseGenerator.generate() })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
@@ -88,7 +90,7 @@ context('Recommendations tab in case summary', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
+    cy.visit(`${sharedPaths.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
     cy.pageHeading().should('equal', 'Recommendations for Jane Bloggs')
 
     checkValuesInTable([
@@ -103,28 +105,29 @@ context('Recommendations tab in case summary', () => {
 
     cy.getLinkHref('Update recommendation', { parent: '[data-qa="2"]' }).should(
       'contain',
-      '/recommendations/2/task-list'
+      '/recommendations/2/task-list',
     )
     cy.getLinkHref('Update recommendation', { parent: '[data-qa="3"]' }).should(
       'contain',
-      '/recommendations/3/task-list'
+      '/recommendations/3/task-list',
     )
     cy.getLinkHref('Update recommendation', { parent: '[data-qa="4"]' }).should(
       'contain',
-      '/recommendations/4/task-list-no-recall'
+      '/recommendations/4/task-list-no-recall',
     )
     cy.getLinkHref('Download Part A from 23 September 2021 at 14:59', {
       parent: '[data-qa="5"]',
     }).should('contain', '/recommendations/5/documents/part-a?crn=X514364')
     cy.getLinkHref('Download letter from 14 May 2019 at 14:59', { parent: '[data-qa="6"]' }).should(
       'contain',
-      '/recommendations/6/documents/no-recall-letter?crn=X514364'
+      '/recommendations/6/documents/no-recall-letter?crn=X514364',
     )
   })
 
   it('if signed in user is a SPO - lists all recommendations with only download actions available', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', { statusCode: 200, response: RecommendationResponseGenerator.generate() })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
@@ -134,7 +137,7 @@ context('Recommendations tab in case summary', () => {
       },
     })
     cy.task('getStatuses', { statusCode: 200, response: [] })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
+    cy.visit(`${sharedPaths.cases}/${crn}/recommendations?flagRecommendationsPage=1`)
     cy.pageHeading().should('equal', 'Recommendations for Jane Bloggs')
 
     checkValuesInTable([
@@ -151,6 +154,7 @@ context('Recommendations tab in case summary', () => {
   it('shows delete links if flag is on', () => {
     cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] })
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', { statusCode: 200, response: RecommendationResponseGenerator.generate() })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
@@ -159,7 +163,7 @@ context('Recommendations tab in case summary', () => {
         recommendations,
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
+    cy.visit(`${sharedPaths.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
     cy.pageHeading().should('equal', 'Recommendations for Jane Bloggs')
 
     checkValuesInTable([
@@ -182,6 +186,7 @@ context('Recommendations tab in case summary', () => {
   it('shows a message if no recommendations', () => {
     cy.signIn()
     cy.task('getActiveRecommendation', { statusCode: 200, response: { recommendationId: 12345 } })
+    cy.task('getRecommendation', { statusCode: 200, response: RecommendationResponseGenerator.generate() })
     cy.task('getCase', {
       sectionId: 'recommendations',
       statusCode: 200,
@@ -190,7 +195,7 @@ context('Recommendations tab in case summary', () => {
         recommendations: [],
       },
     })
-    cy.visit(`${routeUrls.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
+    cy.visit(`${sharedPaths.cases}/${crn}/recommendations?flagRecommendationsPage=1&flagDeleteRecommendation=1`)
     cy.getElement('No recommendations to display.').should('exist')
   })
 })

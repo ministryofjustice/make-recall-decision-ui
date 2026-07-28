@@ -56,7 +56,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         errorId: (dateOfBirthIso as ValidationError).errorId,
         invalidParts: (dateOfBirthIso as ValidationError).invalidParts,
         values: dateOfBirthParts,
-      })
+      }),
     )
   }
 
@@ -81,7 +81,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

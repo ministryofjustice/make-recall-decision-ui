@@ -1,18 +1,28 @@
+import { faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import recallTypeExtendedController from './recallTypeExtendedController'
+import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
+import { nextPageLinkUrl } from '../recommendations/helpers/urls'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import recallTypePath from '../../utils/routing'
 
 jest.mock('../../monitoring/azureAppInsights')
 jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../recommendations/helpers/urls')
+jest.mock('../../utils/routing')
 
 describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: {},
+        recommendation: {
+          sentenceGroup: SentenceGroup.EXTENDED,
+        },
         token: 'token1',
       },
     })
@@ -30,6 +40,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
+          sentenceGroup: SentenceGroup.EXTENDED,
           recallType: {
             selected: { value: 'STANDARD', details: null },
             allOptions: [
@@ -57,7 +68,7 @@ describe('get', () => {
               name: 'recallType',
               href: '#recallType',
               errorId: 'noRecallTypeExtendedSelected',
-              html: 'Select whether you recommend a recall or not',
+              html: 'Select a recall recommendation',
             },
           ],
           recallType: {
@@ -67,6 +78,7 @@ describe('get', () => {
           },
         },
         recommendation: {
+          sentenceGroup: SentenceGroup.EXTENDED,
           recallType: '',
         },
         token: 'token1',
@@ -85,19 +97,43 @@ describe('get', () => {
         {
           href: '#recallType',
           errorId: 'noRecallTypeExtendedSelected',
-          html: 'Select whether you recommend a recall or not',
+          html: 'Select a recall recommendation',
           name: 'recallType',
         },
       ],
     })
   })
+
+  describe('unexpected sentence group', () => {
+    Object.values(SentenceGroup)
+      .filter(sentenceGroup => sentenceGroup !== SentenceGroup.EXTENDED)
+      .forEach(sentenceGroup => {
+        it(`${sentenceGroup} leads to redirect`, async () => {
+          const recommendation = RecommendationResponseGenerator.generate({
+            sentenceGroup,
+          })
+          const res = mockRes({
+            locals: {
+              recommendation,
+              urlInfo: UrlInfoGenerator.generate(),
+            },
+          })
+          const redirectionPath = faker.lorem.slug()
+          ;(recallTypePath as jest.Mock).mockReturnValue(redirectionPath)
+
+          recallTypeExtendedController.get(mockReq(), res, mockNext())
+
+          expect(recallTypePath).toHaveBeenCalledWith(recommendation)
+          expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}${redirectionPath}`)
+        })
+      })
+  })
 })
 
 describe('post', () => {
-  it('post with valid data', async () => {
+  it(`post with valid data`, async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
@@ -111,7 +147,7 @@ describe('post', () => {
       locals: {
         user: { token: 'token1', username: 'Dave', region: { code: 'N07', name: 'London' } },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath },
+        urlInfo: UrlInfoGenerator.generate(),
       },
     })
     const next = mockNext()
@@ -133,7 +169,7 @@ describe('post', () => {
           selected: { value: 'STANDARD' },
           allOptions: [
             { value: 'STANDARD', text: 'Standard recall' },
-            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
+            { value: 'NO_RECALL', text: 'No recall - create a decision not to recall letter' },
           ],
         },
       },
@@ -149,17 +185,19 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/emergency-recall`)
+    // We want to ensure we are ignoring fromInfo from the url info
+    expect(nextPageLinkUrl).not.toHaveBeenCalled()
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}indeterminate-details`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
-  it('post with valid data - no recall', async () => {
+  it(`post with valid data - no recall`, async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const basePath = `/recommendations/123/`
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
@@ -172,7 +210,8 @@ describe('post', () => {
       token: 'token1',
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath },
+        urlInfo: UrlInfoGenerator.generate(),
+        flags: {},
       },
     })
     const next = mockNext()
@@ -194,14 +233,17 @@ describe('post', () => {
           selected: { value: 'NO_RECALL' },
           allOptions: [
             { value: 'STANDARD', text: 'Standard recall' },
-            { value: 'NO_RECALL', text: 'No recall - send a decision not to recall letter' },
+            { value: 'NO_RECALL', text: 'No recall - create a decision not to recall letter' },
           ],
         },
       },
       featureFlags: {},
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-no-recall`)
+    // We want to ensure we are ignoring fromInfo from the url info
+    expect(nextPageLinkUrl).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith(303, `${res.locals.urlInfo.basePath}task-list-no-recall`)
+
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -232,7 +274,7 @@ describe('post', () => {
       {
         errorId: 'noRecallTypeExtendedSelected',
         href: '#recallType',
-        text: 'Select whether you recommend a recall or not',
+        text: 'Select a recall recommendation',
         name: 'recallType',
         invalidParts: undefined,
         values: undefined,

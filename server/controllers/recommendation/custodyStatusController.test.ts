@@ -2,6 +2,7 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import custodyStatusController from './custodyStatusController'
+import ErrorGenerator from '../../../data/common/errorGenerator'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -54,22 +55,11 @@ describe('get', () => {
   })
 
   it('initial load with error data', async () => {
+    const errorList = ErrorGenerator.generate()
     const res = mockRes({
       locals: {
         errors: {
-          list: [
-            {
-              name: 'custodyStatusDetailsYesPolice',
-              href: '#custodyStatusDetailsYesPolice',
-              errorId: 'missingCustodyPoliceAddressDetail',
-              html: 'Enter the custody address',
-            },
-          ],
-          custodyStatusDetailsYesPolice: {
-            text: 'Enter the custody address',
-            href: '#custodyStatusDetailsYesPolice',
-            errorId: 'missingCustodyPoliceAddressDetail',
-          },
+          list: errorList,
         },
         recommendation: {
           custodyStatus,
@@ -81,25 +71,13 @@ describe('get', () => {
     await custodyStatusController.get(mockReq(), res, mockNext())
 
     expect(res.locals.errors).toEqual({
-      custodyStatusDetailsYesPolice: {
-        errorId: 'missingCustodyPoliceAddressDetail',
-        href: '#custodyStatusDetailsYesPolice',
-        text: 'Enter the custody address',
-      },
-      list: [
-        {
-          href: '#custodyStatusDetailsYesPolice',
-          errorId: 'missingCustodyPoliceAddressDetail',
-          html: 'Enter the custody address',
-          name: 'custodyStatusDetailsYesPolice',
-        },
-      ],
+      list: errorList,
     })
   })
 })
 
 describe('post', () => {
-  it('post with valid data', async () => {
+  it(`post with valid data`, async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
     const basePath = `/recommendations/123/`
@@ -107,7 +85,6 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         custodyStatus: 'YES_POLICE',
-        custodyStatusDetailsYesPolice: 'test',
       },
     })
 
@@ -116,6 +93,7 @@ describe('post', () => {
       locals: {
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath },
+        flags: {},
       },
     })
     const next = mockNext()
@@ -128,7 +106,6 @@ describe('post', () => {
       valuesToSave: {
         custodyStatus: {
           selected: 'YES_POLICE',
-          details: 'test',
           allOptions: [
             { value: 'YES_PRISON', text: 'Yes, prison custody' },
             { value: 'YES_POLICE', text: 'Yes, police custody' },
@@ -142,40 +119,40 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/share-case-with-admin`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
+})
 
-  it('post with invalid data', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+it('post with invalid data', async () => {
+  ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '123' },
-      body: {
-        custodyStatus: 'YES_POLICE',
-        custodyStatusDetailsYesPolice: '',
-      },
-    })
-
-    const res = mockRes({
-      locals: {
-        user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/123/` },
-      },
-    })
-
-    await custodyStatusController.post(req, res, mockNext())
-
-    expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'missingCustodyPoliceAddressDetail',
-        href: '#custodyStatusDetailsYesPolice',
-        invalidParts: undefined,
-        name: 'custodyStatusDetailsYesPolice',
-        text: 'Enter the custody address',
-        values: undefined,
-      },
-    ])
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  const req = mockReq({
+    originalUrl: 'some-url',
+    params: { recommendationId: '123' },
+    body: {
+      custodyStatus: 'YES_POLIC',
+    },
   })
+
+  const res = mockRes({
+    locals: {
+      user: { token: 'token1' },
+      recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+      urlInfo: { basePath: `/recommendations/123/` },
+      flags: {},
+    },
+  })
+
+  await custodyStatusController.post(req, res, mockNext())
+
+  expect(updateRecommendation).not.toHaveBeenCalled()
+  expect(req.session.errors).toEqual([
+    {
+      errorId: 'noCustodyStatusSelected',
+      href: '#custodyStatus',
+      invalidParts: undefined,
+      name: 'custodyStatus',
+      text: 'Select whether the person is in custody or not',
+      values: undefined,
+    },
+  ])
+  expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
 })

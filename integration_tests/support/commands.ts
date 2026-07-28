@@ -14,6 +14,7 @@ import getRecommendationsResponse from '../../api/responses/get-case-recommendat
 Cypress.Commands.add('signIn', (opts = {}) => {
   cy.task('stubSignIn', opts)
   cy.task('stubAuthUser')
+  cy.task('getFlags')
   cy.mockCaseSummaryData()
   cy.request('/')
   return cy.task('getSignInUrl').then(cy.visit)
@@ -28,14 +29,6 @@ Cypress.Commands.add('mockCaseSummaryData', () => {
   cy.task('getCaseV2', { sectionId: 'licence-conditions', statusCode: 200, response: getCaseLicenceConditionsResponse })
   cy.task('getCase', { sectionId: 'recommendations', statusCode: 200, response: getRecommendationsResponse })
 })
-
-export const setResponsePropertiesToNull = recommendation => {
-  const copy = { ...recommendation }
-  Object.keys(recommendation).forEach(key => {
-    copy[key] = null
-  })
-  return copy
-}
 
 Cypress.Commands.add('mockRecommendationData', () => {
   cy.task('getRecommendation', {
@@ -81,3 +74,13 @@ Cypress.Commands.add('injectAxe', () => {
     })
   })
 })
+
+const setResponsePropertiesToNull = recommendation => {
+  const copy = { ...recommendation }
+  Object.keys(recommendation).forEach(key => {
+    copy[key] = null
+  })
+  return copy
+}
+
+export default setResponsePropertiesToNull

@@ -1,4 +1,4 @@
-import { validateIndeterminateSentenceType } from './formValidator'
+import validateIndeterminateSentenceType from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
 
 describe('validateIndeterminateSentenceType', () => {
@@ -21,7 +21,7 @@ describe('validateIndeterminateSentenceType', () => {
     expect(errors).toBeUndefined()
     expect(valuesToSave).toEqual({
       indeterminateSentenceType: {
-        allOptions: formOptions.indeterminateSentenceType,
+        allOptions: formOptions.indeterminateSentenceType.map(({ value, text }) => ({ value, text })),
         selected: 'LIFE',
       },
     })
@@ -32,13 +32,15 @@ describe('validateIndeterminateSentenceType', () => {
       indeterminateSentenceType: '',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateIndeterminateSentenceType({
+      requestBody,
+    })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         errorId: 'noIndeterminateSentenceTypeSelected',
       },
     ])
@@ -49,13 +51,13 @@ describe('validateIndeterminateSentenceType', () => {
       indeterminateSentenceType: 'VALUE',
       crn: 'X34534',
     }
-    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody, recommendationId })
+    const { errors, valuesToSave } = await validateIndeterminateSentenceType({ requestBody })
     expect(valuesToSave).toBeUndefined()
     expect(errors).toEqual([
       {
         href: '#indeterminateSentenceType',
         name: 'indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         errorId: 'noIndeterminateSentenceTypeSelected',
       },
     ])

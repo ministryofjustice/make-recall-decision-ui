@@ -1,4 +1,4 @@
-import { inputDisplayValuesVictimLiaisonOfficer } from './inputDisplayValues'
+import inputDisplayValuesVictimLiaisonOfficer from './inputDisplayValues'
 
 describe('inputDisplayValuesVictimLiaisonOfficer', () => {
   const apiValues = {

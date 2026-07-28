@@ -1,42 +1,56 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
-import { EVENTS } from '../../../utils/constants'
+import EVENTS from '../../../utils/constants'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
-import { bindPlaceholderValues } from '../../../utils/automatedFieldValues/binding'
+import bindPlaceholderValues from '../../../utils/automatedFieldValues/binding'
 import { availableRecallTypes } from './availableRecallTypes'
 
-export const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
-  const { recallType, recallTypeDetailsStandard, originalRecallType, ftrMandatory, personOnProbationName } = requestBody
+const validateRecallType = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+  const { recallType, originalRecallType, ftrMandatory, standardMandatory, personOnProbationName } = requestBody
   const ftrMandatoryResolved = ftrMandatory === 'true'
+  const standardMandatoryResolved = standardMandatory === 'true'
   const invalidRecallType =
-    !isValueValid(recallType as string, 'recallType') || (ftrMandatoryResolved && recallType === 'STANDARD')
+    !isValueValid(recallType as string, 'recallType') ||
+    (ftrMandatoryResolved && recallType === 'STANDARD') ||
+    (standardMandatoryResolved && recallType === 'FIXED_TERM')
+
   const isFixedTerm = recallType === 'FIXED_TERM'
   const isStandard = recallType === 'STANDARD'
   const isChanged = recallType !== originalRecallType
+
+  const { mandatoryFTRRationale } = strings.automatedFieldValues
+
   const recallTypeDetailsFixedTerm =
     ftrMandatoryResolved && isFixedTerm
-      ? bindPlaceholderValues(strings.automatedFieldValues.mandatoryFTRRationale, {
+      ? bindPlaceholderValues(mandatoryFTRRationale, { personOnProbationName: personOnProbationName as string })
+      : requestBody.recallTypeDetailsFixedTerm
+
+  const recallTypeDetailsStandard =
+    standardMandatoryResolved && isStandard
+      ? bindPlaceholderValues(strings.automatedFieldValues.mandatoryStandardRationale, {
           personOnProbationName: personOnProbationName as string,
         })
-      : requestBody.recallTypeDetailsFixedTerm
-  const missingDetailFixedTerm =
-    !ftrMandatoryResolved && isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
-  const missingDetailStandard = !ftrMandatoryResolved && isStandard && !recallTypeDetailsStandard
+      : requestBody.recallTypeDetailsStandard
+
+  const isDiscretionary = !ftrMandatoryResolved && !standardMandatoryResolved
+  const missingDetailFixedTerm = isDiscretionary && isFixedTerm && isEmptyStringOrWhitespace(recallTypeDetailsFixedTerm)
+  const missingDetailStandard = isDiscretionary && isStandard && isEmptyStringOrWhitespace(recallTypeDetailsStandard)
+
   const isFromTaskList = urlInfo.fromPageId === 'task-list'
   const hasError = !recallType || invalidRecallType || missingDetailFixedTerm || missingDetailStandard
   if (hasError) {
     const errors = []
     let errorId
     if (!recallType || invalidRecallType) {
-      errorId = ftrMandatoryResolved ? 'noRecallTypeSelectedMandatory' : 'noRecallTypeSelectedDiscretionary'
+      errorId = 'noRecallTypeSelected'
       errors.push(
         makeErrorObject({
           id: 'recallType',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingDetailFixedTerm || missingDetailStandard) {
@@ -46,7 +60,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
           id: missingDetailFixedTerm ? 'recallTypeDetailsFixedTerm' : 'recallTypeDetailsStandard',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     const unsavedValues = {
@@ -71,7 +85,7 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
         value: recallType,
         details: isString(recallTypeDetails) ? stripHtmlTags(recallTypeDetails as string) : undefined,
       },
-      allOptions: availableRecallTypes(ftrMandatory === 'true'),
+      allOptions: availableRecallTypes(ftrMandatoryResolved, standardMandatoryResolved),
     },
     isThisAnEmergencyRecall: false,
   }
@@ -99,3 +113,5 @@ export const validateRecallType = async ({ requestBody, urlInfo }: FormValidator
     },
   }
 }
+
+export default validateRecallType

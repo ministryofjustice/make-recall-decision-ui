@@ -1,9 +1,9 @@
 import { Response } from 'express'
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { createRecommendationController } from './createRecommendation'
+import createRecommendationController from './createRecommendation'
 import { createRecommendation, getActiveRecommendation, getStatuses } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { getCaseSection } from '../caseSummary/getCaseSection'
+import getCaseSection from '../caseSummary/getCaseSection'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import activeRecommendation from '../../../api/responses/get-active-recommendation.json'
 
@@ -82,7 +82,7 @@ describe('createRecommendationController', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      featureFlags
+      featureFlags,
     )
   })
 

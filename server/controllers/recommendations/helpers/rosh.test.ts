@@ -15,7 +15,7 @@ describe('rosh', () => {
         riskToStaff: 'MEDIUM',
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'MEDIUM',
-      })
+      }),
     ).toEqual('High')
 
     expect(
@@ -25,7 +25,7 @@ describe('rosh', () => {
         riskToStaff: 'VERY_HIGH',
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'MEDIUM',
-      })
+      }),
     ).toEqual('Very High')
 
     expect(
@@ -35,7 +35,7 @@ describe('rosh', () => {
         riskToStaff: 'LOW',
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'LOW',
-      })
+      }),
     ).toEqual('Medium')
 
     expect(
@@ -45,7 +45,7 @@ describe('rosh', () => {
         riskToStaff: 'LOW',
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'LOW',
-      })
+      }),
     ).toEqual('Low')
 
     expect(
@@ -55,7 +55,7 @@ describe('rosh', () => {
         riskToStaff: 'NOT_APPLICABLE',
         riskToKnownAdult: 'NOT_APPLICABLE',
         riskToChildren: 'NOT_APPLICABLE',
-      })
+      }),
     ).toEqual('Not Applicable')
   })
 })

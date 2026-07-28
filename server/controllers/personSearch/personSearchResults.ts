@@ -1,15 +1,15 @@
 import { Request, Response } from 'express'
 import { searchPersons } from '../../data/makeDecisionApiClient'
-import { validatePersonSearch } from './validators/validatePersonSearch'
-import { routeUrls } from '../../routes/routeUrls'
-import { AuditService } from '../../services/auditService'
+import validatePersonSearch from './validators/validatePersonSearch'
+import AuditService from '../../services/auditService'
 import { isPreprodOrProd } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 const auditService = new AuditService()
 
-export const personSearchResults = async (req: Request, res: Response) => {
+const personSearchResults = async (req: Request, res: Response) => {
   const { crn, page } = {
     crn: req.query.crn as string,
     page: req.query.page as string,
@@ -20,16 +20,19 @@ export const personSearchResults = async (req: Request, res: Response) => {
   if (errors) {
     req.session.errors = errors
     req.session.unsavedValues = unsavedValues
-    return res.redirect(303, routeUrls.searchByCRN)
+    return res.redirect(303, sharedPaths.searchByCRN)
   }
   res.locals.crn = searchValue
   res.locals.hasPpcsRole = user.hasPpcsRole
   res.locals.page = await searchPersons(user.token, Number(page), 20, searchValue, undefined, undefined)
-  res.render('pages/paginatedPersonSearchResults')
   appInsightsEvent(EVENTS.PERSON_SEARCH_RESULTS, user.username, { crn: searchValue, region: user.region }, flags)
   await auditService.personSearch({
     searchTerm: { crn: searchValue },
     username: res.locals.user.username,
     logErrors: isPreprodOrProd(res.locals.env),
   })
+
+  return res.render('pages/paginatedPersonSearchResults')
 }
+
+export default personSearchResults

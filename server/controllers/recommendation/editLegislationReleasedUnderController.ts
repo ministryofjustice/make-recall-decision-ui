@@ -3,8 +3,8 @@ import { getRecommendation, ppudReferenceList, updateRecommendation } from '../.
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { CUSTODY_GROUP } from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import strings from '../../textStrings/en'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -41,7 +41,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   res.render(`pages/recommendations/editLegislationReleasedUnder`)
-  next()
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
@@ -83,7 +83,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'check-booking-details', urlInfo })
-  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

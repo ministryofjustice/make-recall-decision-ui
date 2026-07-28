@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express'
-import { parseRecommendationUrl } from './parseRecommendationUrl'
+import parseRecommendationUrl from './parseRecommendationUrl'
 import { mockReq, mockRes } from './testutils/mockRequestUtils'
 
 describe('parseRecommendationUrl', () => {

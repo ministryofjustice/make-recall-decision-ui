@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress'
+import cypressSplit from 'cypress-split'
 import {
   createNoRecallLetter,
   createPartA,
@@ -26,8 +27,9 @@ import {
   updateRecommendation,
   updateStatuses,
 } from './mockApis/makeRecallDecisionApi'
+import getFlags from './mockApis/flipt'
 import { readBase64File, readPdf } from './plugins/readFiles'
-import { readDocX } from '../cypress_shared/plugins'
+import readDocX from '../cypress_shared/plugins'
 import { resetStubs } from './mockApis/wiremock'
 import auth from './mockApis/auth'
 import tokenVerification from './mockApis/tokenVerification'
@@ -46,7 +48,8 @@ export default defineConfig({
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
-    setupNodeEvents(on) {
+    setupNodeEvents(on, config) {
+      cypressSplit(on, config)
       on('task', {
         reset: resetStubs,
         getSignInUrl: auth.getSignInUrl,
@@ -82,7 +85,9 @@ export default defineConfig({
         downloadSupportingDocument,
         searchMappedUsers,
         ppudSearchActiveUsers,
+        getFlags,
       })
+      return config
     },
     baseUrl: 'http://localhost:3007',
     excludeSpecPattern: '**/!(*.spec).ts',

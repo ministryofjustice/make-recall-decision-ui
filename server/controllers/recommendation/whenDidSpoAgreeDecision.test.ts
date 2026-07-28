@@ -1,4 +1,4 @@
-import { fakerEN_GB as faker } from '@faker-js/faker/.'
+import { faker } from '@faker-js/faker/locale/en_GB'
 import whenDidSpoAgreeDecisionController from './whenDidSpoAgreeDecision'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
@@ -186,7 +186,7 @@ describe('post', () => {
       originalUrl: 'some-url',
       params: { recommendationId: '1' },
       body: {
-        'dateTime-day': (futureDate.getDay() + 1).toString(),
+        'dateTime-day': futureDate.getDate().toString(),
         'dateTime-month': (futureDate.getMonth() + 1).toString(),
         'dateTime-year': futureDate.getFullYear().toString(),
         'dateTime-hour': futureDate.getHours().toString(),
@@ -213,7 +213,7 @@ describe('post', () => {
         name: 'dateTime',
         invalidParts: ['day', 'month', 'year'],
         values: {
-          day: (futureDate.getDay() + 1).toString(),
+          day: futureDate.getDate().toString(),
           hour: futureDate.getHours().toString(),
           minute: futureDate.getMinutes().toString(),
           month: (futureDate.getMonth() + 1).toString(),

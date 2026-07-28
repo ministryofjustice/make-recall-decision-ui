@@ -1,62 +1,101 @@
 import getPersonSearchResponse from '../../api/responses/get-person-search.json'
 import searchActiveUsersResponse from '../../api/responses/ppudSearchActiveUsers.json'
 import searchMappedUserResponse from '../../api/responses/searchMappedUsers.json'
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import completeRecommendationResponse from '../../api/responses/get-recommendation.json'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import { standardActiveConvictionTemplate } from '../fixtures/ActiveConvictionTemplateBuilder'
 import { deliusLicenceConditionDoNotPossess } from '../fixtures/DeliusLicenceConditionTemplateBuilder'
-import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import ppcsPaths from '../../server/routes/paths/ppcs.paths'
+import { RecommendationResponse } from '../../server/@types/make-recall-decision-api'
+import { BookRecallToPpud } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
+import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 
 const noRecallResponse = {
   ...completeRecommendationResponse,
   recallType: { selected: { value: 'NO_RECALL' } },
 }
 
-const urls = [
+const urls: {
+  url: string
+  fullRecommendationData?: boolean
+  validationError?: boolean
+  noRecallData?: boolean
+  statuses?: {
+    name: string
+    active: boolean
+  }[]
+  bookRecallToPpud?: Partial<BookRecallToPpud>
+  customRecommendation?: RecommendationResponse
+}[] = [
   { url: '/' },
   { url: '/search-by-crn' },
   { url: '/search-by-name' },
   { url: '/search-results-by-crn?crn=123' },
   { url: '/search-results-by-crn?crn=123&page=0' },
   { url: '/search-results-by-name?crn=123&page=0' },
-  { url: `${routeUrls.cases}/123/overview` },
-  { url: `${routeUrls.cases}/123/risk` },
-  { url: `${routeUrls.cases}/123/vulnerabilities` },
-  { url: `${routeUrls.cases}/123/personal-details` },
-  { url: `${routeUrls.cases}/123/licence-conditions` },
-  { url: `${routeUrls.cases}/123/contact-history` },
-  { url: `${routeUrls.cases}/123/recommendations` },
+  { url: `${sharedPaths.cases}/123/overview` },
+  { url: `${sharedPaths.cases}/123/risk` },
+  { url: `${sharedPaths.cases}/123/vulnerabilities` },
+  { url: `${sharedPaths.cases}/123/personal-details` },
+  { url: `${sharedPaths.cases}/123/licence-conditions` },
+  { url: `${sharedPaths.cases}/123/contact-history` },
+  { url: `${sharedPaths.cases}/123/recommendations` },
   // contact filter with valid dates
   {
-    url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
+    url: `${sharedPaths.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=4&dateFrom-year=22&dateTo-day=14&dateTo-month=4&dateTo-year=22`,
   },
   // contact filter with invalid dates and errors
   {
-    url: `${routeUrls.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
+    url: `${sharedPaths.cases}/123/contact-history?dateFrom-day=13&dateFrom-month=24&dateFrom-year=22&dateTo-day=14&dateTo-month=20&dateTo-year=22`,
   },
   // recommendation flow
   recommendationEndpoint('already-existing', [], true),
   recommendationEndpoint('task-list-consider-recall'),
   recommendationEndpoint('trigger-leading-to-recall'),
-  recommendationEndpoint('response-to-probation'),
   recommendationEndpoint('licence-conditions'),
   recommendationEndpoint('alternatives-tried'),
   recommendationEndpoint('indeterminate-type'),
-  recommendationEndpoint('is-indeterminate'),
-  recommendationEndpoint('is-extended'),
   recommendationEndpoint('share-case-with-manager'),
   recommendationEndpoint('share-case-with-admin'),
   recommendationEndpoint('discuss-with-manager'),
-  recommendationEndpoint('recall-type'),
+  recommendationEndpoint(
+    'recall-type',
+    [],
+    false,
+    {},
+    {
+      ...(completeRecommendationResponse as RecommendationResponse),
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+    },
+  ),
   recommendationEndpoint('spo-agree-to-recall'),
   recommendationEndpoint('emergency-recall'),
   recommendationEndpoint('suitability-for-fixed-term-recall'),
   recommendationEndpoint('sensitive-info'),
   recommendationEndpoint('custody-status'),
   recommendationEndpoint('what-led'),
-  recommendationEndpoint('recall-type-indeterminate'),
-  recommendationEndpoint('recall-type-extended'),
+  recommendationEndpoint(
+    'recall-type-indeterminate',
+    [],
+    false,
+    {},
+    {
+      ...(completeRecommendationResponse as RecommendationResponse),
+      sentenceGroup: SentenceGroup.INDETERMINATE,
+    },
+  ),
+  recommendationEndpoint(
+    'recall-type-extended',
+    [],
+    false,
+    {},
+    {
+      ...(completeRecommendationResponse as RecommendationResponse),
+      sentenceGroup: SentenceGroup.EXTENDED,
+    },
+  ),
   recommendationEndpoint('fixed-licence'),
   recommendationEndpoint('indeterminate-details'),
   recommendationEndpoint('vulnerabilities'),
@@ -66,7 +105,6 @@ const urls = [
   recommendationEndpoint('appointment-no-recall'),
   recommendationEndpoint('contraband'),
   recommendationEndpoint('address-details'),
-  recommendationEndpoint('iom'),
   recommendationEndpoint('police-details'),
   recommendationEndpoint('victim-contact-scheme'),
   recommendationEndpoint('victim-liaison-officer'),
@@ -80,8 +118,6 @@ const urls = [
   recommendationEndpoint('ppcs-query-emails'),
   recommendationEndpoint('arrest-issues'),
   recommendationEndpoint('add-previous-release'),
-  recommendationEndpoint('add-previous-recall'),
-  recommendationEndpoint('previous-recalls'),
   recommendationEndpoint('previous-releases'),
   recommendationEndpoint('offence-analysis'),
   recommendationEndpoint('rosh'),
@@ -91,9 +127,17 @@ const urls = [
   recommendationEndpoint('confirmation-part-a'),
   recommendationEndpoint('preview-part-a'),
   recommendationEndpoint('task-list'),
-  { url: `${routeUrls.recommendations}/456/recall-type`, validationError: true, fullRecommendationData: true },
-  { url: `${routeUrls.recommendations}/456/alternatives-tried`, validationError: true },
-  { url: `${routeUrls.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
+  {
+    url: `${sharedPaths.recommendations}/456/recall-type`,
+    validationError: true,
+    fullRecommendationData: false,
+    customRecommendation: {
+      ...(completeRecommendationResponse as RecommendationResponse),
+      sentenceGroup: SentenceGroup.ADULT_SDS,
+    },
+  },
+  { url: `${sharedPaths.recommendations}/456/alternatives-tried`, validationError: true },
+  { url: `${sharedPaths.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
 ]
 
 const spoUrls = [
@@ -115,7 +159,13 @@ const spoUrls = [
 ]
 
 const ppcsUrls = [
-  { url: '/ppcs-search', validationError: false, fullRecommendationData: false, statuses: [], bookRecallToPpud: {} },
+  {
+    url: `/${ppcsPaths.search}`,
+    validationError: false,
+    fullRecommendationData: false,
+    statuses: [],
+    bookRecallToPpud: {},
+  },
   {
     url: '/ppcs-search-results?crn=X098092',
     validationError: false,
@@ -140,25 +190,28 @@ const ppcsUrls = [
   recommendationEndpoint('edit-recall-received-date-and-time', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-probation-area', ['SENT_TO_PPCS']),
   recommendationEndpoint('edit-mappa-level', ['SENT_TO_PPCS']),
-  recommendationEndpoint('select-index-offence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectIndexOffence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('match-index-offence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectPpudSentence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('select-ppud-sentence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.areOffenceChangesNeeded, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('custody-type', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.matchIndexOffence, ['SENT_TO_PPCS'], false, {
+    custodyGroup: CUSTODY_GROUP.DETERMINATE,
+  }),
+  recommendationEndpoint(ppcsPaths.editCustodyType, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
   recommendationEndpoint('sentence-to-commit', ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('sentence-to-commit-existing-offender', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.sentenceToCommitExistingOffender, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint('select-indeterminate-ppud-sentence', ['SENT_TO_PPCS'], false, {
+  recommendationEndpoint(ppcsPaths.selectIndeterminatePpudSentence, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.INDETERMINATE,
   }),
   recommendationEndpoint('supporting-documents', ['SENT_TO_PPCS']),
@@ -184,17 +237,19 @@ const apUrls = [
 
 function recommendationEndpoint(
   resource: string,
-  statuses = [],
+  statuses: string[] = [],
   fullRecommendationData: boolean = false,
-  bookRecallToPpud = {}
+  bookRecallToPpud = {},
+  customRecommendation?: RecommendationResponse,
 ) {
   return {
-    url: `${routeUrls.recommendations}/456/${resource}`,
+    url: `${sharedPaths.recommendations}/456/${resource}`,
     fullRecommendationData,
     validationError: false,
     noRecallData: false,
     statuses: statuses.map(name => ({ name, active: true })),
     bookRecallToPpud,
+    customRecommendation,
   }
 }
 
@@ -218,6 +273,13 @@ const TEMPLATE = {
   paging: { page: 0, pageSize: 10, totalNumberOfPages: 1 },
 }
 
+// Ignore the Probation Components API fallback header as it shouldn't
+// ever be presented to the end user
+const A11Y_ELEMENTS_TO_CHECK = {
+  include: [['body']],
+  exclude: [['.probation-common-fallback-header']],
+}
+
 context('Accessibility (a11y) Checks', () => {
   beforeEach(() => {
     cy.signIn()
@@ -232,10 +294,10 @@ context('Accessibility (a11y) Checks', () => {
         .withActiveConviction(
           standardActiveConvictionTemplate()
             .withDescription('Robbery - 05714')
-            .withLicenceCondition(deliusLicenceConditionDoNotPossess())
+            .withLicenceCondition(deliusLicenceConditionDoNotPossess()),
         )
         .withAllConvictionsReleasedOnLicence()
-        .build()
+        .build(),
     )
     cy.task('updateStatuses', { statusCode: 200, response: [] })
     cy.mockCaseSummaryData()
@@ -246,6 +308,8 @@ context('Accessibility (a11y) Checks', () => {
     it(`${item.url}${item.validationError ? ' - error' : ''}`, () => {
       if (item.fullRecommendationData) {
         cy.task('getRecommendation', { statusCode: 200, response: completeRecommendationResponse })
+      } else if (item.customRecommendation) {
+        cy.task('getRecommendation', { statusCode: 200, response: item.customRecommendation })
       }
       if (item.noRecallData) {
         cy.task('getRecommendation', { statusCode: 200, response: noRecallResponse })
@@ -257,7 +321,7 @@ context('Accessibility (a11y) Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -295,7 +359,7 @@ context('Accessibility (a11y) SPO Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -334,7 +398,7 @@ context('Accessibility (a11y) AP Checks', () => {
         cy.clickButton('Continue')
       }
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },
@@ -524,7 +588,7 @@ context('Accessibility (a11y) PPCS Checks', () => {
 
       cy.visit(item.url)
       cy.injectAxe()
-      cy.checkA11y('body', {
+      cy.checkA11y(A11Y_ELEMENTS_TO_CHECK, {
         rules: {
           'aria-allowed-attr': { enabled: false },
         },

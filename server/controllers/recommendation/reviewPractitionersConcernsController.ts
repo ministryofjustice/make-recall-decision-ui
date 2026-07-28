@@ -5,6 +5,8 @@ import { RecommendationDecorated } from '../../@types/api'
 import { AdditionalLicenceConditionOption } from '../../@types/make-recall-decision-api'
 import logger from '../../../logger'
 import { isDefined } from '../../utils/utils'
+import { SentenceGroup, sentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import indeterminateSentenceType from '../recommendations/indeterminateSentenceType/formOptions'
 
 function extractStandardLicenceConditions(recommendation: RecommendationDecorated): Array<string> {
   if (recommendation.licenceConditionsBreached && recommendation.licenceConditionsBreached.standardLicenceConditions) {
@@ -47,7 +49,7 @@ function extractAdditionalLicenceConditions(recommendation: RecommendationDecora
   ) {
     const { selectedOptions, allOptions } = recommendation.licenceConditionsBreached.additionalLicenceConditions
     return selectedOptions
-      .map((s: { mainCatCode: string; subCatCode: string }) => {
+      ?.map((s: { mainCatCode: string; subCatCode: string }) => {
         const option = allOptions.find(o => o.mainCatCode === s.mainCatCode && o.subCatCode === s.subCatCode)
         if (option) {
           return {
@@ -138,21 +140,30 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const additionalLicenceConditions = extractAdditionalLicenceConditions(recommendation)
   const bespokeLicenceConditions = extractBespokeLicenceConditions(recommendation)
 
+  const isIndeterminateSentence = recommendation.sentenceGroup === SentenceGroup.INDETERMINATE ? 'Yes' : 'No'
+  const isExtendedSentence = recommendation.sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No'
+
   res.locals = {
     ...res.locals,
     page: {
       id: 'reviewPractitionersConcerns',
     },
+    sentenceGroupHumanReadable: sentenceGroup.find(group => group.value === recommendation.sentenceGroup)?.text,
     offenderName: recommendation.personOnProbation.name,
     triggerLeadingToRecall: recommendation.triggerLeadingToRecall,
-    responseToProbation: recommendation.responseToProbation,
     standardLicenceConditions,
     additionalLicenceConditions,
     bespokeLicenceConditions,
     alternativesToRecallTried,
     additionalLicenceConditionsText: recommendation.additionalLicenceConditionsText,
-    isIndeterminateSentence: recommendation.isIndeterminateSentence ? 'Yes' : 'No',
-    isExtendedSentence: recommendation.isExtendedSentence ? 'Yes' : 'No',
+    isIndeterminateSentence,
+    isExtendedSentence,
+    indeterminateSentenceHumanReadable:
+      isIndeterminateSentence === 'Yes'
+        ? indeterminateSentenceType.find(
+            sentenceType => sentenceType.value === recommendation.indeterminateSentenceType?.selected,
+          )?.text
+        : undefined,
   }
 
   res.render(`pages/recommendations/reviewPractitionersConcerns`)

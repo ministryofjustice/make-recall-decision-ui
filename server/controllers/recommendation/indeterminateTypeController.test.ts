@@ -1,8 +1,11 @@
+import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import indeterminateTypeController from './indeterminateTypeController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import ppPaths from '../../routes/paths/pp.paths'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -10,7 +13,7 @@ describe('get', () => {
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: SentenceGroup.INDETERMINATE },
         token: 'token1',
       },
     })
@@ -31,15 +34,21 @@ describe('get', () => {
       locals: {
         recommendation: {
           personOnProbation: { name: 'Joe Bloggs' },
+          sentenceGroup: 'INDETERMINATE',
           indeterminateSentenceType: {
-            selected: 'IPP',
+            selected: 'DHMP',
             allOptions: [
               { value: 'LIFE', text: 'Life sentence' },
               {
                 value: 'IPP',
-                text: 'Imprisonment for Public Protection (IPP) sentence',
+                text: 'Imprisonment for public protection (IPP)',
               },
-              { value: 'DPP', text: 'Detention for Public Protection (DPP) sentence' },
+              { value: 'DPP', text: 'Detention for public protection (DPP)' },
+              {
+                value: 'DHMP',
+                text: 'Detention at His Majesty’s pleasure (DHMP)',
+                hint: 'Youth indeterminate sentence',
+              },
             ],
           },
         },
@@ -49,7 +58,41 @@ describe('get', () => {
     const next = mockNext()
     await indeterminateTypeController.get(mockReq(), res, next)
 
-    expect(res.locals.inputDisplayValues).toEqual({ value: 'IPP' })
+    expect(res.locals.inputDisplayValues).toEqual({ value: 'DHMP' })
+  })
+
+  it('redirects to Sentence Information page if sentenceGroup does not exists', async () => {
+    const basePath = faker.internet.url()
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        token: 'token1',
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+    await indeterminateTypeController.get(mockReq(), res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppPaths.sentenceInformation}`)
+    expect(res.render).not.toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
+  })
+
+  it('redirects to Sentence Information page if sentenceGroup is not INDETERMINATE', async () => {
+    const basePath = faker.internet.url()
+    const res = mockRes({
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: 'DETERMINATE' },
+        token: 'token1',
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+    await indeterminateTypeController.get(mockReq(), res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppPaths.sentenceInformation}`)
+    expect(res.render).not.toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
   })
 
   it('initial load with error data', async () => {
@@ -61,11 +104,11 @@ describe('get', () => {
               name: 'indeterminateSentenceType',
               href: '#indeterminateSentenceType',
               errorId: 'noIndeterminateSentenceTypeSelected',
-              text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
+              text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
             },
           ],
           indeterminateSentenceType: {
-            text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
+            text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
             href: '#indeterminateSentenceType',
             errorId: 'noIndeterminateSentenceTypeSelected',
           },
@@ -84,13 +127,13 @@ describe('get', () => {
       indeterminateSentenceType: {
         errorId: 'noIndeterminateSentenceTypeSelected',
         href: '#indeterminateSentenceType',
-        text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
       },
       list: [
         {
           href: '#indeterminateSentenceType',
           errorId: 'noIndeterminateSentenceTypeSelected',
-          text: 'Select whether Joe Bloggs is on a life, IPP or DPP sentence',
+          text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
           name: 'indeterminateSentenceType',
         },
       ],
@@ -114,7 +157,25 @@ describe('post', () => {
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+        recommendation: {
+          personOnProbation: { name: 'Joe Bloggs' },
+          indeterminateSentenceType: {
+            selected: 'IPP',
+            allOptions: [
+              { value: 'LIFE', text: 'Life sentence' },
+              {
+                value: 'IPP',
+                text: 'Imprisonment for public protection (IPP)',
+              },
+              { value: 'DPP', text: 'Detention for public protection (DPP)' },
+              {
+                value: 'DHMP',
+                text: 'Detention at His Majesty’s pleasure (DHMP)',
+                hint: 'Youth indeterminate sentence',
+              },
+            ],
+          },
+        },
         urlInfo: { basePath },
         statuses: [],
       },
@@ -132,9 +193,10 @@ describe('post', () => {
             { value: 'LIFE', text: 'Life sentence' },
             {
               value: 'IPP',
-              text: 'Imprisonment for Public Protection (IPP) sentence',
+              text: 'Imprisonment for public protection (IPP)',
             },
-            { value: 'DPP', text: 'Detention for Public Protection (DPP) sentence' },
+            { value: 'DPP', text: 'Detention for public protection (DPP)' },
+            { value: 'DHMP', text: 'Detention at His Majesty’s pleasure (DHMP)' },
           ],
         },
       },
@@ -173,7 +235,7 @@ describe('post', () => {
       {
         errorId: 'noIndeterminateSentenceTypeSelected',
         href: '#indeterminateSentenceType',
-        text: 'Select whether {{ fullName }} is on a life, IPP or DPP sentence',
+        text: 'Select whether {{ fullName }} is on a life, IPP, DPP or DHMP sentence',
         name: 'indeterminateSentenceType',
         invalidParts: undefined,
         values: undefined,

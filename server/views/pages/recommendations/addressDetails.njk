@@ -31,7 +31,7 @@
                 <div class='govuk-!-margin-bottom-6'>
                     {% if recommendation.personOnProbation.addresses.length %}
 
-                        <p class="govuk=body">{% if recommendation.personOnProbation.addresses.length === 1 %}This is the last known address{% else %}These are the last known addresses{% endif %}
+                        <p class="govuk-body">{% if recommendation.personOnProbation.addresses.length === 1 %}This is the last known address{% else %}These are the last known addresses{% endif %}
                             for {{ recommendation.personOnProbation.name }} in NDelius. If {% if recommendation.personOnProbation.addresses.length === 1 %}it is{% else %}they are{% endif %} incorrect, update
                             NDelius.</p>
                         {% for address in recommendation.personOnProbation.addresses %}

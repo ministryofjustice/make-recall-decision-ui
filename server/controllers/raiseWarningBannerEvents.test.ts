@@ -18,7 +18,7 @@ describe('raiseWarningBannerEvents', () => {
         region: { code: 'N07', name: 'London' },
       },
       'AB1234C',
-      { flag: true }
+      { flag: true },
     )
     expect(appInsightsEvent).toHaveBeenCalledWith(
       'mrdTwoActiveConvictions',
@@ -27,7 +27,7 @@ describe('raiseWarningBannerEvents', () => {
         crn: 'AB1234C',
         region: { code: 'N07', name: 'London' },
       },
-      { flag: true }
+      { flag: true },
     )
   })
 
@@ -40,7 +40,7 @@ describe('raiseWarningBannerEvents', () => {
         region: { code: 'N07', name: 'London' },
       },
       'AB1234C',
-      { flag: true }
+      { flag: true },
     )
     expect(appInsightsEvent).toHaveBeenCalledWith(
       'mrdNotOnLicenceActive',
@@ -49,7 +49,7 @@ describe('raiseWarningBannerEvents', () => {
         crn: 'AB1234C',
         region: { code: 'N07', name: 'London' },
       },
-      { flag: true }
+      { flag: true },
     )
   })
 
@@ -62,7 +62,7 @@ describe('raiseWarningBannerEvents', () => {
         region: { code: 'N07', name: 'London' },
       },
       'AB1234C',
-      { flag: true }
+      { flag: true },
     )
     expect(appInsightsEvent).toHaveBeenCalledWith(
       'mrdNotOnLicenceNdelius',
@@ -71,7 +71,7 @@ describe('raiseWarningBannerEvents', () => {
         crn: 'AB1234C',
         region: { code: 'N07', name: 'London' },
       },
-      { flag: true }
+      { flag: true },
     )
   })
 })

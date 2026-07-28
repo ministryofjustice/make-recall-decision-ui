@@ -1,0 +1,37 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      {% include '../../partials/error-summary.njk' %}
+
+      <form novalidate method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukRadios({
+            name: "isRecalledOnNewChargedOrConvictedOffence",
+            fieldset: {
+              legend: {
+                text: pageHeadings[page.id],
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: radioCheckboxItems({
+              items: chargedWithOffenceOptions,
+              currentValues: recommendation.isRecalledOnNewChargedOrConvictedOffence.selected
+            }),
+            errorMessage: errorMessage(errors.isRecalledOnNewChargedOrConvictedOffence)
+          })
+        }}
+
+        {{ formSubmitButton({ label: 'Continue' })}}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { BookRecallToPpud } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
 import { AnyNoneOrOption, DataGenerator, IncludeNoneOrOption } from '../@generators/dataGenerators'
-import { CUSTODY_GROUP } from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { resolveAnyNoneOrOption, resolveIncludeNoneOrOption } from '../@generators/dataGenerator.utils'
 import { PpudSentenceDataGenerator, PpudSentenceDataOptions } from './ppudSentenceDataGenerator'
 import { EthnicityGenerator, EthnicityKey } from '../common/ethnicityGenerator'
@@ -19,6 +19,7 @@ export type BookRecallToPpudOptions = {
   custodyGroup?: AnyNoneOrOption<CUSTODY_GROUP>
   custodyTypeBasedOnGroup?: CUSTODY_GROUP
   custodyType?: AnyNoneOrOption<CustodyType>
+  changeOffenceOrAddComment?: AnyNoneOrOption<boolean>
   indexOffence?: IncludeNoneOrOption<string>
   indexOffenceComment?: IncludeNoneOrOption<string>
   ppudSentenceId?: string
@@ -30,7 +31,7 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
   generate: options => {
     if (options?.custodyTypeBasedOnGroup && options?.custodyType) {
       throw new Error(
-        'Both explicit Custody Type and type based on Custody Group provided. Only one or the other may be provided.'
+        'Both explicit Custody Type and type based on Custody Group provided. Only one or the other may be provided.',
       )
     }
     let resolvedCustodyType: CustodyType
@@ -63,11 +64,12 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
       ethnicity: EthnicityGenerator.generate(options?.ethnicity),
       custodyGroup: resolveAnyNoneOrOption(options?.custodyGroup ?? 'any', Object.values(CUSTODY_GROUP)),
       custodyType: resolvedCustodyType,
+      changeOffenceOrAddComment: resolveAnyNoneOrOption(options?.changeOffenceOrAddComment ?? 'any', [true, false]),
       indexOffence: resolveIncludeNoneOrOption(options?.indexOffence, faker.lorem.words),
       indexOffenceComment: resolveIncludeNoneOrOption(options?.indexOffenceComment, faker.lorem.sentence),
       ppudSentenceId: options?.ppudSentenceId,
       ppudIndeterminateSentenceData: PpudSentenceDataGenerator.generate(
-        options?.ppudIndeterminateSentenceData ?? 'any'
+        options?.ppudIndeterminateSentenceData ?? 'any',
       ),
       sentenceDate: resolveIncludeNoneOrOption(options?.sentenceDate, faker.date.anytime)?.toISOString(),
       legislationReleasedUnder,

@@ -1,7 +1,7 @@
 import { isDefined } from '../../../utils/utils'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesAddPreviousRelease = ({ errors = {} }: InputDisplayValuesArgs) => {
+const inputDisplayValuesAddPreviousRelease = ({ errors = {} }: InputDisplayValuesArgs) => {
   if (isDefined(errors.previousReleaseDate)) {
     return {
       value: errors.previousReleaseDate.values,
@@ -9,3 +9,5 @@ export const inputDisplayValuesAddPreviousRelease = ({ errors = {} }: InputDispl
   }
   return { value: undefined }
 }
+
+export default inputDisplayValuesAddPreviousRelease

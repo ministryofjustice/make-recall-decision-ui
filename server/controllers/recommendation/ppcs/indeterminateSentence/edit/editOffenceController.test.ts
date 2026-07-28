@@ -1,4 +1,4 @@
-import { fakerEN_GB as faker } from '@faker-js/faker/'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { mockNext, mockReq, mockRes } from '../../../../../middleware/testutils/mockRequestUtils'
 import { ppudReferenceList, updateRecommendation } from '../../../../../data/makeDecisionApiClient'
 import { RecommendationResponseGenerator } from '../../../../../../data/recommendations/recommendationGenerator'

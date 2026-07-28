@@ -1,4 +1,4 @@
-export const whyConsideredRecall = [
+const whyConsideredRecall = [
   {
     value: 'RISK_INCREASED',
     text: 'Your risk is assessed as increased',
@@ -12,3 +12,5 @@ export const whyConsideredRecall = [
     text: 'Your risk is assessed as increased and contact with your probation practitioner has broken down',
   },
 ]
+
+export default whyConsideredRecall

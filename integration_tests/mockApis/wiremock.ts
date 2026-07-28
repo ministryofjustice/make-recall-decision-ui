@@ -1,6 +1,7 @@
 import superagent, { SuperAgentRequest, Response } from 'superagent'
 
-const url = 'http://localhost:9999/__admin'
+// port 9091 is aligned with what is defined in the HMPPS node_integration_tests.yml workflow
+const url = 'http://localhost:9091/__admin'
 
 const stubFor = (mapping: Record<string, unknown>): SuperAgentRequest =>
   superagent.post(`${url}/mappings`).send(mapping)

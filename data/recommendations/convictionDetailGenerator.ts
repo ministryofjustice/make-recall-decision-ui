@@ -21,11 +21,11 @@ export const ConvictionDetailGenerator: DataGenerator<ConvictionDetail, Convicti
     sentenceDescription: faker.lorem.sentence(),
     custodialTerm: resolveIncludeNoneOrOption(
       options?.custodialTerm ?? 'none',
-      () => `${faker.number.int({ min: 1, max: 12 })} months`
+      () => `${faker.number.int({ min: 1, max: 12 })} months`,
     ),
     extendedTerm: resolveIncludeNoneOrOption(
       options?.extendedTerm ?? 'none',
-      () => `${faker.number.int({ min: 1, max: 12 })} years`
+      () => `${faker.number.int({ min: 1, max: 12 })} years`,
     ),
     hasBeenReviewed: options?.hasBeenReviewed ?? faker.datatype.boolean(),
   }),

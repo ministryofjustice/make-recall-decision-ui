@@ -1,8 +1,14 @@
+import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import alternativesToRecallTriedController from './alternativesToRecallTriedController'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
+import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
+import ppPaths from '../../routes/paths/pp.paths'
+import validateAlternativesTried from '../recommendations/alternativesToRecallTried/formValidator'
+import ErrorGenerator from '../../../data/common/errorGenerator'
 
+jest.mock('../recommendations/alternativesToRecallTried/formValidator')
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
@@ -30,13 +36,27 @@ describe('get', () => {
     ],
   }
 
-  it('test back button', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-      },
+  describe('test back button', () => {
+    ;[true, false].forEach(hasFromPageId => {
+      it(`with ${hasFromPageId ? '' : 'no '}fromPageId value in the URL info object`, async () => {
+        const urlInfo = UrlInfoGenerator.generate({
+          fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
+        })
+        const res = mockRes({
+          locals: {
+            recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
+            urlInfo,
+          },
+        })
+        await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
+
+        if (!hasFromPageId) {
+          expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
+        } else {
+          expect(res.locals.backLinkUrl).toBeUndefined()
+        }
+      })
     })
-    await alternativesToRecallTriedController.get(mockReq(), res, mockNext())
   })
 
   it('load with existing data', async () => {
@@ -103,11 +123,23 @@ describe('get', () => {
 })
 
 describe('post', () => {
-  it('post with valid data', async () => {
+  it(`post with valid data`, async () => {
+    const validationResults = {
+      valuesToSave: {
+        alternativesToRecallTried: {
+          selected: faker.lorem.word(),
+          allOptions: faker.helpers.multiple(() => {
+            return { value: faker.lorem.word(), text: faker.lorem.sentence() }
+          }),
+        },
+      },
+    }
+    ;(validateAlternativesTried as jest.Mock).mockResolvedValue(validationResults)
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
+    const recommendationId = faker.number.int().toString()
     const req = mockReq({
-      params: { recommendationId: '123' },
+      params: { recommendationId },
       body: {
         alternativesToRecallTried: 'WARNINGS_LETTER',
         'alternativesToRecallTriedDetail-WARNINGS_LETTER': 'a warning',
@@ -125,21 +157,49 @@ describe('post', () => {
       locals: {
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/123/` },
+        urlInfo: { basePath: `/recommendations/${recommendationId}/` },
       },
     })
 
-    await alternativesToRecallTriedController.post(req, res, mockNext())
+    const next = mockNext()
+    await alternativesToRecallTriedController.post(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/task-list-consider-recall`)
+    expect(validateAlternativesTried).toHaveBeenCalledWith({
+      requestBody: req.body,
+      recommendationId,
+      urlInfo: res.locals.urlInfo,
+      token: res.locals.user.token,
+    })
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId,
+      valuesToSave: validationResults.valuesToSave,
+      token: res.locals.user.token,
+      featureFlags: res.locals.flags,
+    })
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      `/recommendations/${recommendationId}/${ppPaths.sentenceInformation}`,
+    )
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
   it('post with invalid data', async () => {
+    const validationResults = {
+      errors: ErrorGenerator.generate(),
+      unsavedValues: faker.helpers.multiple(() => {
+        return {
+          value: faker.lorem.word(),
+          details: faker.lorem.sentence(),
+        }
+      }),
+    }
+    ;(validateAlternativesTried as jest.Mock).mockResolvedValue(validationResults)
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
+    const recommendationId = faker.number.int().toString()
     const req = mockReq({
       originalUrl: 'some-url',
-      params: { recommendationId: '123' },
+      params: { recommendationId },
       body: {
         alternativesToRecallTried: undefined,
         'alternativesToRecallTriedDetail-WARNINGS_LETTER': '',
@@ -157,23 +217,26 @@ describe('post', () => {
       locals: {
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/123/` },
+        urlInfo: { basePath: `/recommendations/${recommendationId}/` },
       },
     })
 
-    await alternativesToRecallTriedController.post(req, res, mockNext())
+    const next = mockNext()
+    await alternativesToRecallTriedController.post(req, res, next)
+
+    expect(validateAlternativesTried).toHaveBeenCalledWith({
+      requestBody: req.body,
+      recommendationId,
+      urlInfo: res.locals.urlInfo,
+      token: res.locals.user.token,
+    })
 
     expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'noAlternativesTriedSelected',
-        href: '#alternativesToRecallTried',
-        invalidParts: undefined,
-        name: 'alternativesToRecallTried',
-        text: 'Select which alternatives to recall have been tried already',
-        values: undefined,
-      },
-    ])
+    expect(req.session).toEqual({
+      errors: validationResults.errors,
+      unsavedValues: validationResults.unsavedValues,
+    })
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 })

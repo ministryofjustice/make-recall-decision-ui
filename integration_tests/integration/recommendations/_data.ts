@@ -1,7 +1,7 @@
 import completeRecommendationResponse from '../../../api/responses/get-recommendation.json'
-import { setResponsePropertiesToNull } from '../../support/commands'
+import setResponsePropertiesToNull from '../../support/commands'
 
-export const defaultUpdateRecommendationResponse = (crn: string, id: string) => ({
+const defaultUpdateRecommendationResponse = (crn: string, id: string) => ({
   ...setResponsePropertiesToNull(completeRecommendationResponse),
   id,
   createdDate: '2000-10-31T01:30:00.000Z',
@@ -23,3 +23,5 @@ export const defaultUpdateRecommendationResponse = (crn: string, id: string) => 
     isSentToDelius: true,
   },
 })
+
+export default defaultUpdateRecommendationResponse

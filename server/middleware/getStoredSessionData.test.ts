@@ -1,5 +1,5 @@
 import { SessionData } from 'express-session'
-import { getStoredSessionData } from './getStoredSessionData'
+import getStoredSessionData from './getStoredSessionData'
 import { mockReq, mockRes } from './testutils/mockRequestUtils'
 
 describe('store flash errors on request session (middleware)', () => {

@@ -1,14 +1,20 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation, updateStatuses } from '../../data/makeDecisionApiClient'
-import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { validateRecallTypeIndeterminate } from '../recommendations/recallTypeIndeterminate/formValidator'
-import { inputDisplayValuesRecallTypeIndeterminate } from '../recommendations/recallTypeIndeterminate/inputDisplayValues'
+import validateRecallTypeIndeterminate from '../recommendations/recallTypeIndeterminate/formValidator'
+import inputDisplayValuesRecallTypeIndeterminate from '../recommendations/recallTypeIndeterminate/inputDisplayValues'
 import { isEmptyStringOrWhitespace, normalizeCrn } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import recallTypePath from '../../utils/routing'
 
 function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+
+  if (recommendation.sentenceGroup !== SentenceGroup.INDETERMINATE) {
+    const redirectionPath = recallTypePath(recommendation)
+    return res.redirect(303, `${res.locals.urlInfo.basePath}${redirectionPath}`)
+  }
 
   res.locals = {
     ...res.locals,
@@ -23,7 +29,7 @@ function get(req: Request, res: Response, next: NextFunction) {
   }
 
   res.render(`pages/recommendations/recallTypeIndeterminate`)
-  next()
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
@@ -72,9 +78,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPageId = recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'
-  res.redirect(303, nextPageLinkUrl({ nextPageId, urlInfo }))
-
   const crn = normalizeCrn(req.body.crn)
   if (!isEmptyStringOrWhitespace(crn)) {
     appInsightsEvent(
@@ -86,9 +89,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
         recommendationId,
         region,
       },
-      flags
+      flags,
     )
   }
+
+  return res.redirect(
+    303,
+    `${urlInfo.basePath}${recallType === 'NO_RECALL' ? 'task-list-no-recall' : 'indeterminate-details'}`,
+  )
 }
 
 export default { get, post }

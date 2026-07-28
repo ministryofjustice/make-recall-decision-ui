@@ -21,7 +21,7 @@ describe('get', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -52,7 +52,7 @@ describe('get', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(updateStatuses).not.toHaveBeenCalled()
@@ -78,7 +78,7 @@ describe('get', () => {
         },
       }),
       res,
-      next
+      next,
     )
 
     expect(updateStatuses).not.toHaveBeenCalled()

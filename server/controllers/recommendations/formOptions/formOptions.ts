@@ -1,28 +1,29 @@
-import { recallType } from '../recallType/formOptions'
-import { custodyStatus } from '../custodyStatus/formOptions'
-
-import { standardLicenceConditions } from './licenceConditions'
-import { hasVictimsInContactScheme } from '../victimContactScheme/formOptions'
-import { alternativesToRecallTried } from '../alternativesToRecallTried/formOptions'
-import { isUnderIntegratedOffenderManagement } from '../integratedOffenderManagement/formOptions'
-import { vulnerabilities, vulnerabilitiesRiskToSelf } from '../vulnerabilities/formOptions'
-import { indeterminateSentenceType } from '../indeterminateSentenceType/formOptions'
-import { recallTypeIndeterminate, recallTypeIndeterminateApi } from '../recallTypeIndeterminate/formOptions'
-import { indeterminateOrExtendedSentenceDetails } from '../indeterminateOrExtendedSentenceDetails/formOptions'
-import { whyConsideredRecall } from '../whyConsideredRecall/formOptions'
-import { howWillAppointmentHappen } from '../nextAppointment/formOptions'
-import { renderTemplateString } from '../../../utils/nunjucks'
-import { yesNo } from './yesNo'
-import { roshLevels } from '../rosh/formOptions'
+import custodyStatus from '../custodyStatus/formOptions'
+import recallType from '../recallType/formOptions'
+import { yesNoOptions, YesNoValues } from './yesNo'
+import strings from '../../../textStrings/en'
 import { UiListItem } from '../../../@types/pagesForms'
-import { spoRecallTypeEnum } from './spoRecallTypeEnum'
-import { rationaleCheck } from '../rationaleCheck/formOptions'
+import { renderTemplateString } from '../../../utils/nunjucks'
+import alternativesToRecallTried from '../alternativesToRecallTried/formOptions'
+import indeterminateOrExtendedSentenceDetails from '../indeterminateOrExtendedSentenceDetails/formOptions'
+import indeterminateSentenceType from '../indeterminateSentenceType/formOptions'
+import howWillAppointmentHappen from '../nextAppointment/formOptions'
+import rationaleCheck from '../rationaleCheck/formOptions'
 import { recallTypeExtended } from '../recallTypeExtended/formOptions'
+import { recallTypeIndeterminate, recallTypeIndeterminateApi } from '../recallTypeIndeterminate/formOptions'
+import roshLevels from '../rosh/formOptions'
+import hasVictimsInContactScheme from '../victimContactScheme/formOptions'
+import { vulnerabilities } from '../vulnerabilities/formOptions'
+import whyConsideredRecall from '../whyConsideredRecall/formOptions'
+import standardLicenceConditions from './licenceConditions'
+import spoRecallTypeEnum from './spoRecallTypeEnum'
+import { sentenceGroup } from '../sentenceInformation/formOptions'
 
 export type FormOption = {
   value: string
   text: string
   detailsLabel?: string
+  hint?: string
 }
 
 type FormOptionsType = {
@@ -30,6 +31,7 @@ type FormOptionsType = {
 }
 
 export const formOptions: FormOptionsType = {
+  sentenceGroup,
   recallType,
   rationaleCheck,
   spoRecallTypeEnum,
@@ -40,15 +42,17 @@ export const formOptions: FormOptionsType = {
   custodyStatus,
   alternativesToRecallTried,
   vulnerabilities,
-  vulnerabilitiesRiskToSelf,
   indeterminateSentenceType,
   indeterminateOrExtendedSentenceDetails,
   whyConsideredRecall,
   howWillAppointmentHappen,
-  yesNo,
+  yesNo: yesNoOptions(),
   hasVictimsInContactScheme,
-  isUnderIntegratedOffenderManagement,
   roshLevels,
+  yesNoOffenceChanges: yesNoOptions({
+    [YesNoValues.YES]: strings.labels.yesOffenceChanges,
+    [YesNoValues.NO]: strings.labels.no,
+  }),
 }
 
 export const isValueValid = (val: string, optionId: string) =>

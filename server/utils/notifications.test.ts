@@ -1,13 +1,9 @@
-import { getActiveNotificationBanner } from './notifications'
-import { Notification } from '../@types/notification'
+import getActiveNotificationBanner from './notifications'
 import { HMPPS_AUTH_ROLE } from '../middleware/authorisationMiddleware'
 
-import { notifications } from '../content/notifications'
+import notifications from '../content/notifications'
 
-jest.mock('../content/notifications', () => ({
-  __esModule: true,
-  notifications: [] as Notification[],
-}))
+jest.mock('../content/notifications')
 
 describe('Notifications', () => {
   describe('getActiveNotificationBanner', () => {

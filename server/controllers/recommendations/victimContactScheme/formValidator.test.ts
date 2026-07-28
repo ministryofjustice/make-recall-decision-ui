@@ -1,4 +1,4 @@
-import { validateVictimContactScheme } from './formValidator'
+import validateVictimContactScheme from './formValidator'
 import { formOptions } from '../formOptions/formOptions'
 
 describe('validateVictimContactScheme', () => {

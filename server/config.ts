@@ -39,9 +39,11 @@ export interface PpudApiConfig extends ApiConfig {
 }
 
 export default {
+  buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
+  gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   https: production,
   applicationName: 'Consider a recall',
-  staticResourceCacheDuration: 20,
+  staticResourceCacheDuration: '1h',
   redis: {
     host: get('REDIS_HOST', 'localhost', requiredInProduction),
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
@@ -111,6 +113,18 @@ export default {
         deadline: Number(get('MAKE_RECALL_DECISIONS_AND_DELIUS_API_TIMEOUT_DEADLINE', 5000)),
       },
       agent: new AgentConfig(Number(get('MAKE_RECALL_DECISIONS_AND_DELIUS_API_TIMEOUT_RESPONSE', 5000))),
+    },
+    probationApi: {
+      url: get(
+        'COMPONENT_API_URL',
+        'https://probation-frontend-components-dev.hmpps.service.justice.gov.uk',
+        requiredInProduction,
+      ),
+      healthPath: '/health/ping',
+    },
+    fliptClient: {
+      namespace: get('FLIPT_NAMESPACE', 'consider-a-recall', requiredInProduction),
+      url: get('FLIPT_SERVER_URL', 'https://feature-toggles-dev.hmpps.service.justice.gov.uk/', requiredInProduction),
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),

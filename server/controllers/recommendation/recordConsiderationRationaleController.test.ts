@@ -21,11 +21,8 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/recordConsiderationRationale')
 
     expect(res.locals.triggerLeadingToRecallCompleted).toBeFalsy()
-    expect(res.locals.responseToProbationCompleted).toBeFalsy()
     expect(res.locals.licenceConditionsBreachedCompleted).toBeFalsy()
     expect(res.locals.alternativesToRecallTriedCompleted).toBeFalsy()
-    expect(res.locals.isExtendedSentenceCompleted).toBeFalsy()
-    expect(res.locals.isIndeterminateSentenceCompleted).toBeFalsy()
     expect(res.locals.allTasksCompleted).toBeFalsy()
 
     expect(next).toHaveBeenCalled()
@@ -73,7 +70,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
     expect(next).not.toHaveBeenCalled()
@@ -118,7 +115,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendation/123/share-case-with-manager`)
     expect(next).not.toHaveBeenCalled()

@@ -10,11 +10,11 @@ import { STATUSES } from '../middleware/recommendationStatusCheck'
  * @param isSpo - Flag indicating if the current user is a Senior Probation Officer. false indifates a Probation Practitioner.
  * @returns A new RecommendationBanner object.
  */
-export function createRecommendationBanner(
+function createRecommendationBanner(
   statuses: Status[],
   recommendation: { createdByUserFullName: string; createdDate: string; personOnProbation: { name: string } },
   recommendationId: string,
-  isSpo: boolean
+  isSpo: boolean,
 ): RecommendationBanner {
   const banner = {
     display: false,
@@ -63,3 +63,5 @@ export function createRecommendationBanner(
 
   return banner
 }
+
+export default createRecommendationBanner

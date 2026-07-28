@@ -7,7 +7,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('returns an ISO formatted UTC date for valid date-time parts that fall within BST period', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2021', month: '05', day: '30', hour: '14', minute: '12' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual('2021-05-30T13:12:00.000Z')
     })
@@ -20,7 +20,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('returns an ISO formatted UTC date for valid date-time parts that fall outside BST period', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2021', month: '01', day: '12', hour: '11', minute: '40' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual('2021-01-12T11:40:00.000Z')
     })
@@ -28,7 +28,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('returns an ISO formatted UTC date-time for a valid date-time', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2021', month: '01', day: '12', hour: '10', minute: '53' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual('2021-01-12T10:53:00.000Z')
     })
@@ -41,7 +41,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('allows single-digit parts if validatePartLengths option is not passed', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2021', month: '3', day: '5', hour: '5', minute: '1' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual('2021-03-05T05:01:00.000Z')
     })
@@ -51,7 +51,7 @@ describe('convertGmtDatePartsToUtc', () => {
       const lastTwoDigits = currentYear.substring(2)
       const result = convertGmtDatePartsToUtc(
         { year: lastTwoDigits, month: '3', day: '5', hour: '5', minute: '1' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual(`${currentYear}-03-05T05:01:00.000Z`)
     })
@@ -59,7 +59,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('assumes a 2 digit year of greater than current year, is last century, if validatePartLengths option is not true', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '83', month: '3', day: '5', hour: '5', minute: '1' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual('1983-03-05T05:01:00.000Z')
     })
@@ -74,7 +74,7 @@ describe('convertGmtDatePartsToUtc', () => {
       const { year, month, day } = today
       const result = convertGmtDatePartsToUtc(
         { year: year.toString(), month: padWithZeroes(month), day: padWithZeroes(day) },
-        { dateMustBeInPast: true, includeTime: false }
+        { dateMustBeInPast: true, includeTime: false },
       )
       expect(result).toEqual(today.toISODate())
     })
@@ -89,7 +89,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with all parts missing', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '', month: '', day: '', hour: '', minute: '' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({ errorId: 'blankDateTime', invalidParts: ['day', 'month', 'year', 'hour', 'minute'] })
     })
@@ -107,7 +107,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with parts missing from date and time', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '', month: '03', day: '20', hour: '', minute: '05' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({ errorId: 'missingDateParts', invalidParts: ['year', 'hour'] })
     })
@@ -120,7 +120,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with all date parts missing', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '', month: '', day: '', hour: '03', minute: '04' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({ errorId: 'missingDate' })
     })
@@ -128,7 +128,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with any time parts missing', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2021', month: '03', day: '25', hour: '05', minute: '' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({ errorId: 'missingDateParts', invalidParts: ['minute'] })
     })
@@ -136,7 +136,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with all time parts missing', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2021', month: '03', day: '25', hour: '', minute: '' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({ errorId: 'missingTime', invalidParts: ['hour', 'minute'] })
     })
@@ -167,7 +167,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with any hour part having a negative value', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2020', month: '05', day: '12', hour: '-10', minute: '53' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({
         errorId: 'outOfRangeValueDateParts',
@@ -178,7 +178,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with any hour part over the max allowed value', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2020', month: '05', day: '12', hour: '24', minute: '53' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({
         errorId: 'outOfRangeValueDateParts',
@@ -189,7 +189,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with any minute part having a negative value', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2020', month: '05', day: '12', hour: '10', minute: '-10' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({
         errorId: 'outOfRangeValueDateParts',
@@ -200,7 +200,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with any minute part having a value out of bounds', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2020', month: '05', day: '12', hour: '23', minute: '60' },
-        { includeTime: true }
+        { includeTime: true },
       )
       expect(result).toEqual({
         errorId: 'outOfRangeValueDateParts',
@@ -218,7 +218,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error if a date-time must be in the past but is in the future', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2050', month: '12', day: '10', hour: '23', minute: '12' },
-        { dateMustBeInPast: true, includeTime: true }
+        { dateMustBeInPast: true, includeTime: true },
       )
       expect(result).toEqual({ errorId: 'dateMustBeInPast', invalidParts: ['day', 'month', 'year'] })
     })
@@ -226,7 +226,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error if a date must be in the past but is in the future', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2045', month: '03', day: '04' },
-        { dateMustBeInPast: true, includeTime: false }
+        { dateMustBeInPast: true, includeTime: false },
       )
       expect(result).toEqual({ errorId: 'dateMustBeInPast', invalidParts: ['day', 'month', 'year'] })
     })
@@ -234,7 +234,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error if a date-time must be in the future but is in the past', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2020', month: '12', day: '10', hour: '23', minute: '12' },
-        { dateMustBeInFuture: true, includeTime: true }
+        { dateMustBeInFuture: true, includeTime: true },
       )
       expect(result).toEqual({ errorId: 'dateMustBeInFuture', invalidParts: ['day', 'month', 'year'] })
     })
@@ -242,7 +242,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error if a date must be in the future but is in the past', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '2020', month: '03', day: '04' },
-        { dateMustBeInFuture: true, includeTime: false }
+        { dateMustBeInFuture: true, includeTime: false },
       )
       expect(result).toEqual({ errorId: 'dateMustBeInFuture', invalidParts: ['day', 'month', 'year'] })
     })
@@ -252,7 +252,7 @@ describe('convertGmtDatePartsToUtc', () => {
     it('error for a date-time with any single-digit parts not padded with zeroes, if validatePartLengths option is passed', () => {
       const result = convertGmtDatePartsToUtc(
         { year: '21', month: '3', day: '5', hour: '5', minute: '1' },
-        { includeTime: true, validatePartLengths: true }
+        { includeTime: true, validatePartLengths: true },
       )
       expect(result).toEqual({
         errorId: 'minLengthDateTimeParts',
@@ -274,7 +274,7 @@ describe('convertGmtDatePartsToUtc', () => {
   it('error for a date-time with any part not being an integer', () => {
     const result = convertGmtDatePartsToUtc(
       { year: 'ff21', month: '3.2', day: '1.5', hour: 'ab1', minute: '35.3' },
-      { includeTime: true }
+      { includeTime: true },
     )
     expect(result).toEqual({ errorId: 'invalidDate' })
   })

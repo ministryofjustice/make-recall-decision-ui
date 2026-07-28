@@ -24,7 +24,7 @@ const generateInternal = (options?: TermOptions): Term => ({
 const resolve = (
   options: 'all' | ChronosOptions,
   selector: (co: ChronosOptions) => IncludeNoneOrOption<number>,
-  maxValue: number
+  maxValue: number,
 ) => {
   const chronoValue = selector(options !== 'all' ? options : undefined)
   if (options === 'all' || chronoValue === 'include' || chronoValue === undefined) {

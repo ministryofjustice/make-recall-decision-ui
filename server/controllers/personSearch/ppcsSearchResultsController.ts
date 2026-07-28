@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { getRecommendation, searchForPpcs } from '../../data/makeDecisionApiClient'
+import { getRecommendation, ppcsSearch } from '../../data/makeDecisionApiClient'
 import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -13,7 +13,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     return
   }
 
-  const { results } = await searchForPpcs(token, crn as string)
+  const { results } = await ppcsSearch(token, crn as string)
 
   if (results.length === 0) {
     res.redirect(303, `no-ppcs-search-results?crn=${crn}`)

@@ -1,4 +1,4 @@
-import { decorateSelectedFilters } from './decorateSelectedFilters'
+import decorateSelectedFilters from './decorateSelectedFilters'
 import { ContactHistoryFilters } from '../../../../@types/contacts'
 
 describe('decorateSelectedFilters', () => {

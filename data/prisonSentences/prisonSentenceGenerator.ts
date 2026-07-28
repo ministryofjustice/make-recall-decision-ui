@@ -10,6 +10,7 @@ export type PrisonSentenceOptions = {
   lineSequence?: number
   sentenceSequence?: number
   sentenceType?: SentenceTypeOption
+  sentenceEndDate?: string
   terms?: TermOptions[]
   offences?: SentenceOffenceOptions[]
 }
@@ -43,7 +44,8 @@ const generateInternal = (options?: PrisonSentenceOptions): PrisonSentence => ({
   sentenceTypeDescription: resolveSentenceType(options?.sentenceType),
   sentenceDate: faker.date.past().toDateString(),
   sentenceStartDate: faker.date.past().toDateString(),
-  sentenceEndDate: faker.date.future().toDateString(),
+  sentenceEndDate: options?.sentenceEndDate,
+  sentenceSequenceExpiryDate: faker.date.future().toDateString(),
   terms: TermGenerator.generateSeries(options?.terms ?? [{ chronos: 'all' }]),
   offences: SentenceOffenceGenerator.generateSeries(options?.offences ?? [{}]),
   releaseDate: faker.date.future().toDateString(),

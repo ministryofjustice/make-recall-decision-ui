@@ -1,4 +1,4 @@
-import { isObjectInArray, selectedFilterItems } from './nunjucks'
+import { isObjectInArray, merge, selectedFilterItems } from './nunjucks'
 
 describe('selectedFilterItems', () => {
   it('prefixes hrefs with the URL path', () => {
@@ -56,5 +56,31 @@ describe('isObjectInArray', () => {
       ],
     })
     expect(result).toEqual(false)
+  })
+})
+
+describe('merge', () => {
+  it('merges two objects', () => {
+    const result = merge({ a: 1 }, { b: 'abc' })
+    expect(result).toEqual({ a: 1, b: 'abc' })
+  })
+
+  it('merges more than two objects', () => {
+    const result = merge({ a: 1, b: 2, c: 'three' }, { d: 'four', e: 5 }, { f: 'six' })
+    expect(result).toEqual({ a: 1, b: 2, c: 'three', d: 'four', e: 5, f: 'six' })
+  })
+
+  it('later objects overwrite earlier ones', () => {
+    const result = merge({ a: 1, b: 2 }, { b: 'overwritten', c: 3 })
+    expect(result).toEqual({ a: 1, b: 'overwritten', c: 3 })
+  })
+
+  it('does not mutate the original object(s)', () => {
+    const obj1 = { a: 1, b: 2 }
+    const obj2 = { b: 'overwritten', c: 3 }
+    const result = merge(obj1, obj2)
+    expect(obj1).toEqual({ a: 1, b: 2 })
+    expect(obj2).toEqual({ b: 'overwritten', c: 3 })
+    expect(result).toEqual({ a: 1, b: 'overwritten', c: 3 })
   })
 })

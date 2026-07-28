@@ -1,15 +1,17 @@
 import { PpudAddress } from '../@types/make-recall-decision-api/models/PpudCreateOffenderRequest'
 import { PpudSentence, RecommendationResponse } from '../@types/make-recall-decision-api/models/RecommendationResponse'
 import { ppudCreateOffender, ppudUpdateOffender, updateRecommendation } from '../data/makeDecisionApiClient'
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import BookingMemento from './BookingMemento'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
+import SENTENCED_AS_YOUTH from '../@types/make-recall-decision-api/models/ppud/SentencedAsYouth'
 
 export default async function bookOffender(
   bookingMemento: BookingMemento,
   recommendation: RecommendationResponse,
   token: string,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) {
   const memento = { ...bookingMemento }
 
@@ -87,6 +89,8 @@ export default async function bookOffender(
       indexOffence: recommendation.bookRecallToPpud?.indexOffence,
       mappaLevel: recommendation.bookRecallToPpud?.mappaLevel,
       prisonNumber: recommendation.bookRecallToPpud?.prisonNumber,
+      sentencedAsYouth:
+        recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS ? SENTENCED_AS_YOUTH.YES : SENTENCED_AS_YOUTH.NO,
       address,
       additionalAddresses,
     })

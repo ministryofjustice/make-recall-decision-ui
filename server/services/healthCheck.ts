@@ -2,7 +2,7 @@ import promClient from 'prom-client'
 import { serviceCheckFactory } from '../data/healthCheck'
 import config from '../config'
 import type { AgentConfig } from '../config'
-import { routes } from '../../api/routes'
+import routes from '../../api/routes'
 
 const healthCheckGauge = new promClient.Gauge({
   name: 'upstream_healthcheck',
@@ -33,23 +33,17 @@ function service(name: string, url: string, agentConfig: AgentConfig): HealthChe
 }
 
 function addAppInfo(result: HealthCheckResult): HealthCheckResult {
-  const buildInformation = getBuild()
+  const buildInformation = {
+    buildNumber: config.buildNumber,
+    gitRef: config.gitRef,
+  }
   const buildInfo = {
     uptime: process.uptime(),
     build: buildInformation,
-    version: buildInformation && buildInformation.buildNumber,
+    version: buildInformation.buildNumber,
   }
 
   return { ...result, ...buildInfo }
-}
-
-function getBuild() {
-  try {
-    // eslint-disable-next-line import/no-unresolved,global-require
-    return require('../../build-info.json')
-  } catch (ex) {
-    return null
-  }
 }
 
 function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus: HealthCheckStatus) {
@@ -61,14 +55,14 @@ const apiChecks = [
   service(
     'makeRecallDecisionApi',
     `${config.apis.makeRecallDecisionApi.url}${routes.healthCheck}`,
-    config.apis.makeRecallDecisionApi.agent
+    config.apis.makeRecallDecisionApi.agent,
   ),
   ...(config.apis.tokenVerification.enabled
     ? [
         service(
           'tokenVerification',
           `${config.apis.tokenVerification.url}/health/ping`,
-          config.apis.tokenVerification.agent
+          config.apis.tokenVerification.agent,
         ),
       ]
     : []),

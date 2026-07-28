@@ -1,4 +1,4 @@
-import { decorateAllContactTypes } from './decorateAllContactTypes'
+import decorateAllContactTypes from './decorateAllContactTypes'
 
 describe('decorateAllContactTypes', () => {
   it('flattens all groups into one list', () => {

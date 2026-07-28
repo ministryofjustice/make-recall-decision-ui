@@ -1,3 +1,5 @@
+import SENTENCED_AS_YOUTH from './ppud/SentencedAsYouth'
+
 export type PpudCreateOffenderRequest = {
   address: PpudAddress,
   additionalAddresses: PpudAddress[],
@@ -15,6 +17,7 @@ export type PpudCreateOffenderRequest = {
   mappaLevel: string,
   nomsId: string,
   prisonNumber: string,
+  sentencedAsYouth: SENTENCED_AS_YOUTH,
 };
 
 export type PpudAddress = {

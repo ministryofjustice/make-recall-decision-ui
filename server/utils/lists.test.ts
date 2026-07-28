@@ -141,11 +141,13 @@ describe('List utilities', () => {
           checked: false,
           text: 'Standard recall',
           value: 'STANDARD',
+          conditional: undefined,
         },
         {
           checked: false,
-          text: 'No recall - send a decision not to recall letter',
+          text: 'No recall - create a decision not to recall letter',
           value: 'NO_RECALL',
+          conditional: undefined,
         },
       ])
     })

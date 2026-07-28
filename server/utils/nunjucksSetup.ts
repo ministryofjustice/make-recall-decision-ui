@@ -1,7 +1,10 @@
 /* eslint-disable no-param-reassign */
 import nunjucks from 'nunjucks'
 import express from 'express'
+import fs from 'node:fs'
 import * as pathModule from 'path'
+
+import logger from '../../logger'
 import { makePageTitle, errorMessage, countLabel, isNotNull, isDefined, hasData, logMessage } from './utils'
 import config from '../config'
 import { formatDateTimeFromIsoString, formatJSDate, formatSentenceLength, formatTerm } from './dates/formatting'
@@ -18,9 +21,12 @@ import {
   formatDateFilterQueryString,
   isObjectInArray,
   countLabelSuffix,
+  merge,
+  renderString,
+  isBeforeDate,
 } from './nunjucks'
 import { radioCheckboxItems, findListItemByValue } from './lists'
-import { getDisplayValueForOption } from '../controllers/recommendations/helpers/getDisplayValueForOption'
+import getDisplayValueForOption from '../controllers/recommendations/helpers/getDisplayValueForOption'
 import { nextPageLinkUrl, changeLinkUrl } from '../controllers/recommendations/helpers/urls'
 import { recommendationsListStatusLabel } from '../controllers/recommendations/helpers/recommendationStatus'
 import { defaultName } from '../monitoring/azureAppInsights'
@@ -37,6 +43,16 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   app.locals.applicationInsightsConnectionString = config.applicationInsights.connectionString
   app.locals.applicationInsightsRoleName = defaultName()
 
+  // Read the asset manifest to find the built versions of our assets
+  let assetManifest: Record<string, string> = {}
+
+  try {
+    const assetMetadataPath = path.resolve(__dirname, '../../assets/manifest.json')
+    assetManifest = JSON.parse(fs.readFileSync(assetMetadataPath, 'utf8'))
+  } catch (err) {
+    logger.error('Could not read assest manifest file')
+  }
+
   // Cachebusting version string
   if (production) {
     // Version only changes on reboot
@@ -52,15 +68,15 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   const njkEnv = nunjucks.configure(
     [
       path.join(__dirname, '../../server/views'),
-      'node_modules/govuk-frontend/',
-      'node_modules/govuk-frontend/components/',
+      'node_modules/govuk-frontend/dist',
       'node_modules/@ministryofjustice/frontend/',
       'node_modules/@ministryofjustice/frontend/moj/components/',
+      'node_modules/@ministryofjustice/hmpps-probation-frontend-components/dist/assets/',
     ],
     {
       autoescape: true,
       express: app,
-    }
+    },
   )
 
   njkEnv.addFilter('initialiseName', (fullName: string) => {
@@ -72,6 +88,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     return `${array[0][0]}. ${array.reverse()[0]}`
   })
   njkEnv.addFilter('defaultValue', defaultValue)
+  njkEnv.addFilter('merge', merge)
 
   // globals
   njkEnv.addGlobal('formatDateTimeFromIsoString', formatDateTimeFromIsoString)
@@ -103,4 +120,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('hasRequiredVulnerabilitiesDetails', hasAllRequiredVulnerabilityDetails)
   njkEnv.addGlobal('formatJSDate', formatJSDate)
   njkEnv.addGlobal('formatSentenceLength', formatSentenceLength)
+  njkEnv.addGlobal('renderString', renderString)
+  njkEnv.addFilter('isBefore', isBeforeDate)
+  njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
 }

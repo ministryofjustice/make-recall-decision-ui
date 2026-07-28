@@ -128,8 +128,6 @@ r197,0,"^seniorProbationOfficerInfo_functionalEmail$","functional@probation.gov.
 r198,0,"^seniorProbationOfficerInfo_fullName$","Jo Bloggs","/recalls/[^\/]+/secondary-dossier-probation",0,c1
 r199,0,"^seniorProbationOfficerInfo_phoneNumber$","01305737387","/recalls/[^\/]+/secondary-dossier-probation",0,c1
 r201,0,"^seniorProbationOfficerInfo_email$","jbloggs@probation.gov.uk","/recalls/[^\/]+/secondary-dossier-probation",0,c1
-r203,0,"^responseToProbation$","DC has been attending appointments and says he is focusing on controlling his drinking. When I questioned the smell of alcohol he claimed it was a strong cologne. contacting family they’ve said he’s doing ok and that all is back to normal.
-He missed some rehab appointments but the worker has said that he’s struggling to focus.","/recommendations/[^\/]+/response-to-probation",0,c2
 r204,3,"^standard\|GOOD_BEHAVIOUR$","1","/recommendations/[^\/]+/licence-conditions",0,c2
 r205,3,"^additional\|LC74$","1","/recommendations/[^\/]+/licence-conditions",0,c2
 r206,3,"^REFERRAL_TO_PARTNERSHIP_AGENCIES$","1","/recommendations/[^\/]+/alternatives-tried",0,c2
@@ -143,7 +141,6 @@ r214,3,"^YES$","1","/recommendations/[^\/]+/victim-contact-scheme",0,c2
 r215,0,"^dateVloInformed-day$","02","/recommendations/[^\/]+/victim-liaison-officer",0,c2
 r216,0,"^dateVloInformed-month$","09","/recommendations/[^\/]+/victim-liaison-officer",0,c2
 r217,0,"^dateVloInformed-year$","2022","/recommendations/[^\/]+/victim-liaison-officer",0,c2
-r219,3,"^NO$","1","/recommendations/[^\/]+/iom",0,c2
 r220,3,"^YES$","1","/recommendations/[^\/]+/arrest-issues",0,c2
 r221,0,"^hasArrestIssuesDetailsYes$","Prone to drinking and violence","/recommendations/[^\/]+/arrest-issues",0,c2
 r222,0,"^phoneNumber$","07838383929","/recommendations/[^\/]+/police-details",0,c2

@@ -24,7 +24,7 @@ describe('recommendationStatusCheck', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).not.toHaveBeenCalled()
@@ -50,7 +50,7 @@ describe('recommendationStatusCheck', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).toHaveBeenCalled()
@@ -75,7 +75,7 @@ describe('recommendationStatusCheck', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(res.redirect).toHaveBeenCalled()
@@ -91,7 +91,7 @@ describe('recommendationStatusCheck', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(getStatuses).not.toHaveBeenCalled()

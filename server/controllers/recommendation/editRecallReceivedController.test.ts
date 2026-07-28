@@ -133,7 +133,9 @@ describe('post', () => {
       recommendationId: '1',
       token: 'token1',
       valuesToSave: {
-        bookRecallToPpud: { receivedDateTime: '2023-05-01T11:59:00.000Z' },
+        bookRecallToPpud: {
+          receivedDateTime: '2023-05-01T11:59:00.000Z',
+        },
       },
       featureFlags: {},
     })

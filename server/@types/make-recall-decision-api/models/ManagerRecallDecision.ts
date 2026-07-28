@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+ 
 
 import type { ManagerRecallDecisionTypeSelectedValue } from './ManagerRecallDecisionTypeSelectedValue';
 import type { TextValueOption } from './TextValueOption';

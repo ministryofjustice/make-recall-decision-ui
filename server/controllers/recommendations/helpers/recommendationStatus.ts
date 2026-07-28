@@ -16,11 +16,11 @@ export enum RecommendationStatus {
 }
 
 export const recommendationStatus = (
-  recommendation: RecommendationResponse | RecommendationsListItem
+  recommendation: RecommendationResponse | RecommendationsListItem,
 ): RecommendationStatus => {
   const { status, recallType } = recommendation
   const isRecall = [RecallTypeSelectedValue.value.STANDARD, RecallTypeSelectedValue.value.FIXED_TERM].includes(
-    recallType?.selected?.value
+    recallType?.selected?.value,
   )
   const isNoRecall = recallType?.selected?.value === RecallTypeSelectedValue.value.NO_RECALL
 

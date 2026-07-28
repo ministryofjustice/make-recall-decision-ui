@@ -1,18 +1,15 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { nextPageLinkUrl } from '../helpers/urls'
-import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
+const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   let errors
 
-  const { custodyStatus, custodyStatusDetailsYesPolice } = requestBody
+  const { custodyStatus } = requestBody
   const invalidStatus = !custodyStatus || !isValueValid(custodyStatus as string, 'custodyStatus')
-  const missingPoliceCustodyAddress =
-    custodyStatus === 'YES_POLICE' && isEmptyStringOrWhitespace(custodyStatusDetailsYesPolice)
-  if (invalidStatus || missingPoliceCustodyAddress) {
+  if (invalidStatus) {
     errors = []
     if (invalidStatus) {
       const errorId = 'noCustodyStatusSelected'
@@ -21,17 +18,7 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
           id: 'custodyStatus',
           text: strings.errors[errorId],
           errorId,
-        })
-      )
-    }
-    if (missingPoliceCustodyAddress) {
-      const errorId = 'missingCustodyPoliceAddressDetail'
-      errors.push(
-        makeErrorObject({
-          id: 'custodyStatusDetailsYesPolice',
-          text: strings.errors[errorId],
-          errorId,
-        })
+        }),
       )
     }
     return {
@@ -44,7 +31,6 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
   const valuesToSave = {
     custodyStatus: {
       selected: custodyStatus,
-      details: custodyStatus === 'YES_POLICE' ? stripHtmlTags(custodyStatusDetailsYesPolice as string) : null,
       allOptions: formOptions.custodyStatus,
     },
   }
@@ -54,3 +40,5 @@ export const validateCustodyStatus = async ({ requestBody, urlInfo }: FormValida
     nextPagePath,
   }
 }
+
+export default validateCustodyStatus

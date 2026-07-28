@@ -4,7 +4,7 @@ type ValuesToSaveType = {
   hasBeenReviewed: Record<string, boolean>
 }
 
-export const updatePageReviewedStatus = async ({
+const updatePageReviewedStatus = async ({
   reviewedProperty,
   recommendationId,
   token,
@@ -19,3 +19,5 @@ export const updatePageReviewedStatus = async ({
     await updateRecommendation({ recommendationId, valuesToSave, token })
   }
 }
+
+export default updatePageReviewedStatus

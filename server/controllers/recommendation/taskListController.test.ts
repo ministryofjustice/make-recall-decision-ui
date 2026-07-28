@@ -6,77 +6,65 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import config from '../../config'
 import { VULNERABILITY } from '../recommendations/vulnerabilities/formOptions'
 import { vulnerabilityRequiresDetails } from '../recommendations/vulnerabilitiesDetails/formValidator'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { CustodyStatus } from '../../@types/make-recall-decision-api/models/CustodyStatus'
+import selected = CustodyStatus.selected
+import { RecallTypeSelectedValue } from '../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
 
 describe('get', () => {
-  const recommendationTemplate = {
-    custodyStatus: {
-      selected: 'NO',
-    },
-    localPoliceContact: {
-      contactName: 'Joe Bloggs',
-    },
-    crn: 'X098092',
+  const recommendationTemplate = RecommendationResponseGenerator.generate({
     recallType: {
-      selected: { value: 'STANDARD' },
-    },
-    decisionDateTime: '2021-01-01T12:00:00',
-    responseToProbation: 'text',
-    whatLedToRecall: 'text',
-    isThisAnEmergencyRecall: false,
-    isIndeterminateSentence: false,
-    isExtendedSentence: false,
-    activeCustodialConvictionCount: 1,
-    hasVictimsInContactScheme: {
-      selected: 'NO',
-    },
-    indeterminateSentenceType: { selected: 'NO' },
-    hasArrestIssues: { selected: false },
-    hasContrabandRisk: { selected: false },
-    personOnProbation: {
-      name: 'Joe Bloggs',
-      mappa: { hasBeenReviewed: true },
-      hasBeenReviewed: true,
-    },
-    alternativesToRecallTried: {
-      selected: [{ value: 'NONE' }],
-    },
-    licenceConditionsBreached: {
-      standardLicenceConditions: {
-        selected: ['GOOD_BEHAVIOUR'],
+      selected: {
+        value: RecallTypeSelectedValue.value.FIXED_TERM,
       },
     },
-    isUnderIntegratedOffenderManagement: { selected: 'NO' },
-    vulnerabilities: {
-      selected: [{ value: VULNERABILITY.DRUG_OR_ALCOHOL_USE }],
+    sentenceGroup: SentenceGroup.ADULT_SDS,
+    alternativesToRecallTried: true,
+    decisionDateTime: true,
+    triggerLeadingToRecall: false,
+    previousReleases: true,
+    licenceConditionsBreached: true,
+    isChargedWithOffence: true,
+    personOnProbation: {
+      name: 'Jane Bloggs',
+      hasBeenReviewed: true,
+      mappa: {
+        hasBeenReviewed: true,
+      },
+      ftr56MappaReviewed: true,
     },
-    convictionDetail: { hasBeenReviewed: true },
-    offenceAnalysis: 'text',
-    isMainAddressWherePersonCanBeFound: { selected: true },
-    previousReleases: { hasBeenReleasedPreviously: false },
-    previousRecalls: { hasBeenRecalledPreviously: false },
-    currentRoshForPartA: {},
+    indexOffenceDetails: true,
+    convictionDetail: {
+      hasBeenReviewed: true,
+    },
+    offenceAnalysis: true,
+    custodyStatus: {
+      selected: selected.YES_POLICE,
+      details: faker.location.streetAddress(),
+      allOptions: [],
+    },
+
+    indeterminateOrExtendedSentenceDetails: false,
+    practitionerForPartA: true,
     whoCompletedPartA: {
-      name: 'john',
-      email: 'john@me.com',
-      telephone: '123456',
-      region: 'region A',
-      localDeliveryUnit: 'here',
       isPersonProbationPractitionerForOffender: true,
     },
-    practitionerForPartA: {
-      name: 'jane',
-      email: 'jane@me.com',
-      telephone: '55555',
-      region: 'region A',
-      localDeliveryUnit: 'here',
-      isPersonProbationPractitionerForOffender: true,
-    },
-    revocationOrderRecipients: ['here@me.com'],
-    ppcsQueryEmails: ['bob@me.com'],
-  }
+    whatLedToRecall: true,
+    isThisAnEmergencyRecall: true,
+    isServingTerroristOrNationalSecurityOffence: true,
+    isAtRiskOfInvolvedInForeignPowerThreat: true,
+    wasReferredToParoleBoard244ZB: true,
+    wasRepatriatedForMurder: true,
+    isServingSOPCSentence: true,
+    isServingDCRSentence: true,
+    isYouthSentenceOver12Months: true,
+    isYouthChargedWithSeriousOffence: true,
+  })
 
   const taskCompleteness = {
     areAllComplete: true,
@@ -88,31 +76,36 @@ describe('get', () => {
       hasArrestIssues: true,
       hasContrabandRisk: true,
       hasVictimsInContactScheme: true,
-      isExtendedSentence: true,
-      isIndeterminateSentence: true,
+      sentenceGroup: true,
+      triggerLeadingToRecall: false,
       isMainAddressWherePersonCanBeFound: true,
       isThisAnEmergencyRecall: true,
-      isUnderIntegratedOffenderManagement: true,
       licenceConditionsBreached: true,
       localPoliceContact: true,
       mappa: true,
       offenceAnalysis: true,
       personOnProbation: true,
-      previousRecalls: true,
       previousReleases: true,
       recallType: true,
       decisionDateTime: true,
-      responseToProbation: true,
       vulnerabilities: true,
       whatLedToRecall: true,
       fixedTermAdditionalLicenceConditions: true,
-      indeterminateOrExtendedSentenceDetails: true,
-      indeterminateSentenceType: false,
+      indeterminateOrExtendedSentenceDetails: false,
       didProbationPractitionerCompletePartA: true,
       practitionerForPartA: true,
       whoCompletedPartA: true,
       ppcsQueryEmails: true,
       revocationOrderRecipients: true,
+      isChargedWithOffence: true,
+      isServingTerroristOrNationalSecurityOffence: true,
+      isAtRiskOfInvolvedInForeignPowerThreat: true,
+      wasReferredToParoleBoard244ZB: true,
+      wasRepatriatedForMurder: true,
+      isServingSOPCSentence: true,
+      isServingDCRSentence: true,
+      isYouthSentenceOver12Months: true,
+      isYouthChargedWithSeriousOffence: true,
     },
   }
 
@@ -139,7 +132,7 @@ describe('get', () => {
     })
     expect(next).toHaveBeenCalled()
 
-    expect(vulnerabilityRequiresDetails).not.toHaveBeenCalled()
+    expect(vulnerabilityRequiresDetails).toHaveBeenCalled()
 
     expect(res.locals.lineManagerCountersignLink).toEqual(false)
     expect(res.locals.seniorManagerCountersignLink).toEqual(false)
@@ -150,27 +143,12 @@ describe('get', () => {
     expect(res.locals.isSpo).toEqual(false)
     expect(res.locals.shareLink).toEqual(`${config.domain}/recommendations/123/task-list`)
     expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type`)
-    expect(res.locals.selectedVulnerabilitiesRequireDetails).not.toBeDefined()
-  })
-
-  it('present for indeterminate', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate, isIndeterminateSentence: true }
-    const res = mockRes({
-      locals: {
-        recommendation,
-        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
-      },
-    })
-    const next = mockNext()
-    await taskListController.get(mockReq({ params: { recommendationId: '123' } }), res, next)
-
-    expect(res.locals.whatDoYouRecommendPageUrlSlug).toEqual(`recall-type-indeterminate`)
+    expect(res.locals.selectedVulnerabilitiesRequireDetails).toBeDefined()
   })
 
   it('present for extended', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate, isExtendedSentence: true }
+    const recommendation = { ...recommendationTemplate, sentenceGroup: SentenceGroup.EXTENDED }
     const res = mockRes({
       locals: {
         recommendation,
@@ -204,19 +182,20 @@ describe('get', () => {
 
   it('present - tasks complete', async () => {
     ;(getStatuses as jest.Mock).mockResolvedValue([])
-    const recommendation = { ...recommendationTemplate }
+
     const res = mockRes({
       locals: {
-        recommendation,
+        recommendation: recommendationTemplate,
         user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
       },
     })
+
     const next = mockNext()
     await taskListController.get(mockReq(), res, next)
 
     expect(res.locals.page).toEqual({ id: 'taskList' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
-    expect(res.locals.recommendation).toEqual(recommendation)
+    expect(res.locals.recommendation).toEqual(recommendationTemplate)
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
       isReadyForCounterSignature: true,
@@ -375,7 +354,55 @@ describe('get', () => {
 
     expect(res.locals.isSpo).toEqual(true)
   })
-  describe('when riskToSelf flag enabled', () => {
+
+  it('present - tasks complete with ftr56SentenceConviction enabled', async () => {
+    ;(getStatuses as jest.Mock).mockResolvedValue([])
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...recommendationTemplate,
+          isRecalledOnNewChargedOrConvictedOffence: {
+            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+          },
+        },
+        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
+        flags: {
+          ftr56SentenceConviction: true,
+        },
+      },
+    })
+
+    const next = mockNext()
+    await taskListController.get(mockReq(), res, next)
+
+    expect(res.locals.page).toEqual({ id: 'taskList' })
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
+    expect(res.locals.recommendation).toEqual({
+      ...recommendationTemplate,
+      isRecalledOnNewChargedOrConvictedOffence: {
+        selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+      },
+    })
+    expect(res.locals.taskCompleteness).toEqual({
+      ...taskCompleteness,
+      statuses: {
+        ...taskCompleteness.statuses,
+        isRecalledOnNewChargedOrConvictedOffence: true,
+      },
+      isReadyForCounterSignature: true,
+      areAllComplete: false,
+    })
+
+    expect(res.locals.lineManagerCountersignLink).toEqual(true)
+    expect(res.locals.seniorManagerCountersignLink).toEqual(false)
+    expect(res.locals.lineManagerCountersignLabel).toEqual('To do')
+    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
+    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
+    expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
+  })
+
+  describe('VulnerabilitiesRequireDetails', () => {
     ;[true, false].forEach(expectedSelectedVulnerabilitiesRequireDetails => {
       it(`selectedVulnerabilitiesRequireDetails value set to result of vulnerabilityRequiresDetails call (${expectedSelectedVulnerabilitiesRequireDetails})`, async () => {
         ;(getStatuses as jest.Mock).mockResolvedValue([])
@@ -394,7 +421,6 @@ describe('get', () => {
               },
             },
             user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-            flags: { flagRiskToSelfEnabled: true },
           },
         })
         const next = mockNext()
@@ -414,7 +440,7 @@ describe('get', () => {
         vulnerability2 = faker.helpers.enumValue(VULNERABILITY)
       } while (vulnerability1 === vulnerability2)
       ;(vulnerabilityRequiresDetails as jest.Mock).mockImplementation(
-        (vulnerability: VULNERABILITY) => vulnerability === vulnerability1
+        (vulnerability: VULNERABILITY) => vulnerability === vulnerability1,
       )
 
       const res = mockRes({
@@ -429,7 +455,6 @@ describe('get', () => {
             },
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()
@@ -452,7 +477,6 @@ describe('get', () => {
             },
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()
@@ -470,7 +494,6 @@ describe('get', () => {
             vulnerabilities: undefined,
           },
           user: { roles: ['ROLE_MAKE_RECALL_DECISION_SPO'] },
-          flags: { flagRiskToSelfEnabled: true },
         },
       })
       const next = mockNext()

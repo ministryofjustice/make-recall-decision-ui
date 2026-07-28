@@ -1,9 +1,9 @@
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { searchPersons } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { personSearchResultsByName } from './personSearchResultsByName'
-import { AuditService } from '../../services/auditService'
-import { routeUrls } from '../../routes/routeUrls'
+import personSearchResultsByName from './personSearchResultsByName'
+import AuditService from '../../services/auditService'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
@@ -50,7 +50,7 @@ describe('personSearchResultsByName', () => {
         lastName: 'Bloggs',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
 
     expect(AuditService.prototype.personSearch).toHaveBeenCalledWith({
@@ -87,7 +87,7 @@ describe('personSearchResultsByName', () => {
       firstName: 'Harry',
       lastName: 'Zero0',
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, routeUrls.searchByName)
+    expect(res.redirect).toHaveBeenCalledWith(303, sharedPaths.searchByName)
   })
 
   it('invalid search for lastName', async () => {
@@ -117,6 +117,6 @@ describe('personSearchResultsByName', () => {
       firstName: 'Harry1',
       lastName: "Zero-'",
     })
-    expect(res.redirect).toHaveBeenCalledWith(303, routeUrls.searchByName)
+    expect(res.redirect).toHaveBeenCalledWith(303, sharedPaths.searchByName)
   })
 })

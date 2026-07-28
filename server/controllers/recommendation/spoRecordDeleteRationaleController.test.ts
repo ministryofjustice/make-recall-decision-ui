@@ -71,7 +71,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
 
     expect(updateStatuses).toHaveBeenCalledWith({

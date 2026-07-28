@@ -6,7 +6,7 @@ import {
   transformLicenceConditions,
 } from '../../caseSummary/licenceConditions/transformLicenceConditions'
 
-export const fetchAndTransformLicenceConditions = async ({
+const fetchAndTransformLicenceConditions = async ({
   crn,
   token,
 }: {
@@ -19,3 +19,5 @@ export const fetchAndTransformLicenceConditions = async ({
   }
   return transformLicenceConditions(response)
 }
+
+export default fetchAndTransformLicenceConditions

@@ -1,5 +1,5 @@
 import { formOptions } from '../formOptions/formOptions'
-import { inputDisplayValuesVulnerabilitiesDetails } from './inputDisplayValues'
+import inputDisplayValuesVulnerabilitiesDetails from './inputDisplayValues'
 import { VULNERABILITY } from '../vulnerabilities/formOptions'
 
 describe('inputDisplayValuesVulnerabilitiesDetails', () => {

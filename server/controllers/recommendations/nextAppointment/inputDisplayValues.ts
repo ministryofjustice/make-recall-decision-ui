@@ -4,7 +4,7 @@ import { RecommendationResponse } from '../../../@types/make-recall-decision-api
 import { NextAppointment } from '../../../@types/make-recall-decision-api/models/NextAppointment'
 import { InputDisplayValuesArgs } from '../../../@types/pagesForms'
 
-export const inputDisplayValuesNextAppointment = ({ errors, unsavedValues, apiValues }: InputDisplayValuesArgs) => {
+const inputDisplayValuesNextAppointment = ({ errors, unsavedValues, apiValues }: InputDisplayValuesArgs) => {
   if (isDefined(errors)) {
     return {
       howWillAppointmentHappen: unsavedValues?.howWillAppointmentHappen,
@@ -24,3 +24,5 @@ export const inputDisplayValuesNextAppointment = ({ errors, unsavedValues, apiVa
     probationPhoneNumber: nextAppointment?.probationPhoneNumber,
   }
 }
+
+export default inputDisplayValuesNextAppointment

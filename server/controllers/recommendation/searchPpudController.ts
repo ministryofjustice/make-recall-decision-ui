@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { searchPpud } from '../../data/makeDecisionApiClient'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { routeUrls } from '../../routes/routeUrls'
+import { sharedPaths } from '../../routes/paths/shared.paths'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -36,7 +36,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         pageUrlSlug: 'no-ppud-search-results',
         region,
       },
-      flags
+      flags,
     )
 
     req.session.fullName = fullName.replace(/\s/g, ' ') as string
@@ -48,7 +48,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   req.session.ppudSearchResults = results
 
-  const nextPagePath = `${routeUrls.recommendations}/${recommendationId}/search-ppud-results`
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/search-ppud-results`
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

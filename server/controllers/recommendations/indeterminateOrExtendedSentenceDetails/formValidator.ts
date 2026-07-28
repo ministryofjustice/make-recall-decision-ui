@@ -1,41 +1,39 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { cleanseUiList, findListItemByValue } from '../../../utils/lists'
 import { nextPageLinkUrl } from '../helpers/urls'
 import { isEmptyStringOrWhitespace, stripHtmlTags } from '../../../utils/utils'
 import { UiFormOption, FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-const missingDetailsError = (optionId: string) => {
-  switch (optionId) {
-    case 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE':
-      return strings.errors.missingIndeterminateDetailIndexOffence
-    case 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE':
-      return strings.errors.missingIndeterminateDetailSexualViolent
-    case 'OUT_OF_TOUCH':
-      return strings.errors.missingIndeterminateDetailContact
-    default:
-      return 'Enter details'
-  }
+const errorsMap: Record<string, string> = {
+  BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE: strings.errors.missingIndeterminateDetailIndexOffence,
+  BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE: strings.errors.missingIndeterminateDetailSexualViolent,
+  BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE:
+    strings.errors.missingIndeterminateDetailLikelyResultSexualViolent,
+  OUT_OF_TOUCH: strings.errors.missingIndeterminateDetailContact,
 }
 
-export const validateIndeterminateDetails = async ({
-  requestBody,
-  urlInfo,
-}: FormValidatorArgs): FormValidatorReturn => {
+const missingDetailsError = (optionId: string) => {
+  return errorsMap[optionId] ?? 'Enter details'
+}
+
+const validateIndeterminateDetails = async ({ requestBody, urlInfo }: FormValidatorArgs): FormValidatorReturn => {
   const { indeterminateOrExtendedSentenceDetails } = requestBody
   const selected = Array.isArray(indeterminateOrExtendedSentenceDetails)
     ? indeterminateOrExtendedSentenceDetails
     : [indeterminateOrExtendedSentenceDetails]
-  const invalidAlternative = selected.some(
-    selectionId => !isValueValid(selectionId, 'indeterminateOrExtendedSentenceDetails')
-  )
+
+  const items = formOptions.indeterminateOrExtendedSentenceDetails
+  const formId = 'indeterminateOrExtendedSentenceDetails'
+
+  const invalidAlternative = selected.some(selectionId => !isValueValid(selectionId, formId))
   const missingDetails = selected.filter(selectionId => {
     const optionShouldHaveDetails = Boolean(
       findListItemByValue<UiFormOption>({
-        items: formOptions.indeterminateOrExtendedSentenceDetails,
+        items,
         value: selectionId,
-      })?.detailsLabel
+      })?.detailsLabel,
     )
     if (
       optionShouldHaveDetails &&
@@ -53,10 +51,11 @@ export const validateIndeterminateDetails = async ({
       errorId = 'noIndeterminateDetailsSelected'
       errors.push(
         makeErrorObject({
-          id: 'indeterminateOrExtendedSentenceDetails',
+          id: 'option-1',
+          name: 'indeterminateOrExtendedSentenceDetails',
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
     if (missingDetails.length) {
@@ -67,7 +66,7 @@ export const validateIndeterminateDetails = async ({
             id: `indeterminateOrExtendedSentenceDetailsDetail-${selectionId}`,
             text: missingDetailsError(selectionId),
             errorId,
-          })
+          }),
         )
       })
     }
@@ -93,7 +92,7 @@ export const validateIndeterminateDetails = async ({
           details: details ? stripHtmlTags(details as string) : undefined,
         }
       }),
-      allOptions: cleanseUiList(formOptions.indeterminateOrExtendedSentenceDetails),
+      allOptions: cleanseUiList(items),
     },
   }
   const nextPagePath = nextPageLinkUrl({ nextPageId: 'sensitive-info', urlInfo })
@@ -102,3 +101,5 @@ export const validateIndeterminateDetails = async ({
     nextPagePath,
   }
 }
+
+export default validateIndeterminateDetails

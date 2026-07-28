@@ -1,4 +1,4 @@
-import { validateReasonsForNoRecall } from './formValidator'
+import validateReasonsForNoRecall from './formValidator'
 
 describe('validateReasonsForNoRecall', () => {
   const recommendationId = '34'

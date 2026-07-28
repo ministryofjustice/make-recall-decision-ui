@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { ppudReferenceList, updateRecommendation } from '../../../../../data/makeDecisionApiClient'
 import { makeErrorObject } from '../../../../../utils/errors'
-import { strings } from '../../../../../textStrings/en'
+import strings from '../../../../../textStrings/en'
 import { nextPageLinkUrl } from '../../../../recommendations/helpers/urls'
 import { isDefined } from '../../../../../utils/utils'
 import { RecommendationResponse } from '../../../../../@types/make-recall-decision-api'
@@ -15,7 +15,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
   const recommendationResponse = recommendation as RecommendationResponse
   const ppudSentence = recommendationResponse.ppudOffender.sentences.find(
-    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
   )
   const existingSentencingCourt = ppudSentence.sentencingCourt || 'Not specified'
   const pendingSentenceData = recommendationResponse.bookRecallToPpud.ppudIndeterminateSentenceData
@@ -60,7 +60,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
         id: 'sentencingCourt',
         text: strings.errors[errorId],
         errorId,
-      })
+      }),
     )
   }
 
@@ -84,7 +84,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     token: res.locals.user.token,
   })
 
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'sentence-to-commit-indeterminate', urlInfo }))
+  return res.redirect(303, nextPageLinkUrl({ nextPageId: 'sentence-to-commit-indeterminate', urlInfo }))
 }
 
 export default { get, post }

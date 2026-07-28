@@ -1,13 +1,12 @@
 import { testSummaryList } from '../../../componentTests/summaryList.tests'
-import searchMappedUserResponse from '../../../../api/responses/searchMappedUsers.json'
-import searchActiveUsersResponse from '../../../../api/responses/ppudSearchActiveUsers.json'
-import { RECOMMENDATION_STATUS } from '../../../../server/middleware/recommendationStatus'
+import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
 import { PrisonSentenceSequenceGenerator } from '../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
-import { defaultUpdateRecommendationResponse } from '../_data'
-import { CUSTODY_GROUP } from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import defaultUpdateRecommendationResponse from '../_data'
+import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { PrisonSentence } from '../../../../server/@types/make-recall-decision-api/models/PrisonSentence'
 import { PrisonSentenceOptions } from '../../../../data/prisonSentences/prisonSentenceGenerator'
+import setUpSessionForPpcs from './util'
 
 context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', () => {
   const crn = 'X34983'
@@ -16,16 +15,14 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
   const testPageUrl = `/recommendations/${recommendationId}/consecutive-sentence-details`
 
   beforeEach(() => {
-    cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-    cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
-    cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
+    setUpSessionForPpcs()
   })
 
   const defaultRecommendationResponse = RecommendationResponseGenerator.generate({
     bookRecallToPpud: {
       custodyGroup: CUSTODY_GROUP.DETERMINATE,
     },
-    nomisOffenceIndex: {
+    nomisIndexOffence: {
       selectedIndex: 0,
     },
   })
@@ -95,7 +92,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     {},
     {},
   ])
-  const defaultExpectedSentenceSequence = defaultPrisonSentenceSequence.at(0)
+  const defaultExpectedSentenceSequence = defaultPrisonSentenceSequence[0]
 
   const expectedLabels = {
     indexOffence: 'Index offence',
@@ -104,7 +101,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     court: 'Court',
     dateOfSentence: 'Date of sentence',
     startDate: 'Start date',
-    expiryDate: 'Sentence expiry date',
+    latestExpiryDate: 'Latest sentence expiry date',
     sentenceLength: 'Sentence length',
     impTerm: 'Custodial term',
     licTerm: 'Extended term',
@@ -125,19 +122,23 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
       })
 
       it('Page Heading and pre-sentences body', () => {
-        cy.pageHeading().should('contain', 'View the index offence and its consecutive sentences')
+        cy.pageHeading().should('contain', 'Check the index offence and its consecutive sentences')
         cy.get('.govuk-body').should(
           'contain.text',
-          'The index offence is the first sentence in the consecutive sequence.'
+          'View the index offence selected from NOMIS and the sentences that run consecutively to it.',
         )
         cy.get('h2').should('exist').should('contain', 'Offence sequence')
+        cy.get('.govuk-body').should(
+          'contain.text',
+          'The index offence is the first sentence in the consecutive sequence.',
+        )
       })
       it('Continue link as button', () => {
         cy.get('a#continue')
           .should('exist')
           .should('have.class', 'govuk-button')
           .should('have.attr', 'role', 'button')
-          .should('have.attr', 'href', `/recommendations/${recommendationId}/match-index-offence`)
+          .should('have.attr', 'href', `/recommendations/${recommendationId}/select-ppud-sentence`)
       })
 
       describe('Sentence details', () => {
@@ -146,22 +147,22 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
         })
 
         it('Index sentence - correct summary details', () => {
-          const term = defaultExpectedSentenceSequence.indexSentence.terms.at(0)
+          const term = defaultExpectedSentenceSequence.indexSentence.terms?.[0]
           const expectedSentenceLength = `${term.years} years, ${term.months} months, ${term.weeks} weeks, ${term.days} days`
           testSentenceSummaryDetails(
             'indexSentence',
             defaultExpectedSentenceSequence.indexSentence,
             expectedLabels.indexOffence,
-            [{ key: expectedLabels.sentenceLength, value: expectedSentenceLength }]
+            [{ key: expectedLabels.sentenceLength, value: expectedSentenceLength }],
           )
         })
 
         it('Consecutive sentence', () => {
           testConsecutiveGroup(1, 2, 'index', ['sentence-seq-1-initial'])
-          const singleConsecutiveSentence = new Map(Object.entries(defaultExpectedSentenceSequence.sentencesInSequence))
-            .get('1')
-            .at(0)
-          const term = singleConsecutiveSentence.terms.at(0)
+          const singleConsecutiveSentence = new Map(
+            Object.entries(defaultExpectedSentenceSequence.sentencesInSequence),
+          ).get('1')?.[0]
+          const term = singleConsecutiveSentence.terms?.[0]
           const expectedSentenceLength = `${term.years} years, ${term.months} months, ${term.weeks} weeks`
           testSentenceSummaryDetails('sentence-seq-1-initial', singleConsecutiveSentence, expectedLabels.offence, [
             { key: expectedLabels.sentenceLength, value: expectedSentenceLength },
@@ -171,15 +172,15 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
         it('Consecutive sentence - with single concurrent sentence', () => {
           testConsecutiveGroup(2, 3, 2, ['sentence-seq-2-initial', 'sentence-seq-2-1'])
           const concurrentSentences = new Map(Object.entries(defaultExpectedSentenceSequence.sentencesInSequence)).get(
-            '2'
+            '2',
           )
 
-          const firstConcurrentSentence = concurrentSentences.at(0)
-          const firstSentenceTerm = firstConcurrentSentence.terms.at(0)
+          const firstConcurrentSentence = concurrentSentences?.[0]
+          const firstSentenceTerm = firstConcurrentSentence.terms?.[0]
           const expectedFirstTimeSentenceLength = `${firstSentenceTerm.years} years, ${firstSentenceTerm.months} months, ${firstSentenceTerm.days} days`
 
-          const secondConurrentSentence = concurrentSentences.at(1)
-          const secondSentenceTerm = secondConurrentSentence.terms.at(0)
+          const secondConurrentSentence = concurrentSentences?.[1]
+          const secondSentenceTerm = secondConurrentSentence.terms?.[0]
           const expectedSecondTimeSentenceLength = `${secondSentenceTerm.years} years, ${secondSentenceTerm.months} months`
 
           testSentenceSummaryDetails('sentence-seq-2-initial', firstConcurrentSentence, expectedLabels.offence, [
@@ -195,12 +196,12 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
 
         it('Consecutive sentence - after concurrent sentences, correctly sequenced', () => {
           testConsecutiveGroup(3, 5, 3, ['sentence-seq-3-initial'])
-          const singleConsecutiveSentence = new Map(Object.entries(defaultExpectedSentenceSequence.sentencesInSequence))
-            .get('3')
-            .at(0)
+          const singleConsecutiveSentence = new Map(
+            Object.entries(defaultExpectedSentenceSequence.sentencesInSequence),
+          ).get('3')?.[0]
           const { terms } = singleConsecutiveSentence
-          const impTerm = terms.at(0)
-          const licTerm = terms.at(1)
+          const impTerm = terms?.[0]
+          const licTerm = terms?.[1]
           const expectedIMPTerm = `${impTerm.years} years, ${impTerm.months} months, ${impTerm.weeks} weeks, ${impTerm.days} days`
           const expectedLICTerm = `${licTerm.years} years, ${licTerm.months} months, ${licTerm.weeks} weeks, ${licTerm.days} days`
 
@@ -218,22 +219,22 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             'sentence-seq-4-3',
           ])
           const concurrentSentences = new Map(Object.entries(defaultExpectedSentenceSequence.sentencesInSequence)).get(
-            '5'
+            '5',
           )
 
-          const firstConcurrentSentence = concurrentSentences.at(0)
+          const firstConcurrentSentence = concurrentSentences?.[0]
           const expectedFirstTimeSentenceLength = '-'
 
-          const secondConurrentSentence = concurrentSentences.at(1)
-          const secondSentenceTerm = secondConurrentSentence.terms.at(0)
+          const secondConurrentSentence = concurrentSentences?.[1]
+          const secondSentenceTerm = secondConurrentSentence.terms?.[0]
           const expectedSecondTimeSentenceLength = `${secondSentenceTerm.years} years, ${secondSentenceTerm.months} months, ${secondSentenceTerm.weeks} weeks, ${secondSentenceTerm.days} days`
 
-          const thirdConurrentSentence = concurrentSentences.at(2)
-          const thirdSentenceTerm = thirdConurrentSentence.terms.at(0)
+          const thirdConurrentSentence = concurrentSentences?.[2]
+          const thirdSentenceTerm = thirdConurrentSentence.terms?.[0]
           const expectedThirdTimeSentenceLength = `${thirdSentenceTerm.years} years, ${thirdSentenceTerm.months} months, ${thirdSentenceTerm.weeks} weeks, ${thirdSentenceTerm.days} days`
 
-          const fourthConurrentSentence = concurrentSentences.at(3)
-          const fourthSentenceTerm = fourthConurrentSentence.terms.at(0)
+          const fourthConurrentSentence = concurrentSentences?.[3]
+          const fourthSentenceTerm = fourthConurrentSentence.terms?.[0]
           const expectedFourthTimeSentenceLength = `${fourthSentenceTerm.years} years, ${fourthSentenceTerm.months} months, ${fourthSentenceTerm.weeks} weeks, ${fourthSentenceTerm.days} days`
 
           testSentenceSummaryDetails('sentence-seq-4-initial', firstConcurrentSentence, expectedLabels.offence, [
@@ -260,20 +261,26 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     id: string,
     expectedSentence: PrisonSentence,
     expectedOffenceLabel: string,
-    expectedTerms: { key: string; value: string }[]
+    expectedTerms: { key: string; value: string }[],
   ) => {
     cy.get(`dl#${id}`).should('exist').as('sentenceSummary')
+    const expectedRows = [
+      { key: expectedOffenceLabel, value: expectedSentence.offences?.[0].offenceDescription },
+      { key: expectedLabels.sentenceType, value: expectedSentence.sentenceTypeDescription },
+      { key: expectedLabels.court, value: expectedSentence.courtDescription },
+      { key: expectedLabels.dateOfSentence, value: expectedSentence.sentenceDate },
+      { key: expectedLabels.startDate, value: expectedSentence.sentenceStartDate },
+    ]
+    if (id === 'indexSentence') {
+      expectedRows.push({
+        key: expectedLabels.latestExpiryDate,
+        value: expectedSentence.sentenceSequenceExpiryDate,
+      })
+    }
+    expectedRows.push(...expectedTerms)
     testSummaryList(cy.get('@sentenceSummary'), {
       matchLength: true,
-      rows: [
-        { key: expectedOffenceLabel, value: expectedSentence.offences.at(0).offenceDescription },
-        { key: expectedLabels.sentenceType, value: expectedSentence.sentenceTypeDescription },
-        { key: expectedLabels.court, value: expectedSentence.courtDescription },
-        { key: expectedLabels.dateOfSentence, value: expectedSentence.sentenceDate },
-        { key: expectedLabels.startDate, value: expectedSentence.sentenceStartDate },
-        { key: expectedLabels.expiryDate, value: expectedSentence.sentenceEndDate },
-        ...expectedTerms,
-      ],
+      rows: expectedRows,
     })
   }
 
@@ -281,7 +288,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
     index: number,
     titleSequenceLine: number,
     consecutiveTo: 'index' | number,
-    expectedSummaryListIds: string[]
+    expectedSummaryListIds: string[],
   ) => {
     cy.get(`#consecutive-group-${index}`)
       .should('exist')
@@ -320,7 +327,7 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
       .should('have.class', 'govuk-heading-s')
       .should(
         'contain.text',
-        `${expectedConcurrentSentenceCount} concurrent sentence${expectedConcurrentSentenceCount > 1 ? 's' : ''}`
+        `${expectedConcurrentSentenceCount} concurrent sentence${expectedConcurrentSentenceCount > 1 ? 's' : ''}`,
       )
 
     cy.get('@details').find('div.govuk-details__text').should('exist').as('content')

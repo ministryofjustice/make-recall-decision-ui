@@ -15,6 +15,7 @@ export namespace IndeterminateSentenceType {
         LIFE = 'LIFE',
         IPP = 'IPP',
         DPP = 'DPP',
+        DHMP = 'DHMP',
         NO = 'NO',
     }
 

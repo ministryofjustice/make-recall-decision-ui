@@ -2,10 +2,48 @@ import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockReque
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import indeterminateDetailsController from './indeterminateDetailsController'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
+  it('load with existing data', async () => {
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          indeterminateOrExtendedSentenceDetails: {
+            selected: [{ value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE', details: 'test' }],
+            allOptions: [
+              {
+                value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
+                text: '{{ fullName }} has shown behaviour similar to the circumstances surrounding the <strong>index offence</strong>',
+              },
+              {
+                value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
+                text: '{{ fullName }} has shown behaviour that <strong>has caused, or will cause, a sexual or violent offence</strong>',
+              },
+              {
+                value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+                text: '{{ fullName }} has shown behaviour <strong>likely to result in a sexual or violent offence</strong>, or that could be associated with committing one',
+              },
+              {
+                value: 'OUT_OF_TOUCH',
+                text: '{{ fullName }} is either <strong>out of touch</strong> with probation, or their current location is not known',
+              },
+            ],
+          },
+        },
+        token: 'token1',
+      },
+    })
+    const next = mockNext()
+    await indeterminateDetailsController.get(mockReq(), res, next)
+
+    expect(res.locals.inputDisplayValues).toEqual([
+      { value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE', details: 'test' },
+    ])
+  })
+
   it('load with no data', async () => {
     const res = mockRes({
       locals: {
@@ -23,34 +61,6 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/indeterminateOrExtendedSentenceDetails')
 
     expect(next).toHaveBeenCalled()
-  })
-
-  it('load with existing data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          indeterminateOrExtendedSentenceDetails: {
-            selected: [{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'test' }],
-            allOptions: [
-              {
-                value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-                text: '{{ fullName }} has shown behaviour similar to the index offence',
-              },
-              {
-                value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-                text: '{{ fullName }} has shown behaviour that could lead to a sexual or violent offence',
-              },
-              { value: 'OUT_OF_TOUCH', text: '{{ fullName }} is out of touch' },
-            ],
-          },
-        },
-        token: 'token1',
-      },
-    })
-    const next = mockNext()
-    await indeterminateDetailsController.get(mockReq(), res, next)
-
-    expect(res.locals.inputDisplayValues).toEqual([{ value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'test' }])
   })
 
   it('initial load with error data', async () => {
@@ -109,9 +119,11 @@ describe('post', () => {
         indeterminateOrExtendedSentenceDetails: [
           'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
           'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
+          'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
         ],
         'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE': 'test',
         'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE': 'test2',
+        'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE': 'test3',
         'indeterminateOrExtendedSentenceDetailsDetail-OUT_OF_TOUCH': '',
       },
     })
@@ -134,17 +146,25 @@ describe('post', () => {
           selected: [
             { value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE', details: 'test' },
             { value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE', details: 'test2' },
+            { value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE', details: 'test3' },
           ],
           allOptions: [
             {
               value: 'BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE',
-              text: '{{ fullName }} has shown behaviour similar to the index offence',
+              text: '{{ fullName }} has shown behaviour similar to the circumstances surrounding the <strong>index offence</strong>',
             },
             {
               value: 'BEHAVIOUR_LEADING_TO_SEXUAL_OR_VIOLENT_OFFENCE',
-              text: '{{ fullName }} has shown behaviour that could lead to a sexual or violent offence',
+              text: '{{ fullName }} has shown behaviour that <strong>has caused, or will cause, a sexual or violent offence</strong>',
             },
-            { value: 'OUT_OF_TOUCH', text: '{{ fullName }} is out of touch' },
+            {
+              value: 'BEHAVIOUR_LIKELY_TO_RESULT_SEXUAL_OR_VIOLENT_OFFENCE',
+              text: '{{ fullName }} has shown behaviour <strong>likely to result in a sexual or violent offence</strong>, or that could be associated with committing one',
+            },
+            {
+              value: 'OUT_OF_TOUCH',
+              text: '{{ fullName }} is either <strong>out of touch</strong> with probation, or their current location is not known',
+            },
           ],
         },
       },
@@ -153,6 +173,33 @@ describe('post', () => {
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
+    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('post with valid data and redirects extended sentence correctly', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    const basePath = `/recommendations/123/`
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        indeterminateOrExtendedSentenceDetails: ['BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE'],
+        'indeterminateOrExtendedSentenceDetailsDetail-BEHAVIOUR_SIMILAR_TO_INDEX_OFFENCE': 'test',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: { personOnProbation: { name: 'Joe Bloggs' }, sentenceGroup: SentenceGroup.EXTENDED },
+        urlInfo: { basePath },
+      },
+    })
+    const next = mockNext()
+
+    await indeterminateDetailsController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/emergency-recall`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
   })
 
@@ -182,8 +229,8 @@ describe('post', () => {
     expect(req.session.errors).toEqual([
       {
         errorId: 'noIndeterminateDetailsSelected',
-        href: '#indeterminateOrExtendedSentenceDetails',
-        text: 'Select at least one of the criteria',
+        href: '#option-1',
+        text: 'Select all the criteria that apply to {{ fullName }}',
         name: 'indeterminateOrExtendedSentenceDetails',
         invalidParts: undefined,
         values: undefined,

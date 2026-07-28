@@ -1,4 +1,4 @@
-import { routeUrls } from '../../server/routes/routeUrls'
+import { sharedPaths } from '../../server/routes/paths/shared.paths'
 
 context('Feature flags', () => {
   beforeEach(() => {
@@ -6,11 +6,17 @@ context('Feature flags', () => {
   })
 
   it('override a flag', () => {
-    cy.visit(routeUrls.flags)
+    cy.visit(sharedPaths.flags)
     cy.pageHeading().should('equal', 'Feature flags')
-    cy.getSelectableOptionByLabel('Recommendations tab', 'On').should('not.be.checked')
-    cy.selectRadio('Recommendations tab', 'On')
+    cy.getElement('mockedFlag')
+      .should('exist')
+      .parent()
+      .within(() => {
+        cy.get('.govuk-summary-list__actions').should('exist')
+        cy.get('input[value=1]').click()
+      })
+
     cy.clickButton('Save')
-    cy.location().should(loc => expect(loc.search).to.contain('flagRecommendationsPage=1'))
+    cy.location().should(loc => expect(loc.search).to.contain('mockedFlag=1'))
   })
 })

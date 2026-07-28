@@ -3,26 +3,38 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import emergencyRecallController from './emergencyRecallController'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import randomEnum from '../../@types/enum.testFactory'
+import ErrorGenerator from '../../../data/common/errorGenerator'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../monitoring/azureAppInsights')
 
 describe('get', () => {
-  it('load with no data', async () => {
-    const res = mockRes({
-      locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        token: 'token1',
-      },
+  ;[true, false].forEach(isExtendedSentence => {
+    it(`load with no data, isExtendedSentence: ${isExtendedSentence}`, async () => {
+      const sentenceGroup = isExtendedSentence
+        ? SentenceGroup.EXTENDED
+        : randomEnum(SentenceGroup, [SentenceGroup.EXTENDED])
+      const res = mockRes({
+        locals: {
+          recommendation: {
+            personOnProbation: { name: 'Joe Bloggs' },
+            sentenceGroup,
+          },
+          token: 'token1',
+        },
+      })
+      const next = mockNext()
+      await emergencyRecallController.get(mockReq(), res, next)
+
+      expect(res.locals.page).toEqual({ id: 'emergencyRecall' })
+      expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+      expect(res.locals.isExtendedSentence).toEqual(isExtendedSentence)
+      expect(res.render).toHaveBeenCalledWith('pages/recommendations/emergencyRecall')
+
+      expect(next).toHaveBeenCalled()
     })
-    const next = mockNext()
-    await emergencyRecallController.get(mockReq(), res, next)
-
-    expect(res.locals.page).toEqual({ id: 'emergencyRecall' })
-    expect(res.locals.inputDisplayValues.value).not.toBeDefined()
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/emergencyRecall')
-
-    expect(next).toHaveBeenCalled()
   })
 
   it('load with existing data', async () => {
@@ -41,22 +53,11 @@ describe('get', () => {
   })
 
   it('initial load with error data', async () => {
+    const errors = ErrorGenerator.generate()
     const res = mockRes({
       locals: {
         errors: {
-          list: [
-            {
-              name: 'isThisAnEmergencyRecall',
-              href: '#isThisAnEmergencyRecall',
-              errorId: 'noEmergencyRecallSelected',
-              html: 'Select whether this is an emergency recall or not',
-            },
-          ],
-          isThisAnEmergencyRecall: {
-            text: 'Select whether this is an emergency recall or not',
-            href: '#isThisAnEmergencyRecall',
-            errorId: 'noEmergencyRecallSelected',
-          },
+          list: errors,
         },
         recommendation: {
           isThisAnEmergencyRecall: undefined,
@@ -68,19 +69,7 @@ describe('get', () => {
     await emergencyRecallController.get(mockReq(), res, mockNext())
 
     expect(res.locals.errors).toEqual({
-      list: [
-        {
-          name: 'isThisAnEmergencyRecall',
-          href: '#isThisAnEmergencyRecall',
-          errorId: 'noEmergencyRecallSelected',
-          html: 'Select whether this is an emergency recall or not',
-        },
-      ],
-      isThisAnEmergencyRecall: {
-        text: 'Select whether this is an emergency recall or not',
-        href: '#isThisAnEmergencyRecall',
-        errorId: 'noEmergencyRecallSelected',
-      },
+      list: errors,
     })
   })
 })
@@ -129,7 +118,7 @@ describe('post', () => {
         recommendationId: '123',
         region: { code: 'N07', name: 'London' },
       },
-      {}
+      {},
     )
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
@@ -180,7 +169,6 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         recallType: 'FIXED_TERM',
-        isExtendedSentence: 'false',
         isThisAnEmergencyRecall: 'NO',
       },
     })
@@ -199,6 +187,7 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/fixed-licence`)
   })
+
   it('post with valid data for extended sentence', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
 
@@ -208,7 +197,6 @@ describe('post', () => {
       body: {
         crn: 'X098092',
         recallType: 'STANDARD',
-        isExtendedSentence: 'true',
         isThisAnEmergencyRecall: 'NO',
       },
     })
@@ -225,6 +213,6 @@ describe('post', () => {
 
     await emergencyRecallController.post(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/indeterminate-details`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/sensitive-info`)
   })
 })

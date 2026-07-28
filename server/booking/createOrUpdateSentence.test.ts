@@ -1,10 +1,10 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { ppudCreateSentence, ppudUpdateSentence, updateRecommendation } from '../data/makeDecisionApiClient'
 import createOrUpdateSentence from './createOrUpdateSentence'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
-import { CUSTODY_GROUP } from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { BookingMementoGenerator } from '../../data/bookingMemento/bookingMementoGenerator'
 import BookingMemento from './BookingMemento'
 import { PpudCreateSentenceResponseGenerator } from '../../data/ppud/createSentenceResponse/ppudCreateSentenceResponseGenerator'
@@ -20,6 +20,8 @@ import {
   PpudSentence,
   PpudSentenceData,
 } from '../@types/make-recall-decision-api/models/RecommendationResponse'
+import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
+import SENTENCED_AS_YOUTH from '../@types/make-recall-decision-api/models/ppud/SentencedAsYouth'
 
 jest.mock('../data/makeDecisionApiClient')
 
@@ -29,7 +31,8 @@ const featureFlags = { xyz: true }
 function expectedDeterminateSentenceRequest(
   bookRecallToPpud: BookRecallToPpud,
   nomisOffence: OfferedOffence,
-  sentenceLength: SentenceLength
+  sentenceLength: SentenceLength,
+  sentenceGroup: SentenceGroup,
 ): PpudUpdateSentenceRequest {
   return {
     custodyType: bookRecallToPpud?.custodyType,
@@ -38,27 +41,30 @@ function expectedDeterminateSentenceRequest(
     licenceExpiryDate: nomisOffence.licenceExpiryDate,
     releaseDate: nomisOffence.releaseDate,
     sentenceLength,
-    sentenceExpiryDate: nomisOffence.sentenceEndDate,
+    sentenceExpiryDate: nomisOffence.sentenceSequenceExpiryDate,
     sentencingCourt: nomisOffence.courtDescription,
     sentencedUnder: bookRecallToPpud?.legislationSentencedUnder,
+    sentencedAsYouth: sentenceGroup === SentenceGroup.YOUTH_SDS ? SENTENCED_AS_YOUTH.YES : SENTENCED_AS_YOUTH.NO,
   }
 }
 
 function expectedIndeterminateSentenceRequest(
   selectedPpudSentence: PpudSentence,
-  editedIndeterminateSentenceData: PpudSentenceData
+  editedIndeterminateSentenceData: PpudSentenceData,
+  sentenceGroup: SentenceGroup,
 ): PpudUpdateSentenceRequest {
   return {
     custodyType: selectedPpudSentence.custodyType,
     dateOfSentence: editedIndeterminateSentenceData.dateOfSentence,
     sentencingCourt: editedIndeterminateSentenceData.sentencingCourt,
+    sentencedAsYouth: sentenceGroup === SentenceGroup.YOUTH_SDS ? SENTENCED_AS_YOUTH.YES : SENTENCED_AS_YOUTH.NO,
   }
 }
 
 function testSentenceCreation(
   recommendation: RecommendationResponse,
   bookingMemento: BookingMemento,
-  expectedSentenceRequest: PpudUpdateSentenceRequest
+  expectedSentenceRequest: PpudUpdateSentenceRequest,
 ) {
   const recommendationForCreation = {
     ...recommendation,
@@ -109,7 +115,7 @@ function testSentenceCreation(
 function testSentenceUpdate(
   recommendation: RecommendationResponse,
   bookingMemento: BookingMemento,
-  expectedSentenceRequest: PpudUpdateSentenceRequest
+  expectedSentenceRequest: PpudUpdateSentenceRequest,
 ) {
   describe('- updating existing PPUD sentence', () => {
     const expectedMemento: BookingMemento = {
@@ -131,7 +137,7 @@ function testSentenceUpdate(
         token,
         bookingMemento.offenderId,
         bookingMemento.sentenceId,
-        expectedSentenceRequest
+        expectedSentenceRequest,
       )
     })
     it('updates the recommendation', () => {
@@ -154,7 +160,7 @@ describe('update sentence', () => {
   describe('not in expected stage', () => {
     const bookingMemento = BookingMementoGenerator.generate({
       stage: faker.helpers.arrayElement(
-        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENDER_BOOKED)
+        Object.values(StageEnum).filter((stage: StageEnum) => stage !== StageEnum.OFFENDER_BOOKED),
       ),
     })
     let returnedMemento: BookingMemento
@@ -187,7 +193,8 @@ describe('update sentence', () => {
         const expectedSentenceRequest = expectedDeterminateSentenceRequest(
           recommendationWithoutCustodialTerm.bookRecallToPpud,
           recommendationWithoutCustodialTerm.nomisIndexOffence.allOptions[0],
-          null
+          null,
+          recommendationWithoutCustodialTerm.sentenceGroup,
         )
 
         testSentenceCreation(recommendationWithoutCustodialTerm, bookingMemento, expectedSentenceRequest)
@@ -222,7 +229,8 @@ describe('update sentence', () => {
         const expectedSentenceRequest = expectedDeterminateSentenceRequest(
           recommendationWithCustodialTerm.bookRecallToPpud,
           recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0],
-          expectedSentenceLength
+          expectedSentenceLength,
+          recommendationWithCustodialTerm.sentenceGroup,
         )
 
         testSentenceCreation(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
@@ -242,7 +250,8 @@ describe('update sentence', () => {
       recommendation.bookRecallToPpud.ppudSentenceId = selectedPpudSentence.id
       const expectedSentenceRequest = expectedIndeterminateSentenceRequest(
         selectedPpudSentence,
-        recommendation.bookRecallToPpud.ppudIndeterminateSentenceData
+        recommendation.bookRecallToPpud.ppudIndeterminateSentenceData,
+        recommendation.sentenceGroup,
       )
 
       testSentenceUpdate(recommendation, bookingMemento, expectedSentenceRequest)

@@ -1,4 +1,4 @@
-export enum EVENTS {
+enum EVENTS {
   PERSON_SEARCH_RESULTS = 'mrdPersonSearchResults',
   MRD_RECOMMENDATION_STARTED = 'mrdRecommendationStarted',
   MRD_RECOMMENDATION_PAGE_VIEW = 'mrdRecommendationPageView',
@@ -19,3 +19,5 @@ export enum EVENTS {
   BOOKING_ERROR = 'mrdBookingOnToPPUDError',
   BOOKED_ONTO_PPUD = 'mrdBookedOntoPPUD',
 }
+
+export default EVENTS

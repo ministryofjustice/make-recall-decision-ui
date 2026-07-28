@@ -1,8 +1,8 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
-import { updatePageReviewedStatus } from '../recommendations/helpers/updatePageReviewedStatus'
+import updatePageReviewedStatus from '../recommendations/helpers/updatePageReviewedStatus'
 import offenceDetailsController from './offenceDetailsController'
-import { fetchAndTransformLicenceConditions } from '../recommendations/licenceConditions/transform'
+import fetchAndTransformLicenceConditions from '../recommendations/licenceConditions/transform'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 
 jest.mock('../../data/makeDecisionApiClient')
@@ -31,7 +31,7 @@ describe('get', () => {
         params: { recommendationId: '123' },
       }),
       res,
-      next
+      next,
     )
 
     expect(updateRecommendation).toHaveBeenCalledWith({
@@ -63,7 +63,7 @@ describe('get', () => {
         username: 'bob',
       },
       'ABC',
-      {}
+      {},
     )
   })
 })

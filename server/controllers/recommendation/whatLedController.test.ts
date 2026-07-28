@@ -15,7 +15,7 @@ describe('get', () => {
     const next = mockNext()
     whatLedController.get(mockReq(), res, next)
 
-    expect(res.locals.page).toEqual({ id: 'whatLedToRecall' })
+    expect(res.locals.page).toEqual({ id: 'whatLedToRecall', isOutOfHoursRecall: false })
     expect(res.locals.inputDisplayValues.value).not.toBeDefined()
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/whatLedToRecall')
 

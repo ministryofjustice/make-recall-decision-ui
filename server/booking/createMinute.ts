@@ -1,7 +1,7 @@
 import BookingMemento from './BookingMemento'
-import { FeatureFlags } from '../@types/featureFlags'
+import type { FeatureFlags } from '../@types/featureFlags'
 import { ppudCreateMinute, updateRecommendation } from '../data/makeDecisionApiClient'
-import { StageEnum } from './StageEnum'
+import StageEnum from './StageEnum'
 
 export default async function createMinute(
   bookingMemento: BookingMemento,
@@ -9,7 +9,7 @@ export default async function createMinute(
   subject: string,
   text: string,
   token: string,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) {
   const memento = { ...bookingMemento }
 

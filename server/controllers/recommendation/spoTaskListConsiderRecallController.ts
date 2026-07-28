@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { hasData } from '../../utils/utils'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -38,7 +38,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       recommendationId,
       region,
     },
-    flags
+    flags,
   )
 
   res.render(`pages/recommendations/spoTaskListConsiderRecall`)

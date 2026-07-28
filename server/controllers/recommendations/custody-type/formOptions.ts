@@ -1,4 +1,4 @@
-export const determinateCustodyTypeLabels: Record<string, string> = {
+const determinateCustodyTypeLabels: Record<string, string> = {
   Determinate: 'Determinate',
   DCR: 'DCR (Discretionary conditional release)',
   EDS: 'EDS (Extended determinate sentence)',
@@ -6,3 +6,5 @@ export const determinateCustodyTypeLabels: Record<string, string> = {
   SOPC: 'SOPC (Sentence for offenders of particular concern)',
   SDOPC: 'SDOPC (Special sentence of detention for terrorist offenders of particular concern)',
 }
+
+export default determinateCustodyTypeLabels

@@ -2,7 +2,7 @@ import { removeParamsFromQueryString } from '../../../../utils/utils'
 import { ContactHistoryFilters, ContactTypeDecorated } from '../../../../@types/contacts'
 
 // details of applied filters, to be shown as 'tags' at the top of the filters panel; the user can click on a tag to remove the filter
-export const decorateSelectedFilters = ({
+const decorateSelectedFilters = ({
   selectedContactTypes,
   allContactTypes,
   filters,
@@ -29,3 +29,5 @@ export const decorateSelectedFilters = ({
         })
         .filter(Boolean)
     : []
+
+export default decorateSelectedFilters

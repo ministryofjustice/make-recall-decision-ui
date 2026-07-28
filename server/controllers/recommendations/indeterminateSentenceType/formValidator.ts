@@ -1,14 +1,21 @@
 import { makeErrorObject } from '../../../utils/errors'
 import { formOptions, isValueValid } from '../formOptions/formOptions'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 import { FormValidatorArgs, FormValidatorReturn } from '../../../@types/pagesForms'
 
-export const validateIndeterminateSentenceType = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
+const validateIndeterminateSentenceType = async ({ requestBody }: FormValidatorArgs): FormValidatorReturn => {
   let errors
   let valuesToSave
 
   const { indeterminateSentenceType } = requestBody
-  if (!indeterminateSentenceType || !isValueValid(indeterminateSentenceType as string, 'indeterminateSentenceType')) {
+
+  const items = formOptions.indeterminateSentenceType
+  // api don't accept 'hint' so keep only value and text
+  const itemsWithoutHint = items.map(({ value, text }) => ({ value, text }))
+
+  const formId = 'indeterminateSentenceType'
+
+  if (!indeterminateSentenceType || !isValueValid(indeterminateSentenceType as string, formId)) {
     const errorId = 'noIndeterminateSentenceTypeSelected'
     errors = [
       makeErrorObject({
@@ -22,7 +29,7 @@ export const validateIndeterminateSentenceType = async ({ requestBody }: FormVal
     valuesToSave = {
       indeterminateSentenceType: {
         selected: indeterminateSentenceType,
-        allOptions: formOptions.indeterminateSentenceType,
+        allOptions: itemsWithoutHint,
       },
     }
   }
@@ -31,3 +38,5 @@ export const validateIndeterminateSentenceType = async ({ requestBody }: FormVal
     valuesToSave,
   }
 }
+
+export default validateIndeterminateSentenceType

@@ -1,17 +1,19 @@
 import { NextFunction, Request, Response } from 'express'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
-import { booleanToYesNo } from '../../utils/utils'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import { makeErrorObject } from '../../utils/errors'
-import { strings } from '../../textStrings/en'
-import { getCaseSection } from '../caseSummary/getCaseSection'
+import strings from '../../textStrings/en'
+import getCaseSection from '../caseSummary/getCaseSection'
 import { NamedFormError, UrlInfo } from '../../@types/pagesForms'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import {
-  isFixedTermRecallMandatoryForValueKeys,
-  isFixedTermRecallMandatoryForRecommendation,
-} from '../../utils/fixedTermRecallUtils'
+import { isRecommendationDiscretionaryRecall } from '../../utils/fixedTermRecallUtils'
+import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
+import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
+import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
+import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import { sharedPaths } from '../../routes/paths/shared.paths'
+import { hasValue } from '../../utils/utils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -21,13 +23,19 @@ async function get(req: Request, res: Response, next: NextFunction) {
     unsavedValues,
   } = res.locals
 
+  // This screen isn't shown for indeterminate or extended sentences
+  if ([SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(recommendation.sentenceGroup)) {
+    res.redirect(303, `${sharedPaths.recommendations}/${recommendation.id}/indeterminate-details`)
+    return next()
+  }
+
   const { caseSummary: caseSummaryOverview } = await getCaseSection(
     'overview',
     recommendation.crn,
     token,
     userId,
     req.query,
-    flags
+    flags,
   )
   const { caseSummary: caseSummaryRisk } = await getCaseSection(
     'risk',
@@ -35,72 +43,49 @@ async function get(req: Request, res: Response, next: NextFunction) {
     token,
     userId,
     req.query,
-    flags
+    flags,
   )
 
   const caseSummary = {
     ...caseSummaryOverview,
     ...caseSummaryRisk,
   }
-  const popName = recommendation.personOnProbation.name
 
-  const inputDisplayValues = {
-    isSentence48MonthsOrOver: {
-      label: `Is ${popName}'s sentence 48 months or over?`,
-      hint: `Use the total length if ${popName} is serving consecutive sentences.`,
-      value: unsavedValues?.isSentence48MonthsOrOver || booleanToYesNo(recommendation.isSentence48MonthsOrOver),
-    },
-    isUnder18: {
-      label: `Is ${popName} under 18?`,
-      value: unsavedValues?.isUnder18 || booleanToYesNo(recommendation.isUnder18),
-    },
-    isMappaCategory4: {
-      label: `Is ${popName} in MAPPA category 4?`,
-      value: unsavedValues?.isMappaCategory4 || booleanToYesNo(recommendation.isMappaCategory4),
-    },
-    isMappaLevel2Or3: {
-      label: `Is ${popName}'s MAPPA level 2 or 3?`,
-      value: unsavedValues?.isMappaLevel2Or3 || booleanToYesNo(recommendation.isMappaLevel2Or3),
-    },
-    isRecalledOnNewChargedOffence: {
-      label: `Is ${popName} being recalled on a new charged offence?`,
-      value:
-        unsavedValues?.isRecalledOnNewChargedOffence || booleanToYesNo(recommendation.isRecalledOnNewChargedOffence),
-    },
-    isServingFTSentenceForTerroristOffence: {
-      label: `Is ${popName} serving a fixed term sentence for a terrorist offence?`,
-      value:
-        unsavedValues?.isServingFTSentenceForTerroristOffence ||
-        booleanToYesNo(recommendation.isServingFTSentenceForTerroristOffence),
-    },
-    hasBeenChargedWithTerroristOrStateThreatOffence: {
-      label: `Has ${popName} been charged with a terrorist or state threat offence?`,
-      value:
-        unsavedValues?.hasBeenChargedWithTerroristOrStateThreatOffence ||
-        booleanToYesNo(recommendation.hasBeenChargedWithTerroristOrStateThreatOffence),
-    },
+  const formOptions = getFormOptions(
+    recommendation.personOnProbation.name,
+    recommendation.sentenceGroup,
+    flags.ftr56SentenceConviction,
+  )
+
+  const inputDisplayValues = suitabilityInputDisplayValues(formOptions, unsavedValues, recommendation)
+
+  const warningPanelDetails = {
+    title: 'Changes could affect your recall recommendation choices',
+    body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
   }
 
   const warningPanel =
-    recommendation.recallType !== null && !isFixedTermRecallMandatoryForRecommendation(recommendation)
-      ? {
-          title: 'Changes could affect your recall recommendation choices',
-          body: `Changing your answers could make ${recommendation.personOnProbation.name} eligible for a mandatory fixed term recall. If this happens, information explaining your previous recall type selection will be deleted.`,
-        }
+    // The rationale is exclusively recorded for the YOUTH_SDS flow
+    // so the warning is only required when the sentenceGroup is YOUTH_SDS
+    recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
+    hasValue(recommendation.recallType) &&
+    isRecommendationDiscretionaryRecall(recommendation)
+      ? warningPanelDetails
       : undefined
 
   res.locals = {
     ...res.locals,
-    caseSummary,
     page: {
       id: 'suitabilityForFixedTermRecall',
       warningPanel,
     },
+    caseSummary,
     inputDisplayValues,
+    sentenceGroupDetails: getSentenceGroupDetailsFromEnum(recommendation.sentenceGroup),
   }
 
-  res.render(`pages/recommendations/suitabilityForFixedTermRecall`)
-  next()
+  res.render('pages/recommendations/suitabilityForFixedTermRecall')
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
@@ -121,13 +106,13 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const valuesToSave: Record<string, unknown> = {}
 
   const fieldIds = [
-    'isSentence48MonthsOrOver',
-    'isUnder18',
-    'isMappaCategory4',
-    'isMappaLevel2Or3',
-    'isRecalledOnNewChargedOffence',
-    'isServingFTSentenceForTerroristOffence',
-    'hasBeenChargedWithTerroristOrStateThreatOffence',
+    ...Object.keys(
+      getFormOptions(
+        recommendation.personOnProbation.name,
+        recommendation.sentenceGroup,
+        flags.ftr56SentenceConviction,
+      ),
+    ),
   ]
 
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
@@ -143,20 +128,30 @@ async function post(req: Request, res: Response, _: NextFunction) {
           id: key,
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     } else {
       valuesToSave[key] = value === 'YES'
     }
   })
 
-  const ftrMandatoryPreviously = isFixedTermRecallMandatoryForRecommendation(recommendation)
-  const ftrIsMandatoryUpdated = isFixedTermRecallMandatoryForValueKeys(valuesToSave as Record<string, boolean>)
-  if (ftrMandatoryPreviously && !ftrIsMandatoryUpdated) {
+  // We can't validate these fields as they're set from the NDelius value,
+  // but they're still required so we add them in here
+  if (recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS) {
+    valuesToSave.isMappaLevel2Or3 = req.body.isMappaLevel2Or3 === 'YES'
+    valuesToSave.isMappaCategory4 = req.body.isMappaCategory4 === 'YES'
+  }
+
+  // wipe the recall Type and rationale if the criteria has changed
+  const criteriaChanged = fieldIds.some(
+    fieldId => recommendation[fieldId as keyof typeof recommendation] !== valuesToSave[fieldId],
+  )
+
+  if (criteriaChanged) {
     valuesToSave.recallType = {
       ...recommendation.recallType,
       selected: {
-        value: recommendation.recallType?.selected.value,
+        value: null,
       },
     }
   }
@@ -174,7 +169,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  res.redirect(303, nextPagePreservingFromPageAndAnchor({ pageUrlSlug: 'recall-type', urlInfo }))
+  return res.redirect(303, nextPagePreservingFromPageAndAnchor({ pageUrlSlug: 'recall-type', urlInfo }))
 }
 
 export default { get, post }

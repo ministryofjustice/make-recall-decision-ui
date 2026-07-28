@@ -1,4 +1,4 @@
-import { createRecommendationBanner } from './bannerUtils'
+import createRecommendationBanner from './bannerUtils'
 import { Status } from '../@types/caseSummary'
 
 describe('create recommendation banner', () => {

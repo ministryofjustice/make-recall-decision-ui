@@ -13,14 +13,15 @@ import { convertToTitleCase, hasValue, isDefined } from '../../../utils/utils'
 import { PrisonOffenderSearchResponse } from '../../../@types/make-recall-decision-api/models/PrisonOffenderSearchResponse'
 import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
 import { makeErrorObject } from '../../../utils/errors'
-import { strings } from '../../../textStrings/en'
+import strings from '../../../textStrings/en'
 
-import { checkIfAddressesAreEmpty } from '../../../utils/addressChecker'
+import checkIfAddressesAreEmpty from '../../../utils/addressChecker'
 import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
-import { getRoute } from './custodyGroupRouter'
-import { CUSTODY_GROUP } from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import getRoute from './custodyGroupRouter'
+import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import recommendationUtils from '../../../utils/recommendationUtils'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -38,6 +39,9 @@ async function get(_: Request, res: Response, next: NextFunction) {
     .filter(s => s.active)
     .find(s => s.name === STATUSES.ACO_SIGNED)
 
+  // Out of hours recalls should have the AP_ statuses
+  const isOutOfHoursRecall = recommendationUtils.isOutOfHoursRecall(statuses)
+
   let errorMessage
   const valuesToSave = {
     prisonOffender: undefined,
@@ -49,7 +53,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     if (hasValue(recommendation.personOnProbation.nomsNumber)) {
       const nomisPrisonOffender = (await searchForPrisonOffender(
         token,
-        recommendation.personOnProbation.nomsNumber
+        recommendation.personOnProbation.nomsNumber,
       )) as PrisonOffenderSearchResponse
 
       if (!isDefined(nomisPrisonOffender)) {
@@ -79,10 +83,17 @@ async function get(_: Request, res: Response, next: NextFunction) {
     }
   }
 
+  const cro =
+    recommendation.personOnProbation?.croNumber ||
+    recommendation.prisonOffender?.cro ||
+    recommendation.ppudOffender?.croOtherNumber ||
+    null
+
   const edited = {} as Record<string, boolean>
 
   // if recommendation does not have working values for book to ppud, add them.
   if (!hasValue(recommendation.bookRecallToPpud)) {
+    const { decisionDateTime } = recommendation as RecommendationResponse
     let firstName = ''
     let middleName = ''
     let lastName = ''
@@ -97,17 +108,18 @@ async function get(_: Request, res: Response, next: NextFunction) {
       currentEstablishment = await determinePpudEstablishment(recommendation, token)
     }
 
-    const sentToPpcs = (statuses as RecommendationStatusResponse[])
-      .filter(s => s.active)
-      .find(s => s.name === STATUSES.SENT_TO_PPCS)
-
     valuesToSave.bookRecallToPpud = {
       firstNames: `${firstName} ${middleName}`.trim(),
       lastName,
       dateOfBirth,
       prisonNumber: recommendation.prisonOffender?.bookingNo,
-      cro: recommendation.prisonOffender?.cro,
-      receivedDateTime: sentToPpcs?.created,
+      cro,
+      // When a recall is OOH, the recall received and recall decision date/time need to
+      // match, so we use the decision date provided by the PP during the recommendation process
+      // see: https://dsdmoj.atlassian.net/browse/MRD-3015
+      // if its non OOH, force ppcs users to enter the date and time they received the recall,
+      // even if it is the same as the decision date/time, see: MRD-3042
+      receivedDateTime: isOutOfHoursRecall ? decisionDateTime : null,
       currentEstablishment,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
@@ -133,9 +145,14 @@ async function get(_: Request, res: Response, next: NextFunction) {
       edited.prisonNumber = true
     }
 
-    if (bookRecallToPpud.cro !== prisonOffender?.cro) {
+    if (bookRecallToPpud.cro !== cro) {
       edited.cro = true
     }
+  }
+
+  // We only create new records for determinate sentences, so default to determinate if ppudOffender isn't present
+  if (!hasValue(recommendation.ppudOffender)) {
+    recommendation.bookRecallToPpud.custodyGroup = CUSTODY_GROUP.DETERMINATE
   }
 
   if (isDefined(valuesToSave.bookRecallToPpud) || isDefined(valuesToSave.prisonOffender)) {
@@ -235,11 +252,12 @@ async function post(req: Request, res: Response, next: NextFunction) {
       bookRecallToPpud,
       'legislationReleasedUnder',
       'missingLegislationReleasedUnder',
-      errors
+      errors,
     )
   }
 
   validateBookRecallToPpudField(bookRecallToPpud, 'currentEstablishment', 'missingCurrentEstablishment', errors)
+  validateBookRecallToPpudField(bookRecallToPpud, 'receivedDateTime', 'missingReceivedDateTime', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'probationArea', 'missingProbationArea', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'policeForce', 'missingPoliceForce', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'releasingPrison', 'missingReleasingPrison', errors)
@@ -254,7 +272,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
   const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 
-  next()
+  return next()
 
   function validateBookRecallToPpudField(
     // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -262,7 +280,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     fieldName: keyof BookRecallToPpud,
     errorId: string,
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    errors: NamedFormError[]
+    errors: NamedFormError[],
   ) {
     if (
       !hasValue(bookRecallToPpud[fieldName]) ||
@@ -273,7 +291,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
           id: fieldName,
           text: strings.errors[errorId],
           errorId,
-        })
+        }),
       )
     }
   }

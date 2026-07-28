@@ -3,7 +3,7 @@ import { getRecommendation, updateRecommendation, updateStatuses } from '../../d
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
-import { EVENTS } from '../../utils/constants'
+import EVENTS from '../../utils/constants'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { hasValue } from '../../utils/utils'
 

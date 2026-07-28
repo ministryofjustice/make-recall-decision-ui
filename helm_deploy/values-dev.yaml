@@ -15,9 +15,21 @@ generic-service:
     MAKE_RECALL_DECISION_API_URL: "http://make-recall-decision-api.make-recall-decision-dev.svc.cluster.local"
     MANAGE_USERS_API_URL: "https://manage-users-api-dev.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-dev.hmpps.service.justice.gov.uk"
+    COMPONENT_API_URL: "https://probation-frontend-components-dev.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT: "dev"
+    FLIPT_SERVER_URL: "https://feature-toggles-dev.hmpps.service.justice.gov.uk/"
+    FLIPT_NAMESPACE: "consider-a-recall"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
+
+  allowlist:
+    north_shields_user: 194.33.192.1/24
+    kettering_user: 194.33.196.4/24
+    ark-dom1-farnborough: 194.33.192.0/24
+    groups:
+      - internal
+      - prisons # do not remove, the prisons group also covers probation
+      - probation
 
   scheduledDowntime:
     enabled: true
@@ -25,4 +37,3 @@ generic-service:
 generic-prometheus-alerts:
   businessHoursOnly: true
   alertSeverity: make-recall-decision-nonprod
-
