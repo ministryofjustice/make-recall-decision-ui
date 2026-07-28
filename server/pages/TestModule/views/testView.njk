@@ -1,6 +1,6 @@
 {% extends "../../../views/partials/layout.njk" %}
 
-{% set pageTitle = makePageTitle({ pageHeading: "Test Module" }) %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id]   }) %}
 
 {% block content %}
     <div class="govuk-grid-row">

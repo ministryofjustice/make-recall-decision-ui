@@ -19,7 +19,7 @@ import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpSentry from './middleware/setUpSentry'
-import setUpWebRequestParsing from './middleware/setupRequestParsing'
+import setUpWebRequestParsing from './middleware/setUpRequestParsing'
 import authorisationMiddleware, { HMPPS_AUTH_ROLE } from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
 import appInsightsOperationId from './middleware/appInsightsOperationId'
@@ -50,7 +50,10 @@ export default function createApp(userService: UserService): express.Application
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   // Setup modules goes here
-  const { routes: moduleRoutes, paths: modulePaths } = ModuleLoader()
+  const modules = ModuleLoader()
+  const modulePaths = modules.map(module => module.path)
+  const moduleRoutes = modules.flatMap(module => module.routes)
+
   nunjucksSetup(app, path, modulePaths)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware)

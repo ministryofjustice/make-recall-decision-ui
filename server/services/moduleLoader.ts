@@ -8,13 +8,19 @@
 import TestModule from '../pages/TestModule'
 
 export default function ModuleLoader() {
-  const routes = [...TestModule.routes]
-  const paths = [TestModule.path]
-  const strings = [TestModule.strings]
+  // console.log('Flibble', TestModule)
 
-  return {
-    paths,
-    routes,
-    strings,
-  }
+  return [TestModule]
+
+  // const routes = [...TestModule.routes]
+  // const paths = [TestModule.path]
+  // const strings = [TestModule.strings]
+  // // const formOptions = [{ [TestModule.id]: TestModule.formOptions }]
+
+  // return {
+  //   paths,
+  //   routes,
+  //   strings,
+  //   // formOptions,
+  // }
 }

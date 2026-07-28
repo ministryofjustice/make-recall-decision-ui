@@ -18,42 +18,38 @@ import whyConsideredRecall from '../whyConsideredRecall/formOptions'
 import standardLicenceConditions from './licenceConditions'
 import spoRecallTypeEnum from './spoRecallTypeEnum'
 import { sentenceGroup } from '../sentenceInformation/formOptions'
+import ModuleLoader from '../../../services/moduleLoader'
+import { FormOptionsType } from '../../../@types/FormOptions'
 
-export type FormOption = {
-  value: string
-  text: string
-  detailsLabel?: string
-  hint?: string
+const buildFormOptions = (): FormOptionsType => {
+  console.log('buildFormOptions happening')
+  return {
+    sentenceGroup,
+    recallType,
+    rationaleCheck,
+    spoRecallTypeEnum,
+    recallTypeIndeterminate,
+    recallTypeExtended,
+    recallTypeIndeterminateApi,
+    standardLicenceConditions,
+    custodyStatus,
+    alternativesToRecallTried,
+    vulnerabilities,
+    indeterminateSentenceType,
+    indeterminateOrExtendedSentenceDetails,
+    whyConsideredRecall,
+    howWillAppointmentHappen,
+    yesNo: yesNoOptions(),
+    hasVictimsInContactScheme,
+    roshLevels,
+    yesNoOffenceChanges: yesNoOptions({
+      [YesNoValues.YES]: strings.labels.yesOffenceChanges,
+      [YesNoValues.NO]: strings.labels.no,
+    }),
+  }
 }
 
-type FormOptionsType = {
-  [key: string]: FormOption[]
-}
-
-export const formOptions: FormOptionsType = {
-  sentenceGroup,
-  recallType,
-  rationaleCheck,
-  spoRecallTypeEnum,
-  recallTypeIndeterminate,
-  recallTypeExtended,
-  recallTypeIndeterminateApi,
-  standardLicenceConditions,
-  custodyStatus,
-  alternativesToRecallTried,
-  vulnerabilities,
-  indeterminateSentenceType,
-  indeterminateOrExtendedSentenceDetails,
-  whyConsideredRecall,
-  howWillAppointmentHappen,
-  yesNo: yesNoOptions(),
-  hasVictimsInContactScheme,
-  roshLevels,
-  yesNoOffenceChanges: yesNoOptions({
-    [YesNoValues.YES]: strings.labels.yesOffenceChanges,
-    [YesNoValues.NO]: strings.labels.no,
-  }),
-}
+export const formOptions = buildFormOptions()
 
 export const isValueValid = (val: string, optionId: string) =>
   Boolean(formOptions[optionId].find((option: UiListItem) => option.value === val))
