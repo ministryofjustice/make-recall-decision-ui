@@ -86,6 +86,10 @@ export default defineConfig({
         searchMappedUsers,
         ppudSearchActiveUsers,
         getFlags,
+        log(message) {
+          console.log(message)
+          return null
+        },
       })
       return config
     },
