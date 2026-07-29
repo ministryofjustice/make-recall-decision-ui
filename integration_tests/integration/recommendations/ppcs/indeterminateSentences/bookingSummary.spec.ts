@@ -83,7 +83,7 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
           .should('have.attr', 'target', '_blank')
           .and('have.attr', 'href')
           .then(href => {
-            expect(href).to.include('http://localhost:3000')
+            expect(href).to.include('https://internaltest.ppud.justice.gov.uk')
           })
       })
 
