@@ -1,7 +1,8 @@
+import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 
 export default {
-  stubPing: () => {
+  stubPing: (): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
@@ -14,7 +15,7 @@ export default {
       },
     })
   },
-  stubVerifyToken: () => {
+  stubVerifyToken: (): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'POST',
