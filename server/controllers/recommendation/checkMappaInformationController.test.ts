@@ -62,55 +62,24 @@ describe('post', () => {
     })
   })
 
-  describe('with ftr56SentenceConviction flag', () => {
-    it('it redirects correctly when disabled', async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValueOnce({})
+  it('it redirects correctly', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValueOnce({})
 
-      const res = mockRes({
-        token: 'token',
-      })
-
-      const req = mockReq({
-        params: { recommendationId: '1' },
-        body: {
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-        },
-      })
-      const next = mockNext()
-
-      await checkMappaInformationController.post(req, res, next)
-
-      expect(res.redirect).toHaveBeenCalledWith(
-        303,
-        `${sharedPaths.recommendations}/1/${ppPaths.suitabilityForFixedTermRecall}`,
-      )
+    const res = mockRes({
+      token: 'token',
     })
 
-    it('it redirects correctly when enabled', async () => {
-      ;(updateRecommendation as jest.Mock).mockResolvedValueOnce({})
-
-      const res = mockRes({
-        token: 'token',
-        locals: {
-          flags: {
-            ftr56SentenceConviction: true,
-          },
-        },
-      })
-
-      const req = mockReq({
-        params: { recommendationId: '1' },
-        body: {
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-        },
-      })
-      const next = mockNext()
-
-      await checkMappaInformationController.post(req, res, next)
-
-      expect(res.redirect).toHaveBeenCalledWith(303, `${sharedPaths.recommendations}/1/${ppPaths.chargedWithOffence}`)
+    const req = mockReq({
+      params: { recommendationId: '1' },
+      body: {
+        isMappaCategory4: true,
+        isMappaLevel2Or3: true,
+      },
     })
+    const next = mockNext()
+
+    await checkMappaInformationController.post(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `${sharedPaths.recommendations}/1/${ppPaths.chargedWithOffence}`)
   })
 })

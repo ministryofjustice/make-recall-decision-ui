@@ -42,7 +42,6 @@ const strings: Record<string, Record<string, string>> = {
     noEmergencyRecallSelected: 'Select whether this is an emergency recall or not',
     noIsMappaCategory4: 'Select whether {{ fullName }} is in MAPPA category 4',
     noIsMappaLevel2Or3: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
-    noIsChargedWithOffence: 'Select whether {{ fullName }} is being recalled because of being charged with an offence',
     noIsServingTerroristOrNationalSecurityOffence:
       'Select whether {{ fullName }} is serving a sentence for a terrorist or national security offence',
     noIsAtRiskOfInvolvedInForeignPowerThreat:

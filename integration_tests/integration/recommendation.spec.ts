@@ -18,6 +18,7 @@ import ppPaths from '../../server/routes/paths/pp.paths'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
 import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
 import selected = CustodyStatus.selected
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 const recommendationMock = RecommendationResponseGenerator.generate({
   sentenceGroup: SentenceGroup.ADULT_SDS,
@@ -26,7 +27,6 @@ const recommendationMock = RecommendationResponseGenerator.generate({
   triggerLeadingToRecall: true,
   previousReleases: true,
   licenceConditionsBreached: true,
-  isChargedWithOffence: true,
   isServingTerroristOrNationalSecurityOffence: true,
   isAtRiskOfInvolvedInForeignPowerThreat: true,
   wasReferredToParoleBoard244ZB: true,
@@ -35,6 +35,9 @@ const recommendationMock = RecommendationResponseGenerator.generate({
   isServingDCRSentence: true,
   isYouthSentenceOver12Months: true,
   isYouthChargedWithSeriousOffence: true,
+  isRecalledOnNewChargedOrConvictedOffence: {
+    selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+  },
   personOnProbation: {
     name: 'Jane Bloggs',
     hasBeenReviewed: true,

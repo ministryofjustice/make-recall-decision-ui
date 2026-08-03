@@ -29,7 +29,6 @@ const sharedProperties: RecommendationResponse = {
 }
 
 const suitabilityForRecallProperties: RecommendationResponse = {
-  isChargedWithOffence: undefined,
   isServingTerroristOrNationalSecurityOffence: undefined,
   isAtRiskOfInvolvedInForeignPowerThreat: undefined,
   wasReferredToParoleBoard244ZB: undefined,
@@ -154,7 +153,10 @@ describe('taskCompleteness', () => {
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(recallProperties, false),
-        ...setAllProperties(suitabilityForRecallProperties, false),
+        ...{
+          ...setAllProperties(suitabilityForRecallProperties, false),
+          isRecalledOnNewChargedOrConvictedOffence: false,
+        },
         recallType: true,
         fixedTermAdditionalLicenceConditions: true,
         hasArrestIssues: true,
@@ -174,41 +176,6 @@ describe('taskCompleteness', () => {
   })
 
   describe('No recall', () => {
-    // it('all complete', () => {
-    //   const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
-    //     noRecallResponse as RecommendationResponse,
-    //   )
-    //   expect(statuses).toEqual({
-    //     ...setAllProperties(sharedProperties, true),
-    //     ...setAllProperties(noRecallProperties, true),
-    //     ...setAllProperties(suitabilityForRecallProperties, false),
-    //     previousReleases: false,
-    //     sentenceGroup: false,
-    //     triggerLeadingToRecall: false,
-    //   })
-    //   expect(areAllComplete).toEqual(true)
-    //   expect(isReadyForCounterSignature).toEqual(false)
-    // })
-
-    // it('all complete - sentence type not required if indeterminate is false', () => {
-    //   const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
-    //     ...noRecallResponse,
-    //     decisionDateTime: null,
-    //     indeterminateSentenceType: undefined,
-    //   } as RecommendationResponse)
-    //   expect(statuses).toEqual({
-    //     ...setAllProperties(sharedProperties, true),
-    //     ...setAllProperties(noRecallProperties, true),
-    //     ...setAllProperties(suitabilityForRecallProperties, false),
-    //     decisionDateTime: false,
-    //     previousReleases: false,
-    //     sentenceGroup: false,
-    //     triggerLeadingToRecall: false,
-    //   })
-    //   expect(areAllComplete).toEqual(true)
-    //   expect(isReadyForCounterSignature).toEqual(false)
-    // })
-
     const emptyNoRecall: RecommendationResponse = {
       ...setAllProperties(sharedProperties, null),
       ...setAllProperties(noRecallProperties, null),
@@ -223,7 +190,10 @@ describe('taskCompleteness', () => {
       expect(statuses).toEqual({
         ...setAllProperties(sharedProperties, false),
         ...setAllProperties(noRecallProperties, false),
-        ...setAllProperties(suitabilityForRecallProperties, false),
+        ...{
+          ...setAllProperties(suitabilityForRecallProperties, false),
+          isRecalledOnNewChargedOrConvictedOffence: false,
+        },
         triggerLeadingToRecall: false,
         recallType: true,
         previousReleases: false,
@@ -299,7 +269,12 @@ describe('taskCompleteness', () => {
           },
           ...setAllProperties(noRecallProperties, true),
           ...(group === SentenceGroup.ADULT_SDS || group === SentenceGroup.YOUTH_SDS
-            ? setAllProperties(suitabilityForRecallProperties, true)
+            ? {
+                ...setAllProperties(suitabilityForRecallProperties, true),
+                isRecalledOnNewChargedOrConvictedOffence: {
+                  selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+                },
+              }
             : {}),
         } as RecommendationResponse
 
@@ -892,13 +867,15 @@ describe('taskCompleteness', () => {
     const adultSDSBase = {
       ...baseRecall,
       sentenceGroup: SentenceGroup.ADULT_SDS,
-      isChargedWithOffence: true,
       isServingTerroristOrNationalSecurityOffence: true,
       isAtRiskOfInvolvedInForeignPowerThreat: true,
       wasReferredToParoleBoard244ZB: true,
       wasRepatriatedForMurder: true,
       isServingSOPCSentence: true,
       isServingDCRSentence: true,
+      isRecalledOnNewChargedOrConvictedOffence: {
+        selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+      },
     } as RecommendationResponse
 
     it('returns areAllComplete true when all 7 adult criteria are set', () => {
@@ -907,7 +884,6 @@ describe('taskCompleteness', () => {
     })
 
     it.each([
-      'isChargedWithOffence',
       'isServingTerroristOrNationalSecurityOffence',
       'isAtRiskOfInvolvedInForeignPowerThreat',
       'wasReferredToParoleBoard244ZB',
@@ -972,17 +948,10 @@ describe('taskCompleteness', () => {
   describe('suitabilityForRecallValidation — non-SDS sentence groups', () => {
     it.each([SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE])(
       'does not apply SDS suitability criteria for %s',
-      group => {
+      () => {
         // suitabilityForRecallValidation stays true for these groups
         // areAllComplete may still be false for other unrelated reasons (indeterminate type etc)
         // so we only check that suitability is NOT the blocker by asserting the status directly
-        const { statuses } = taskCompleteness({
-          ...baseRecall,
-          sentenceGroup: group,
-          isChargedWithOffence: undefined,
-          isYouthSentenceOver12Months: undefined,
-        } as RecommendationResponse)
-        expect(statuses.isChargedWithOffence).toEqual(false) // raw status is false
         // but suitabilityForRecallValidation should not block — tested via a complete rec
         const { areAllComplete: completeResult } = taskCompleteness({
           ...baseRecall,
@@ -1018,13 +987,15 @@ describe('taskCompleteness', () => {
         sentenceGroup: SentenceGroup.ADULT_SDS,
         indeterminateSentenceType: undefined,
         // all adult SDS criteria must be set for the other validation to pass
-        isChargedWithOffence: true,
         isServingTerroristOrNationalSecurityOffence: true,
         isAtRiskOfInvolvedInForeignPowerThreat: true,
         wasReferredToParoleBoard244ZB: true,
         wasRepatriatedForMurder: true,
         isServingSOPCSentence: true,
         isServingDCRSentence: true,
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+        },
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })
@@ -1065,13 +1036,15 @@ describe('taskCompleteness', () => {
         ...baseRecall,
         sentenceGroup: SentenceGroup.ADULT_SDS,
         indeterminateOrExtendedSentenceDetails: undefined,
-        isChargedWithOffence: true,
         isServingTerroristOrNationalSecurityOffence: true,
         isAtRiskOfInvolvedInForeignPowerThreat: true,
         wasReferredToParoleBoard244ZB: true,
         wasRepatriatedForMurder: true,
         isServingSOPCSentence: true,
         isServingDCRSentence: true,
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+        },
       } as RecommendationResponse)
       expect(areAllComplete).toEqual(true)
     })

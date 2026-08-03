@@ -39,64 +39,42 @@ describe('availableRecallTypes', () => {
 describe('availableRecallTypesForRecommendation', () => {
   const recommendation = RecommendationResponseGenerator.generate()
 
-  ;[true, false].forEach(ftr56SentenceConviction => {
-    describe(`with FTR56 sentence conviction flag set to ${ftr56SentenceConviction}`, () => {
-      it('FTR mandatory -> only FTR and No Recall available', () => {
-        const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-          ['FIXED_TERM', 'NO_RECALL'].includes(entry.value),
-        )
-        ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
+  it('FTR mandatory -> only FTR and No Recall available', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
+      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value),
+    )
+    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
 
-        const actualAvailableRecallTypes = availableRecallTypesForRecommendation(
-          recommendation,
-          ftr56SentenceConviction,
-        )
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
 
-        expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-        expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(
-          recommendation,
-          ftr56SentenceConviction,
-        )
-        expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation, ftr56SentenceConviction)
-      })
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+    expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+    expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+  })
 
-      it('FTR not mandatory & Standard mandatory -> only Standard and No Recall available', () => {
-        const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-          ['STANDARD', 'NO_RECALL'].includes(entry.value),
-        )
-        ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
-        ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
+  it('FTR not mandatory & Standard mandatory -> only Standard and No Recall available', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
+      ['STANDARD', 'NO_RECALL'].includes(entry.value),
+    )
+    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+    ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
 
-        const actualAvailableRecallTypes = availableRecallTypesForRecommendation(
-          recommendation,
-          ftr56SentenceConviction,
-        )
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
 
-        expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-        expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(
-          recommendation,
-          ftr56SentenceConviction,
-        )
-        expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation, ftr56SentenceConviction)
-      })
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+    expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+    expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+  })
 
-      it('FTR not mandatory & Standard not mandatory -> FTR, Standard and No Recall available', () => {
-        const expectedAvailableRecallTypes = formOptions.recallType
-        ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
-        ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+  it('FTR not mandatory & Standard not mandatory -> FTR, Standard and No Recall available', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType
+    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+    ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
 
-        const actualAvailableRecallTypes = availableRecallTypesForRecommendation(
-          recommendation,
-          ftr56SentenceConviction,
-        )
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
 
-        expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-        expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(
-          recommendation,
-          ftr56SentenceConviction,
-        )
-        expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation, ftr56SentenceConviction)
-      })
-    })
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+    expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+    expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
   })
 })

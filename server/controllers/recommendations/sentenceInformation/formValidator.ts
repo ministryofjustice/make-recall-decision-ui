@@ -60,7 +60,6 @@ const validateSentenceInformation = async ({
         valuesToSave.wasRepatriatedForMurder = null
         valuesToSave.isServingSOPCSentence = null
         valuesToSave.isServingDCRSentence = null
-        valuesToSave.isChargedWithOffence = null
         valuesToSave.isServingTerroristOrNationalSecurityOffence = null
         valuesToSave.isAtRiskOfInvolvedInForeignPowerThreat = null
         valuesToSave.isThisAnEmergencyRecall = null

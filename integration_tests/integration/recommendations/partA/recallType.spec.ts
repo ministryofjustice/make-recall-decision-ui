@@ -244,7 +244,6 @@ context('Recall Type Page', () => {
           wasRepatriatedForMurder: randomCriteria.wasRepatriatedForMurder,
           isServingSOPCSentence: randomCriteria.isServingSOPCSentence,
           isServingDCRSentence: randomCriteria.isServingDCRSentence,
-          isChargedWithOffence: randomCriteria.isChargedWithOffence,
           isServingTerroristOrNationalSecurityOffence: randomCriteria.isServingTerroristOrNationalSecurityOffence,
           isAtRiskOfInvolvedInForeignPowerThreat: randomCriteria.isAtRiskOfInvolvedInForeignPowerThreat,
         })

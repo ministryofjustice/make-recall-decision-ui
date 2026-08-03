@@ -29,7 +29,6 @@ describe('get', () => {
     triggerLeadingToRecall: false,
     previousReleases: true,
     licenceConditionsBreached: true,
-    isChargedWithOffence: true,
     personOnProbation: {
       name: 'Jane Bloggs',
       hasBeenReviewed: true,
@@ -64,6 +63,9 @@ describe('get', () => {
     isServingDCRSentence: true,
     isYouthSentenceOver12Months: true,
     isYouthChargedWithSeriousOffence: true,
+    isRecalledOnNewChargedOrConvictedOffence: {
+      selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+    },
   })
 
   const taskCompleteness = {
@@ -97,7 +99,6 @@ describe('get', () => {
       whoCompletedPartA: true,
       ppcsQueryEmails: true,
       revocationOrderRecipients: true,
-      isChargedWithOffence: true,
       isServingTerroristOrNationalSecurityOffence: true,
       isAtRiskOfInvolvedInForeignPowerThreat: true,
       wasReferredToParoleBoard244ZB: true,
@@ -106,6 +107,7 @@ describe('get', () => {
       isServingDCRSentence: true,
       isYouthSentenceOver12Months: true,
       isYouthChargedWithSeriousOffence: true,
+      isRecalledOnNewChargedOrConvictedOffence: true,
     },
   }
 
@@ -353,53 +355,6 @@ describe('get', () => {
     await taskListController.get(mockReq(), res, next)
 
     expect(res.locals.isSpo).toEqual(true)
-  })
-
-  it('present - tasks complete with ftr56SentenceConviction enabled', async () => {
-    ;(getStatuses as jest.Mock).mockResolvedValue([])
-
-    const res = mockRes({
-      locals: {
-        recommendation: {
-          ...recommendationTemplate,
-          isRecalledOnNewChargedOrConvictedOffence: {
-            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
-          },
-        },
-        user: { roles: ['ROLE_MAKE_RECALL_DECISION'] },
-        flags: {
-          ftr56SentenceConviction: true,
-        },
-      },
-    })
-
-    const next = mockNext()
-    await taskListController.get(mockReq(), res, next)
-
-    expect(res.locals.page).toEqual({ id: 'taskList' })
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/taskList')
-    expect(res.locals.recommendation).toEqual({
-      ...recommendationTemplate,
-      isRecalledOnNewChargedOrConvictedOffence: {
-        selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
-      },
-    })
-    expect(res.locals.taskCompleteness).toEqual({
-      ...taskCompleteness,
-      statuses: {
-        ...taskCompleteness.statuses,
-        isRecalledOnNewChargedOrConvictedOffence: true,
-      },
-      isReadyForCounterSignature: true,
-      areAllComplete: false,
-    })
-
-    expect(res.locals.lineManagerCountersignLink).toEqual(true)
-    expect(res.locals.seniorManagerCountersignLink).toEqual(false)
-    expect(res.locals.lineManagerCountersignLabel).toEqual('To do')
-    expect(res.locals.seniorManagerCountersignLabel).toEqual('Cannot start yet')
-    expect(res.locals.lineManagerCountersignStyle).toEqual('grey')
-    expect(res.locals.seniorManagerCountersignStyle).toEqual('grey')
   })
 
   describe('VulnerabilitiesRequireDetails', () => {

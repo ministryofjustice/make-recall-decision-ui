@@ -13,15 +13,10 @@ import {
 } from '../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import recallTypePath from '../../utils/routing'
-import { FeatureFlags } from '../../@types/featureFlags'
 
 function get(_: Request, res: Response, next: NextFunction) {
-  const {
-    recommendation,
-    flags: { ftr56SentenceConviction },
-  } = res.locals as {
+  const { recommendation } = res.locals as {
     recommendation: RecommendationResponse
-    flags: FeatureFlags
   }
 
   if (![SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].includes(recommendation.sentenceGroup)) {
@@ -39,10 +34,10 @@ function get(_: Request, res: Response, next: NextFunction) {
       unsavedValues: res.locals.unsavedValues,
       apiValues: recommendation,
     }),
-    availableRecallTypes: availableRecallTypesForRecommendation(recommendation, ftr56SentenceConviction),
+    availableRecallTypes: availableRecallTypesForRecommendation(recommendation),
     personOnProbationName: recommendation.personOnProbation.fullName,
-    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation, ftr56SentenceConviction),
-    standardMandatory: isStandardRecallMandatoryForRecommendation(recommendation, ftr56SentenceConviction),
+    ftrMandatory: isFixedTermRecallMandatoryForRecommendation(recommendation),
+    standardMandatory: isStandardRecallMandatoryForRecommendation(recommendation),
     isAdultSentence: recommendation.sentenceGroup === SentenceGroup.ADULT_SDS,
   }
 
