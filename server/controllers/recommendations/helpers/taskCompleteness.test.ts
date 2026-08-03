@@ -176,6 +176,41 @@ describe('taskCompleteness', () => {
   })
 
   describe('No recall', () => {
+    // it('all complete', () => {
+    //   const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness(
+    //     noRecallResponse as RecommendationResponse,
+    //   )
+    //   expect(statuses).toEqual({
+    //     ...setAllProperties(sharedProperties, true),
+    //     ...setAllProperties(noRecallProperties, true),
+    //     ...setAllProperties(suitabilityForRecallProperties, false),
+    //     previousReleases: false,
+    //     sentenceGroup: false,
+    //     triggerLeadingToRecall: false,
+    //   })
+    //   expect(areAllComplete).toEqual(true)
+    //   expect(isReadyForCounterSignature).toEqual(false)
+    // })
+
+    // it('all complete - sentence type not required if indeterminate is false', () => {
+    //   const { areAllComplete, isReadyForCounterSignature, statuses } = taskCompleteness({
+    //     ...noRecallResponse,
+    //     decisionDateTime: null,
+    //     indeterminateSentenceType: undefined,
+    //   } as RecommendationResponse)
+    //   expect(statuses).toEqual({
+    //     ...setAllProperties(sharedProperties, true),
+    //     ...setAllProperties(noRecallProperties, true),
+    //     ...setAllProperties(suitabilityForRecallProperties, false),
+    //     decisionDateTime: false,
+    //     previousReleases: false,
+    //     sentenceGroup: false,
+    //     triggerLeadingToRecall: false,
+    //   })
+    //   expect(areAllComplete).toEqual(true)
+    //   expect(isReadyForCounterSignature).toEqual(false)
+    // })
+
     const emptyNoRecall: RecommendationResponse = {
       ...setAllProperties(sharedProperties, null),
       ...setAllProperties(noRecallProperties, null),
