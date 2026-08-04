@@ -215,6 +215,6 @@
       "serialize-javascript": "7.0.5"
     },
     "systeminformation": "^5.31.6",
-    "js-yaml": "4.2.0"
+    "js-yaml": "4.3.0"
   }
 }

@@ -22,7 +22,7 @@ export default class FeatureFlagService {
   async fliptClient(): Promise<FliptClient> {
     if (!this.client) {
       try {
-        this.client = createClient()
+        this.client = await createClient()
       } catch (err) {
         logger.error(err, 'Unable to connect to feature flag service')
         throw Error('Unable to connect to feature flag service')
@@ -32,10 +32,23 @@ export default class FeatureFlagService {
     return this.client
   }
 
+  private closeClient(): void {
+    if (this.client) {
+      try {
+        this.client.close()
+      } catch (error) {
+        logger.warn(error, 'Error closing flipt client')
+      } finally {
+        this.client = undefined
+      }
+    }
+  }
+
   async getAll(): Promise<FeatureFlagResponse[]> {
     try {
       logger.info('Making flipt flag request')
-      const flags: FeatureFlagResponse[] = await (await this.fliptClient()).listFlags()
+      const client = await this.fliptClient()
+      const flags: FeatureFlagResponse[] = await client.listFlags()
 
       const evaluatedFlags = await Promise.all(
         flags.map(async flag => {
@@ -48,10 +61,12 @@ export default class FeatureFlagService {
     } catch (error) {
       logger.error(error, 'Error retrieving all flags')
       return []
+    } finally {
+      this.closeClient()
     }
   }
 
-  async isFeatureEnabled(key: string, flagType: FeatureFlagResponse['type']): Promise<boolean> {
+  private async isFeatureEnabled(key: string, flagType: FeatureFlagResponse['type']): Promise<boolean> {
     try {
       const evaluationArguments = {
         entityId: this.user.username,
@@ -61,10 +76,11 @@ export default class FeatureFlagService {
         },
       }
 
+      const client = await this.fliptClient()
       const flag =
         flagType === 'BOOLEAN_FLAG_TYPE'
-          ? await (await this.fliptClient()).evaluateBoolean(evaluationArguments)
-          : await (await this.fliptClient()).evaluateVariant(evaluationArguments)
+          ? await client.evaluateBoolean(evaluationArguments)
+          : await client.evaluateVariant(evaluationArguments)
 
       return flag.enabled
     } catch (error) {

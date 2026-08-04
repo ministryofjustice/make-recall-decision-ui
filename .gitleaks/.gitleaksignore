@@ -1,2 +1,3 @@
 # The Fingerprint of false positive alerts can be added here to be excluded from future scans.
 integration_tests/support/featureFlagDefinitions.ts:generic-api-key:23
+mock-flipt-api/__files/get-snapshot.json:generic-api-key:29

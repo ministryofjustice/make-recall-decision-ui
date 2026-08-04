@@ -30,13 +30,16 @@ describe('Feature flag service', () => {
     const listFlags = jest.fn().mockResolvedValue(flags)
     const evaluateBoolean = jest.fn().mockResolvedValue({ enabled: true })
     const evaluateVariant = jest.fn().mockResolvedValue({ enabled: true })
-    ;(createClient as jest.Mock).mockResolvedValue({ listFlags, evaluateBoolean, evaluateVariant })
+    const close = jest.fn()
+
+    ;(createClient as jest.Mock).mockResolvedValue({ listFlags, evaluateBoolean, evaluateVariant, close })
 
     await featureFlagService.getAll()
 
     expect(evaluateBoolean).toHaveBeenCalledTimes(1)
     expect(evaluateVariant).toHaveBeenCalledTimes(1)
     expect(listFlags).toHaveBeenCalledTimes(1)
+    expect(close).toHaveBeenCalledTimes(1)
   })
 
   it('throws from fliptClient when createClient fails', async () => {

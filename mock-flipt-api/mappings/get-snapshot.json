@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/internal/v1/evaluation/snapshot/namespace/consider-a-recall"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "get-snapshot.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
