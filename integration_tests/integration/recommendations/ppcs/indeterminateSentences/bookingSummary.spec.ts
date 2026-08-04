@@ -60,6 +60,33 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
         cy.get('a.govuk-link').should('contain.text', 'Go to PPUD (opens in new tab)')
       })
 
+      it('Go to PPUD takes to Check booking details', () => {
+        cy.visit(testPageUrl)
+
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: {
+            ...recommendation,
+            bookRecallToPpud: {
+              receivedDateTime: '2024-01-31T15:17:58Z',
+            },
+            prisonOffender: {},
+          },
+        })
+        cy.task('getStatuses', {
+          statusCode: 200,
+          response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+        })
+        cy.task('updateRecommendation', { statusCode: 200, response: recommendation })
+        cy.get('a')
+          .contains('Go to PPUD (opens in new tab)')
+          .should('have.attr', 'target', '_blank')
+          .and('have.attr', 'href')
+          .then(href => {
+            expect(href).to.include('https://internaltest.ppud.justice.gov.uk')
+          })
+      })
+
       describe('Sentence section', () => {
         it('displays the Sentence heading and hint', () => {
           cy.visit(testPageUrl)
