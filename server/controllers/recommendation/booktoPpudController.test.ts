@@ -462,6 +462,7 @@ describe('post', () => {
       {
         stage: StageEnum.STARTED,
         errorType: 'DATA',
+        uploadFailedDocName: '',
         failed: true,
         failedMessage: '{"something":"text"}',
       },

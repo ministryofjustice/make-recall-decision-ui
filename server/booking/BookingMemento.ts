@@ -10,5 +10,6 @@ export default interface BookingMemento {
   failed?: boolean
   failedMessage?: string
   errorType?: BookingErrorType
+  uploadFailedDocName?: string
   uploaded?: string[]
 }

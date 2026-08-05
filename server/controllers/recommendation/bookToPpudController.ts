@@ -49,6 +49,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
   let bookingErrorType: BookingErrorType = BookingErrorType.DATA
+  let uploadingDocName = ''
   let memento: BookingMemento = recommendation.bookingMemento || {
     stage: StageEnum.STARTED,
   }
@@ -75,11 +76,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
     if (PPUDPartA) {
+      uploadingDocName = PPUDPartA.filename
       memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPartA?.id, 'PPUDPartA', token, flags)
     }
-
     const PPUDLicenceDocument = documents.find(doc => doc.type === 'PPUDLicenceDocument')
     if (PPUDLicenceDocument) {
+      uploadingDocName = PPUDLicenceDocument.filename
       memento = await uploadMandatoryDocument(
         memento,
         recommendationId,
@@ -92,6 +94,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     const PPUDProbationEmail = documents.find(doc => doc.type === 'PPUDProbationEmail')
     if (PPUDProbationEmail) {
+      uploadingDocName = PPUDProbationEmail.filename
       memento = await uploadMandatoryDocument(
         memento,
         recommendationId,
@@ -104,21 +107,25 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     const PPUDOASys = documents.find(doc => doc.type === 'PPUDOASys')
     if (PPUDOASys) {
+      uploadingDocName = PPUDOASys.filename
       memento = await uploadMandatoryDocument(memento, recommendationId, PPUDOASys?.id, 'PPUDOASys', token, flags)
     }
 
     const PPUDPrecons = documents.find(doc => doc.type === 'PPUDPrecons')
     if (PPUDPrecons) {
+      uploadingDocName = PPUDPrecons.filename
       memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPrecons?.id, 'PPUDPrecons', token, flags)
     }
 
     const PPUDPSR = documents.find(doc => doc.type === 'PPUDPSR')
     if (PPUDPSR) {
+      uploadingDocName = PPUDPSR.filename
       memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPSR?.id, 'PPUDPSR', token, flags)
     }
 
     const PPUDChargeSheet = documents.find(doc => doc.type === 'PPUDChargeSheet')
     if (PPUDChargeSheet) {
+      uploadingDocName = PPUDChargeSheet.filename
       memento = await uploadMandatoryDocument(
         memento,
         recommendationId,
@@ -130,7 +137,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     }
 
     const additional = documents.filter(doc => doc.type === 'OtherDocument').map(d => d.id)
-
+    uploadingDocName = `Other Documents`
     memento = await additional.reduce<Promise<BookingMemento>>(
       (mementoPromise, id) =>
         mementoPromise.then(currentMemento =>
@@ -170,6 +177,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       memento.failed = true
       memento.failedMessage = err.text
       memento.errorType = bookingErrorType
+      memento.uploadFailedDocName = uploadingDocName
       await updateRecommendation({
         recommendationId: String(recommendation.id),
         valuesToSave: {
