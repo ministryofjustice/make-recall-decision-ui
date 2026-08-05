@@ -5,19 +5,29 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-            <div class="govuk-panel govuk-panel--confirmation">
-              <h1 class='govuk-panel__title'>Your recall booking - {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}</h1>
-              <div class="govuk-panel__body" data-qa="fullName">
-              {{ recommendation.personOnProbation.name }}
-              </div>
-              <div class="govuk-panel__body govuk-!-font-weight-bold" data-qa="nomsId">
-                NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}
-              </div>
-            </div>
+          <div class="govuk-panel govuk-panel--confirmation">
+                    <h1 class="govuk-panel__title">
+                          Booked onto PPUD
+                    </h1>
 
-            <h2 class="govuk-heading-m">What happens next</h2>
-
-            <p class="govuk-body">You have added this recall to PPUD.  The offence you've selected will go into the comments box in the offence screen.</p>
+                    <div class="govuk-panel__body">
+                        {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}
+                    </div>
+                    <div class="govuk-panel__body">
+                        NOMIS number: <strong>{{ recommendation.personOnProbation.nomsNumber }}</strong>
+                    </div>
+                </div>
+                <h2 class="govuk-heading-m">What happens next</h2>
+                <p class='govuk-body'>
+                    You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use.
+                </p>
+                <div class='govuk-!-margin-top-6'>
+                    {{ govukButton({
+                            text: "Start a new booking",
+                            classes: "govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
+                            href: "/ppcs-search"
+                        }) }}
+                </div>
         </div>
     </div>
 {% endblock %}
