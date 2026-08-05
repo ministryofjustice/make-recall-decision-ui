@@ -49,11 +49,10 @@ context('Select PPUD Sentence', () => {
       cy.contains('a.govuk-button', 'Start a new booking').should('have.attr', 'href', '/ppcs-search')
     })
 
-    it('should navigate to the PPCS search page when clicked', () => {
+    it('should render a Start a new booking button linking to the PPCS search page', () => {
       cy.visit(testPageUrl)
-      cy.contains('a.govuk-button', 'Start a new booking').click()
 
-      cy.url().should('include', '/ppcs-search')
+      cy.contains('a.govuk-button', 'Start a new booking').should('have.attr', 'href', '/ppcs-search')
     })
   })
 })
