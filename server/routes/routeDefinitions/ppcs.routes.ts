@@ -53,6 +53,7 @@ import editOffenceController from '../../controllers/recommendation/ppcs/indeter
 import editSentencingCourt from '../../controllers/recommendation/ppcs/indeterminateSentence/edit/editSentencingCourt'
 import ppcsPaths from '../paths/ppcs.paths'
 import areOffenceChangesNeededController from '../../controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/areOffenceChangesNeededController'
+import errorBookToPpudController from '../../controllers/recommendation/errorBookToPpudController'
 
 const roles = { allow: [HMPPS_AUTH_ROLE.PPCS] }
 
@@ -584,6 +585,11 @@ const ppcsRoutes: RouteDefinition[] = [
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpud}`,
     method: 'get',
     handler: bookedToPpudController.get,
+  },
+  {
+    ...createRecommendationRouteTemplate('get', bookingMiddleware, roles),
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.erroBookToPpud}`,
+    handler: errorBookToPpudController.get,
   },
   ...ppcsRecommendationRoutes,
   ...ppcsDeterminateSentenceRoutes,

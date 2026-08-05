@@ -22,6 +22,7 @@ import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
 import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import BookingErrorType from '../../booking/BookingErrorType'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
@@ -47,7 +48,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
-
+  let bookingErrorType: BookingErrorType = BookingErrorType.DATA
   let memento: BookingMemento = recommendation.bookingMemento || {
     stage: StageEnum.STARTED,
   }
@@ -65,11 +66,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     memento = await createOrUpdateSentence(memento, recommendation, token, flags)
 
     memento = await updateOffence(memento, recommendation, token, flags)
-
+    // if(1 === 1) throw new Error('Data Error')
     memento = await updateRelease(memento, recommendation, token, flags)
 
     memento = await updateRecall(memento, recommendation, token, flags)
-
+    bookingErrorType = BookingErrorType.DOCUMENTS
     const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
 
     const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
@@ -168,7 +169,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     if (err.status !== undefined) {
       memento.failed = true
       memento.failedMessage = err.text
-
+      memento.errorType = bookingErrorType
       await updateRecommendation({
         recommendationId: String(recommendation.id),
         valuesToSave: {
@@ -189,7 +190,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         flags,
       )
 
-      return res.redirect(303, req.originalUrl)
+      return res.redirect(303, nextPageLinkUrl({ nextPageId: 'error-book-to-ppud', urlInfo }))
     }
     throw err
   }

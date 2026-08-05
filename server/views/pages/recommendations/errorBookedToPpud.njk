@@ -1,0 +1,49 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        {% if isDataError %}
+            <div class="govuk-grid-column-two-thirds-from-desktop">
+                <div class="govuk-panel">
+                    <h1 class="govuk-panel__title">
+                          Recall booking not completed
+                    </h1>
+                </div>
+                <p class='govuk-body'>
+                    Something went wrong booking the recall to PPUD. You’ll need to go to PPUD to check what information’s there, and add anything that’s missing.
+                </p>
+                <a target="_blank" rel="noopener noreferrer" class="govuk-link"
+               href='booking-summary'>View a summary of information to check in PPUD</a>
+                <div class='govuk-!-margin-top-6'>
+                    {{ govukButton({
+                            text: "Open PPUD to complete the booking",
+                            classes: "govuk-button--primary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
+                            href: {{ppudUrl}}
+                        }) }}
+                </div>
+            </div>
+        {% else %}
+            <div class="govuk-grid-column-two-thirds-from-desktop">
+                <div class="govuk-panel">
+                    <h1 class="govuk-panel__title">
+                          Document not uploaded to PPUD
+                    </h1>
+                </div>
+                <p class='govuk-body'>
+                    The [document name] did not upload to PPUD. You’ll need to go to PPUD to add the document manually and add any other missing documents.
+                </p>
+                <a target="_blank" rel="noopener noreferrer" class="govuk-link"
+               href='booking-summary'>View a summary of information to check in PPUD</a>
+                <div class='govuk-!-margin-top-6'>
+                    {{ govukButton({
+                            text: "Open PPUD to complete the booking",
+                            classes: "govuk-button--primary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
+                            href: {{ppudUrl}}
+                        }) }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

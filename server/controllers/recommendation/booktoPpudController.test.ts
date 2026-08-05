@@ -461,6 +461,7 @@ describe('post', () => {
     expect(bookOffender).toHaveBeenCalledWith(
       {
         stage: StageEnum.STARTED,
+        errorType: 'DATA',
         failed: true,
         failedMessage: '{"something":"text"}',
       },
@@ -486,7 +487,7 @@ describe('post', () => {
       },
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/error-book-to-ppud`)
     expect(next).not.toHaveBeenCalled()
   })
 })

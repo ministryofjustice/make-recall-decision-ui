@@ -60,5 +60,6 @@ export default {
   supportingDocumentDownload: 'supporting-document-download/:id',
   bookedToPpud: 'booked-to-ppud',
   bookToPpud: 'book-to-ppud',
+  erroBookToPpud: 'error-book-to-ppud',
   bookingSummary: 'booking-summary',
 }
