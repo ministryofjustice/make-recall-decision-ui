@@ -2,6 +2,7 @@ import updateRecall from './updateRecall'
 import StageEnum from './StageEnum'
 import { ppudCreateRecall, updateRecommendation } from '../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
+import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 jest.mock('../data/makeDecisionApiClient')
@@ -110,7 +111,7 @@ describe('update recall', () => {
       bookRecallToPpud: { mappaLevel: '', policeForce: '', probationArea: '', receivedDateTime: '' },
     } as unknown as RecommendationResponse
 
-    const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: true }]
+    const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: true }] as unknown as RecommendationStatusResponse[]
 
     ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
 
