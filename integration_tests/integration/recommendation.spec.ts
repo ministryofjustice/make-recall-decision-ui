@@ -3402,7 +3402,7 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/booked-to-ppud`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
+      cy.pageHeading().should('contain', 'Booked onto PPUD')
     })
 
     it('booking summary - NOMIS sentence is part of single-sentence sequence (non-null sentenceEndDate)', () => {
