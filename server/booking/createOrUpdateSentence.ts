@@ -7,6 +7,13 @@ import { PpudUpdateSentenceRequest } from '../@types/make-recall-decision-api/mo
 import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 import SENTENCED_AS_YOUTH from '../@types/make-recall-decision-api/models/ppud/SentencedAsYouth'
+import { Term } from '../@types/make-recall-decision-api/models/PrisonSentence'
+
+function calculateOffenceDays(offenceTerm: Term): number {
+  const days = offenceTerm?.days ?? 0
+  const weeksInDays = (offenceTerm?.weeks ?? 0) * 7
+  return days + weeksInDays
+}
 
 function buildDeterminateSentenceRequest(recommendation: RecommendationResponse): PpudUpdateSentenceRequest {
   const nomisOffence = recommendation.nomisIndexOffence.allOptions.find(
@@ -14,11 +21,12 @@ function buildDeterminateSentenceRequest(recommendation: RecommendationResponse)
   )
 
   const offenceTerm = nomisOffence.terms.find(term => term.code === 'IMP')
-
   const sentenceLength =
     offenceTerm != null
       ? {
-          partDays: offenceTerm?.days || 0,
+          // MRD-3238 - PPUD simply doesn't support weeks,
+          // so any part of the term in weeks needs to be converted into days.
+          partDays: calculateOffenceDays(offenceTerm) || 0,
           partMonths: offenceTerm?.months || 0,
           partYears: offenceTerm?.years || 0,
         }
