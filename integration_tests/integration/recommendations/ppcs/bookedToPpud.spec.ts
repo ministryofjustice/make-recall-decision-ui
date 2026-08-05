@@ -1,9 +1,31 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
 import setUpSessionForPpcs from './util'
+import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 
 context('Select PPUD Sentence', () => {
   const recommendationId = faker.number.int()
+
+  const recommendation = RecommendationResponseGenerator.generate({
+    nomisIndexOffence: {
+      selectedIndex: 1,
+    },
+    id: recommendationId,
+    personOnProbation: {
+      nomsNumber: 'J80002',
+      name: 'John Doe',
+    },
+    bookRecallToPpud: {
+      firstName: 'John',
+      lastName: 'Doe',
+      custodyGroup: CUSTODY_GROUP.DETERMINATE,
+      ppudSentenceId: '1',
+    },
+    bookingMemento: {
+      failed: false,
+    },
+  })
 
   const testPageUrl = `/recommendations/${recommendationId}/booked-to-ppud`
 
@@ -20,6 +42,7 @@ context('Select PPUD Sentence', () => {
     })
 
     it('Booked to PPUD success', () => {
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.visit(testPageUrl)
 
       cy.get('.govuk-panel.govuk-panel--confirmation').should('exist')
