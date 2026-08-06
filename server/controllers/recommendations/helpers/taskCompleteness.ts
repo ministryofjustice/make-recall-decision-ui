@@ -60,7 +60,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
       hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected) ||
       hasData(recommendation.additionalLicenceConditionsText),
-    isChargedWithOffence: hasValue(recommendation.isChargedWithOffence),
     isServingTerroristOrNationalSecurityOffence: hasValue(recommendation.isServingTerroristOrNationalSecurityOffence),
     isAtRiskOfInvolvedInForeignPowerThreat: hasValue(recommendation.isAtRiskOfInvolvedInForeignPowerThreat),
     wasReferredToParoleBoard244ZB: hasValue(recommendation.wasReferredToParoleBoard244ZB),
@@ -69,37 +68,21 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isServingDCRSentence: hasValue(recommendation.isServingDCRSentence),
     isYouthSentenceOver12Months: hasValue(recommendation.isYouthSentenceOver12Months),
     isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
-  }
-
-  if (_featureFlags?.ftr56SentenceConviction) {
-    statuses.isRecalledOnNewChargedOrConvictedOffence = hasValue(
+    isRecalledOnNewChargedOrConvictedOffence: hasValue(
       recommendation.isRecalledOnNewChargedOrConvictedOffence?.selected,
-    )
+    ),
   }
 
   const { triggerLeadingToRecall } = statuses
 
-  let isAdultSDSSuitabilityCriteriaSet
-
-  isAdultSDSSuitabilityCriteriaSet =
-    statuses.isChargedWithOffence &&
+  const isAdultSDSSuitabilityCriteriaSet =
     statuses.isServingTerroristOrNationalSecurityOffence &&
     statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
     statuses.wasReferredToParoleBoard244ZB &&
     statuses.wasRepatriatedForMurder &&
     statuses.isServingSOPCSentence &&
-    statuses.isServingDCRSentence
-
-  if (_featureFlags?.ftr56SentenceConviction) {
-    isAdultSDSSuitabilityCriteriaSet =
-      statuses.isServingTerroristOrNationalSecurityOffence &&
-      statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
-      statuses.wasReferredToParoleBoard244ZB &&
-      statuses.wasRepatriatedForMurder &&
-      statuses.isServingSOPCSentence &&
-      statuses.isServingDCRSentence &&
-      statuses.isRecalledOnNewChargedOrConvictedOffence
-  }
+    statuses.isServingDCRSentence &&
+    statuses.isRecalledOnNewChargedOrConvictedOffence
 
   const isYouthSDSSuitabilityCriteriaSet =
     statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence

@@ -17,12 +17,9 @@ export function availableRecallTypes(isFtrMandatory: boolean, isStandardMandator
   return formOptions.recallType
 }
 
-export function availableRecallTypesForRecommendation(
-  recommendation: RecommendationResponse,
-  ftr56SentenceConviction: boolean,
-): FormOption[] {
+export function availableRecallTypesForRecommendation(recommendation: RecommendationResponse): FormOption[] {
   return availableRecallTypes(
-    isFixedTermRecallMandatoryForRecommendation(recommendation, ftr56SentenceConviction),
-    isStandardRecallMandatoryForRecommendation(recommendation, ftr56SentenceConviction),
+    isFixedTermRecallMandatoryForRecommendation(recommendation),
+    isStandardRecallMandatoryForRecommendation(recommendation),
   )
 }

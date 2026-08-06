@@ -3,6 +3,7 @@ import { sharedPaths } from '../../server/routes/paths/shared.paths'
 import noRecallResponse from '../../api/responses/get-recommendation-no-recall.json'
 import setResponsePropertiesToNull from '../support/commands'
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 context('No recall', () => {
   beforeEach(() => {
@@ -195,19 +196,22 @@ context('No recall', () => {
           name: 'Jane Bloggs',
           ftr56MappaReviewed: true,
         },
-        isChargedWithOffence: true,
         isServingTerroristOrNationalSecurityOffence: true,
         isAtRiskOfInvolvedInForeignPowerThreat: true,
         wasReferredToParoleBoard244ZB: true,
         wasRepatriatedForMurder: true,
         isServingSOPCSentence: true,
         isServingDCRSentence: true,
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+        },
       }
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
       cy.task('getStatuses', { statusCode: 200, response: [] })
       cy.visit(`${sharedPaths.recommendations}/${recommendationId}/task-list-no-recall`)
 
       cy.getElement('MAPPA information to assess recall type Reviewed').should('exist')
+      cy.getElement('New offence charges or convictions').should('exist')
       cy.getElement('Suitability for standard or fixed term recall Completed').should('exist')
       cy.getElement('What you recommend Completed').should('exist')
       cy.getElement('When did the SPO agree this recall? Completed').should('not.exist')
@@ -278,7 +282,6 @@ context('No recall', () => {
       const recommendation = {
         ...noRecallResponse,
         sentenceGroup,
-        isChargedWithOffence: true,
         isServingTerroristOrNationalSecurityOffence: true,
         isAtRiskOfInvolvedInForeignPowerThreat: true,
         wasReferredToParoleBoard244ZB: true,
@@ -287,6 +290,9 @@ context('No recall', () => {
         isServingDCRSentence: true,
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+        },
         personOnProbation: {
           ...noRecallResponse.personOnProbation,
           ftr56MappaReviewed: true,

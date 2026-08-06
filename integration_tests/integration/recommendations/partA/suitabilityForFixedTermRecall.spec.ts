@@ -97,12 +97,7 @@ context('Suitability for fixed term recall page', () => {
               fieldId: 'isServingDCRSentence',
             },
           ]
-          if (!ftr56SentenceConviction) {
-            expectedQuestions.unshift({
-              label: `Is ${recommendation.personOnProbation.name} being recalled because of being charged with an offence?`,
-              fieldId: 'isChargedWithOffence',
-            })
-          }
+
           expectedQuestions.forEach((testCase, index) => {
             testRadioButtons(cy.get('.govuk-form-group').eq(index), {
               legend: {
@@ -170,13 +165,6 @@ context('Suitability for fixed term recall page', () => {
               checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
             },
           ]
-          if (!ftr56SentenceConviction) {
-            expectedErrors.unshift({
-              href: 'isChargedWithOffence',
-              message: `Select whether ${recommendation.personOnProbation.name} is being recalled because of being charged with an offence`,
-              checkFieldHasErrorStyling: false, // the individual radio item isn't styled as error
-            })
-          }
           testForErrorSummary(expectedErrors)
         })
       })

@@ -51,12 +51,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ...caseSummaryRisk,
   }
 
-  const formOptions = getFormOptions(
-    recommendation.personOnProbation.name,
-    recommendation.sentenceGroup,
-    flags.ftr56SentenceConviction,
-  )
-
+  const formOptions = getFormOptions(recommendation.personOnProbation.name, recommendation.sentenceGroup)
   const inputDisplayValues = suitabilityInputDisplayValues(formOptions, unsavedValues, recommendation)
 
   const warningPanelDetails = {
@@ -105,16 +100,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const errors: NamedFormError[] = []
   const valuesToSave: Record<string, unknown> = {}
 
-  const fieldIds = [
-    ...Object.keys(
-      getFormOptions(
-        recommendation.personOnProbation.name,
-        recommendation.sentenceGroup,
-        flags.ftr56SentenceConviction,
-      ),
-    ),
-  ]
-
+  const fieldIds = [...Object.keys(getFormOptions(recommendation.personOnProbation.name, recommendation.sentenceGroup))]
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
 
   // Loop through the unsaved values to generate an array of errors
