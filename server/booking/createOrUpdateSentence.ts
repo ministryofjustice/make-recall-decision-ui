@@ -26,7 +26,7 @@ function buildDeterminateSentenceRequest(recommendation: RecommendationResponse)
       ? {
           // MRD-3238 - PPUD simply doesn't support weeks,
           // so any part of the term in weeks needs to be converted into days.
-          partDays: calculateOffenceDays(offenceTerm) || 0,
+          partDays: calculateOffenceDays(offenceTerm),
           partMonths: offenceTerm?.months || 0,
           partYears: offenceTerm?.years || 0,
         }
