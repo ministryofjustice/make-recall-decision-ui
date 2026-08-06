@@ -80,7 +80,7 @@ jobs:
           echo "tags=not @E2E and not @smoke" >> $GITHUB_ENV
       - name: Run the tests
         id: e2e_tests
-        uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
+        uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7.4.1
         with:
           working-directory: make-recall-decision-e2e-tests
           publish-summary: false
