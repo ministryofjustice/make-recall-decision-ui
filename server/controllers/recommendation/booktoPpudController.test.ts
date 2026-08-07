@@ -1,5 +1,10 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getRecommendation, getSupportingDocuments, updateStatuses } from '../../data/makeDecisionApiClient'
+import {
+  getRecommendation,
+  getSupportingDocuments,
+  updateRecommendation,
+  updateStatuses,
+} from '../../data/makeDecisionApiClient'
 import bookToPpudController from './bookToPpudController'
 import bookOffender from '../../booking/bookOffender'
 import createOrUpdateSentence from '../../booking/createOrUpdateSentence'
@@ -14,6 +19,7 @@ import createMinute from '../../booking/createMinute'
 import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import BookingErrorType from '../../booking/BookingErrorType'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -38,6 +44,7 @@ const LOCALS_PAGE_TEMPLATE = {
   },
   urlInfo: { basePath: `/recommendations/1/` },
   flags: { xyz: true },
+  statuses: [{ name: 'AP_RECORDED_RATIONALE', active: false }],
   env: 'prod',
 }
 
@@ -64,9 +71,14 @@ describe('get', () => {
 })
 
 describe('post', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   it('post - happy path', async () => {
     const recommendation = { id: '12345', crn: 'X123', region: { code: 'N07', name: 'London' } }
     const flags = { xyz: true }
+    const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: false }]
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -81,6 +93,7 @@ describe('post', () => {
         user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
         urlInfo: { basePath },
         flags,
+        statuses,
       },
     })
     const next = mockNext()
@@ -110,7 +123,13 @@ describe('post', () => {
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
-    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRecall).toHaveBeenCalledWith(
+      { stage: StageEnum.RELEASE_BOOKED },
+      recommendation,
+      'token',
+      flags,
+      statuses,
+    )
     expect(res.locals).toEqual(LOCALS_PAGE_TEMPLATE)
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -140,6 +159,7 @@ describe('post', () => {
   it('post - happy path with no files', async () => {
     const recommendation = { id: '12345' }
     const flags = {}
+    const statuses = [{ name: 'SOME_STATUS', active: true }]
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -152,6 +172,7 @@ describe('post', () => {
       locals: {
         urlInfo: { basePath },
         flags,
+        statuses,
       },
     })
     const next = mockNext()
@@ -181,7 +202,13 @@ describe('post', () => {
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
-    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRecall).toHaveBeenCalledWith(
+      { stage: StageEnum.RELEASE_BOOKED },
+      recommendation,
+      'token',
+      flags,
+      statuses,
+    )
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
@@ -199,6 +226,7 @@ describe('post', () => {
       id: '12345',
     }
     const flags = {}
+    const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: true }]
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -211,6 +239,7 @@ describe('post', () => {
       locals: {
         urlInfo: { basePath },
         flags,
+        statuses,
       },
     })
     const next = mockNext()
@@ -330,7 +359,13 @@ describe('post', () => {
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
-    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRecall).toHaveBeenCalledWith(
+      { stage: StageEnum.RELEASE_BOOKED },
+      recommendation,
+      'token',
+      flags,
+      statuses,
+    )
 
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { stage: 'RECALL_BOOKED' },
@@ -461,6 +496,8 @@ describe('post', () => {
     expect(bookOffender).toHaveBeenCalledWith(
       {
         stage: StageEnum.STARTED,
+        errorType: BookingErrorType.DATA,
+        uploadFailedDocName: '',
         failed: true,
         failedMessage: '{"something":"text"}',
       },
@@ -468,6 +505,22 @@ describe('post', () => {
       'token',
       flags,
     )
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '12345',
+      valuesToSave: {
+        bookingMemento: {
+          stage: StageEnum.STARTED,
+          failed: true,
+          failedMessage: '{"something":"text"}',
+          errorType: 'DATA',
+          uploadFailedDocName: '',
+        },
+      },
+      token: 'token',
+      featureFlags: flags,
+    })
+
     expect(createOrUpdateSentence).not.toHaveBeenCalled()
     expect(updateOffence).not.toHaveBeenCalled()
     expect(updateRelease).not.toHaveBeenCalled()
@@ -486,7 +539,116 @@ describe('post', () => {
       },
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud-fail`)
+
+    expect(next).not.toHaveBeenCalled()
+  })
+
+  it('post - DOCUMENT upload exception', async () => {
+    const recommendation = {
+      id: '12345',
+      crn: 'X123',
+    }
+
+    const flags = {}
+
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
+
+    const req = mockReq({
+      params: {
+        recommendationId: '1',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        urlInfo: {
+          basePath: `/recommendations/1/`,
+        },
+        flags,
+        user: {
+          username: 'Dave',
+          token: 'token',
+          region: {
+            code: 'N07',
+            name: 'London',
+          },
+        },
+      },
+    })
+
+    const next = mockNext()
+
+    ;(bookOffender as jest.Mock).mockResolvedValue({
+      stage: StageEnum.OFFENDER_BOOKED,
+    })
+    ;(createOrUpdateSentence as jest.Mock).mockResolvedValue({
+      stage: StageEnum.SENTENCE_BOOKED,
+    })
+    ;(updateOffence as jest.Mock).mockResolvedValue({
+      stage: StageEnum.OFFENCE_BOOKED,
+    })
+    ;(updateRelease as jest.Mock).mockResolvedValue({
+      stage: StageEnum.RELEASE_BOOKED,
+    })
+    ;(updateRecall as jest.Mock).mockResolvedValue({
+      stage: StageEnum.RECALL_BOOKED,
+    })
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([
+      {
+        id: 'document-id',
+        filename: 'part-a.docx',
+        type: 'PPUDPartA',
+      },
+    ])
+    ;(uploadMandatoryDocument as jest.Mock).mockImplementation(() => {
+      throw new PpudError(400, '{"error":"upload failed"}')
+    })
+
+    await bookToPpudController.post(req, res, next)
+
+    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
+      expect.objectContaining({
+        stage: StageEnum.RECALL_BOOKED,
+      }),
+      '1',
+      'document-id',
+      'PPUDPartA',
+      'token',
+      flags,
+    )
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '12345',
+      valuesToSave: {
+        bookingMemento: {
+          stage: StageEnum.RECALL_BOOKED,
+          failed: true,
+          failedMessage: '{"error":"upload failed"}',
+          errorType: 'DOCUMENTS',
+          uploadFailedDocName: 'part-a.docx',
+        },
+      },
+      token: 'token',
+      featureFlags: flags,
+    })
+
+    expect(appInsightsEvent).toHaveBeenCalledWith(
+      'mrdBookingOnToPPUDError',
+      'Dave',
+      {
+        crn: 'X123',
+        recommendationId: '1',
+        region: {
+          code: 'N07',
+          name: 'London',
+        },
+      },
+      flags,
+    )
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud-fail`)
+
     expect(next).not.toHaveBeenCalled()
   })
 })

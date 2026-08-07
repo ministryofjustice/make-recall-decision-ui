@@ -222,9 +222,43 @@ describe('update sentence', () => {
         const selectedOffence = recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0]
         const custodialTerm = selectedOffence.terms[0]
         const expectedSentenceLength = {
-          partDays: custodialTerm.days,
+          partDays: custodialTerm.days + custodialTerm.weeks * 7, // Weeks are now converted into days
           partMonths: custodialTerm.months,
           partYears: custodialTerm.years,
+        }
+        const expectedSentenceRequest = expectedDeterminateSentenceRequest(
+          recommendationWithCustodialTerm.bookRecallToPpud,
+          recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0],
+          expectedSentenceLength,
+          recommendationWithCustodialTerm.sentenceGroup,
+        )
+
+        testSentenceCreation(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
+
+        testSentenceUpdate(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
+      })
+
+      describe('converts weeks to days in a selected index offence with a custodial term', () => {
+        const termOptions: TermOptions[] = [{ chronos: { years: 0, months: 0, weeks: 2, days: 0 }, code: 'IMP' }]
+        const recommendationWithCustodialTerm = {
+          ...recommendation,
+          nomisIndexOffence: {
+            ...recommendation.nomisIndexOffence,
+            allOptions: OfferedOffenceGenerator.generateSeries([
+              {
+                offenderChargeId: recommendation.nomisIndexOffence.selected,
+                terms: termOptions,
+              },
+              {},
+              {},
+            ]),
+          },
+        }
+
+        const expectedSentenceLength = {
+          partDays: 14, // Weeks are now converted into days
+          partMonths: 0,
+          partYears: 0,
         }
         const expectedSentenceRequest = expectedDeterminateSentenceRequest(
           recommendationWithCustodialTerm.bookRecallToPpud,
