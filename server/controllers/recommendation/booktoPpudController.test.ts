@@ -19,6 +19,7 @@ import createMinute from '../../booking/createMinute'
 import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import BookingErrorType from '../../booking/BookingErrorType'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -470,7 +471,7 @@ describe('post', () => {
     expect(bookOffender).toHaveBeenCalledWith(
       {
         stage: StageEnum.STARTED,
-        errorType: 'DATA',
+        errorType: BookingErrorType.DATA,
         uploadFailedDocName: '',
         failed: true,
         failedMessage: '{"something":"text"}',

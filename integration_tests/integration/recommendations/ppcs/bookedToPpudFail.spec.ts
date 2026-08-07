@@ -44,7 +44,7 @@ context('Booked to PPUD failed', () => {
         'Something went wrong booking the recall to PPUD. You’ll need to go to PPUD to check what information’s there, and add anything that’s missing.',
       )
 
-      cy.contains('a', 'View a summary of information to check in PPUD').should('have.attr', 'href', 'booking-summary')
+      cy.contains('a', 'View a summary of information to check in PPUD').should('have.attr', 'href', '/booking-summary')
 
       cy.contains('a.govuk-button', 'Open PPUD to complete the booking')
         .should('have.attr', 'href', 'https://internaltest.ppud.justice.gov.uk')
@@ -75,7 +75,7 @@ context('Booked to PPUD failed', () => {
 
       cy.get('.govuk-body').should('contain', 'The Licence.pdf did not upload to PPUD.')
 
-      cy.contains('a', 'View a summary of information to check in PPUD').should('have.attr', 'href', 'booking-summary')
+      cy.contains('a', 'View a summary of information to check in PPUD').should('have.attr', 'href', '/booking-summary')
 
       cy.contains('a.govuk-button', 'Open PPUD to complete the booking')
         .should('have.attr', 'href', 'https://internaltest.ppud.justice.gov.uk')

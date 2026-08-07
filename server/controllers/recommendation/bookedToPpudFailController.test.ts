@@ -1,5 +1,4 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
-import { getRecommendation } from '../../data/makeDecisionApiClient'
 import bookedToPpudFailController from './bookedToPpudFailController'
 import BookingErrorType from '../../booking/BookingErrorType'
 import config from '../../config'
@@ -15,25 +14,19 @@ describe('get', () => {
       },
     }
 
-    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
-
     const req = mockReq({
       params: { recommendationId: '1' },
     })
 
     const res = mockRes({
       locals: {
-        user: {
-          token: 'token',
-        },
+        recommendation,
       },
     })
 
     const next = mockNext()
 
     await bookedToPpudFailController.get(req, res, next)
-
-    expect(getRecommendation).toHaveBeenCalledWith('1', 'token')
 
     expect(res.locals.page).toEqual({
       id: 'bookedToPpudFail',
@@ -56,17 +49,13 @@ describe('get', () => {
       },
     }
 
-    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
-
     const req = mockReq({
       params: { recommendationId: '1' },
     })
 
     const res = mockRes({
       locals: {
-        user: {
-          token: 'token',
-        },
+        recommendation,
       },
     })
 
