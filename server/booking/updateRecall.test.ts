@@ -2,6 +2,7 @@ import updateRecall from './updateRecall'
 import StageEnum from './StageEnum'
 import { ppudCreateRecall, updateRecommendation } from '../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
+import { RecommendationStatusResponse } from '../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 
 jest.mock('../data/makeDecisionApiClient')
@@ -57,6 +58,7 @@ describe('update recall', () => {
       policeForce: 'Bethnal Green Police Force',
       probationArea: 'london',
       receivedDateTime: '2024-01-29T16:15:39',
+      recallTypeForPpud: 'To be determined',
       riskOfContrabandDetails: 'Contraband detail...',
     })
 
@@ -81,5 +83,45 @@ describe('update recall', () => {
       releaseId: '555',
       stage: 'RECALL_BOOKED',
     })
+  })
+
+  it('sets recall type to "Emergency to be determined" for emergency recalls', async () => {
+    const bookingMemento = { stage: StageEnum.RELEASE_BOOKED, offenderId: '767', releaseId: '555' }
+    const recommendation = {
+      isThisAnEmergencyRecall: true,
+      bookRecallToPpud: { mappaLevel: '', policeForce: '', probationArea: '', receivedDateTime: '' },
+    } as unknown as RecommendationResponse
+
+    ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
+
+    await updateRecall(bookingMemento, recommendation, 'token', {})
+
+    expect(ppudCreateRecall).toHaveBeenCalledWith(
+      'token',
+      '767',
+      '555',
+      expect.objectContaining({ recallTypeForPpud: 'Emergency to be determined' }),
+    )
+  })
+
+  it('sets recall type to "Emergency to be determined" for OOH recalls', async () => {
+    const bookingMemento = { stage: StageEnum.RELEASE_BOOKED, offenderId: '767', releaseId: '555' }
+    const recommendation = {
+      isThisAnEmergencyRecall: false,
+      bookRecallToPpud: { mappaLevel: '', policeForce: '', probationArea: '', receivedDateTime: '' },
+    } as unknown as RecommendationResponse
+
+    const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: true }] as unknown as RecommendationStatusResponse[]
+
+    ;(ppudCreateRecall as jest.Mock).mockResolvedValue({ recall: { id: '898' } })
+
+    await updateRecall(bookingMemento, recommendation, 'token', {}, statuses)
+
+    expect(ppudCreateRecall).toHaveBeenCalledWith(
+      'token',
+      '767',
+      '555',
+      expect.objectContaining({ recallTypeForPpud: 'Emergency to be determined' }),
+    )
   })
 })

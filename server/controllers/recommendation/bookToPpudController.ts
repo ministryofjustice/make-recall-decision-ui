@@ -68,7 +68,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     memento = await updateRelease(memento, recommendation, token, flags)
 
-    memento = await updateRecall(memento, recommendation, token, flags)
+    memento = await updateRecall(memento, recommendation, token, flags, res.locals.statuses)
 
     const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
 
