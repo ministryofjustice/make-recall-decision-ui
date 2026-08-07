@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker/.'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { randomiseCriteria } from '../../../../data/utils'
