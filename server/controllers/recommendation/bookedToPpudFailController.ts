@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getRecommendation } from '../../data/makeDecisionApiClient'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import BookingErrorType from '../../booking/BookingErrorType'
+import config from '../../config'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
@@ -10,22 +11,21 @@ async function get(req: Request, res: Response, next: NextFunction) {
   } = res.locals
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
-
-  const errorBookToPpud = BookingErrorType.DOCUMENTS // recommendation.bookingMemento?.errorType
-
-  const isDocumentError = errorBookToPpud === BookingErrorType.DOCUMENTS
+  const isDataError = recommendation.bookingMemento?.errorType === BookingErrorType.DATA
 
   res.locals = {
     ...res.locals,
     page: {
-      id: 'errorBookToPpud',
+      id: 'bookedToPpudFail',
     },
     recommendation,
-    isDocumentError,
-    isDataError: !isDocumentError,
+    isDataError,
+    errorType: recommendation.bookingMemento?.errorType,
+    uploadFailedDocName: recommendation.bookingMemento?.uploadFailedDocName,
+    ppudUrl: config.ppud,
   }
 
-  res.render('pages/recommendations/errorBookToPpud')
+  res.render('pages/recommendations/bookedToPpudFail')
   next()
 }
 

@@ -67,7 +67,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     memento = await createOrUpdateSentence(memento, recommendation, token, flags)
 
     memento = await updateOffence(memento, recommendation, token, flags)
-    // if(1 === 1) throw new Error('Data Error')
     memento = await updateRelease(memento, recommendation, token, flags)
 
     memento = await updateRecall(memento, recommendation, token, flags)
@@ -136,15 +135,15 @@ async function post(req: Request, res: Response, _: NextFunction) {
       )
     }
 
-    const additional = documents.filter(doc => doc.type === 'OtherDocument').map(d => d.id)
-    uploadingDocName = `Other Documents`
-    memento = await additional.reduce<Promise<BookingMemento>>(
-      (mementoPromise, id) =>
-        mementoPromise.then(currentMemento =>
-          uploadAdditionalDocument(currentMemento, recommendationId, id, token, flags),
-        ),
-      Promise.resolve(memento),
-    )
+    const additionalDocuments = documents.filter(doc => doc.type === 'OtherDocument')
+
+    memento = await additionalDocuments.reduce<Promise<BookingMemento>>(async (mementoPromise, document) => {
+      const currentMemento = await mementoPromise
+
+      uploadingDocName = document.filename
+
+      return uploadAdditionalDocument(currentMemento, recommendationId, document.id, token, flags)
+    }, Promise.resolve(memento))
 
     memento = await createMinute(
       memento,
@@ -198,7 +197,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
         flags,
       )
 
-      return res.redirect(303, nextPageLinkUrl({ nextPageId: 'error-book-to-ppud', urlInfo }))
+      return res.redirect(303, nextPageLinkUrl({ nextPageId: 'booked-to-ppud-fail', urlInfo }))
     }
     throw err
   }
