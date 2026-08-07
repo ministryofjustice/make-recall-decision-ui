@@ -121,7 +121,6 @@ describe('validateSentenceInformation', () => {
       wasRepatriatedForMurder: null,
       isServingSOPCSentence: null,
       isServingDCRSentence: null,
-      isChargedWithOffence: null,
       isServingTerroristOrNationalSecurityOffence: null,
       isAtRiskOfInvolvedInForeignPowerThreat: null,
     }

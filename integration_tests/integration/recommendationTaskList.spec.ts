@@ -72,18 +72,6 @@ context('Recommendation - task list', () => {
       sentenceGroup: SentenceGroup.ADULT_SDS,
       expect: {
         mappa: true,
-        suitability: true,
-        indeterminateOrExtendedDetails: false,
-        additionalLicenceConditions: true,
-        emergencyRecall: true,
-        indeterminateSentenceType: false,
-      },
-    },
-    {
-      name: 'Adult SDS with ftr56SentenceConviction enabled',
-      sentenceGroup: SentenceGroup.ADULT_SDS,
-      expect: {
-        mappa: true,
         isRecalledOnNewChargedOrConvictedOffence: true,
         suitability: true,
         indeterminateOrExtendedDetails: false,
@@ -91,7 +79,6 @@ context('Recommendation - task list', () => {
         emergencyRecall: true,
         indeterminateSentenceType: false,
       },
-      flags: ['ftr56SentenceConviction'],
     },
     {
       name: 'Youth SDS',
@@ -131,7 +118,7 @@ context('Recommendation - task list', () => {
     },
   ]
 
-  scenarios.forEach(({ name, sentenceGroup, expect, flags = [] }) => {
+  scenarios.forEach(({ name, sentenceGroup, expect }) => {
     it(`task list - To do - ${name}`, () => {
       const response = {
         ...recommendationResponse,
@@ -142,7 +129,7 @@ context('Recommendation - task list', () => {
         },
         sentenceGroup,
       }
-      setUp(response as RecommendationResponse, [], flags)
+      setUp(response as RecommendationResponse, [])
 
       cy.getElement('MAPPA information to assess recall type To review').should(expect.mappa ? 'exist' : 'not.exist')
       cy.getElement('New offence charges or convictions To do').should(
@@ -225,7 +212,6 @@ context('Recommendation - task list', () => {
           },
           ftr56MappaReviewed: true,
         },
-        isChargedWithOffence: expect?.isRecalledOnNewChargedOrConvictedOffence ? undefined : true,
         isServingTerroristOrNationalSecurityOffence: true,
         isAtRiskOfInvolvedInForeignPowerThreat: true,
         wasReferredToParoleBoard244ZB: true,
@@ -234,13 +220,11 @@ context('Recommendation - task list', () => {
         isServingDCRSentence: true,
         isYouthSentenceOver12Months: true,
         isYouthChargedWithSeriousOffence: true,
-        isRecalledOnNewChargedOrConvictedOffence: expect?.isRecalledOnNewChargedOrConvictedOffence
-          ? {
-              selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
-            }
-          : undefined,
+        isRecalledOnNewChargedOrConvictedOffence: {
+          selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+        },
       }
-      setUp(response as RecommendationResponse, [], flags)
+      setUp(response as RecommendationResponse, [])
 
       cy.getElement('MAPPA information to assess recall type Reviewed').should(expect.mappa ? 'exist' : 'not.exist')
       cy.getElement('New offence charges or convictions Completed').should(
@@ -317,13 +301,10 @@ context('Recommendation - task list', () => {
           cy.getElement('Suitability for standard or fixed term recall').should('not.exist')
         })
       })
-
-      describe('with ftr56SentenceConviction enabled', () => {
-        ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
-          it(`does not show isRecalledOnNewChargedOrConvictedOffence item for ${sentenceGroup}`, () => {
-            setUp({ ...recommendationResponse, sentenceGroup }, [], ['ftr56SentenceConviction'])
-            cy.getElement('New offence charges or convictions').should('not.exist')
-          })
+      ;[SentenceGroup.YOUTH_SDS, SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+        it(`does not show isRecalledOnNewChargedOrConvictedOffence item for ${sentenceGroup}`, () => {
+          setUp({ ...recommendationResponse, sentenceGroup }, [], [])
+          cy.getElement('New offence charges or convictions').should('not.exist')
         })
       })
     })

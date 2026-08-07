@@ -108,7 +108,6 @@ export type RecommendationResponse = {
   wasRepatriatedForMurder?: boolean,
   isServingSOPCSentence?: boolean,
   isServingDCRSentence?: boolean,
-  isChargedWithOffence?: boolean,
   isServingTerroristOrNationalSecurityOffence?: boolean,
   isAtRiskOfInvolvedInForeignPowerThreat?: boolean,
   isYouthSentenceOver12Months?: boolean,
