@@ -44,6 +44,7 @@ const LOCALS_PAGE_TEMPLATE = {
   },
   urlInfo: { basePath: `/recommendations/1/` },
   flags: { xyz: true },
+  statuses: [{ name: 'AP_RECORDED_RATIONALE', active: false }],
   env: 'prod',
 }
 
@@ -77,6 +78,7 @@ describe('post', () => {
   it('post - happy path', async () => {
     const recommendation = { id: '12345', crn: 'X123', region: { code: 'N07', name: 'London' } }
     const flags = { xyz: true }
+    const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: false }]
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -91,6 +93,7 @@ describe('post', () => {
         user: { username: 'Dave', region: { code: 'N07', name: 'London' } },
         urlInfo: { basePath },
         flags,
+        statuses,
       },
     })
     const next = mockNext()
@@ -120,7 +123,13 @@ describe('post', () => {
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
-    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRecall).toHaveBeenCalledWith(
+      { stage: StageEnum.RELEASE_BOOKED },
+      recommendation,
+      'token',
+      flags,
+      statuses,
+    )
     expect(res.locals).toEqual(LOCALS_PAGE_TEMPLATE)
 
     expect(updateStatuses).toHaveBeenCalledWith({
@@ -150,6 +159,7 @@ describe('post', () => {
   it('post - happy path with no files', async () => {
     const recommendation = { id: '12345' }
     const flags = {}
+    const statuses = [{ name: 'SOME_STATUS', active: true }]
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -162,6 +172,7 @@ describe('post', () => {
       locals: {
         urlInfo: { basePath },
         flags,
+        statuses,
       },
     })
     const next = mockNext()
@@ -191,7 +202,13 @@ describe('post', () => {
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
-    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRecall).toHaveBeenCalledWith(
+      { stage: StageEnum.RELEASE_BOOKED },
+      recommendation,
+      'token',
+      flags,
+      statuses,
+    )
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
@@ -209,6 +226,7 @@ describe('post', () => {
       id: '12345',
     }
     const flags = {}
+    const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: true }]
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
@@ -221,6 +239,7 @@ describe('post', () => {
       locals: {
         urlInfo: { basePath },
         flags,
+        statuses,
       },
     })
     const next = mockNext()
@@ -340,7 +359,13 @@ describe('post', () => {
     )
     expect(updateOffence).toHaveBeenCalledWith({ stage: StageEnum.SENTENCE_BOOKED }, recommendation, 'token', flags)
     expect(updateRelease).toHaveBeenCalledWith({ stage: StageEnum.OFFENCE_BOOKED }, recommendation, 'token', flags)
-    expect(updateRecall).toHaveBeenCalledWith({ stage: StageEnum.RELEASE_BOOKED }, recommendation, 'token', flags)
+    expect(updateRecall).toHaveBeenCalledWith(
+      { stage: StageEnum.RELEASE_BOOKED },
+      recommendation,
+      'token',
+      flags,
+      statuses,
+    )
 
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       { stage: 'RECALL_BOOKED' },
