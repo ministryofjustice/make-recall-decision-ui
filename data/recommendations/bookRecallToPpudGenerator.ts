@@ -15,7 +15,12 @@ export type BookRecallToPpudOptions = {
   firstName?: string
   lastName?: string
   dateOfBirth?: string
+  prisonNumber?: string
+  gender?: string
   ethnicity?: EthnicityKey
+  cro?: string
+  decisionDateTime?: string
+  receivedDateTime?: string
   custodyGroup?: AnyNoneOrOption<CUSTODY_GROUP>
   custodyTypeBasedOnGroup?: CUSTODY_GROUP
   custodyType?: AnyNoneOrOption<CustodyType>
@@ -24,7 +29,12 @@ export type BookRecallToPpudOptions = {
   indexOffenceComment?: IncludeNoneOrOption<string>
   ppudSentenceId?: string
   ppudIndeterminateSentenceData?: AnyNoneOrOption<PpudSentenceDataOptions>
+  mappaLevel?: string
+  policeForce?: string
+  probationArea?: string
   sentenceDate?: IncludeNoneOrOption<Date>
+  releasingPrison?: string
+  currentEstablishment?: string
 }
 
 export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookRecallToPpudOptions> = {
@@ -61,7 +71,12 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
       firstNames: options?.firstName ?? faker.person.firstName(),
       lastName: options?.lastName ?? faker.person.lastName(),
       dateOfBirth: options?.dateOfBirth ?? faker.date.past().toDateString(),
+      prisonNumber: options?.prisonNumber ?? faker.string.alphanumeric(),
+      gender: options?.gender ?? faker.person.gender(),
       ethnicity: EthnicityGenerator.generate(options?.ethnicity),
+      cro: options?.cro ?? faker.number.int().toString(),
+      decisionDateTime: options?.decisionDateTime ?? faker.date.recent().toISOString(),
+      receivedDateTime: options?.receivedDateTime ?? faker.date.recent().toISOString(),
       custodyGroup: resolveAnyNoneOrOption(options?.custodyGroup ?? 'any', Object.values(CUSTODY_GROUP)),
       custodyType: resolvedCustodyType,
       changeOffenceOrAddComment: resolveAnyNoneOrOption(options?.changeOffenceOrAddComment ?? 'any', [true, false]),
@@ -71,9 +86,14 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
       ppudIndeterminateSentenceData: PpudSentenceDataGenerator.generate(
         options?.ppudIndeterminateSentenceData ?? 'any',
       ),
+      mappaLevel: options?.mappaLevel ?? faker.number.int({ min: 1, max: 3 }).toString(),
+      probationArea: options?.probationArea ?? faker.location.county(),
+      policeForce: options?.policeForce ?? faker.location.county(),
       sentenceDate: resolveIncludeNoneOrOption(options?.sentenceDate, faker.date.anytime)?.toISOString(),
       legislationReleasedUnder,
       legislationSentencedUnder,
+      releasingPrison: options?.releasingPrison ?? faker.location.city(),
+      currentEstablishment: options?.currentEstablishment ?? faker.location.city(),
     }
   },
 }

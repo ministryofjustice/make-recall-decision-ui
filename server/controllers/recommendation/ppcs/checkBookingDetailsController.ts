@@ -15,7 +15,7 @@ import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
 import { makeErrorObject } from '../../../utils/errors'
 import strings from '../../../textStrings/en'
 
-import checkIfAddressesAreEmpty from '../../../utils/addressChecker'
+import allAddressesAreEmpty from '../../../utils/addressChecker'
 import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
@@ -75,6 +75,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
           ethnicity: nomisPrisonOffender.physicalAttributes.ethnicity,
           cro: nomisPrisonOffender.identifiers.find(id => id.type === 'CRO')?.value,
           pnc: nomisPrisonOffender.identifiers.find(id => id.type === 'PNC')?.value,
+          releaseDate: nomisPrisonOffender.sentenceDetail?.releaseDate,
         }
         recommendation.prisonOffender = valuesToSave.prisonOffender
       }
@@ -200,7 +201,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   let hasLastKnownAddress: boolean = false
 
   if (addresses) {
-    hasLastKnownAddress = !checkIfAddressesAreEmpty(addresses)
+    hasLastKnownAddress = !allAddressesAreEmpty(addresses)
   }
 
   res.locals = {
