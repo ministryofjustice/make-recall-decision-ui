@@ -4,7 +4,9 @@
 {% set editIdPrefix = 'edit-' %}
 
 {% macro formatAddress(address) %}
-    {% if not address.noFixedAbode %}
+    {% if address.noFixedAbode %}
+        {{ bodyParagraph("No fixed abode") }}
+    {% else %}
         <p class="govuk-body">
             {% if address.line1 %}
                 {{ address.line1 }}<br />

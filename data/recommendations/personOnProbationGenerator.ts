@@ -52,6 +52,7 @@ export const PersonOnProbationGenerator: DataGenerator<
         addresses: [
           {
             line1: faker.location.streetAddress(),
+            line2: faker.location.county(),
             town: faker.location.city(),
             postcode: faker.location.zipCode(),
             noFixedAbode: faker.datatype.boolean(),

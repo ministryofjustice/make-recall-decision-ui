@@ -22,6 +22,7 @@ import {
   isRecalledOnNewChargedOrConvictedOffenceGenerator,
   IsRecalledOnNewChargedOrConvictedOffenceOptions,
 } from './isRecalledOnNewChargedOrConvictedOffenceGenerator'
+import { PrisonOffenderGenerator, PrisonOffenderOptions } from './prisonOffenderGenerator'
 
 /*
 / This is a WIP that returns only either undefined or basic random info for children based on a boolean.
@@ -67,6 +68,7 @@ export type RecommendationOptions = {
   revocationOrderRecipients?: boolean
   ppcsQueryEmails?: boolean
   bookRecallToPpud?: BookRecallToPpudOptions
+  prisonOffender?: PrisonOffenderOptions
   nomisIndexOffence?: NoneOrOption<NomisIndexOffenceOptions>
   ppudOffender?: NoneOrOption<PpudOffenderOptions>
   bookingMemento?: NoneOrOption<BookingMementoOptions>
@@ -247,6 +249,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
     revocationOrderRecipients: (options?.revocationOrderRecipients ?? true) ? [faker.internet.email()] : undefined,
     ppcsQueryEmails: (options?.ppcsQueryEmails ?? true) ? [faker.internet.email()] : undefined,
     bookRecallToPpud: BookRecallToPpudGenerator.generate(options?.bookRecallToPpud),
+    prisonOffender: PrisonOffenderGenerator.generate(options?.prisonOffender),
     nomisIndexOffence:
       options?.nomisIndexOffence === 'none' ? undefined : NomisIndexGenerator.generate(options?.nomisIndexOffence),
     ppudOffender: options?.ppudOffender === 'none' ? undefined : PpudOffenderGenerator.generate(options?.ppudOffender),

@@ -225,6 +225,7 @@ export type PrisonOffender = {
   ethnicity: string,
   cro: string,
   pnc: string,
+  releaseDate: string,
 }
 
 // The PPUD types below are aligned with those defined in PpudDetailsResponse.ts
