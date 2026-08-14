@@ -54,7 +54,7 @@ import editSentencingCourt from '../../controllers/recommendation/ppcs/indetermi
 import ppcsPaths from '../paths/ppcs.paths'
 import areOffenceChangesNeededController from '../../controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/areOffenceChangesNeededController'
 import bookedToPpudFailController from '../../controllers/recommendation/bookedToPpudFailController'
-import bookedToPpudSuccessController from '../../controllers/recommendation/bookedToPpudControllerSuccess'
+import bookedToPpudSuccessController from '../../controllers/recommendation/bookedToPpudSuccessController'
 
 const roles = { allow: [HMPPS_AUTH_ROLE.PPCS] }
 

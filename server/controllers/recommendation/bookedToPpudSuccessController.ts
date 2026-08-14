@@ -3,16 +3,17 @@ import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/Cus
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+
   res.locals = {
     ...res.locals,
-    isNewSentence: recommendation.bookRecallToPpud.ppudSentenceId === 'ADD_NEW',
+    isNewSentence: recommendation.bookRecallToPpud?.ppudSentenceId === 'ADD_NEW',
     isInDeterminateSentences: recommendation.bookRecallToPpud?.custodyGroup === CUSTODY_GROUP.INDETERMINATE,
     page: {
       id: 'bookedToPpudSuccess',
     },
   }
 
-  res.render(`pages/recommendations/bookedToPpudSuccess`)
+  res.render('pages/recommendations/bookedToPpudSuccess')
   next()
 }
 
