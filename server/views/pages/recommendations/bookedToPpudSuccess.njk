@@ -1,0 +1,72 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% if isInDeterminateSentences %}
+            <div class="govuk-panel govuk-panel--confirmation">
+                    <h1 class="govuk-panel__title">
+                          Booked on to PPUD
+                    </h1>
+
+                    <div class="govuk-panel__body">
+                        {{ recommendation.personOnProbation.name }}
+                    </div>
+                    <div class="govuk-panel__body">
+                        NOMIS number: <strong>{{ recommendation.personOnProbation.nomsNumber }}</strong>
+                    </div>
+                </div>
+                <h2 class="govuk-heading-m">What happens next</h2>
+                <p class='govuk-body'>
+                    You’ve added this recall to PPUD and can issue the revocation order. A parole eligible casework (PEC) manager will be assigned to the case.
+                </p>
+        {% else %}
+
+        {% if isNewSentence %}
+                <div class="govuk-panel govuk-panel--confirmation">
+                    <h1 class="govuk-panel__title">
+                          Record created and booked on to PPUD
+                    </h1>
+
+                    <div class="govuk-panel__body">
+                        {{ recommendation.personOnProbation.name }}
+                    </div>
+                    <div class="govuk-panel__body">
+                        NOMIS number: <strong>{{ recommendation.personOnProbation.nomsNumber }}</strong>
+                    </div>
+                </div>
+                <h2 class="govuk-heading-m">What happens next</h2>
+                <p class='govuk-body'>
+                    You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use.
+                </p>
+          {% else %}
+                 <div class="govuk-panel govuk-panel--confirmation">
+                    <h1 class="govuk-panel__title">
+                          Booked on in PPUD
+                    </h1>
+
+                    <div class="govuk-panel__body">
+                        {{ recommendation.personOnProbation.name }}
+                    </div>
+                    <div class="govuk-panel__body">
+                        NOMIS number: <strong>{{ recommendation.personOnProbation.nomsNumber }}</strong>
+                    </div>
+                </div>
+                <h2 class="govuk-heading-m">What happens next</h2>
+                <p class='govuk-body'>
+                    You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use.
+                </p>
+          {% endif %}
+          {% endif %}
+            <div class='govuk-!-margin-top-6'>
+                    {{ govukButton({
+                            text: "Start a new booking",
+                            classes: "govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
+                            href: "/ppcs-search"
+                        }) }}
+                </div>
+        </div>
+    </div>
+{% endblock %}

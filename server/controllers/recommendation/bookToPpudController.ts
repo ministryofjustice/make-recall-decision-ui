@@ -202,7 +202,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     throw err
   }
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'booked-to-ppud', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'booked-to-ppud-success', urlInfo })
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
