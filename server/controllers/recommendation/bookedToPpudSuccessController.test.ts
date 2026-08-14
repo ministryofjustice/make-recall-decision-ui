@@ -20,7 +20,7 @@ describe('get', () => {
     await bookedToPpudSuccessController.get(mockReq(), res, next)
 
     expect(res.locals.isNewSentence).toBe(false)
-    expect(res.locals.isInDeterminateSentences).toBe(false)
+    expect(res.locals.isIndeterminateSentence).toBe(false)
     expect(res.locals.page).toEqual({ id: 'bookedToPpudSuccess' })
 
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/bookedToPpudSuccess')
@@ -44,7 +44,7 @@ describe('get', () => {
     await bookedToPpudSuccessController.get(mockReq(), res, next)
 
     expect(res.locals.isNewSentence).toBe(true)
-    expect(res.locals.isInDeterminateSentences).toBe(false)
+    expect(res.locals.isIndeterminateSentence).toBe(false)
     expect(res.locals.page).toEqual({ id: 'bookedToPpudSuccess' })
 
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/bookedToPpudSuccess')
@@ -68,7 +68,7 @@ describe('get', () => {
     await bookedToPpudSuccessController.get(mockReq(), res, next)
 
     expect(res.locals.isNewSentence).toBe(false)
-    expect(res.locals.isInDeterminateSentences).toBe(true)
+    expect(res.locals.isIndeterminateSentence).toBe(true)
     expect(res.locals.page).toEqual({ id: 'bookedToPpudSuccess' })
 
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/bookedToPpudSuccess')
@@ -89,7 +89,7 @@ describe('get', () => {
     await bookedToPpudSuccessController.get(mockReq(), res, next)
 
     expect(res.locals.isNewSentence).toBe(false)
-    expect(res.locals.isInDeterminateSentences).toBe(false)
+    expect(res.locals.isIndeterminateSentence).toBe(false)
     expect(res.locals.page).toEqual({ id: 'bookedToPpudSuccess' })
 
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/bookedToPpudSuccess')

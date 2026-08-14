@@ -7,7 +7,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   res.locals = {
     ...res.locals,
     isNewSentence: recommendation.bookRecallToPpud?.ppudSentenceId === 'ADD_NEW',
-    isInDeterminateSentences: recommendation.bookRecallToPpud?.custodyGroup === CUSTODY_GROUP.INDETERMINATE,
+    isIndeterminateSentence: recommendation.bookRecallToPpud?.custodyGroup === CUSTODY_GROUP.INDETERMINATE,
     page: {
       id: 'bookedToPpudSuccess',
     },
