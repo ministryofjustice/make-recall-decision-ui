@@ -152,7 +152,7 @@ describe('post', () => {
       },
     )
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud-success`)
     expect(next).not.toHaveBeenCalled()
   })
 
@@ -217,7 +217,7 @@ describe('post', () => {
       token: 'token',
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud-success`)
     expect(next).not.toHaveBeenCalled()
   })
 
@@ -458,7 +458,7 @@ describe('post', () => {
       token: 'token',
     })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud`)
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/booked-to-ppud-success`)
     expect(next).not.toHaveBeenCalled()
   })
 

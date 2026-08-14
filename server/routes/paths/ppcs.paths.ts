@@ -61,5 +61,6 @@ export default {
   bookedToPpud: 'booked-to-ppud',
   bookToPpud: 'book-to-ppud',
   bookedToPpudFail: 'booked-to-ppud-fail',
+  bookedToPpudSuccess: 'booked-to-ppud-success',
   bookingSummary: 'booking-summary',
 }
