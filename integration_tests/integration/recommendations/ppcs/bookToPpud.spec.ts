@@ -46,7 +46,7 @@ context('Book to PPUD', () => {
 
       cy.get('.govuk-body').should(
         'contain',
-        "You are creating a booking for John Doe. This will include all the information you've just checked.",
+        'You are creating a booking for John Doe. This will include all the information you’ve just checked.',
       )
 
       cy.get('.govuk-body').should('contain', 'It may take a few minutes to process.')
@@ -67,7 +67,7 @@ context('Book to PPUD', () => {
 
       cy.get('.govuk-body').should(
         'contain',
-        "You are creating a new PPUD record for John Doe. This will include all the information you've just checked.",
+        'You are creating a new PPUD record for John Doe. This will include all the information you’ve just checked.',
       )
 
       cy.get('.govuk-body').should('contain', 'It may take a few minutes to process.')
