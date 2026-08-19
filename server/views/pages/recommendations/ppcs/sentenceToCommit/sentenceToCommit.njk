@@ -132,6 +132,35 @@
                         </div>
                     {% endif %}
                 </dl>
+
+                </br>
+                <h2 class="govuk-heading-m">Documents</h2>
+                {% if documents and documents.length %}
+                    <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                        {% for doc in documents %}
+                            <div class="govuk-summary-list__row">
+                                <dd class="govuk-summary-list__value">
+                                    {{ doc.filename }}
+                                </dd>
+                            </div>
+                        {% endfor %}
+                    </dl>
+                {% else %}
+                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
+                {% endif %}
+
+                <h2 class="govuk-heading-m">Minutes</h2>
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
+                <p class="govuk-body govuk-!-font-weight-bold">Background information:</p>
+                {% if backgroundInfo %}
+                    <pre class="govuk-body">{{ backgroundInfo }}</pre>
+                {% endif %}
+                <p class="govuk-body govuk-!-font-weight-bold">More information:</p>
+                {% if moreInfo %}
+                    <p class="govuk-body">{{ moreInfo }}</p>
+                {% endif %}
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
+
                 {{ formSubmitButton() }}
             </form>
         </div>
