@@ -19,7 +19,6 @@ import createMinute from '../../booking/createMinute'
 import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
-import BookingErrorType from '../../booking/BookingErrorType'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -495,8 +494,7 @@ describe('post', () => {
 
     expect(bookOffender).toHaveBeenCalledWith(
       {
-        stage: StageEnum.STARTED,
-        errorType: BookingErrorType.DATA,
+        stage: StageEnum.POSTING_RECALL_DATA,
         uploadFailedDocName: '',
         failed: true,
         failedMessage: '{"something":"text"}',
@@ -510,10 +508,9 @@ describe('post', () => {
       recommendationId: '12345',
       valuesToSave: {
         bookingMemento: {
-          stage: StageEnum.STARTED,
+          stage: StageEnum.POSTING_RECALL_DATA,
           failed: true,
           failedMessage: '{"something":"text"}',
-          errorType: 'DATA',
           uploadFailedDocName: '',
         },
       },
@@ -609,7 +606,10 @@ describe('post', () => {
 
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       expect.objectContaining({
-        stage: StageEnum.RECALL_BOOKED,
+        failed: true,
+        failedMessage: '{"error":"upload failed"}',
+        stage: StageEnum.UPLOADING_DOCUMENTS,
+        uploadFailedDocName: 'part-a.docx',
       }),
       '1',
       'document-id',
@@ -622,10 +622,9 @@ describe('post', () => {
       recommendationId: '12345',
       valuesToSave: {
         bookingMemento: {
-          stage: StageEnum.RECALL_BOOKED,
+          stage: StageEnum.UPLOADING_DOCUMENTS,
           failed: true,
           failedMessage: '{"error":"upload failed"}',
-          errorType: 'DOCUMENTS',
           uploadFailedDocName: 'part-a.docx',
         },
       },
