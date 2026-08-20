@@ -135,6 +135,7 @@
 
                 </br>
                 <h2 class="govuk-heading-m">Documents</h2>
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
                 {% if documents and documents.length %}
                     <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                         {% for doc in documents %}
@@ -145,22 +146,22 @@
                             </div>
                         {% endfor %}
                     </dl>
-                {% else %}
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
                 {% endif %}
 
                 <h2 class="govuk-heading-m">Minutes</h2>
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
-                <p class="govuk-body govuk-!-font-weight-bold">Background information:</p>
+                <p class="govuk-body">Background information:<br>
                 {% if backgroundInfo %}
-                    <pre class="govuk-body">{{ backgroundInfo }}</pre>
+                    {{ backgroundInfo | replace("\n", "<br>") | safe }}
                 {% endif %}
-                <p class="govuk-body govuk-!-font-weight-bold">More information:</p>
+                </p>
+                <p class="govuk-body">More information:<br>
                 {% if moreInfo %}
-                    <p class="govuk-body">{{ moreInfo }}</p>
+                    {{ moreInfo }}
                 {% else %}
-                    <p class="govuk-body">No more information was provided in the minute</p>
+                    No more information was provided in the minute
                 {% endif %}
+                </p>
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
 
                 {{ formSubmitButton() }}
