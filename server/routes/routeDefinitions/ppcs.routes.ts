@@ -7,7 +7,7 @@ import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../rec
 import searchPpudController from '../../controllers/recommendation/searchPpudController'
 import noSearchPpudResults from '../../controllers/recommendation/noSearchPpudResults'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { and, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
+import { and, flagIsActive, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
 import searchPpudResultsController from '../../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../../controllers/recommendation/ppcs/checkBookingDetailsController'
 import editPoliceContactController from '../../controllers/recommendation/editPoliceContactController'
@@ -446,6 +446,7 @@ const ppcsDeterminateSentenceRoutes: RouteDefinition[] = [
 const indeterminateSentenceMiddleware = [
   recommendationStatusCheck(
     and(
+      flagIsActive('ppcsIndeterminateJourney'),
       statusIsActive(STATUSES.SENT_TO_PPCS),
       ppcsCustodyGroup(CUSTODY_GROUP.INDETERMINATE),
       not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),

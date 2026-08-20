@@ -9,15 +9,18 @@ import { testSummaryList } from '../../../../componentTests/summaryList.tests'
 import { indeterminateCustodyTypes } from '../../../../../server/helpers/ppudSentence/custodyTypes'
 import formatPpudSentenceLength from '../../../../../server/utils/dates/ppudSentenceLength/formatting'
 import { formatDateTimeFromIsoString } from '../../../../../server/utils/dates/formatting'
+import testIndeterminateJourneyFlag from './testIndeterminateFlag'
 
 context('Indeterminate Sentence - Sentence to Commit Page', () => {
   const recommendationId = '123'
 
-  const testPageUrl = `${routes.recommendations}/${recommendationId}/${ppcsPaths.sentenceToCommitIndeterminate}`
+  const testPageUrl = `${routes.recommendations}/${recommendationId}/${ppcsPaths.sentenceToCommitIndeterminate}?ppcsIndeterminateJourney=1`
 
   beforeEach(() => {
     setUpSessionForPpcs()
   })
+
+  testIndeterminateJourneyFlag(ppcsPaths.sentenceToCommitIndeterminate)
 
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
   describe('Page Data', () => {

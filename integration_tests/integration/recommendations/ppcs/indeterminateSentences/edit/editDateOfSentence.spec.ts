@@ -6,17 +6,21 @@ import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommend
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 import { MIN_VALUE_YEAR } from '../../../../../../server/utils/dates/conversion'
 import setUpSessionForPpcs from '../../util'
+import testIndeterminateJourneyFlag from '../testIndeterminateFlag'
+import ppcsPaths from '../../../../../../server/routes/paths/ppcs.paths'
 
 context('Indeterminate Sentence - Edit Date of Sentence Page', () => {
   const recommendationId = '123'
   const inputName = 'date-of-sentence'
   const inputId = 'dateOfSentence'
 
-  const testPageUrl = `/recommendations/${recommendationId}/edit-date-of-sentence`
+  const testPageUrl = `/recommendations/${recommendationId}/${ppcsPaths.indeterminateEdit.dateOfSentence}?ppcsIndeterminateJourney=1`
 
   beforeEach(() => {
     setUpSessionForPpcs()
   })
+
+  testIndeterminateJourneyFlag(ppcsPaths.indeterminateEdit.dateOfSentence)
 
   const sentenceId = faker.number.int().toString()
   const ppudDateOfSentence = faker.date.future()
