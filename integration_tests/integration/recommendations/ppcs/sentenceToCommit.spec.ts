@@ -82,6 +82,8 @@ context('Sentence to commit', () => {
       cy.getText('1-term').should('contain', '4 years')
       cy.getText('2-termType').should('contain', 'Extended term')
       cy.getText('2-term').should('contain', '2 years')
+
+      cy.contains('No more information was provided in the minute').should('exist')
     })
 
     it('single term', () => {
