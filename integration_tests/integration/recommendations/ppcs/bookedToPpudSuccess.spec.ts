@@ -92,7 +92,7 @@ context('Booked to PPUD success', () => {
       cy.get('.govuk-panel.govuk-panel--confirmation')
         .should('be.visible')
         .within(() => {
-          cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Booked on in PPUD')
+          cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Booked onto PPUD')
 
           cy.get('.govuk-panel__body').eq(0).should('contain.text', 'John Doe')
 
@@ -124,7 +124,7 @@ context('Booked to PPUD success', () => {
       cy.get('.govuk-panel.govuk-panel--confirmation')
         .should('be.visible')
         .within(() => {
-          cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Booked on to PPUD')
+          cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Booked onto PPUD')
 
           cy.get('.govuk-panel__body').eq(0).should('contain.text', 'John Doe')
 
@@ -152,11 +152,11 @@ context('Booked to PPUD success', () => {
       cy.visit(testPageUrl)
     })
 
-    it('should display the record created and booked on to PPUD confirmation new determinate sentence', () => {
+    it('should display the record created and booked onto PPUD confirmation new determinate sentence', () => {
       cy.get('.govuk-panel.govuk-panel--confirmation')
         .should('be.visible')
         .within(() => {
-          cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Record created and booked on to PPUD')
+          cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Record created and booked onto PPUD')
 
           cy.get('.govuk-panel__body').eq(0).should('contain.text', 'John Doe')
 
@@ -188,7 +188,7 @@ context('Booked to PPUD success', () => {
       cy.contains('a.govuk-button', 'Start a new booking')
         .should('be.visible')
         .and('have.class', 'govuk-button--secondary')
-        .and('have.attr', 'href', '/ppcs-search')
+        .and('have.attr', 'href', '/')
     })
   })
 })
