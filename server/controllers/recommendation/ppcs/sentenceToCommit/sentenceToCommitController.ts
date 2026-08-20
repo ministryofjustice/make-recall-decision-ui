@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
-import { getSupportingDocuments } from '../../../../data/makeDecisionApiClient'
-import { riskOfSeriousHarmLevel } from '../../../recommendations/helpers/rosh'
-import { SentenceGroup } from '../../../recommendations/sentenceInformation/formOptions'
+import getDocumentsAndMinutes from './documentsAndMinutes'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -18,27 +16,12 @@ async function get(req: Request, res: Response, next: NextFunction) {
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
 
-  const documents = await getSupportingDocuments({
-    recommendationId: String(recommendation.id),
+  const { documents, backgroundInfo, moreInfo } = await getDocumentsAndMinutes(
+    recommendationResponse,
+    offence?.courtDescription,
     token,
-    featureFlags: flags,
-  })
-
-  const extended = recommendationResponse.sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No'
-  const custody =
-    recommendationResponse.prisonOffender?.status === 'ACTIVE IN'
-      ? `Yes at ${recommendationResponse.prisonOffender?.locationDescription || 'HMP Prison'}`
-      : 'No'
-  const rosh = riskOfSeriousHarmLevel(recommendationResponse.currentRoshForPartA)
-  const sentencingCourt = offence?.courtDescription || ''
-
-  const backgroundInfo =
-    `Extended sentence: ${extended}\n` +
-    `Risk of serious harm level: ${rosh}\n` +
-    `In custody: ${custody}\n` +
-    `Sentencing court: ${sentencingCourt}`
-
-  const moreInfo = recommendationResponse.bookRecallToPpud?.minute
+    flags,
+  )
 
   res.locals = {
     ...res.locals,
