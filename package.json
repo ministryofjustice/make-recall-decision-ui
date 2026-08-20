@@ -208,15 +208,12 @@
   },
   "overrides": {
     "@opentelemetry/core": "2.10.0",
-    "brace-expansion": "5.0.9",
     "csurf": {
       "cookie": "0.7.2"
     },
     "diff": "8.0.3",
     "mocha": {
       "serialize-javascript": "7.0.5"
-    },
-    "systeminformation": "^5.31.6",
-    "nanoid": "3.3.17"
+    }
   }
 }
