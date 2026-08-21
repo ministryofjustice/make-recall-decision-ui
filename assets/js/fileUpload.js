@@ -90,6 +90,7 @@ class CaRMultiFileUpload extends MultiFileUpload {
     xhr.addEventListener('load', onLoad)
     xhr.addEventListener('error', onError)
     xhr.open('POST', this.config.uploadUrl)
+    // Adding this request header allows us to check `req.xhr` in the controllers
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
     xhr.responseType = 'json'
     xhr.send(formData)
@@ -132,7 +133,9 @@ class CaRMultiFileUpload extends MultiFileUpload {
     })
     xhr.open('POST', this.config.deleteUrl)
     xhr.setRequestHeader('Content-Type', 'application/json')
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest') // This is the only change in this method to allow us to detect XHR requests in the controller
+    // This is the only change in this method
+    // it allows us to detect XHR requests in the controller using `req.xhr`
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
     xhr.responseType = 'json'
     xhr.send(
       JSON.stringify({
