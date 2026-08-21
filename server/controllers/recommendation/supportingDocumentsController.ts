@@ -31,16 +31,16 @@ async function get(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-async function post(req: Request, res: Response, next: NextFunction) {
+async function post(req: Request, res: Response, _: NextFunction) {
   const { xhr: isXhr } = req
 
   // Determine the action we're currently doing
   if (req.body?.delete) {
-    return handleDelete(req, res, next)
+    return handleDelete(req, res)
   }
 
   if (Array.isArray(req.files) && req.files.length) {
-    return handleUpload(req, res, next)
+    return handleUpload(req, res)
   }
 
   // Handle when there's no "action"
@@ -65,7 +65,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
  * creating a new controller with no attached screens and just a post function
  */
 
-async function handleDelete(req: Request, res: Response, _: NextFunction) {
+async function handleDelete(req: Request, res: Response) {
   const { xhr: isXhr, params, body } = req
   const { recommendationId } = params
   const { delete: id } = body
@@ -97,7 +97,7 @@ async function handleDelete(req: Request, res: Response, _: NextFunction) {
   const status = errors.length ? 400 : 204
 
   if (isXhr) {
-    return res.status(status).json({ success: false })
+    return res.status(status).json({})
   }
 
   if (errors.length) {
@@ -107,7 +107,7 @@ async function handleDelete(req: Request, res: Response, _: NextFunction) {
   return res.redirect(303, req.originalUrl)
 }
 
-async function handleUpload(req: Request, res: Response, _: NextFunction) {
+async function handleUpload(req: Request, res: Response) {
   const { xhr: isXhr } = req
   const { recommendationId } = req.params
   const {

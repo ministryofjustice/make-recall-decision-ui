@@ -188,7 +188,7 @@ describe('Match Index Offence Controller', () => {
             await matchIndexOffenceController.post(req, res, next)
           })
           it('redirects to Custody Type page', () =>
-            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.supportingDocuments}`))
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.editCustodyType}`))
         })
         describe('Updating an existing PPUD sentence', () => {
           const recommendation = RecommendationResponseGenerator.generate()
@@ -201,8 +201,8 @@ describe('Match Index Offence Controller', () => {
             ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
             await matchIndexOffenceController.post(req, res, next)
           })
-          it('redirects to Supporting Documents upload page', () =>
-            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.supportingDocuments}`))
+          it('redirects to Sentence to commit existing offender page', () =>
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.sentenceToCommitExistingOffender}`))
         })
       })
     })

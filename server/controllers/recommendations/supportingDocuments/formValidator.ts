@@ -4,7 +4,7 @@ import strings from '../../../textStrings/en'
 import { makeErrorObject } from '../../../utils/errors'
 import { renderTemplateString } from '../../../utils/nunjucks'
 
-const maxFileSize = 25000 * 1024
+const maxFileSize = 25 * 1024 * 1024
 const supportedFileTypes = [
   'application/pdf',
   'text/plain',
