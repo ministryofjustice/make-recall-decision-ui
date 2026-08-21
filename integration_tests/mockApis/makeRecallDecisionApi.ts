@@ -33,11 +33,13 @@ const mockUpdate = ({
   statusCode = 200,
   response,
   method = 'POST',
+  delay = 0,
 }: {
   urlPathPattern: string
   statusCode: number
   response: unknown
   method?: 'POST' | 'PATCH'
+  delay?: number
 }) =>
   stubFor({
     request: {
@@ -49,6 +51,7 @@ const mockUpdate = ({
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
+      fixedDelayMilliseconds: delay,
       jsonBody: response,
     },
   })
@@ -149,6 +152,37 @@ export const getSupportingDocuments = ({ statusCode = 200, response }: { statusC
     urlPathPattern: `${routes.recommendations}/(.*)/documents$`,
     statusCode,
     response,
+  })
+
+export const uploadSupportingDocument = ({
+  statusCode = 200,
+  response,
+  delay = 0,
+}: {
+  statusCode?
+  response
+  delay?
+}) =>
+  mockUpdate({
+    urlPathPattern: `${routes.recommendations}/(.*)/documents/?`,
+    statusCode,
+    response,
+    delay,
+  })
+
+export const deleteSupportingDocument = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPathPattern: `${routes.recommendations}/(.*)/documents/(.*)`,
+    },
+    response: {
+      status: statusCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: response,
+    },
   })
 
 export const downloadSupportingDocument = ({ statusCode = 200, response }: { statusCode?; response }) =>

@@ -104,9 +104,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
   })
 
   const nextPageId =
-    changeOffenceOrAddComment === YesNoValues.YES
-      ? ppcsPaths.matchIndexOffence
-      : ppcsPaths.sentenceToCommitExistingOffender
+    changeOffenceOrAddComment === YesNoValues.YES ? ppcsPaths.matchIndexOffence : ppcsPaths.supportingDocuments
+
   const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
