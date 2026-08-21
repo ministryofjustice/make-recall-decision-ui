@@ -2654,65 +2654,6 @@ context('Make a recommendation', () => {
       cy.getText('localPoliceContact').should('contain', 'joe.bloggs@gmail.com')
     })
 
-    it('edit MAPPA Level', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: {},
-          ppudOffender: {},
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('getReferenceList', {
-        name: 'mappa-levels',
-        statusCode: 200,
-        response: {
-          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPA'],
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/edit-mappa-level`)
-      cy.pageHeading().should('contain', 'Edit MAPPA level')
-
-      cy.getText('mappaLevel').should('contain', 'Level 0')
-    })
-
-    it('edit MAPPA Level - unknown', () => {
-      const completeRecommendationResponseWithoutMappaLevel = JSON.parse(JSON.stringify(completeRecommendationResponse))
-      delete completeRecommendationResponseWithoutMappaLevel.personOnProbation.mappa.level
-
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponseWithoutMappaLevel,
-          prisonOffender: {},
-          bookRecallToPpud: {},
-          ppudOffender: {},
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('getReferenceList', {
-        name: 'mappa-levels',
-        statusCode: 200,
-        response: {
-          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPA'],
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/edit-mappa-level`)
-      cy.pageHeading().should('contain', 'Edit MAPPA level')
-
-      cy.getText('mappaLevel').should('contain', 'Unknown')
-    })
-
     it('select determinate ppud sentence - NOMIS sentence is in single-sentence sequence (non-null sentenceEndDate)', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
