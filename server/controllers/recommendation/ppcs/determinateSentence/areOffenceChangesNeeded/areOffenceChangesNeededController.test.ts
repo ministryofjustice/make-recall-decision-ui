@@ -183,7 +183,7 @@ describe('Are Offence Changes Needed Controller', () => {
                 it('Redirects to the Match Index Offence page', () =>
                   expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.matchIndexOffence}`))
               } else {
-                it('redirects to Sentence to Commit Existing page', () =>
+                it('redirects to Supporting Documents upload page', () =>
                   expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.supportingDocuments}`))
               }
             })
