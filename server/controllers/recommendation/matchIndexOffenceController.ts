@@ -82,8 +82,11 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
+  const selectedPpudSentence = (recommendation as RecommendationResponse).ppudOffender?.sentences?.find(
+    s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
+  )
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: ppcsPaths.supportingDocuments,
+    nextPageId: selectedPpudSentence ? ppcsPaths.sentenceToCommitExistingOffender : ppcsPaths.editCustodyType,
     urlInfo,
   })
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

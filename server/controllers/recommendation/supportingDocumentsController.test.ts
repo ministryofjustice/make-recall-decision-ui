@@ -177,7 +177,7 @@ describe('post request', () => {
       await supportingDocumentsController.post(req, res, mockNext())
 
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.json).toHaveBeenCalledWith({ success: false })
+      expect(res.json).toHaveBeenCalledWith({})
     })
   })
 
@@ -243,6 +243,7 @@ describe('post request', () => {
 
       expect(validateFileUploadRequest).toHaveBeenCalled()
       expect(uploadSupportingDocument).not.toHaveBeenCalled()
+      expect(req.session.errors).toEqual([{ error: true }])
       expect(res.redirect).toHaveBeenCalledWith(303, '/example-url')
     })
 
