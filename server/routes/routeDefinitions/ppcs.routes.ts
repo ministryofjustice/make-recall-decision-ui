@@ -267,6 +267,13 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
     handler: supportingDocumentsController.get,
   },
+  // This is actually to handle the "delete" post request to this URL,
+  // rather than the file uploader which is handled before CSRF tokens
+  {
+    ...ppcsAfterSearchPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
+    handler: supportingDocumentsController.post,
+  },
   {
     ...ppcsAfterSearchGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentUpload}`,
