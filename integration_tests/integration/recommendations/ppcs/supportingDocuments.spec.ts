@@ -61,6 +61,9 @@ context('Supporting documents upload page', () => {
           cy.get('label').should('exist').should('contain.text', 'Choose files')
         })
 
+      cy.get('.moj-multi-file-upload__row').should('not.exist')
+      cy.get('.moj-multi-file__uploaded-files').should('have.class', 'moj-hidden')
+
       cy.get('a.govuk-button.govuk-button--primary')
         .should('exist')
         .should('contain.text', 'Continue')
