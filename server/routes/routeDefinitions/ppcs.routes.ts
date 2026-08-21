@@ -267,6 +267,11 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
     handler: supportingDocumentsController.get,
   },
   {
+    ...ppcsAfterSearchPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
+    handler: supportingDocumentsController.post,
+  },
+  {
     ...ppcsAfterSearchGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentUpload}`,
     handler: supportingDocumentUploadController.get,

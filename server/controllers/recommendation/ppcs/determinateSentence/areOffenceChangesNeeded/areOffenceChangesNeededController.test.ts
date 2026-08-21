@@ -184,10 +184,7 @@ describe('Are Offence Changes Needed Controller', () => {
                   expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.matchIndexOffence}`))
               } else {
                 it('redirects to Sentence to Commit Existing page', () =>
-                  expect(res.redirect).toHaveBeenCalledWith(
-                    303,
-                    `${basePath}${ppcsPaths.sentenceToCommitExistingOffender}`,
-                  ))
+                  expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.supportingDocuments}`))
               }
             })
           })

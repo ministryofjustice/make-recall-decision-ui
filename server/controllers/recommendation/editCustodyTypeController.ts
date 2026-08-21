@@ -70,7 +70,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     featureFlags: flags,
   })
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'sentence-to-commit', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo })
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

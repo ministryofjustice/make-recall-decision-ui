@@ -188,7 +188,7 @@ describe('Match Index Offence Controller', () => {
             await matchIndexOffenceController.post(req, res, next)
           })
           it('redirects to Custody Type page', () =>
-            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.editCustodyType}`))
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.supportingDocuments}`))
         })
         describe('Updating an existing PPUD sentence', () => {
           const recommendation = RecommendationResponseGenerator.generate()
@@ -202,7 +202,7 @@ describe('Match Index Offence Controller', () => {
             await matchIndexOffenceController.post(req, res, next)
           })
           it('redirects to Sentence to Commit Existing page', () =>
-            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.sentenceToCommitExistingOffender}`))
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.supportingDocuments}`))
         })
       })
     })
