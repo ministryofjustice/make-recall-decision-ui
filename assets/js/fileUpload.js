@@ -133,8 +133,7 @@ class CaRMultiFileUpload extends MultiFileUpload {
     })
     xhr.open('POST', this.config.deleteUrl)
     xhr.setRequestHeader('Content-Type', 'application/json')
-    // This is the only change in this method
-    // it allows us to detect XHR requests in the controller using `req.xhr`
+    // Adding this request header allows us to check `req.xhr` in the controllers
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
     xhr.responseType = 'json'
     xhr.send(
