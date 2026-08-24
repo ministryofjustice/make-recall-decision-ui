@@ -595,7 +595,7 @@ const ppcsRoutes: RouteDefinition[] = [
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudFail}`,
     method: 'get',
-    handler: bookedToPpudController.get,
+    handler: bookedToPpudFailController.get,
   },
   {
     ...createRecommendationRouteTemplate(
@@ -605,7 +605,7 @@ const ppcsRoutes: RouteDefinition[] = [
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudSuccess}`,
     method: 'get',
-    handler: bookedToPpudController.get,
+    handler: bookedToPpudSuccessController.get,
   },
   ...ppcsRecommendationRoutes,
   ...ppcsDeterminateSentenceRoutes,
