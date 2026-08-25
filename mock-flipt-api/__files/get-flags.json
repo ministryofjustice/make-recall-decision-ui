@@ -10,5 +10,11 @@
     "description": "bar",
     "enabled": true,
     "type": "BOOLEAN_FLAG_TYPE"
+  },
+  {
+    "key": "ui-ppcsIndeterminateJourney",
+    "description": "bar",
+    "enabled": true,
+    "type": "BOOLEAN_FLAG_TYPE"
   }
 ]
