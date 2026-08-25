@@ -10,7 +10,7 @@ context('Determinate Ppud Sentences', () => {
   describe('Standard page load', () => {
     const recommendationId = '1'
 
-    const testPageUrl = `/recommendations/${recommendationId}/determinate-ppud-sentences?ppcsIndeterminateJourney=1`
+    const testPageUrl = `/recommendations/${recommendationId}/${ppcsPaths.determinatePpudSentences}?ppcsIndeterminateJourney=1`
 
     beforeEach(() => {
       setUpSessionForPpcs()
