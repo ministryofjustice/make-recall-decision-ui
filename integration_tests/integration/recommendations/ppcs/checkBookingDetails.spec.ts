@@ -8,11 +8,18 @@ import { formatDateTimeFromIsoString } from '../../../../server/utils/dates/form
 import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { Address, RecommendationResponse } from '../../../../server/@types/make-recall-decision-api'
 import { currentHighestRosh, Rosh } from '../../../../server/controllers/recommendations/helpers/rosh'
+import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
 
 context('Check Booking Details page', () => {
   const baseRecommendation = RecommendationResponseGenerator.generate()
   const testPageUrl = `/recommendations/${baseRecommendation.id}/check-booking-details`
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
+  const acoSignedStatus = {
+    name: RECOMMENDATION_STATUS.ACO_SIGNED,
+    active: true,
+    createdByUserFullName: faker.person.fullName(),
+    emailAddress: faker.internet.email(),
+  }
 
   beforeEach(() => {
     setUpSessionForPpcs()
@@ -299,44 +306,18 @@ context('Check Booking Details page', () => {
           contentCheck: checkSummaryListInAccordion({
             rows: [
               {
-                key: 'Recall received date',
+                key: 'Recall received date and time',
                 value: receivedDateTime
-                  ? formatDateTimeFromIsoString({
-                      isoDate: receivedDateTime,
-                      dateOnly: true,
-                    })
-                  : 'You must enter a date',
+                  ? formatDateTimeFromIsoString({ isoDate: receivedDateTime })
+                  : 'You must enter a date and time',
                 editLink: {
                   url: 'edit-recall-received-date-and-time',
-                  accessibleLabel: 'recall received date',
+                  accessibleLabel: 'recall received date and time',
                 },
               },
               {
-                key: 'Recall received time',
-                value: receivedDateTime
-                  ? formatDateTimeFromIsoString({
-                      isoDate: receivedDateTime,
-                      timeOnly: true,
-                    })
-                  : 'You must enter a time',
-                editLink: {
-                  url: 'edit-recall-received-date-and-time',
-                  accessibleLabel: 'recall received time',
-                },
-              },
-              {
-                key: 'Recall decision date',
-                value: formatDateTimeFromIsoString({
-                  isoDate: decisionDateTime,
-                  dateOnly: true,
-                }),
-              },
-              {
-                key: 'Recall decision time',
-                value: formatDateTimeFromIsoString({
-                  isoDate: decisionDateTime,
-                  timeOnly: true,
-                }),
+                key: 'Recall decision date and time',
+                value: formatDateTimeFromIsoString({ isoDate: decisionDateTime }),
               },
             ],
           }),
@@ -432,12 +413,6 @@ context('Check Booking Details page', () => {
           statusCode: 200,
           response: recommendation,
         })
-        const acoSignedStatus = {
-          name: RECOMMENDATION_STATUS.ACO_SIGNED,
-          active: true,
-          createdByUserFullName: faker.person.fullName(),
-          emailAddress: faker.internet.email(),
-        }
         cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
 
         cy.visit(testPageUrl)
@@ -483,12 +458,6 @@ context('Check Booking Details page', () => {
           statusCode: 200,
           response: recommendation,
         })
-        const acoSignedStatus = {
-          name: RECOMMENDATION_STATUS.ACO_SIGNED,
-          active: true,
-          createdByUserFullName: faker.person.fullName(),
-          emailAddress: faker.internet.email(),
-        }
         cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
 
         cy.visit(testPageUrl)
@@ -544,12 +513,6 @@ context('Check Booking Details page', () => {
         statusCode: 200,
         response: recommendation,
       })
-      const acoSignedStatus = {
-        name: RECOMMENDATION_STATUS.ACO_SIGNED,
-        active: true,
-        createdByUserFullName: faker.person.fullName(),
-        emailAddress: faker.internet.email(),
-      }
       cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
 
       cy.visit(testPageUrl)
@@ -629,12 +592,6 @@ context('Check Booking Details page', () => {
           ...baseRecommendation.prisonOffender,
           status: 'ACTIVE IN', // fixed value for this test; the logic linked to the possible values is tested thoroughly elsewhere
         },
-      }
-      const acoSignedStatus = {
-        name: RECOMMENDATION_STATUS.ACO_SIGNED,
-        active: true,
-        createdByUserFullName: faker.person.fullName(),
-        emailAddress: faker.internet.email(),
       }
 
       function checkAccordionAddress(checkAddressFunction: (element: Cypress.Chainable<JQuery<HTMLElement>>) => void) {
@@ -878,51 +835,110 @@ context('Check Booking Details page', () => {
     // TODO test practitioner variations
   })
 
-  it('shows "You must enter a date" and "You must enter a time" when receivedDateTime is null', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: {
-        ...baseRecommendation,
-        bookRecallToPpud: {
-          receivedDateTime: null,
-        },
-        prisonOffender: {},
+  describe('Error message display', () => {
+    const commonErrors = [
+      {
+        href: 'gender',
+        message: 'Enter gender',
+        errorComponentId: 'check-booking-personal-details-list-gender-row',
+        checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
       },
-    })
-    cy.task('getStatuses', {
-      statusCode: 200,
-      response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-    })
-    cy.task('updateRecommendation', { statusCode: 200, response: baseRecommendation })
-
-    cy.visit(`/recommendations/252523937/check-booking-details`)
-
-    cy.get('#check-booking-recall-information-list').should('contain', 'You must enter a date')
-    cy.get('#check-booking-recall-information-list').should('contain', 'You must enter a time')
-  })
-
-  it('check booking details shows the recall received date and time when receivedDateTimeUpdatedByPpcs is set', () => {
-    cy.task('getRecommendation', {
-      statusCode: 200,
-      response: {
-        ...baseRecommendation,
-        bookRecallToPpud: {
-          receivedDateTime: '2024-01-31T15:17:58Z',
-        },
-        prisonOffender: {},
+      {
+        href: 'ethnicity',
+        message: 'Enter ethnicity',
+        errorComponentId: 'check-booking-personal-details-list-ethnicity-row',
+        checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
       },
-    })
-    cy.task('getStatuses', {
-      statusCode: 200,
-      response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-    })
-    cy.task('updateRecommendation', { statusCode: 200, response: baseRecommendation })
+      {
+        href: 'currentEstablishment',
+        message: 'Select an establishment from the list',
+        errorComponentId: 'check-booking-custody-details-list-current-establishment-row',
+        checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
+      },
+      {
+        href: 'receivedDateTime',
+        message: 'You must enter a recall received date and time',
+        errorComponentId: 'check-booking-recall-information-list-recall-received-date-and-time-row',
+        checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
+      },
+      {
+        href: 'probationArea',
+        message: 'Enter probation area',
+        errorComponentId: 'check-booking-probation-details-list-probation-area-row',
+        checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
+      },
+      {
+        href: 'policeForce',
+        message: 'Enter police force',
+        errorComponentId: 'check-booking-probation-details-list-local-police-force-row',
+        checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
+      },
+      {
+        href: 'releasingPrison',
+        message: 'Select a releasing prison from the list',
+        errorComponentId: 'check-booking-prison-and-licence-details-list-releasing-prison-row',
+        checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
+      },
+      {
+        href: 'mappaLevel',
+        message: 'Enter MAPPA level',
+        errorComponentId: 'check-booking-risk-levels-list-mappa-level-row',
+        checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
+      },
+    ]
 
-    cy.visit(`/recommendations/252523937/check-booking-details`)
+    it('Displays error messages when none of the mandatory data is set', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...baseRecommendation,
+          bookRecallToPpud: {},
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
 
-    cy.get('#check-booking-recall-information-list').should('not.contain', 'You must enter a date')
-    cy.get('#check-booking-recall-information-list').should('not.contain', 'You must enter a time')
-    cy.get('#check-booking-recall-information-list').should('contain', '31 January 2024')
-    cy.get('#check-booking-recall-information-list').should('contain', '15:17')
+      cy.visit(testPageUrl)
+
+      cy.get('button.govuk-button').click()
+
+      testForErrorPageTitle()
+      testForErrorSummary([
+        ...commonErrors,
+        {
+          href: 'custodyGroup',
+          message: 'Select the correct sentence type',
+          errorComponentId: 'check-booking-custody-details-list-determinate-or-indeterminate-row',
+          checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
+        },
+      ])
+    })
+
+    it('Displays error messages when only custody group is set to determinate (legislation released under mandatory)', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...baseRecommendation,
+          bookRecallToPpud: {
+            custodyGroup: CUSTODY_GROUP.DETERMINATE,
+          },
+        },
+      })
+      cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
+
+      cy.visit(testPageUrl)
+
+      cy.get('button.govuk-button').click()
+
+      testForErrorPageTitle()
+      testForErrorSummary([
+        ...commonErrors,
+        {
+          href: 'legislationReleasedUnder',
+          message: 'Enter legislation',
+          errorComponentId: 'check-booking-prison-and-licence-details-list-legislation-released-under-row',
+          checkFieldHasErrorStyling: false, // summary list items add an error message but don't set an error class on the entire row
+        },
+      ])
+    })
   })
 })
