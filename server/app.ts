@@ -66,6 +66,10 @@ export default function createApp(userService: UserService): express.Application
 
   // Setup mime multipart file support - before csrf
   const router = Router()
+
+  // These upload routes must be registered before CSRF middleware because
+  // the MultiFileUpload component / Multer doesn't handle CSRF tokens.
+  // The corresponding delete route is defined in routeDefinitions (the standard way).
   app.use(multiPartRoutes(router))
 
   app.use(setUpCsrf())
