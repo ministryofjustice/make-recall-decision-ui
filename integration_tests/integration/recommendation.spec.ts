@@ -3249,7 +3249,7 @@ context('Make a recommendation', () => {
         ],
       })
 
-      cy.visit(`/recommendations/252523937/edit-ppud-minute`)
+      cy.visit(`/recommendations/252523937/add-minute`)
       cy.pageHeading().should('contain', 'Add note about supporting documents')
     })
   })
