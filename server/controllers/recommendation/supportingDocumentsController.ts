@@ -197,4 +197,4 @@ async function handleUpload(req: Request, res: Response) {
   return res.redirect(303, req.originalUrl)
 }
 
-export default { get, post, handleDelete }
+export default { get, post }
