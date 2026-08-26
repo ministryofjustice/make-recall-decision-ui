@@ -201,8 +201,8 @@ describe('Match Index Offence Controller', () => {
             ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
             await matchIndexOffenceController.post(req, res, next)
           })
-          it('redirects to Sentence to commit existing offender page', () =>
-            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.sentenceToCommitExistingOffender}`))
+          it('redirects to Supporting documents page', () =>
+            expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.supportingDocuments}`))
         })
       })
     })
