@@ -21,7 +21,6 @@ import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
 import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
-import BookingErrorType from '../../booking/BookingErrorType'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -44,7 +43,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
-  let bookingErrorType: BookingErrorType = BookingErrorType.DATA
+  let bookingErrorType: StageEnum = StageEnum.POSTING_RECALL_DATA
   let uploadingDocName = ''
   let memento: BookingMemento = recommendation.bookingMemento || {
     stage: StageEnum.STARTED,
@@ -66,7 +65,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     memento = await updateRelease(memento, recommendation, token, flags)
 
     memento = await updateRecall(memento, recommendation, token, flags, res.locals.statuses)
-    bookingErrorType = BookingErrorType.DOCUMENTS
+
+    bookingErrorType = StageEnum.UPLOADING_DOCUMENTS
     const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
 
     const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
@@ -140,7 +140,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
       return uploadAdditionalDocument(currentMemento, recommendationId, document.id, token, flags)
     }, Promise.resolve(memento))
-
+    bookingErrorType = StageEnum.BOOKING_MINUTE
     memento = await createMinute(
       memento,
       recommendationId,
@@ -171,7 +171,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     if (err.status !== undefined) {
       memento.failed = true
       memento.failedMessage = err.text
-      memento.errorType = bookingErrorType
+      memento.stage = bookingErrorType
       memento.uploadFailedDocName = uploadingDocName
       await updateRecommendation({
         recommendationId: String(recommendation.id),
