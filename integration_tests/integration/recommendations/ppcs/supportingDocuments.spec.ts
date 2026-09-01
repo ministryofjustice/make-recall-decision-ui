@@ -67,7 +67,24 @@ context('Supporting documents upload page', () => {
       cy.get('a.govuk-button.govuk-button--primary')
         .should('exist')
         .should('contain.text', 'Continue')
-        .should('have.attr', 'href', 'add-minute')
+        .should('have.attr', 'href', 'sentence-to-commit')
+    })
+
+    it('Continue links to sentence-to-commit-existing-offender when ppudRecordPresent is true', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...recommendationResponse,
+          ppudRecordPresent: true,
+        },
+      })
+      cy.task('getSupportingDocuments', { statusCode: 200, response: [] })
+      cy.visit(testPageUrl)
+
+      cy.get('a.govuk-button.govuk-button--primary')
+        .should('exist')
+        .should('contain.text', 'Continue')
+        .should('have.attr', 'href', 'sentence-to-commit-existing-offender')
     })
 
     it('Loads the existing files list correctly', () => {

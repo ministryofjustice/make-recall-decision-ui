@@ -78,7 +78,11 @@
           </form>
 
           <div>
-            <a href='{{urlInfo.pageBase}}add-minute' class='govuk-button govuk-button--primary'>Continue</a>
+            {% if recommendation.ppudRecordPresent %}
+              <a href='{{urlInfo.pageBase}}sentence-to-commit-existing-offender' class='govuk-button govuk-button--primary'>Continue</a>
+            {% else %}
+              <a href='{{urlInfo.pageBase}}sentence-to-commit' class='govuk-button govuk-button--primary'>Continue</a>
+            {% endif %}
           </div>
         </div>
       </div>
