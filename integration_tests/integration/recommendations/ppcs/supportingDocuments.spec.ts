@@ -67,7 +67,7 @@ context('Supporting documents upload page', () => {
       cy.get('a.govuk-button.govuk-button--primary')
         .should('exist')
         .should('contain.text', 'Continue')
-        .should('have.attr', 'href', 'add-minutes')
+        .should('have.attr', 'href', 'add-minute')
     })
 
     it('Loads the existing files list correctly', () => {
