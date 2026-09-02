@@ -130,7 +130,7 @@ context('Indeterminate Sentence - Booking Summary Page', () => {
               rows: [
                 {
                   key: 'Offence',
-                  value: recommendation.bookRecallToPpud.indexOffence ?? '- no value',
+                  value: recWithOffence.bookRecallToPpud.indexOffence ?? '- no value',
                 },
                 {
                   key: 'Offence date',

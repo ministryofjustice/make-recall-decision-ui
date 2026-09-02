@@ -80,8 +80,8 @@ export const BookRecallToPpudGenerator: DataGenerator<BookRecallToPpud, BookReca
       custodyGroup: resolveAnyNoneOrOption(options?.custodyGroup ?? 'any', Object.values(CUSTODY_GROUP)),
       custodyType: resolvedCustodyType,
       changeOffenceOrAddComment: resolveAnyNoneOrOption(options?.changeOffenceOrAddComment ?? 'any', [true, false]),
-      indexOffence: resolveIncludeNoneOrOption(options?.indexOffence, faker.lorem.words),
-      indexOffenceComment: resolveIncludeNoneOrOption(options?.indexOffenceComment, faker.lorem.sentence),
+      indexOffence: resolveIncludeNoneOrOption(options?.indexOffence ?? 'include', faker.lorem.words),
+      indexOffenceComment: resolveIncludeNoneOrOption(options?.indexOffenceComment ?? 'include', faker.lorem.sentence),
       ppudSentenceId: options?.ppudSentenceId,
       ppudIndeterminateSentenceData: PpudSentenceDataGenerator.generate(
         options?.ppudIndeterminateSentenceData ?? 'any',
