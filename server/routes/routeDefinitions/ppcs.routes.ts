@@ -25,14 +25,7 @@ import editDateOfBirthController from '../../controllers/recommendation/editDate
 import editProbationAreaController from '../../controllers/recommendation/editProbationAreaController'
 import editLegislationReleasedUnderController from '../../controllers/recommendation/editLegislationReleasedUnderController'
 import supportingDocumentsController from '../../controllers/recommendation/supportingDocumentsController'
-import supportingDocumentUploadController from '../../controllers/recommendation/supportingDocumentUploadController'
-import additionalSupportingDocumentUploadController from '../../controllers/recommendation/additionalSupportingDocumentUploadController'
-import additionalSupportingDocumentReplaceController from '../../controllers/recommendation/additionalSupportingDocumentReplaceController'
-import additionalSupportingDocumentRemoveController from '../../controllers/recommendation/additionalSupportingDocumentRemoveController'
 import editPpudMinuteController from '../../controllers/recommendation/editPpudMinuteController'
-import supportingDocumentReplaceController from '../../controllers/recommendation/supportingDocumentReplaceController'
-import supportingDocumentRemoveController from '../../controllers/recommendation/supportingDocumentRemoveController'
-import supportingDocumentDownloadController from '../../controllers/recommendation/supportingDocumentDownloadController'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndexOffenceController from '../../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import consecutiveSentenceDetailsController from '../../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
@@ -269,46 +262,6 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
   },
   {
     ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentUpload}`,
-    handler: supportingDocumentUploadController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentUpload}`,
-    handler: supportingDocumentUploadController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentUpload}`,
-    handler: additionalSupportingDocumentUploadController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentUpload}`,
-    handler: additionalSupportingDocumentUploadController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentReplace}`,
-    handler: additionalSupportingDocumentReplaceController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentReplace}`,
-    handler: additionalSupportingDocumentReplaceController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentRemove}`,
-    handler: additionalSupportingDocumentRemoveController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentRemove}`,
-    handler: additionalSupportingDocumentRemoveController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.editPpudMinute}`,
     handler: editPpudMinuteController.get,
   },
@@ -316,31 +269,6 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
     ...ppcsAfterSearchPostTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.editPpudMinute}`,
     handler: editPpudMinuteController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentReplace}`,
-    handler: supportingDocumentReplaceController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentReplace}`,
-    handler: supportingDocumentReplaceController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentRemove}`,
-    handler: supportingDocumentRemoveController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentRemove}`,
-    handler: supportingDocumentRemoveController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentDownload}`,
-    handler: supportingDocumentDownloadController.get,
   },
 ]
 
