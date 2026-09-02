@@ -67,15 +67,15 @@ context('Supporting documents upload page', () => {
       cy.get('a.govuk-button.govuk-button--primary')
         .should('exist')
         .should('contain.text', 'Continue')
-        .should('have.attr', 'href', 'sentence-to-commit')
+        .should('have.attr', 'href', 'sentence-to-commit-existing-offender')
     })
 
-    it('Continue links to sentence-to-commit-existing-offender when ppudOffender is present', () => {
+    it('Continue links to sentence-to-commit when ppudOffender is not present', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
           ...recommendationResponse,
-          ppudOffender: { id: '123' },
+          ppudOffender: undefined,
         },
       })
       cy.task('getSupportingDocuments', { statusCode: 200, response: [] })
@@ -84,7 +84,7 @@ context('Supporting documents upload page', () => {
       cy.get('a.govuk-button.govuk-button--primary')
         .should('exist')
         .should('contain.text', 'Continue')
-        .should('have.attr', 'href', 'sentence-to-commit-existing-offender')
+        .should('have.attr', 'href', 'sentence-to-commit')
     })
 
     it('Continue links to sentence-to-commit-indeterminate when custody group is Indeterminate', () => {
