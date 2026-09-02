@@ -1,11 +1,10 @@
-import express from 'express'
+import express, { Router } from 'express'
 import * as Sentry from '@sentry/node'
 
 import path from 'path'
 import createError from 'http-errors'
 import cookieParser from 'cookie-parser'
 
-import multer from 'multer'
 import pdsComponents from '@ministryofjustice/hmpps-probation-frontend-components'
 import indexRoutes from './routes'
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -28,6 +27,7 @@ import { setupRecommendationStatusCheck } from './middleware/recommendationStatu
 import { hasRole, authorisationCheck } from './middleware/check'
 import config from './config'
 import logger from '../logger'
+import multiPartRoutes from './routes/multipartRoutes'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
@@ -64,8 +64,13 @@ export default function createApp(userService: UserService): express.Application
     }),
   )
 
-  // setup mime multipart file support - before csrf
-  app.use(multer().single('file'))
+  // Setup mime multipart file support - before csrf
+  const router = Router()
+
+  // These upload routes must be registered before CSRF middleware because
+  // the MultiFileUpload component / Multer doesn't handle CSRF tokens.
+  // The corresponding delete route is defined in routeDefinitions (the standard way).
+  app.use(multiPartRoutes(router))
 
   app.use(setUpCsrf())
 
