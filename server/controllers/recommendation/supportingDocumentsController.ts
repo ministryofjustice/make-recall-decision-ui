@@ -9,12 +9,26 @@ import strings from '../../textStrings/en'
 import { SupportingDocument } from '../../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
 import validateFileUploadRequest from '../recommendations/supportingDocuments/formValidator'
 import { NamedFormError } from '../../@types/pagesForms'
+import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api/models/RecommendationResponse'
+
+function getNextPageId(recommendation: RecommendationResponse): string {
+  const custodyGroup = recommendation?.bookRecallToPpud?.custodyGroup
+  if (custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
+    return 'sentence-to-commit-indeterminate'
+  }
+  if (recommendation?.ppudOffender) {
+    return 'sentence-to-commit-existing-offender'
+  }
+  return 'sentence-to-commit'
+}
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendationId } = req.params
   const {
     user: { token },
     flags,
+    recommendation,
   } = res.locals
 
   const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
@@ -25,6 +39,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'supportingDocuments',
     },
     uploadedFiles: documents,
+    nextPageId: getNextPageId(recommendation),
   }
 
   res.render(`pages/recommendations/supportingDocuments`)

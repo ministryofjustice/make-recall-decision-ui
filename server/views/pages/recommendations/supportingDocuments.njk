@@ -78,11 +78,7 @@
           </form>
 
           <div>
-            {% if recommendation.ppudRecordPresent %}
-              <a href='{{urlInfo.pageBase}}sentence-to-commit-existing-offender' class='govuk-button govuk-button--primary'>Continue</a>
-            {% else %}
-              <a href='{{urlInfo.pageBase}}sentence-to-commit' class='govuk-button govuk-button--primary'>Continue</a>
-            {% endif %}
+            <a href='{{urlInfo.pageBase}}{{ nextPageId }}' class='govuk-button govuk-button--primary'>Continue</a>
           </div>
         </div>
       </div>
