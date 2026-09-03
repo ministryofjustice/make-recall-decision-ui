@@ -4,16 +4,20 @@ import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-
 import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 import setUpSessionForPpcs from '../../util'
+import testIndeterminateJourneyFlag from '../testIndeterminateFlag'
+import ppcsPaths from '../../../../../../server/routes/paths/ppcs.paths'
 
 context('Indeterminate Sentence - Edit Sentencing Court Page', () => {
   const recommendationId = '123'
   const autocompleteId = 'sentencingCourt'
 
-  const testPageUrl = `/recommendations/${recommendationId}/edit-sentencing-court`
+  const testPageUrl = `/recommendations/${recommendationId}/${ppcsPaths.indeterminateEdit.sentencingCourt}?ppcsIndeterminateJourney=1`
 
   beforeEach(() => {
     setUpSessionForPpcs()
   })
+
+  testIndeterminateJourneyFlag(ppcsPaths.indeterminateEdit.sentencingCourt)
 
   const sentenceId = faker.number.int().toString()
   const ppudSentencingCourt = `${faker.location.city()} Court`
