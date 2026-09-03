@@ -1,10 +1,15 @@
 import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
 import setUpSessionForPpcs from './util'
+import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 context('Supporting documents upload page', () => {
   const testPageUrl = '/recommendations/123/supporting-documents'
-  const recommendationResponse = RecommendationResponseGenerator.generate()
+  const recommendationResponse = RecommendationResponseGenerator.generate({
+    bookRecallToPpud: {
+      custodyGroup: CUSTODY_GROUP.DETERMINATE,
+    },
+  })
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
 
   beforeEach(() => {
@@ -92,7 +97,7 @@ context('Supporting documents upload page', () => {
         statusCode: 200,
         response: {
           ...recommendationResponse,
-          bookRecallToPpud: { custodyGroup: 'Indeterminate' },
+          bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
         },
       })
       cy.task('getSupportingDocuments', { statusCode: 200, response: [] })
