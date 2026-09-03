@@ -11,8 +11,10 @@ export type PpudSentenceLengthOptions = {
 
 export const PpudSentenceLengthGenerator: DataGenerator<PpudSentenceLength, PpudSentenceLengthOptions> = {
   generate: options => ({
-    partYears: resolveIncludeNoneOrOption(options?.partYears, () => faker.number.int({ min: 1, max: 5 })),
-    partMonths: resolveIncludeNoneOrOption(options?.partMonths, () => faker.number.int({ min: 1, max: 11 })),
-    partDays: resolveIncludeNoneOrOption(options?.partDays, () => faker.number.int({ min: 1, max: 29 })),
+    partYears: resolveIncludeNoneOrOption(options?.partYears ?? 'include', () => faker.number.int({ min: 1, max: 5 })),
+    partMonths: resolveIncludeNoneOrOption(options?.partMonths ?? 'include', () =>
+      faker.number.int({ min: 1, max: 11 }),
+    ),
+    partDays: resolveIncludeNoneOrOption(options?.partDays ?? 'include', () => faker.number.int({ min: 1, max: 29 })),
   }),
 }

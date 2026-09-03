@@ -69,7 +69,9 @@ context('Indeterminate Sentence - Sentence to Commit Page', () => {
               { key: 'Custody type', value: selectedPpudSentence.custodyType },
               {
                 key: 'Offence',
-                value: ppudIndeterminateData.offenceDescription,
+                valueRegex: new RegExp(
+                  `\\s+${ppudIndeterminateData.offenceDescription}\\s+${ppudIndeterminateData.offenceDescriptionComment}\\s+`,
+                ),
                 editLink: {
                   url: ppcsPaths.indeterminateEdit.offenceDescription,
                   accessibleLabel: 'offence',
@@ -107,17 +109,6 @@ context('Indeterminate Sentence - Sentence to Commit Page', () => {
             ],
           })
         })
-        // We check the offence row separately because the testSummaryList function doesn't
-        // match on regex, which we need to do to verify both the offence and comment are shown
-        const offenceAndCommentRegex = new RegExp(
-          `\\s+${ppudIndeterminateData.offenceDescription}\\s+${ppudIndeterminateData.offenceDescriptionComment}\\s+`,
-        )
-        cy.get('@summaryList')
-          .find('div.govuk-summary-list__row')
-          .eq(1)
-          .within(() => {
-            cy.get('dd').eq(0).invoke('text').should('match', offenceAndCommentRegex)
-          })
 
         // Continue button
         cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')

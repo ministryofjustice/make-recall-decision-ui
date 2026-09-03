@@ -64,6 +64,8 @@ context('Determinate sentence - match index offence page', () => {
           bookRecallToPpud: {
             custodyGroup: CUSTODY_GROUP.DETERMINATE,
             ppudSentenceId: 'ADD_NEW',
+            indexOffence: 'none',
+            indexOffenceComment: 'none',
           },
         })
         const selectedNomisOffence = recommendationWithNoMatchingDone.nomisIndexOffence.allOptions.find(
