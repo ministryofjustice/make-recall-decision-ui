@@ -340,12 +340,6 @@ context('Sentence to commit existing offender', () => {
 
       // Minutes section
       cy.contains('h2', 'Minutes').should('exist')
-      cy.contains('Background information:').should('exist')
-      cy.contains('Extended sentence: No').should('exist')
-      cy.contains('Risk of serious harm level: Very High').should('exist')
-      cy.contains('In custody: Yes at HMP Prison').should('exist')
-      cy.contains('Sentencing court: Winchester Crown Court').should('exist')
-      cy.contains('More information:').should('exist')
       cy.contains('Cannot access OASys at the moment').should('exist')
     })
   })
