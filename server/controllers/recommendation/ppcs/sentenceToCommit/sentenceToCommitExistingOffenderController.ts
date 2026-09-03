@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import { PpudSentence } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
-import getDocumentsAndMinutes from './documentsAndMinutes'
+import { getSupportingDocuments } from '../../../../data/makeDecisionApiClient'
 
 async function get(_: Request, res: Response, next: NextFunction) {
   const {
@@ -20,12 +20,11 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const sentences = recommendation.ppudOffender.sentences as PpudSentence[]
   const ppudSentence = sentences.find(s => s.id === recommendation.bookRecallToPpud.ppudSentenceId)
 
-  const { documents, backgroundInfo, moreInfo } = await getDocumentsAndMinutes(
-    recommendationResponse,
-    offence?.courtDescription,
+  const documents = await getSupportingDocuments({
+    recommendationId: String(recommendationResponse.id),
     token,
-    flags,
-  )
+    featureFlags: flags,
+  })
 
   res.locals = {
     ...res.locals,
@@ -35,8 +34,6 @@ async function get(_: Request, res: Response, next: NextFunction) {
     offence,
     ppudSentence,
     documents,
-    backgroundInfo,
-    moreInfo,
   }
 
   res.render(`pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitExistingOffender`)
