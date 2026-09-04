@@ -7,7 +7,7 @@ const generateRecallMinuteText = (recommendationResponse: RecommendationResponse
 
   const custody =
     recommendationResponse.prisonOffender?.status === 'ACTIVE IN'
-      ? `Yes (at HMP${recommendationResponse.prisonOffender?.locationDescription ? ` ${recommendationResponse.prisonOffender?.locationDescription}` : ''})`
+      ? `Yes${recommendationResponse.prisonOffender?.locationDescription ? ` (at HMP ${recommendationResponse.prisonOffender?.locationDescription})` : ''}`
       : 'No'
 
   const rosh = riskOfSeriousHarmLevel(recommendationResponse.currentRoshForPartA)?.toUpperCase()
@@ -18,15 +18,13 @@ const generateRecallMinuteText = (recommendationResponse: RecommendationResponse
 
   const sentencingCourt = offence?.courtDescription || ''
 
-  const moreInformation = recommendationResponse.bookRecallToPpud?.minute || ''
-
   return (
     `Background information\n` +
     `Extended sentence: ${extended}\n` +
     `Risk of serious harm level: ${rosh}\n` +
     `In custody: ${custody}\n` +
     `Sentencing court: ${sentencingCourt}\n\n` +
-    `More information\n${moreInformation}`
+    `More information\n`
   )
 }
 

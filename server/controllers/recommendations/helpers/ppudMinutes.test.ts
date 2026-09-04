@@ -2,10 +2,7 @@ import { RecommendationResponse, RoshData } from '../../../@types/make-recall-de
 import generateRecallMinuteText from './ppudMinutes'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
 import randomEnum from '../../../@types/enum.testFactory'
-import {
-  BookRecallToPpud,
-  PrisonOffender,
-} from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { PrisonOffender } from '../../../@types/make-recall-decision-api/models/RecommendationResponse'
 
 describe('generate recall minute text', () => {
   const recommendationResponse: RecommendationResponse = {
@@ -38,10 +35,9 @@ describe('generate recall minute text', () => {
         `Background information\n` +
           `Extended sentence: Yes\n` +
           `Risk of serious harm level: VERY HIGH\n` +
-          `In custody: Yes (at HMP)\n` +
+          `In custody: Yes\n` +
           `Sentencing court: \n\n` +
-          `More information\n` +
-          `an example minute`,
+          `More information\n`,
       )
     })
 
@@ -60,9 +56,6 @@ describe('generate recall minute text', () => {
             riskToStaff: 'MEDIUM',
             riskToPrisoners: 'LOW',
           } as unknown as RoshData,
-          bookRecallToPpud: {
-            minute: 'another minute',
-          } as unknown as BookRecallToPpud,
         }),
       ).toEqual(
         `Background information\n` +
@@ -70,8 +63,7 @@ describe('generate recall minute text', () => {
           `Risk of serious harm level: HIGH\n` +
           `In custody: No\n` +
           `Sentencing court: \n\n` +
-          `More information\n` +
-          `another minute`,
+          `More information\n`,
       )
     })
 

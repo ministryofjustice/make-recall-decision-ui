@@ -153,7 +153,7 @@ describe('get', () => {
 
     await addMinuteController.get(req, res, next)
 
-    expect(res.locals.minute).toContain('In custody: Yes (at HMP)')
+    expect(res.locals.minute).toContain('In custody: Yes')
   })
 
   it('sets custody to No when the offender is not active in custody', async () => {
