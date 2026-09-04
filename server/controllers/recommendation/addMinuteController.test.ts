@@ -1,24 +1,27 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
 import addMinuteController from './addMinuteController'
-import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { riskOfSeriousHarmLevel } from '../recommendations/helpers/rosh'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
   it('loads the saved minute when one exists', async () => {
-    const recommendation = {
-      crn: 'X1213',
-      bookRecallToPpud: {
-        minute: 'some text',
-      },
-    }
+    const recommendation = RecommendationResponseGenerator.generate({})
+
+    const expectedMinute = `Previous Minute updated notes`
 
     const res = mockRes({
       locals: {
-        recommendation,
+        recommendation: {
+          ...recommendation,
+          bookRecallToPpud: {
+            minute: 'Previous Minute updated notes',
+          },
+        },
       },
     })
 
@@ -28,31 +31,40 @@ describe('get', () => {
     await addMinuteController.get(req, res, next)
 
     expect(res.locals.page).toEqual({ id: 'addMinute' })
-    expect(res.locals.minute).toEqual('some text')
+    expect(res.locals.minute).toEqual(expectedMinute)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/addMinute')
     expect(next).toHaveBeenCalled()
   })
 
   it('generates the default minute when no minute has been saved', async () => {
-    const recommendation = {
-      ...recommendationApiResponse,
-      bookRecallToPpud: {},
+    const recommendation = RecommendationResponseGenerator.generate({
       sentenceGroup: SentenceGroup.EXTENDED,
-      currentRoshForPartA: recommendationApiResponse.currentRoshForPartA,
       prisonOffender: {
         status: 'ACTIVE IN',
-        locationDescription: 'HMP Test Prison',
+        locationDescription: 'Glasgow Prison',
       },
+      bookRecallToPpud: {},
       nomisIndexOffence: {
-        selected: '123',
-        allOptions: [
+        selectedIndex: 123,
+        offeredOffenceOptions: [
           {
-            offenderChargeId: '123',
-            courtDescription: 'Crown Court',
+            offenderChargeId: 123,
           },
         ],
       },
-    }
+    })
+
+    const offence = recommendation.nomisIndexOffence.allOptions?.find(
+      option => option.offenderChargeId === recommendation.nomisIndexOffence.selected,
+    )
+
+    const expectedMinute =
+      `Background information\n` +
+      `Extended sentence: Yes\n` +
+      `Risk of serious harm level: ${riskOfSeriousHarmLevel(recommendation.currentRoshForPartA).toUpperCase()}\n` +
+      `In custody: Yes (at HMP Glasgow Prison)\n` +
+      `Sentencing court: ${offence?.courtDescription || ''}\n\n` +
+      `More information\n`
 
     const res = mockRes({
       locals: {
@@ -66,26 +78,19 @@ describe('get', () => {
     await addMinuteController.get(req, res, next)
 
     expect(res.locals.page).toEqual({ id: 'addMinute' })
-    expect(res.locals.minute).toContain('Background information')
-    expect(res.locals.minute).toContain('All mandatory documents received')
-    expect(res.locals.minute).toContain('Extended sentence: Yes')
-    expect(res.locals.minute).toContain(`Risk of serious harm level: Very High`)
-    expect(res.locals.minute).toContain('In custody: Yes (at HMP Test Prison)')
-    expect(res.locals.minute).toContain('Sentencing court: Crown Court')
-    expect(res.locals.minute).toContain('More information')
+    expect(res.locals.minute).toEqual(expectedMinute)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/addMinute')
     expect(next).toHaveBeenCalled()
   })
 
   it('uses the default prison location when locationDescription is missing', async () => {
-    const recommendation = {
-      ...recommendationApiResponse,
+    const recommendation = RecommendationResponseGenerator.generate({
       bookRecallToPpud: {},
       prisonOffender: {
         status: 'ACTIVE IN',
         locationDescription: '',
       },
-    }
+    })
 
     const res = mockRes({
       locals: {
@@ -98,18 +103,17 @@ describe('get', () => {
 
     await addMinuteController.get(req, res, next)
 
-    expect(res.locals.minute).toContain('In custody: Yes (at HMP Prison)')
+    expect(res.locals.minute).toContain('In custody: Yes (at HMP)')
   })
 
   it('sets custody to No when the offender is not active in custody', async () => {
-    const recommendation = {
-      ...recommendationApiResponse,
+    const recommendation = RecommendationResponseGenerator.generate({
       bookRecallToPpud: {},
       prisonOffender: {
         status: 'ACTIVE OUT',
         locationDescription: 'HMP Test Prison',
       },
-    }
+    })
 
     const res = mockRes({
       locals: {
@@ -132,15 +136,16 @@ describe('post', () => {
   })
 
   it('saves the minute and redirects to the next page', async () => {
-    ;(getRecommendation as jest.Mock).mockResolvedValue({
-      ...recommendationApiResponse,
+    const recommendation = RecommendationResponseGenerator.generate({
       id: 1,
       bookRecallToPpud: {
         policeForce: 'Kent',
         custodyGroup: CUSTODY_GROUP.DETERMINATE,
       },
     })
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+
+    ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
 
     const req = mockReq({
       params: {
@@ -154,7 +159,7 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: {
-          token: 'token1',
+          token: 'token',
         },
         flags: {},
         urlInfo: {
@@ -173,8 +178,7 @@ describe('post', () => {
       recommendationId: '1',
       valuesToSave: {
         bookRecallToPpud: {
-          policeForce: 'Kent',
-          custodyGroup: CUSTODY_GROUP.DETERMINATE,
+          ...recommendation.bookRecallToPpud,
           minute: 'some text',
         },
       },

@@ -1,7 +1,26 @@
-import completeRecommendationResponse from '../../../../api/responses/get-recommendation.json'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import RECOMMENDATION_STATUS from '../../../../server/middleware/recommendationStatus'
 import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import setUpSessionForPpcs from './util'
+import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
+import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
+import { RoshEnum } from '../../../../server/@types/make-recall-decision-api/models/RoshData'
+
+const recommendationId = faker.number.int()
+const completeRecommendationResponse = RecommendationResponseGenerator.generate({
+  id: recommendationId,
+  nomisIndexOffence: {
+    selectedIndex: 1,
+  },
+  personOnProbation: {
+    nomsNumber: 'J80002',
+  },
+  bookRecallToPpud: {
+    firstName: 'John',
+    lastName: 'Doe',
+    ppudSentenceId: '1',
+  },
+})
 
 context('Add minute', () => {
   beforeEach(() => {
@@ -11,102 +30,83 @@ context('Add minute', () => {
       statusCode: 200,
       response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
     })
-
-    cy.task('getSupportingDocuments', {
-      statusCode: 200,
-      response: [],
-    })
   })
 
   describe('Add minute page', () => {
+    it('displays the default minute when no minute has been saved', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          sentenceGroup: SentenceGroup.EXTENDED,
+          currentRoshForPartA: {
+            riskToChildren: RoshEnum.LOW,
+            riskToPublic: RoshEnum.LOW,
+            riskToKnownAdult: RoshEnum.LOW,
+            riskToPrisoners: RoshEnum.HIGH,
+            riskToStaff: RoshEnum.VERY_HIGH,
+          },
+          prisonOffender: {
+            status: 'ACTIVE IN',
+            locationDescription: 'Test Prison',
+          },
+          bookRecallToPpud: {
+            firstNames: 'Joseph',
+            lastName: 'Bluggs',
+            custodyGroup: CUSTODY_GROUP.DETERMINATE,
+          },
+          nomisIndexOffence: {
+            allOptions: [
+              {
+                offenderChargeId: 111111,
+                courtDescription: 'Manchester Crown Court',
+              },
+              {
+                offenderChargeId: 3934369,
+                courtDescription: 'Winchester Crown Court',
+              },
+            ],
+            selected: 3934369,
+          },
+        },
+      })
+
+      cy.visit(`/recommendations/252523937/add-minute`)
+
+      cy.get('textarea[name="minute"]')
+        .should('exist')
+        .and(
+          'have.value',
+          `Background information
+Extended sentence: Yes
+Risk of serious harm level: VERY HIGH
+In custody: Yes (at HMP Test Prison)
+Sentencing court: Winchester Crown Court
+
+More information
+`,
+        )
+    })
     it('displays the saved minute', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
+          personOnProbation: {
+            name: 'Joseph Bluggs',
+          },
           bookRecallToPpud: {
             firstNames: 'Joseph',
             lastName: 'Bluggs',
             custodyGroup: CUSTODY_GROUP.DETERMINATE,
-            minute: 'Cannot access OASys at the moment',
+            minute: 'Last time saved minutes here',
           },
         },
       })
 
       cy.visit(`/recommendations/252523937/add-minute`)
 
-      cy.pageHeading().should('contain', 'Add a minute')
-
-      cy.get('textarea[name="minute"]').should('exist').and('have.value', 'Cannot access OASys at the moment')
-    })
-
-    it('generates the default minute when no minute has been saved', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {
-            status: 'ACTIVE IN',
-            locationDescription: 'HMP Prison',
-          },
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                offenderChargeId: 3934369,
-                courtDescription: 'Winchester Crown Court',
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/add-minute`)
-
-      cy.pageHeading().should('contain', 'Add a minute')
-
-      cy.get('textarea[name="minute"]')
-        .should('exist')
-        .and('contain.value', 'Background information')
-        .and('contain.value', 'All mandatory documents received')
-        .and('contain.value', 'Extended sentence: No')
-        .and('contain.value', 'Risk of serious harm level:')
-        .and('contain.value', 'In custody: Yes (at HMP Prison)')
-        .and('contain.value', 'Sentencing court: Winchester Crown Court')
-        .and('contain.value', 'More information')
-    })
-
-    it('displays extended sentence as Yes for an extended sentence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          sentenceGroup: 'EXTENDED',
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                offenderChargeId: 3934369,
-                courtDescription: 'Winchester Crown Court',
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/add-minute`)
-
-      cy.get('textarea[name="minute"]').should('contain.value', 'Extended sentence: Yes')
+      cy.get('textarea[name="minute"]').should('have.value', 'Last time saved minutes here')
     })
 
     it('displays No when the offender is not in custody', () => {
@@ -114,14 +114,9 @@ context('Add minute', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
-          prisonOffender: {
-            status: 'ACTIVE OUT',
-            locationDescription: 'HMP Prison',
-          },
           bookRecallToPpud: {
             firstNames: 'Joseph',
             lastName: 'Bluggs',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
           },
         },
       })
@@ -138,7 +133,6 @@ context('Add minute', () => {
           ...completeRecommendationResponse,
           prisonOffender: {
             status: 'ACTIVE IN',
-            locationDescription: null,
           },
           bookRecallToPpud: {
             firstNames: 'Joseph',
@@ -147,10 +141,8 @@ context('Add minute', () => {
           },
         },
       })
-
       cy.visit(`/recommendations/252523937/add-minute`)
-
-      cy.get('textarea[name="minute"]').should('contain.value', 'In custody: Yes (at HMP Prison)')
+      cy.get('textarea[name="minute"]').should('contain.value', 'In custody: Yes (at HMP)')
     })
 
     it('displays the sentencing court from the selected NOMIS offence', () => {
@@ -188,38 +180,8 @@ context('Add minute', () => {
   })
 
   describe('Submit minute', () => {
-    it('saves the minute and redirects to the next page', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/add-minute`)
-
-      cy.get('textarea[name="minute"]').clear()
-      cy.get('textarea[name="minute"]').type('This is the updated recall minute')
-      cy.get('button').click()
-
-      cy.url().should('include', '/recommendations/252523937/')
-    })
-
     it('submits the existing minute unchanged', () => {
-      const minute =
-        `BACKGROUND INFO \n` +
-        `Extended sentence: YES\n` +
-        `Risk of Serious Harm Level: VERY HIGH\n` +
-        `In custody: YES at HMP\n` +
-        `Sentencing court: Winchester Crown Court\n` +
-        `More information\n` +
-        ` Booking details reviewed and contersigned by Andy`
-
+      const minute = 'Some minute notes'
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {

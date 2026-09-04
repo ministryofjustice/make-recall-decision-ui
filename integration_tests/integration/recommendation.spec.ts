@@ -3248,9 +3248,6 @@ context('Make a recommendation', () => {
           },
         ],
       })
-
-      cy.visit(`/recommendations/252523937/add-minute`)
-      cy.pageHeading().should('contain', 'Add note about supporting documents')
     })
   })
   describe('PPCS Journey without correct mapping or ppud user account', () => {

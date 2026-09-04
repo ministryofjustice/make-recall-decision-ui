@@ -1,5 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
+{% from "components/heading/macro.njk" import heading %}
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
@@ -16,18 +17,19 @@
                 <input type="hidden" name="type" value="{{ type }}" />
 
                 {% set html %}
-                    <h1 class="govuk-heading-l">
-                        Add a minute for {{ recommendation.personOnProbation.name }}
-                    </h1>
+                    {{ heading(
+                        "Add a minute for " + recommendation.personOnProbation.name,
+                        1,
+                        "l"
+                    ) }}
 
-                    <p class="govuk-body">
-                        Check that the background information is accurate.
-                    </p>
+                    {{ bodyParagraph(
+                         "Check that the background information is accurate."
+                    ) }}
 
-                    <p class="govuk-body">
-                        Under more information, record any issues with the supporting documents
-                        and add information that should be included in the minute on PPUD.
-                    </p>
+                    {{ bodyParagraph(
+                         "Under more information, record any issues with the supporting documents and add information that should be included in the minute on PPUD."
+                    ) }}
                 {% endset %}
 
                 {{ govukTextarea({
@@ -41,9 +43,7 @@
                     errorMessage: errorMessage(errors.minute)
                 }) }}
 
-                {{ formSubmitButton({
-                    text: "Continue"
-                }) }}
+                {{ formSubmitButton() }}
             </form>
         </div>
     </div>

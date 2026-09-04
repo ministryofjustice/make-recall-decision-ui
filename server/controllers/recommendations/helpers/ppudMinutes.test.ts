@@ -28,28 +28,31 @@ describe('generate recall minute text', () => {
   } as unknown as RecommendationResponse
 
   describe('PPUD minutes', () => {
-    it('all inputs populated', async () => {
+    it('all inputs populated', () => {
       expect(
         generateRecallMinuteText({
           ...recommendationResponse,
           sentenceGroup: SentenceGroup.EXTENDED,
         }),
       ).toEqual(
-        `BACKGROUND INFO \n` +
-          `Extended sentence: YES\n` +
-          `Risk of Serious Harm Level: VERY HIGH\n` +
-          `In custody: YES at HMP\n` +
-          `Notes regarding documents added from Consider a Recall:\n` +
+        `Background information\n` +
+          `Extended sentence: Yes\n` +
+          `Risk of serious harm level: VERY HIGH\n` +
+          `In custody: Yes (at HMP)\n` +
+          `Sentencing court: \n\n` +
+          `More information\n` +
           `an example minute`,
       )
     })
 
-    it('all inputs alternatively populated', async () => {
+    it('all inputs alternatively populated', () => {
       expect(
         generateRecallMinuteText({
           ...recommendationResponse,
           sentenceGroup: randomEnum(SentenceGroup, [SentenceGroup.EXTENDED]),
-          prisonOffender: { status: 'OUT' } as unknown as PrisonOffender,
+          prisonOffender: {
+            status: 'OUT',
+          } as unknown as PrisonOffender,
           currentRoshForPartA: {
             riskToChildren: 'NOT_APPLICABLE',
             riskToPublic: 'MEDIUM',
@@ -62,17 +65,19 @@ describe('generate recall minute text', () => {
           } as unknown as BookRecallToPpud,
         }),
       ).toEqual(
-        `BACKGROUND INFO \n` +
-          `Extended sentence: NO\n` +
-          `Risk of Serious Harm Level: HIGH\n` +
-          `In custody: NO\n` +
-          `Notes regarding documents added from Consider a Recall:\n` +
+        `Background information\n` +
+          `Extended sentence: No\n` +
+          `Risk of serious harm level: HIGH\n` +
+          `In custody: No\n` +
+          `Sentencing court: \n\n` +
+          `More information\n` +
           `another minute`,
       )
     })
 
-    it('all nullable inputs null', async () => {
+    it('all nullable inputs null', () => {
       const sentenceGroup = randomEnum(SentenceGroup)
+
       expect(
         generateRecallMinuteText({
           ...recommendationResponse,
@@ -82,7 +87,12 @@ describe('generate recall minute text', () => {
           bookRecallToPpud: null,
         }),
       ).toEqual(
-        `BACKGROUND INFO \nExtended sentence: ${sentenceGroup === SentenceGroup.EXTENDED ? 'YES' : 'NO'}\nRisk of Serious Harm Level: undefined\nIn custody: NO`,
+        `Background information\n` +
+          `Extended sentence: ${sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No'}\n` +
+          `Risk of serious harm level: undefined\n` +
+          `In custody: No\n` +
+          `Sentencing court: \n\n` +
+          `More information\n`,
       )
     })
   })

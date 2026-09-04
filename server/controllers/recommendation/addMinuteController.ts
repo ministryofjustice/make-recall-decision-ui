@@ -1,48 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
-import { RecommendationResponse } from '../../@types/make-recall-decision-api'
-import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
-import { riskOfSeriousHarmLevel } from '../recommendations/helpers/rosh'
-import getRoute from './ppcs/custodyGroupRouter'
-
-const formatMinute = (recommendation: RecommendationResponse) => {
-  const savedMinute = recommendation.bookRecallToPpud?.minute
-
-  if (savedMinute) {
-    return savedMinute
-  }
-
-  const offence = recommendation?.nomisIndexOffence?.allOptions?.find(
-    option => option.offenderChargeId === recommendation.nomisIndexOffence.selected,
-  )
-
-  const extended = recommendation.sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No'
-
-  const custody =
-    recommendation.prisonOffender?.status === 'ACTIVE IN'
-      ? `Yes (at ${recommendation.prisonOffender.locationDescription || 'HMP Prison'})`
-      : 'No'
-
-  const rosh = riskOfSeriousHarmLevel(recommendation.currentRoshForPartA)
-
-  const sentencingCourt = offence?.courtDescription || ''
-
-  return `Background information
-All mandatory documents received
-Extended sentence: ${extended}
-Risk of serious harm level: ${rosh}
-In custody: ${custody}
-Sentencing court: ${sentencingCourt}
-
-More information
-`
-}
+import getSentenceToCommitRoute from './ppcs/sentenceToCommitRouter'
+import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+  const savedMinute = recommendation.bookRecallToPpud?.minute
 
-  const minute = formatMinute(recommendation as RecommendationResponse)
+  const minute = savedMinute ?? generateRecallMinuteText(recommendation)
 
   res.locals = {
     ...res.locals,
@@ -79,7 +45,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-  const nextPageId = getRoute(recommendation.bookRecallToPpud.custodyGroup)
+  const nextPageId = getSentenceToCommitRoute(recommendation)
   const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
   res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
