@@ -140,7 +140,7 @@ describe('post', () => {
     expect(req.session.errors).toEqual([
       {
         name: 'file',
-        text: 'The file must be smaller than 25MB',
+        text: "'{{ filename }}' must be smaller than 25MB. Delete it and upload a smaller version",
         href: '#file',
         errorId: 'fileSizeExceeded',
         invalidParts: undefined,
@@ -148,7 +148,7 @@ describe('post', () => {
       },
       {
         name: 'file',
-        text: 'The filename should not contain the following characters: < > : " / \\ | ? *',
+        text: 'The filename should not contain the following characters: < > : " / \\ | ? *. Delete it to upload again',
         href: '#file',
         errorId: 'invalidFilename',
         invalidParts: undefined,

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
-import getDocumentsAndMinutes from './documentsAndMinutes'
+import { getSupportingDocuments } from '../../../../data/makeDecisionApiClient'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -16,12 +16,11 @@ async function get(req: Request, res: Response, next: NextFunction) {
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
 
-  const { documents, backgroundInfo, moreInfo } = await getDocumentsAndMinutes(
-    recommendationResponse,
-    offence?.courtDescription,
+  const documents = await getSupportingDocuments({
+    recommendationId: String(recommendationResponse.id),
     token,
-    flags,
-  )
+    featureFlags: flags,
+  })
 
   res.locals = {
     ...res.locals,
@@ -30,8 +29,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     offence,
     documents,
-    backgroundInfo,
-    moreInfo,
   }
 
   res.render(`pages/recommendations/ppcs/sentenceToCommit/sentenceToCommit`)

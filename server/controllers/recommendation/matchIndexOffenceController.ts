@@ -86,7 +86,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     s => s.id === recommendation.bookRecallToPpud.ppudSentenceId,
   )
   const nextPagePath = nextPageLinkUrl({
-    nextPageId: selectedPpudSentence ? ppcsPaths.sentenceToCommitExistingOffender : ppcsPaths.editCustodyType,
+    nextPageId: selectedPpudSentence ? ppcsPaths.supportingDocuments : ppcsPaths.editCustodyType,
     urlInfo,
   })
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))

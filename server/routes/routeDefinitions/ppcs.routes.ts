@@ -7,7 +7,7 @@ import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../rec
 import searchPpudController from '../../controllers/recommendation/searchPpudController'
 import noSearchPpudResults from '../../controllers/recommendation/noSearchPpudResults'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { and, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
+import { and, flagIsActive, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
 import searchPpudResultsController from '../../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../../controllers/recommendation/ppcs/checkBookingDetailsController'
 import editPoliceContactController from '../../controllers/recommendation/editPoliceContactController'
@@ -267,6 +267,13 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
     handler: supportingDocumentsController.get,
   },
+  // This is actually to handle the "delete" post request to this URL,
+  // rather than the file uploader which is handled before CSRF tokens
+  {
+    ...ppcsAfterSearchPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
+    handler: supportingDocumentsController.post,
+  },
   {
     ...ppcsAfterSearchGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentUpload}`,
@@ -446,6 +453,7 @@ const ppcsDeterminateSentenceRoutes: RouteDefinition[] = [
 const indeterminateSentenceMiddleware = [
   recommendationStatusCheck(
     and(
+      flagIsActive('ppcsIndeterminateJourney'),
       statusIsActive(STATUSES.SENT_TO_PPCS),
       ppcsCustodyGroup(CUSTODY_GROUP.INDETERMINATE),
       not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
