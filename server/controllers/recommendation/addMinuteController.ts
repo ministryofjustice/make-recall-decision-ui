@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
+import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import getSentenceToCommitRoute from './ppcs/sentenceToCommitRouter'
 import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 
@@ -23,7 +23,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
-  const { recommendationId } = req.params
   const { minute } = req.body
 
   const {
@@ -32,7 +31,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     urlInfo,
   } = res.locals
 
-  const recommendation = await getRecommendation(recommendationId, token)
+  const { recommendation } = res.locals
 
   await updateRecommendation({
     recommendationId: String(recommendation.id),

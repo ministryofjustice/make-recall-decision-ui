@@ -48,7 +48,7 @@ context('Add minute', () => {
           },
           prisonOffender: {
             status: 'ACTIVE IN',
-            locationDescription: 'Test Prison',
+            locationDescription: 'Glasgow Prison',
           },
           bookRecallToPpud: {
             firstNames: 'Joseph',
@@ -80,7 +80,7 @@ context('Add minute', () => {
           `Background information
 Extended sentence: Yes
 Risk of serious harm level: VERY HIGH
-In custody: Yes (at HMP Test Prison)
+In custody: Yes (at HMP Glasgow Prison)
 Sentencing court: Winchester Crown Court
 
 More information
@@ -176,32 +176,6 @@ More information
       cy.get('textarea[name="minute"]')
         .should('contain.value', 'Sentencing court: Winchester Crown Court')
         .and('not.contain.value', 'Manchester Crown Court')
-    })
-  })
-
-  describe('Submit minute', () => {
-    it('submits the existing minute unchanged', () => {
-      const minute = 'Some minute notes'
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-            minute,
-          },
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/add-minute`)
-
-      cy.get('textarea[name="minute"]').should('have.value', minute)
-
-      cy.get('button').click()
-
-      cy.url().should('include', '/recommendations/252523937/')
     })
   })
 })

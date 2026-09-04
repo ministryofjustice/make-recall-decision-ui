@@ -5,10 +5,44 @@ import { SentenceGroup } from '../recommendations/sentenceInformation/formOption
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import { riskOfSeriousHarmLevel } from '../recommendations/helpers/rosh'
+import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 jest.mock('../../data/makeDecisionApiClient')
 
+jest.mock('../recommendations/helpers/rosh', () => ({
+  riskOfSeriousHarmLevel: jest.fn(),
+}))
+
+const riskOfSeriousHarmLevelMock = riskOfSeriousHarmLevel as jest.MockedFunction<typeof riskOfSeriousHarmLevel>
+
+const MOCK_ROSH_LEVEL = 'High'
+
+const getRecommendationMock = (sentenceGroup: SentenceGroup): RecommendationResponse => {
+  return RecommendationResponseGenerator.generate({
+    sentenceGroup,
+    prisonOffender: {
+      status: 'ACTIVE IN',
+      locationDescription: 'Glasgow Prison',
+    },
+    bookRecallToPpud: {},
+    nomisIndexOffence: {
+      selectedIndex: 123,
+      offeredOffenceOptions: [
+        {
+          offenderChargeId: 123,
+        },
+      ],
+    },
+  })
+}
+
 describe('get', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    riskOfSeriousHarmLevelMock.mockReturnValue(MOCK_ROSH_LEVEL)
+  })
+
   it('loads the saved minute when one exists', async () => {
     const recommendation = RecommendationResponseGenerator.generate({})
 
@@ -37,22 +71,7 @@ describe('get', () => {
   })
 
   it('generates the default minute when no minute has been saved', async () => {
-    const recommendation = RecommendationResponseGenerator.generate({
-      sentenceGroup: SentenceGroup.EXTENDED,
-      prisonOffender: {
-        status: 'ACTIVE IN',
-        locationDescription: 'Glasgow Prison',
-      },
-      bookRecallToPpud: {},
-      nomisIndexOffence: {
-        selectedIndex: 123,
-        offeredOffenceOptions: [
-          {
-            offenderChargeId: 123,
-          },
-        ],
-      },
-    })
+    const recommendation = getRecommendationMock(SentenceGroup.EXTENDED)
 
     const offence = recommendation.nomisIndexOffence.allOptions?.find(
       option => option.offenderChargeId === recommendation.nomisIndexOffence.selected,
@@ -61,7 +80,7 @@ describe('get', () => {
     const expectedMinute =
       `Background information\n` +
       `Extended sentence: Yes\n` +
-      `Risk of serious harm level: ${riskOfSeriousHarmLevel(recommendation.currentRoshForPartA).toUpperCase()}\n` +
+      `Risk of serious harm level: ${MOCK_ROSH_LEVEL.toUpperCase()}\n` +
       `In custody: Yes (at HMP Glasgow Prison)\n` +
       `Sentencing court: ${offence?.courtDescription || ''}\n\n` +
       `More information\n`
@@ -81,6 +100,37 @@ describe('get', () => {
     expect(res.locals.minute).toEqual(expectedMinute)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/addMinute')
     expect(next).toHaveBeenCalled()
+
+    expect(riskOfSeriousHarmLevelMock).toHaveBeenCalledWith(recommendation.currentRoshForPartA)
+  })
+
+  it('displays No for non-extended sentence', async () => {
+    const recommendation = getRecommendationMock(SentenceGroup.INDETERMINATE)
+
+    const offence = recommendation.nomisIndexOffence.allOptions?.find(
+      option => option.offenderChargeId === recommendation.nomisIndexOffence.selected,
+    )
+
+    const expectedMinute =
+      `Background information\n` +
+      `Extended sentence: No\n` +
+      `Risk of serious harm level: ${MOCK_ROSH_LEVEL.toUpperCase()}\n` +
+      `In custody: Yes (at HMP Glasgow Prison)\n` +
+      `Sentencing court: ${offence?.courtDescription || ''}\n\n` +
+      `More information\n`
+
+    const res = mockRes({
+      locals: {
+        recommendation,
+      },
+    })
+
+    const req = mockReq()
+    const next = mockNext()
+
+    await addMinuteController.get(req, res, next)
+
+    expect(res.locals.minute).toEqual(expectedMinute)
   })
 
   it('uses the default prison location when locationDescription is missing', async () => {
@@ -133,6 +183,8 @@ describe('get', () => {
 describe('post', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
+    riskOfSeriousHarmLevelMock.mockReturnValue(MOCK_ROSH_LEVEL)
   })
 
   it('saves the minute and redirects to the next page', async () => {
@@ -158,6 +210,7 @@ describe('post', () => {
 
     const res = mockRes({
       locals: {
+        recommendation,
         user: {
           token: 'token',
         },
@@ -171,8 +224,6 @@ describe('post', () => {
     const next = mockNext()
 
     await addMinuteController.post(req, res, next)
-
-    expect(getRecommendation).toHaveBeenCalledWith('1234', 'token')
 
     expect(updateRecommendation).toHaveBeenCalledWith({
       recommendationId: '1',
