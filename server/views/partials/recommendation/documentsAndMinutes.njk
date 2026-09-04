@@ -14,16 +14,7 @@
 
 <h2 class="govuk-heading-m">Minutes</h2>
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
-<p class="govuk-body">Background information:<br>
-{% if backgroundInfo %}
-    {{ backgroundInfo | replace("\n", "<br>") | safe }}
+{% if recommendation.bookRecallToPpud.minute %}
+    <p class="govuk-body">{{ recommendation.bookRecallToPpud.minute | replace("\n", "<br>") | safe }}</p>
 {% endif %}
-</p>
-<p class="govuk-body">More information:<br>
-{% if moreInfo %}
-    {{ moreInfo }}
-{% else %}
-    No more information was provided in the minute
-{% endif %}
-</p>
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-4">
