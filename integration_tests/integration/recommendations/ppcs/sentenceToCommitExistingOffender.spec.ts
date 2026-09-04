@@ -316,7 +316,7 @@ context('Sentence to commit existing offender', () => {
             lastName: 'Bluggs',
             ppudSentenceId: '1',
             custodyGroup: CUSTODY_GROUP.DETERMINATE,
-            minute: 'Cannot access OASys at the moment',
+            minute: 'Offender has a history of non-compliance with licence conditions',
           },
           nomisIndexOffence: {
             allOptions: [
@@ -339,8 +339,11 @@ context('Sentence to commit existing offender', () => {
       cy.get('.govuk-summary-list__value').should('contain', 'Licence-X123456.doc')
 
       // Minutes section
-      cy.contains('h2', 'Minutes').should('exist')
-      cy.contains('Cannot access OASys at the moment').should('exist')
+      cy.contains('h2', 'Minutes')
+        .should('exist')
+        .next('hr')
+        .next('p.govuk-body')
+        .should('contain', 'Offender has a history of non-compliance with licence conditions')
     })
   })
 })
