@@ -68,6 +68,7 @@ const RECOMMENDATION_TEMPLATE = {
     familyName: 'Bloggs',
     dateOfBirth: '1971-02-03',
     prisonNumber: '12345678',
+    croOtherNumber: '999/888',
     establishment: 'HMP Belmarsh',
   },
   whoCompletedPartA: {
@@ -191,7 +192,6 @@ describe('get', () => {
           prisonNumber: PRISON_OFFENDER_TEMPLATE.bookingNo,
           receivedDateTime: null,
           currentEstablishment: expectedCurrentEstablishment,
-          image: undefined,
         },
       },
     })
@@ -203,10 +203,11 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
 
     expect(res.locals.warnings).toStrictEqual({
-      'PPUD-Date of birth': formattedPpudDateOfBirth,
-      'PPUD-First name': RECOMMENDATION_TEMPLATE.ppudOffender.firstNames,
-      'PPUD-Last name': RECOMMENDATION_TEMPLATE.ppudOffender.familyName,
-      'PPUD-Prison booking number': RECOMMENDATION_TEMPLATE.ppudOffender.prisonNumber,
+      'Date of birth': formattedPpudDateOfBirth,
+      'First name': RECOMMENDATION_TEMPLATE.ppudOffender.firstNames,
+      'Last name': RECOMMENDATION_TEMPLATE.ppudOffender.familyName,
+      'Prison booking number': RECOMMENDATION_TEMPLATE.ppudOffender.prisonNumber,
+      CRO: RECOMMENDATION_TEMPLATE.ppudOffender.croOtherNumber,
     })
     expect(formatDateTimeFromIsoString).toHaveBeenCalledWith({
       isoDate: RECOMMENDATION_TEMPLATE.ppudOffender.dateOfBirth,

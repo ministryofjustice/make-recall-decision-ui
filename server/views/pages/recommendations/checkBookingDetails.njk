@@ -77,17 +77,30 @@
                         These details will go into a PPUD record. You should check everything is correct and edit anything that's missing or wrong.
                         </p>
 
-                        <h2 class="govuk-heading-m">Supporting documents</h2>
-                        <p class="govuk-body">
-                        Upload the Part A, licence and reports to add them to PPUD.
-                        </p>
+                        {% set warningKeys = [] %}
+                        {% for key, value in warnings %}
+                            {% set warningKeys = (warningKeys.push(key), warningKeys) %}
+                        {% endfor %}
+
+                        {% if warningKeys | length > 0 %}
+                            {% set warningHtml %}
+                                <p class="govuk-body govuk-!-font-weight-bold">Some information here does not match what's currently in PPUD. Check these details and edit anything that's wrong.</p>
+                                <p class="govuk-body govuk-!-font-weight-bold">From PPUD</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    {% for key, value in warnings %}
+                                        <li><strong>{{ key }}:</strong> {{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endset %}
+
+                            {{ mojBanner({
+                                type: "information",
+                                html: warningHtml,
+                                iconFallbackText: "information"
+                            }) }}
+                        {% endif %}
 
 
-                        {{ govukButton({
-                            text: "Upload documents",
-                            classes: "govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
-                            href: "/recommendations/" + recommendation.id + "/supporting-documents"
-                        }) }}
                 </div>
             </div>
 
@@ -108,7 +121,7 @@
                             { key: 'Gender', value: '<span id="gender"></span>' + blankSafe(recommendation.bookRecallToPpud.gender, true, 'You must enter a gender'), actions: [{ id: editIdPrefix+'gender', text: editText, href: 'edit-gender', visuallyHidden: 'gender' }], error: errors.gender },
                             { key: 'Ethnicity', value: '<span id="ethnicity"></span>' + blankSafe(recommendation.bookRecallToPpud.ethnicity, true, 'Enter an ethnicity'), actions: [{ id: editIdPrefix+'ethnicity', text: editText, href: 'edit-ethnicity', visuallyHidden: 'ethnicity' }], error: errors.ethnicity },
                             { key: 'Date of birth', value: editedBadge(edited.dateOfBirth) + blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.dateOfBirth, dateOnly: true })), actions: [{ id: editIdPrefix+'dateofbirth', text: editText, href: 'edit-date-of-birth', visuallyHidden: 'date of birth' }] },
-                            { key: 'CRO', value:  editedBadge(edited.cro) + blankSafe(recommendation.bookRecallToPpud.cro), actions: [{ id: editIdPrefix+'cro', text: editText, href: 'edit-cro' , visuallyHidden: 'CRO' }] }
+                            { key: 'CRO', value:  editedBadge(edited.cro) + blankSafe(recommendation.bookRecallToPpud.cro, true, 'You must enter a CRO'), actions: [{ id: editIdPrefix+'cro', text: editText, href: 'edit-cro' , visuallyHidden: 'CRO' }], error: errors.cro }
                         ]
                     })
                 }}
@@ -298,7 +311,7 @@
                                 html: "Personal details"
                             },
                             summary: {
-                                text: "From NOMIS"
+                                text: "From NOMIS and Part A"
                             },
                             content: {
                                 html: personalDetailsHtml
