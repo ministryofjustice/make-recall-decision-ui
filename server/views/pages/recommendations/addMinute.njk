@@ -1,5 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 
+{% from "components/heading/macro.njk" import heading %}
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% block beforeContent %}
@@ -9,29 +10,32 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% include '../../partials/error-summary.njk' %}
+            {% include '../../partials/error-summary.njk' %}
 
-
-
-            <form novalidate method="post" enctype='multipart/form-data'>
+            <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="type" value="{{ type }}" />
 
                 {% set html %}
-                    <h1 class='govuk-heading-l'>
-                        {% if minute %}
-                            Edit note about supporting documents
-                        {% else %}
-                            Add note about supporting documents
-                        {% endif %}
-                    </h1>
+                    {{ heading(
+                        "Add a minute for " + recommendation.personOnProbation.name,
+                        1,
+                        "l"
+                    ) }}
 
-                    <p class="govuk-body">Write down any issues with the supporting documents here.  This will go into a minute on PPUD.</p>
+                    {{ bodyParagraph(
+                         "Check that the background information is accurate."
+                    ) }}
+
+                    {{ bodyParagraph(
+                         "Under more information, record any issues with the supporting documents and add information that should be included in the minute on PPUD."
+                    ) }}
                 {% endset %}
+
                 {{ govukTextarea({
                     name: "minute",
                     id: "minute",
-                    rows: "12",
+                    rows: "16",
                     value: minute,
                     label: {
                         html: html
@@ -41,7 +45,6 @@
 
                 {{ formSubmitButton() }}
             </form>
-
         </div>
     </div>
 {% endblock %}
