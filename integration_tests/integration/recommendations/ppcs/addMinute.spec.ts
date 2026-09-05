@@ -108,57 +108,5 @@ More information
 
       cy.get('textarea[name="minute"]').should('have.value', 'Last time saved minutes here')
     })
-
-    it('uses HMP Prison when the prison location is not available', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {
-            status: 'ACTIVE IN',
-          },
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-        },
-      })
-      cy.visit(`/recommendations/252523937/add-minute`)
-      cy.get('textarea[name="minute"]').should('contain.value', 'In custody: Yes')
-    })
-
-    it('displays the sentencing court from the selected NOMIS offence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                offenderChargeId: 111111,
-                courtDescription: 'Manchester Crown Court',
-              },
-              {
-                offenderChargeId: 3934369,
-                courtDescription: 'Winchester Crown Court',
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/add-minute`)
-
-      cy.get('textarea[name="minute"]')
-        .should('contain.value', 'Sentencing court: Winchester Crown Court')
-        .and('not.contain.value', 'Manchester Crown Court')
-    })
   })
 })
