@@ -596,13 +596,23 @@ const ppcsRoutes: RouteDefinition[] = [
     handler: bookedToPpudController.get,
   },
   {
-    ...createRecommendationRouteTemplate('get', bookingMiddleware, roles),
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD))],
+      roles,
+    ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudFail}`,
+    method: 'get',
     handler: bookedToPpudFailController.get,
   },
   {
-    ...createRecommendationRouteTemplate('get', bookingMiddleware, roles),
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD))],
+      roles,
+    ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudSuccess}`,
+    method: 'get',
     handler: bookedToPpudSuccessController.get,
   },
   ...ppcsRecommendationRoutes,
