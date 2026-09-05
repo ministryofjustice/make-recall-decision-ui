@@ -4,18 +4,19 @@ import addMinuteController from './addMinuteController'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
-import { riskOfSeriousHarmLevel } from '../recommendations/helpers/rosh'
+import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 
 jest.mock('../../data/makeDecisionApiClient')
 
-jest.mock('../recommendations/helpers/rosh', () => ({
-  riskOfSeriousHarmLevel: jest.fn(),
+jest.mock('../recommendations/helpers/ppudMinutes', () => ({
+  __esModule: true,
+  default: jest.fn(),
 }))
 
-const riskOfSeriousHarmLevelMock = riskOfSeriousHarmLevel as jest.MockedFunction<typeof riskOfSeriousHarmLevel>
+const generateRecallMinuteTextMock = generateRecallMinuteText as jest.MockedFunction<typeof generateRecallMinuteText>
 
-const MOCK_ROSH_LEVEL = 'High'
+const MOCK_GENERATED_MINUTE = 'Generated default minute'
 
 const getRecommendationMock = (sentenceGroup: SentenceGroup): RecommendationResponse => {
   return RecommendationResponseGenerator.generate({
@@ -40,13 +41,11 @@ describe('get', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
-    riskOfSeriousHarmLevelMock.mockReturnValue(MOCK_ROSH_LEVEL)
+    generateRecallMinuteTextMock.mockReturnValue(MOCK_GENERATED_MINUTE)
   })
 
   it('loads the saved minute when one exists', async () => {
-    const recommendation = RecommendationResponseGenerator.generate({})
-
-    const expectedMinute = `Previous Minute updated notes`
+    const recommendation = RecommendationResponseGenerator.generate()
 
     const res = mockRes({
       locals: {
@@ -65,26 +64,16 @@ describe('get', () => {
     await addMinuteController.get(req, res, next)
 
     expect(res.locals.page).toEqual({ id: 'addMinute' })
-    expect(res.locals.minute).toEqual(expectedMinute)
+    expect(res.locals.minute).toEqual('Previous Minute updated notes')
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/addMinute')
     expect(next).toHaveBeenCalled()
+
+    expect(generateRecallMinuteTextMock).not.toHaveBeenCalled()
   })
 
   it('generates the default minute when no minute has been saved', async () => {
     const recommendation = getRecommendationMock(SentenceGroup.EXTENDED)
 
-    const offence = recommendation.nomisIndexOffence.allOptions?.find(
-      option => option.offenderChargeId === recommendation.nomisIndexOffence.selected,
-    )
-
-    const expectedMinute =
-      `Background information\n` +
-      `Extended sentence: Yes\n` +
-      `Risk of serious harm level: ${MOCK_ROSH_LEVEL.toUpperCase()}\n` +
-      `In custody: Yes (at HMP Glasgow Prison)\n` +
-      `Sentencing court: ${offence?.courtDescription || ''}\n\n` +
-      `More information\n`
-
     const res = mockRes({
       locals: {
         recommendation,
@@ -96,95 +85,17 @@ describe('get', () => {
 
     await addMinuteController.get(req, res, next)
 
+    expect(generateRecallMinuteTextMock).toHaveBeenCalledWith(recommendation)
     expect(res.locals.page).toEqual({ id: 'addMinute' })
-    expect(res.locals.minute).toEqual(expectedMinute)
+    expect(res.locals.minute).toEqual(MOCK_GENERATED_MINUTE)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/addMinute')
     expect(next).toHaveBeenCalled()
-
-    expect(riskOfSeriousHarmLevelMock).toHaveBeenCalledWith(recommendation.currentRoshForPartA)
-  })
-
-  it('displays No for non-extended sentence', async () => {
-    const recommendation = getRecommendationMock(SentenceGroup.INDETERMINATE)
-
-    const offence = recommendation.nomisIndexOffence.allOptions?.find(
-      option => option.offenderChargeId === recommendation.nomisIndexOffence.selected,
-    )
-
-    const expectedMinute =
-      `Background information\n` +
-      `Extended sentence: No\n` +
-      `Risk of serious harm level: ${MOCK_ROSH_LEVEL.toUpperCase()}\n` +
-      `In custody: Yes (at HMP Glasgow Prison)\n` +
-      `Sentencing court: ${offence?.courtDescription || ''}\n\n` +
-      `More information\n`
-
-    const res = mockRes({
-      locals: {
-        recommendation,
-      },
-    })
-
-    const req = mockReq()
-    const next = mockNext()
-
-    await addMinuteController.get(req, res, next)
-
-    expect(res.locals.minute).toEqual(expectedMinute)
-  })
-
-  it('uses the default prison location when locationDescription is missing', async () => {
-    const recommendation = RecommendationResponseGenerator.generate({
-      bookRecallToPpud: {},
-      prisonOffender: {
-        status: 'ACTIVE IN',
-        locationDescription: '',
-      },
-    })
-
-    const res = mockRes({
-      locals: {
-        recommendation,
-      },
-    })
-
-    const req = mockReq()
-    const next = mockNext()
-
-    await addMinuteController.get(req, res, next)
-
-    expect(res.locals.minute).toContain('In custody: Yes')
-  })
-
-  it('sets custody to No when the offender is not active in custody', async () => {
-    const recommendation = RecommendationResponseGenerator.generate({
-      bookRecallToPpud: {},
-      prisonOffender: {
-        status: 'ACTIVE OUT',
-        locationDescription: 'HMP Test Prison',
-      },
-    })
-
-    const res = mockRes({
-      locals: {
-        recommendation,
-      },
-    })
-
-    const req = mockReq()
-    const next = mockNext()
-
-    await addMinuteController.get(req, res, next)
-
-    expect(res.locals.minute).toContain('In custody: No')
   })
 })
 
 describe('post', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-
-    riskOfSeriousHarmLevelMock.mockReturnValue(MOCK_ROSH_LEVEL)
   })
 
   it('saves the minute and redirects to the next page', async () => {
@@ -195,6 +106,7 @@ describe('post', () => {
         custodyGroup: CUSTODY_GROUP.DETERMINATE,
       },
     })
+    const USER_UPDATED_MINUTE = 'user updated minutes'
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendation)
@@ -204,7 +116,7 @@ describe('post', () => {
         recommendationId: '1234',
       },
       body: {
-        minute: 'some text',
+        minute: USER_UPDATED_MINUTE,
       },
     })
 
@@ -230,7 +142,7 @@ describe('post', () => {
       valuesToSave: {
         bookRecallToPpud: {
           ...recommendation.bookRecallToPpud,
-          minute: 'some text',
+          minute: USER_UPDATED_MINUTE,
         },
       },
       token: 'token',

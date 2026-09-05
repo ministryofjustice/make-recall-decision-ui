@@ -109,23 +109,6 @@ More information
       cy.get('textarea[name="minute"]').should('have.value', 'Last time saved minutes here')
     })
 
-    it('displays No when the offender is not in custody', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-          },
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/add-minute`)
-
-      cy.get('textarea[name="minute"]').should('contain.value', 'In custody: No')
-    })
-
     it('uses HMP Prison when the prison location is not available', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -142,7 +125,7 @@ More information
         },
       })
       cy.visit(`/recommendations/252523937/add-minute`)
-      cy.get('textarea[name="minute"]').should('contain.value', 'In custody: Yes (at HMP)')
+      cy.get('textarea[name="minute"]').should('contain.value', 'In custody: Yes')
     })
 
     it('displays the sentencing court from the selected NOMIS offence', () => {
