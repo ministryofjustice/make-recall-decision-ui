@@ -92,7 +92,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   const edited = {} as Record<string, boolean>
 
-  // if recommendation does not have working values for book to ppud, add them.
+  // if the recommendation does not have working values for book to ppud, add them.
   if (!hasValue(recommendation.bookRecallToPpud)) {
     const { decisionDateTime } = recommendation as RecommendationResponse
     let firstName = ''
@@ -169,28 +169,24 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   if (hasValue(recommendation.ppudOffender) && hasValue(recommendation.prisonOffender)) {
     const ppudOffender = recommendation.ppudOffender as PpudOffender
-    const prisonOffender = recommendation.prisonOffender as PrisonOffender
     const bookToPpud = recommendation.bookRecallToPpud as BookRecallToPpud
-    if (prisonOffender.firstName !== ppudOffender.firstNames && bookToPpud.firstNames !== ppudOffender.firstNames) {
-      warnings['PPUD-First name'] = ppudOffender.firstNames
+    if (bookToPpud.firstNames !== ppudOffender.firstNames) {
+      warnings['First name'] = ppudOffender.firstNames
     }
-    if (prisonOffender.lastName !== ppudOffender.familyName && bookToPpud.lastName !== ppudOffender.familyName) {
-      warnings['PPUD-Last name'] = ppudOffender.familyName
+    if (bookToPpud.lastName !== ppudOffender.familyName) {
+      warnings['Last name'] = ppudOffender.familyName
     }
-    if (
-      prisonOffender.bookingNo !== ppudOffender.prisonNumber &&
-      bookToPpud.prisonNumber !== ppudOffender.prisonNumber
-    ) {
-      warnings['PPUD-Prison booking number'] = ppudOffender.prisonNumber
+    if (bookToPpud.prisonNumber !== ppudOffender.prisonNumber) {
+      warnings['Prison booking number'] = ppudOffender.prisonNumber
     }
-    if (
-      prisonOffender.dateOfBirth !== ppudOffender.dateOfBirth &&
-      bookToPpud.dateOfBirth !== ppudOffender.dateOfBirth
-    ) {
-      warnings['PPUD-Date of birth'] = formatDateTimeFromIsoString({
+    if (bookToPpud.dateOfBirth !== ppudOffender.dateOfBirth) {
+      warnings['Date of birth'] = formatDateTimeFromIsoString({
         isoDate: ppudOffender.dateOfBirth,
         dateOnly: true,
       })
+    }
+    if (bookToPpud.cro !== ppudOffender.croOtherNumber) {
+      warnings.CRO = ppudOffender.croOtherNumber
     }
   }
 
@@ -246,6 +242,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   validateBookRecallToPpudField(bookRecallToPpud, 'gender', 'missingGender', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'ethnicity', 'missingEthnicity', errors)
+  validateBookRecallToPpudField(bookRecallToPpud, 'cro', 'missingCro', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'custodyGroup', 'missingCustodyGroup', errors)
 
   if (bookRecallToPpud.custodyGroup === CUSTODY_GROUP.DETERMINATE) {
