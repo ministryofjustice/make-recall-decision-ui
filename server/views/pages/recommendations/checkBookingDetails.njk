@@ -146,9 +146,10 @@
             key: "Determinate or indeterminate",
             value: recommendation.bookRecallToPpud.custodyGroup
         } %}
-        {# If there's an existing PPUD record, allow the user to edit the custody group.
+        {# If the PPCS Indeterminate journey is unavailable, don't allow editing. IF it is
+           and there's an existing PPUD record, allow the user to edit the custody group.
            Otherwise, don't show the edit link as new PPUD records can only be determinate.#}
-        {% if recommendation.ppudOffender %}
+        {% if flags.ppcsIndeterminateJourney and recommendation.ppudOffender %}
             {% set determinateOrIndeterminateRow = determinateOrIndeterminateRow | merge({
                     value: '<span id="custodyGroup"></span>' + blankSafe(recommendation.bookRecallToPpud.custodyGroup, true, 'You must enter determinate or indeterminate'),
                     actions: [{ id: editIdPrefix+'custodygroup', text: editText, href: 'edit-custody-group', visuallyHidden: 'custody group' }],

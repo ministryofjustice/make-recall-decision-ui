@@ -121,6 +121,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       // if its non OOH, force ppcs users to enter the date and time they received the recall,
       // even if it is the same as the decision date/time, see: MRD-3042
       receivedDateTime: isOutOfHoursRecall ? decisionDateTime : null,
+      custodyGroup: flags.ppcsIndeterminateJourney ? undefined : CUSTODY_GROUP.DETERMINATE,
       currentEstablishment,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud

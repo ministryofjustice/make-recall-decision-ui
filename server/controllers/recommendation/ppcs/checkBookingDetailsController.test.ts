@@ -151,6 +151,7 @@ describe('get', () => {
         statuses: [...STATUSES_TEMPLATE],
         flags: {
           xyz: 1,
+          ppcsIndeterminateJourney: 1,
         },
       },
     })
@@ -178,7 +179,7 @@ describe('get', () => {
     )
 
     expect(updateRecommendation).toHaveBeenCalledWith({
-      featureFlags: { xyz: 1 },
+      featureFlags: { xyz: 1, ppcsIndeterminateJourney: 1 },
       recommendationId: RECOMMENDATION_TEMPLATE.id,
       token: 'token',
       valuesToSave: {
@@ -458,6 +459,7 @@ describe('get', () => {
     expect(updateRecommendation).not.toHaveBeenCalled()
     expect(res.locals.edited).toStrictEqual({})
   })
+
   it('default to determinate custody type if ppud record not found', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
 
@@ -483,6 +485,48 @@ describe('get', () => {
     // Custody group should default to Determinate as we can only create new PPUD records for determinate sentences
     expect(res.locals.recommendation.bookRecallToPpud?.custodyGroup).toEqual(CUSTODY_GROUP.DETERMINATE)
   })
+
+  it('leave custody type empty if ppcsIndeterminateJourney flag set to true', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {
+          ppcsIndeterminateJourney: 1,
+        },
+      },
+    })
+    const next = mockNext()
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    expect(res.locals.recommendation.bookRecallToPpud?.custodyGroup).toBeUndefined()
+  })
+
+  it('default to determinate custody type if ppcsIndeterminateJourney flag set to false', async () => {
+    ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(PRISON_OFFENDER_TEMPLATE)
+
+    const res = mockRes({
+      locals: {
+        recommendation: {
+          ...RECOMMENDATION_TEMPLATE,
+        },
+        statuses: STATUSES_TEMPLATE,
+        flags: {
+          ppcsIndeterminateJourney: 0,
+        },
+      },
+    })
+    const next = mockNext()
+    await checkBookingDetailsController.get(mockReq(), res, next)
+
+    // Custody group should default to Determinate as we can only create new PPUD records for determinate sentences
+    expect(res.locals.recommendation.bookRecallToPpud?.custodyGroup).toEqual(CUSTODY_GROUP.DETERMINATE)
+  })
+
   it('load present blanks and banner for no nomis record found.', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(undefined)
 
@@ -527,6 +571,7 @@ describe('get', () => {
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/checkBookingDetails`)
     expect(next).toHaveBeenCalled()
   })
+
   it('load present blanks and banner for nomis number.', async () => {
     ;(searchForPrisonOffender as jest.Mock).mockResolvedValue(undefined)
 
