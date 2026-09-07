@@ -7,6 +7,7 @@ import { SentenceGroup } from '../../../../server/controllers/recommendations/se
 import { RoshEnum } from '../../../../server/@types/make-recall-decision-api/models/RoshData'
 
 const recommendationId = faker.number.int()
+const testPageUrl = `/recommendations/252523937/add-minute`
 const completeRecommendationResponse = RecommendationResponseGenerator.generate({
   id: recommendationId,
   nomisIndexOffence: {
@@ -71,7 +72,7 @@ context('Add minute', () => {
         },
       })
 
-      cy.visit(`/recommendations/252523937/add-minute`)
+      cy.visit(testPageUrl)
 
       cy.get('textarea[name="minute"]')
         .should('exist')
@@ -86,6 +87,7 @@ Sentencing court: Winchester Crown Court
 More information
 `,
         )
+      cy.get('button.govuk-button').should('exist').and('contain.text', 'Continue')
     })
     it('displays the saved minute', () => {
       cy.task('getRecommendation', {
@@ -104,7 +106,7 @@ More information
         },
       })
 
-      cy.visit(`/recommendations/252523937/add-minute`)
+      cy.visit(testPageUrl)
 
       cy.get('textarea[name="minute"]').should('have.value', 'Last time saved minutes here')
     })
