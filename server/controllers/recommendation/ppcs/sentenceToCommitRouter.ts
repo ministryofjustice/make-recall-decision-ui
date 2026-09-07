@@ -1,16 +1,17 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import ppcsPaths from '../../../routes/paths/ppcs.paths'
 
 function getSentenceToCommitRoute(recommendation: RecommendationResponse): string {
   if (recommendation.bookRecallToPpud.custodyGroup === CUSTODY_GROUP.INDETERMINATE) {
-    return 'sentence-to-commit-indeterminate'
+    return ppcsPaths.sentenceToCommitIndeterminate
   }
 
   if (recommendation.ppudOffender) {
-    return 'sentence-to-commit-existing-offender'
+    return ppcsPaths.sentenceToCommitExistingOffender
   }
 
-  return 'sentence-to-commit'
+  return ppcsPaths.sentenceToCommit
 }
 
 export default getSentenceToCommitRoute

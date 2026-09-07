@@ -1,5 +1,6 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
 import CUSTODY_GROUP from '../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
+import ppcsPaths from '../../../routes/paths/ppcs.paths'
 import getSentenceToCommitRoute from './sentenceToCommitRouter'
 
 describe('getSentenceToCommitRoute', () => {
@@ -15,7 +16,7 @@ describe('getSentenceToCommitRoute', () => {
       },
     } as RecommendationResponse
 
-    expect(getSentenceToCommitRoute(recommendation)).toBe('sentence-to-commit-indeterminate')
+    expect(getSentenceToCommitRoute(recommendation)).toBe(ppcsPaths.sentenceToCommitIndeterminate)
   })
 
   it('returns sentence-to-commit-existing-offender when recommendation has a PPUD offender', () => {
@@ -24,7 +25,7 @@ describe('getSentenceToCommitRoute', () => {
       ppudOffender: {},
     } as RecommendationResponse
 
-    expect(getSentenceToCommitRoute(recommendation)).toBe('sentence-to-commit-existing-offender')
+    expect(getSentenceToCommitRoute(recommendation)).toBe(ppcsPaths.sentenceToCommitExistingOffender)
   })
 
   it('returns sentence-to-commit when there is no PPUD offender and custody group is not indeterminate', () => {
@@ -35,7 +36,7 @@ describe('getSentenceToCommitRoute', () => {
       },
     } as RecommendationResponse
 
-    expect(getSentenceToCommitRoute(recommendation)).toBe('sentence-to-commit')
+    expect(getSentenceToCommitRoute(recommendation)).toBe(ppcsPaths.sentenceToCommit)
   })
 
   it('returns sentence-to-commit-indeterminate when custody group is indeterminate even when a PPUD offender exists', () => {
@@ -47,6 +48,6 @@ describe('getSentenceToCommitRoute', () => {
       ppudOffender: {},
     } as RecommendationResponse
 
-    expect(getSentenceToCommitRoute(recommendation)).toBe('sentence-to-commit-indeterminate')
+    expect(getSentenceToCommitRoute(recommendation)).toBe(ppcsPaths.sentenceToCommitIndeterminate)
   })
 })
