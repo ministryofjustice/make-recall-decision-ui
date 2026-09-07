@@ -53,9 +53,17 @@ function testPageData(
 
   cy.visit(`/recommendations/${recommendation.id}/${ppcsPaths.sentenceToCommitExistingOffender}`)
 
-  cy.pageHeading().should('contain', 'Double check your booking')
+  cy.pageHeading().should(
+    'contain',
+    `Check the sentence and offence details for ${recommendation.bookRecallToPpud.firstNames} ${recommendation.bookRecallToPpud.lastName}`,
+  )
 
-  cy.get('p.govuk-body').should('contain', 'The details in your booking will update the details in PPUD.')
+  cy.get('p.govuk-body')
+    .first()
+    .should(
+      'contain',
+      'Check you’ve selected the right PPUD sentence for the booking. The details in your booking will update the details in PPUD.',
+    )
 
   cy.get('.govuk-grid-column-one-half')
     .eq(0)
