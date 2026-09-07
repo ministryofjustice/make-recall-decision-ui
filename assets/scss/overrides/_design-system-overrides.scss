@@ -48,6 +48,10 @@
   width: 40%;
 }
 
+.govuk-summary-list--no-wrap-keys .govuk-summary-list__key {
+  white-space: nowrap;
+}
+
 .govuk-notification-banner--full-width .govuk-notification-banner__content > * {
   max-width: none;
 }
@@ -91,4 +95,3 @@
   color: #505a5f;
   white-space: nowrap;
 }
-

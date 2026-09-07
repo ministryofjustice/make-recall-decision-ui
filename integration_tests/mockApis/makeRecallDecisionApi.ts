@@ -151,6 +151,28 @@ export const getSupportingDocuments = ({ statusCode = 200, response }: { statusC
     response,
   })
 
+export const uploadSupportingDocument = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `${routes.recommendations}/(.*)/documents/?`,
+    statusCode,
+    response,
+  })
+
+export const deleteSupportingDocument = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPathPattern: `${routes.recommendations}/(.*)/documents/(.*)`,
+    },
+    response: {
+      status: statusCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: response,
+    },
+  })
+
 export const downloadSupportingDocument = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockGet({
     urlPathPattern: `${routes.recommendations}/(.*)/documents/(.*)`,

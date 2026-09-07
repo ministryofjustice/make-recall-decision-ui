@@ -3,12 +3,20 @@ import RECOMMENDATION_STATUS from '../../../../../server/middleware/recommendati
 import completeRecommendationResponse from '../../../../../api/responses/get-recommendation.json'
 import { testSummaryList } from '../../../../componentTests/summaryList.tests'
 import setUpSessionForPpcs from '../util'
+import testIndeterminateJourneyFlag from './testIndeterminateFlag'
+import ppcsPaths from '../../../../../server/routes/paths/ppcs.paths'
 
 context('Determinate Ppud Sentences', () => {
   describe('Standard page load', () => {
+    const recommendationId = '1'
+
+    const testPageUrl = `/recommendations/${recommendationId}/${ppcsPaths.determinatePpudSentences}?ppcsIndeterminateJourney=1`
+
     beforeEach(() => {
       setUpSessionForPpcs()
     })
+
+    testIndeterminateJourneyFlag(ppcsPaths.determinatePpudSentences)
 
     it('should load the page as expected', () => {
       cy.task('getRecommendation', {
@@ -82,9 +90,6 @@ context('Determinate Ppud Sentences', () => {
           },
         },
       })
-      const recommendationId = '1'
-
-      const testPageUrl = `/recommendations/${recommendationId}/determinate-ppud-sentences`
 
       cy.task('getStatuses', {
         statusCode: 200,
@@ -192,9 +197,6 @@ context('Determinate Ppud Sentences', () => {
           },
         },
       })
-      const recommendationId = '1'
-
-      const testPageUrl = `/recommendations/${recommendationId}/determinate-ppud-sentences`
 
       cy.task('getStatuses', {
         statusCode: 200,
@@ -266,9 +268,6 @@ context('Determinate Ppud Sentences', () => {
           },
         },
       })
-      const recommendationId = '1'
-
-      const testPageUrl = `/recommendations/${recommendationId}/determinate-ppud-sentences`
 
       cy.task('getStatuses', {
         statusCode: 200,

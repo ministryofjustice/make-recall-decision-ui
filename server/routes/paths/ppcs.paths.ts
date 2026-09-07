@@ -12,7 +12,6 @@ export default {
   selectIndexOffence: 'select-index-offence',
   consecutiveSentenceDetails: 'consecutive-sentence-details',
   matchIndexOffence: 'match-index-offence',
-  determinatePpudSentences: 'determinate-ppud-sentences',
   editCustodyType: 'custody-type',
   sentenceToCommit: 'sentence-to-commit',
 
@@ -22,6 +21,7 @@ export default {
 
   // indeterminate
   selectIndeterminatePpudSentence: 'select-indeterminate-ppud-sentence',
+  determinatePpudSentences: 'determinate-ppud-sentences',
   sentenceToCommitIndeterminate: 'sentence-to-commit-indeterminate',
   indeterminateEdit: {
     releaseDate: 'edit-release-date',

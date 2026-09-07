@@ -238,10 +238,8 @@
                     summaryList({
                         id: "check-booking-recall-information-list",
                         rows: [
-                            { key: 'Recall received date', value: '<span id="receivedDateTime"></span>' + blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, dateOnly: true }), true, 'You must enter a date'), actions: [{ id: editIdPrefix+'receivedDateTime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received date' }], error: errors.receivedDateTime },
-                            { key: 'Recall received time', value: blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime, timeOnly: true }), true, 'You must enter a time'), actions: [{ id: editIdPrefix+'receivedDateTime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received time' }], error: errors.missingReceivedDateTime },
-                            { key: 'Recall decision date', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, dateOnly: true }) },
-                            { key: 'Recall decision time', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime, timeOnly: true }) }
+                            { key: 'Recall received date and time', value: '<span id="receivedDateTime"></span>' + blankSafe(formatDateTimeFromIsoString({ isoDate: recommendation.bookRecallToPpud.receivedDateTime }), true, 'You must enter a date and time'), actions: [{ id: editIdPrefix+'receivedDateTime', text: editText, href: 'edit-recall-received-date-and-time', visuallyHidden: 'recall received date and time' }], error: errors.receivedDateTime },
+                            { key: 'Recall decision date and time', value: formatDateTimeFromIsoString({ isoDate: recommendation.decisionDateTime }) }
                         ]
                     })
                 }}
