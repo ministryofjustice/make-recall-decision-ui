@@ -35,13 +35,16 @@
   "jest": {
     "preset": "ts-jest",
     "transform": {
-      "^.+\\.tsx?$": [
+      "^.+\\.(t|j)sx?$": [
         "ts-jest",
         {
           "isolatedModules": true
         }
       ]
     },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@faker-js/faker)/)"
+    ],
     "collectCoverageFrom": [
       "server/**/*.{ts,js,jsx,mjs}"
     ],
@@ -96,7 +99,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.1036.0",
-    "@faker-js/faker": "^9.7.0",
+    "@faker-js/faker": "^10.6.0",
     "@flipt-io/flipt-client-js": "0.5.0",
     "@microsoft/applicationinsights-web": "^3.1.2",
     "@ministryofjustice/frontend": "8.0.0",
