@@ -1,0 +1,124 @@
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# MoJ Dependabot guidelines were used as a reference:
+# https://developer-portal.service.justice.gov.uk/guidelines/dependabot-guidelines/
+
+version: 2
+
+multi-ecosystem-groups:
+  docker:
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 10
+      semver-patch-days: 7
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm"
+    groups:
+      # Low-risk: dev tooling only, patch and minor updates
+      linting:
+        dependency-type: "development"
+        patterns:
+          - "*eslint*"
+          - "prettier*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Low-risk: test tooling, patch and minor updates
+      testing:
+        dependency-type: "development"
+        patterns:
+          - "*jest*"
+          - "*cypress*"
+          - "mocha*"
+          - "cucumber*"
+          - "*supertest*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Moderate-risk: all other dev dependencies, patch only
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "patch"
+
+      # ⚠️ Production dependencies are NOT grouped here, those need to be reviewed individually
+
+  - package-ecosystem: "docker"
+    multi-ecosystem-group: "docker"
+    patterns: ["*"]
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "ghcr.io/ministryofjustice/*"
+    labels:
+      - "dependencies"
+      - "docker"
+
+  - package-ecosystem: "docker-compose"
+    multi-ecosystem-group: "docker"
+    patterns: ["*"]
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "ghcr.io/ministryofjustice/*"
+    labels:
+      - "dependencies"
+      - "docker"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "ministryofjustice/*"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  - package-ecosystem: "helm"
+    directories:
+      - "/helm_deploy/*"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "https://ministryofjustice.github.io/hmpps-helm-charts/*"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "helm"
+      
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "pre-commit"
