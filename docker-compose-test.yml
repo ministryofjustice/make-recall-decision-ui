@@ -22,7 +22,7 @@ services:
   mock-flipt-api:
     image: wiremock/wiremock
     networks:
-      - hmpps
+      - hmpps_int
     container_name: mock-flipt-api
     ports:
       - "7070:8080"
