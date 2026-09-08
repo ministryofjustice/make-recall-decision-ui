@@ -72,41 +72,7 @@ context('Supporting documents upload page', () => {
       cy.get('a.govuk-button.govuk-button--primary')
         .should('exist')
         .should('contain.text', 'Continue')
-        .should('have.attr', 'href', 'sentence-to-commit-existing-offender')
-    })
-
-    it('Continue links to sentence-to-commit when ppudOffender is not present', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...recommendationResponse,
-          ppudOffender: undefined,
-        },
-      })
-      cy.task('getSupportingDocuments', { statusCode: 200, response: [] })
-      cy.visit(testPageUrl)
-
-      cy.get('a.govuk-button.govuk-button--primary')
-        .should('exist')
-        .should('contain.text', 'Continue')
-        .should('have.attr', 'href', 'sentence-to-commit')
-    })
-
-    it('Continue links to sentence-to-commit-indeterminate when custody group is Indeterminate', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...recommendationResponse,
-          bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-        },
-      })
-      cy.task('getSupportingDocuments', { statusCode: 200, response: [] })
-      cy.visit(testPageUrl)
-
-      cy.get('a.govuk-button.govuk-button--primary')
-        .should('exist')
-        .should('contain.text', 'Continue')
-        .should('have.attr', 'href', 'sentence-to-commit-indeterminate')
+        .should('have.attr', 'href', 'add-minute')
     })
 
     it('Loads the existing files list correctly', () => {

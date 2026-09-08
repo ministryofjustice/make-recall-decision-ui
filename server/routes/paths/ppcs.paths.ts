@@ -54,7 +54,7 @@ export default {
   additionalSupportingDocumentUpload: 'additional-supporting-document-upload',
   additionalSupportingDocumentReplace: 'additional-supporting-document-replace/:id',
   additionalSupportingDocumentRemove: 'additional-supporting-document-remove/:id',
-  editPpudMinute: 'edit-ppud-minute',
+  addMinute: 'add-minute',
   supportingDocumentReplace: 'supporting-document-replace/:type/:id',
   supportingDocumentRemove: 'supporting-document-remove/:id',
   supportingDocumentDownload: 'supporting-document-download/:id',

@@ -16,7 +16,6 @@ import StageEnum from '../../booking/StageEnum'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
-import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
 import BookingErrorType from '../../booking/BookingErrorType'
 
@@ -74,7 +73,12 @@ describe('post', () => {
   })
 
   it('post - happy path', async () => {
-    const recommendation = { id: '12345', crn: 'X123', region: { code: 'N07', name: 'London' } }
+    const recommendation = {
+      id: '12345',
+      crn: 'X123',
+      region: { code: 'N07', name: 'London' },
+      bookRecallToPpud: { minute: 'Minute here' },
+    }
     const flags = { xyz: true }
     const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: false }]
 
@@ -155,7 +159,7 @@ describe('post', () => {
   })
 
   it('post - happy path with no files', async () => {
-    const recommendation = { id: '12345' }
+    const recommendation = { id: '12345', bookRecallToPpud: { minute: 'Minute here' } }
     const flags = {}
     const statuses = [{ name: 'SOME_STATUS', active: true }]
 
@@ -222,6 +226,7 @@ describe('post', () => {
   it('post - happy path - with SupportingDocuments', async () => {
     const recommendation = {
       id: '12345',
+      bookRecallToPpud: { minute: 'Minute here' },
     }
     const flags = {}
     const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: true }]
@@ -247,7 +252,6 @@ describe('post', () => {
     ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
     ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
     ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
-    ;(generateRecallMinuteText as jest.Mock).mockReturnValue('a minute')
 
     const PPUDPartA = {
       title: '',
@@ -441,13 +445,11 @@ describe('post', () => {
     expect(createMinute).toHaveBeenCalledWith(
       { uploaded: ['9'] },
       '1',
-      'BACKGROUND INFO...',
-      'a minute',
+      'Background information',
+      'Minute here',
       'token',
       flags,
     )
-
-    expect(generateRecallMinuteText).toHaveBeenCalledWith(recommendation)
 
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
@@ -461,7 +463,7 @@ describe('post', () => {
   })
 
   it('post - exception', async () => {
-    const recommendation = { id: '12345', crn: 'X123' }
+    const recommendation = { id: '12345', crn: 'X123', bookRecallToPpud: { minute: 'Minute here' } }
     const flags = { xyz: true }
 
     ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
@@ -546,6 +548,7 @@ describe('post', () => {
     const recommendation = {
       id: '12345',
       crn: 'X123',
+      bookRecallToPpud: { minute: 'Minute here' },
     }
 
     const flags = {}
