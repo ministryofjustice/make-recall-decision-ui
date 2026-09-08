@@ -1,14 +1,8 @@
 {
-  "extends": ["config:base"],
-  "prConcurrentLimit": 1,
-  "rangeStrategy": "replace",
-  "prCreation": "status-success",
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    }
-  ],
-  "rebaseWhen": "behind-base-branch",
-  "ignoreDeps": ["govuk-frontend", "eslint", "@sentry/node"]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>ministryofjustice/hmpps-renovate-config:node", "security:only-security-updates"],
+  "prBodyTemplate": "{{{table}}}{{{notes}}}{{{warnings}}}{{{controls}}}",
+  "schedule": [
+    "* 7-19 * * 1-5"
+  ]
 }
