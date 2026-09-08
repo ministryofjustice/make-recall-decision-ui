@@ -143,7 +143,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     memento = await createMinute(
       memento,
       recommendationId,
-      'BACKGROUND INFO...',
+      'Background information',
       recommendation.bookRecallToPpud?.minute,
       token,
       flags,

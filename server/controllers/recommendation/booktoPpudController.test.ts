@@ -445,7 +445,7 @@ describe('post', () => {
     expect(createMinute).toHaveBeenCalledWith(
       { uploaded: ['9'] },
       '1',
-      'BACKGROUND INFO...',
+      'Background information',
       'Minute here',
       'token',
       flags,
