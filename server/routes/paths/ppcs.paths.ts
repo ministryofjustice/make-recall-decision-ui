@@ -12,7 +12,6 @@ export default {
   selectIndexOffence: 'select-index-offence',
   consecutiveSentenceDetails: 'consecutive-sentence-details',
   matchIndexOffence: 'match-index-offence',
-  determinatePpudSentences: 'determinate-ppud-sentences',
   editCustodyType: 'custody-type',
   sentenceToCommit: 'sentence-to-commit',
 
@@ -22,6 +21,7 @@ export default {
 
   // indeterminate
   selectIndeterminatePpudSentence: 'select-indeterminate-ppud-sentence',
+  determinatePpudSentences: 'determinate-ppud-sentences',
   sentenceToCommitIndeterminate: 'sentence-to-commit-indeterminate',
   indeterminateEdit: {
     releaseDate: 'edit-release-date',
@@ -54,7 +54,7 @@ export default {
   additionalSupportingDocumentUpload: 'additional-supporting-document-upload',
   additionalSupportingDocumentReplace: 'additional-supporting-document-replace/:id',
   additionalSupportingDocumentRemove: 'additional-supporting-document-remove/:id',
-  editPpudMinute: 'edit-ppud-minute',
+  addMinute: 'add-minute',
   supportingDocumentReplace: 'supporting-document-replace/:type/:id',
   supportingDocumentRemove: 'supporting-document-remove/:id',
   supportingDocumentDownload: 'supporting-document-download/:id',

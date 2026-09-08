@@ -3,7 +3,7 @@ export interface SummaryList {
   matchLength?: boolean
 }
 
-interface SummaryListRow {
+export interface SummaryListRow {
   key: string
   value?: string
   valueRegex?: RegExp

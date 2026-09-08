@@ -4,17 +4,21 @@ import CUSTODY_GROUP from '../../../../../../server/@types/make-recall-decision-
 import RECOMMENDATION_STATUS from '../../../../../../server/middleware/recommendationStatus'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../../../componentTests/errors.tests'
 import setUpSessionForPpcs from '../../util'
+import testIndeterminateJourneyFlag from '../testIndeterminateFlag'
+import ppcsPaths from '../../../../../../server/routes/paths/ppcs.paths'
 
 context('Indeterminate Sentence - Edit Offence Page', () => {
   const recommendationId = '123'
   const autocompleteId = 'offenceDescription'
   const textAreaId = 'offenceDescriptionComment'
 
-  const testPageUrl = `/recommendations/${recommendationId}/edit-offence`
+  const testPageUrl = `/recommendations/${recommendationId}/${ppcsPaths.indeterminateEdit.offenceDescription}?ppcsIndeterminateJourney=1`
 
   beforeEach(() => {
     setUpSessionForPpcs()
   })
+
+  testIndeterminateJourneyFlag(ppcsPaths.indeterminateEdit.offenceDescription)
 
   const sentenceId = faker.number.int().toString()
   const ppudOffenceDescription = faker.lorem.sentence()

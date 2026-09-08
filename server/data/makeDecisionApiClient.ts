@@ -458,12 +458,12 @@ export const uploadSupportingDocument = ({
   mimetype: string
   data: string
   featureFlags?: FeatureFlags
-}): Promise<SupportingDocument[]> => {
+}): Promise<SupportingDocument> => {
   return restClient(token).post({
     path: `${routes.recommendations}/${recommendationId}/documents`,
     data: { filename, type, title, mimetype, data },
     headers: featureFlagHeaders(featureFlags),
-  }) as Promise<SupportingDocument[]>
+  }) as Promise<SupportingDocument>
 }
 
 export const downloadSupportingDocument = ({

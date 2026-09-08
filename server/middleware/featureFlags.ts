@@ -9,6 +9,7 @@ const featureFlagDescriptions: Record<string, string> = {
     'Development team use only - shows links on the Recommendations tab allowing any recommendation to be marked as deleted. Deleting a recommendation allows a new one to be created, if needed. The "deleted" recommendation will be retained in the database, and no data or audit info will be lost.',
   flagRecommendationsPage:
     'Shows a "Recommendations" tab in Case summary, with a list of all recommendations that have been created for that CRN',
+  ppcsIndeterminateJourney: 'Enables the indeterminate sentence journey for CaR PPCS users',
 }
 
 export const featureFlagsDefaults = async (user: HmppsAuthUser) => {

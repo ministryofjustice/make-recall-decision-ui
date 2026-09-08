@@ -11,21 +11,21 @@
         <div class="govuk-grid-column-two-thirds-from-desktop">
             {% include '../../partials/error-summary.njk' %}
 
-            <h1 class="govuk-heading-l">{{ pageHeadings[page.id] }}</h1>
-
-            <div class="car-text-list">
-                <h2 class='govuk-heading-m'>From Part A</h2>
-                <div class="car-text-list__row">
-                    <div class="car-text-list__key">MAPPA Level</div>
-                    <div class="car-text-list__value" data-qa="mappaLevel">
-                        {% if recommendation.personOnProbation.mappa.level is defined %}
-                            Level {{ recommendation.personOnProbation.mappa.level }}
-                        {% else %}
-                            Unknown
-                        {% endif %}
+            {% set partAHtml %}
+                <div class="car-text-list">
+                    <h2 class='govuk-heading-m'>From Part A</h2>
+                    <div class="car-text-list__row">
+                        <div class="car-text-list__key">MAPPA Level</div>
+                        <div class="car-text-list__value" data-qa="mappaLevel">
+                            {% if recommendation.personOnProbation.mappa.level is defined and recommendation.personOnProbation.mappa.level !== null %}
+                                Level {{ recommendation.personOnProbation.mappa.level }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endset %}
 
             <form novalidate method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -33,6 +33,18 @@
                 {{ govukRadios({
                     idPrefix: "mappaLevel",
                     name: "mappaLevel",
+                    fieldset: {
+                      legend: {
+                        text: pageHeadings[page.id],
+                        classes: "govuk-heading-l",
+                        isPageHeading: true
+                      }
+                    },
+                    formGroup: {
+                      beforeInputs: {
+                        html: partAHtml
+                      }
+                    },
                     items: radioCheckboxItems({
                         items: mappaLevels,
                         currentValues: recommendation.bookRecallToPpud.mappaLevel
