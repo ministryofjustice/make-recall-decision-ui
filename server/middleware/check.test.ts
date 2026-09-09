@@ -1,4 +1,11 @@
-import { authorisationCheck, flagIsActive, hasRole, ppcsCustodyGroup, statusIsActive } from './check'
+import {
+  authorisationCheck,
+  flagIsActive,
+  hasRole,
+  isRecommendationFailed,
+  ppcsCustodyGroup,
+  statusIsActive,
+} from './check'
 import { STATUSES } from './recommendationStatusCheck'
 import { HMPPS_AUTH_ROLE } from './authorisationMiddleware'
 import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/CustodyGroup'
@@ -103,6 +110,38 @@ describe('ppcsCustodyGroup', () => {
     const result = ppcsCustodyGroup(CUSTODY_GROUP.DETERMINATE)({
       recommendation: {},
     })
+
+    expect(result).toBe(false)
+  })
+})
+
+describe('isRecommendationFailed', () => {
+  it('should return true when recommendation has failed', () => {
+    const result = isRecommendationFailed()({
+      recommendation: {
+        bookingMemento: {
+          failed: true,
+        },
+      },
+    })
+
+    expect(result).toBe(true)
+  })
+
+  it('should return false when recommendation has not failed', () => {
+    const result = isRecommendationFailed()({
+      recommendation: {
+        bookingMemento: {
+          failed: false,
+        },
+      },
+    })
+
+    expect(result).toBe(false)
+  })
+
+  it('should return false when recommendation is not present', () => {
+    const result = isRecommendationFailed()({})
 
     expect(result).toBe(false)
   })
