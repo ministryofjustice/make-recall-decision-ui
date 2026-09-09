@@ -48,11 +48,13 @@
   width: 40%;
 }
 
-.govuk-summary-list--no-wrap-keys {
-  table-layout: auto;
-
+.govuk-summary-list.govuk-summary-list--no-wrap-keys {
   .govuk-summary-list__key {
     white-space: nowrap;
+  }
+
+  @media (min-width: 40.0625em) {
+    table-layout: auto;
   }
 }
 
