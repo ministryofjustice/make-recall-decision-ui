@@ -55,6 +55,7 @@ describe('get', () => {
     expect(res.locals.page).toEqual({ id: 'supportingDocuments' })
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/supportingDocuments')
     expect(res.locals.uploadedFiles).toEqual([mockDoc])
+    expect(res.locals.nextPageId).toEqual('add-minute')
     expect(next).toHaveBeenCalled()
   })
 })

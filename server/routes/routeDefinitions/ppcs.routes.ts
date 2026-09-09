@@ -24,8 +24,8 @@ import editEthnicityController from '../../controllers/recommendation/editEthnic
 import editDateOfBirthController from '../../controllers/recommendation/editDateOfBirthController'
 import editProbationAreaController from '../../controllers/recommendation/editProbationAreaController'
 import editLegislationReleasedUnderController from '../../controllers/recommendation/editLegislationReleasedUnderController'
+import addMinuteController from '../../controllers/recommendation/addMinuteController'
 import supportingDocumentsController from '../../controllers/recommendation/supportingDocumentsController'
-import editPpudMinuteController from '../../controllers/recommendation/editPpudMinuteController'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndexOffenceController from '../../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import consecutiveSentenceDetailsController from '../../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
@@ -269,13 +269,13 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
   },
   {
     ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.editPpudMinute}`,
-    handler: editPpudMinuteController.get,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.addMinute}`,
+    handler: addMinuteController.get,
   },
   {
     ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.editPpudMinute}`,
-    handler: editPpudMinuteController.post,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.addMinute}`,
+    handler: addMinuteController.post,
   },
 ]
 

@@ -224,7 +224,7 @@ const ppcsUrls = [
   recommendationEndpoint('additional-supporting-document-upload', ['SENT_TO_PPCS']),
   recommendationEndpoint('additional-supporting-document-replace/12356', ['SENT_TO_PPCS']),
   recommendationEndpoint('additional-supporting-document-remove/12356', ['SENT_TO_PPCS']),
-  recommendationEndpoint('edit-ppud-minute', ['SENT_TO_PPCS']),
+  recommendationEndpoint('add-minute', ['SENT_TO_PPCS']),
   recommendationEndpoint('supporting-document-replace/part-a/11111', ['SENT_TO_PPCS']),
   recommendationEndpoint('supporting-document-remove/11111', ['SENT_TO_PPCS']),
   recommendationEndpoint('book-to-ppud', ['SENT_TO_PPCS']),

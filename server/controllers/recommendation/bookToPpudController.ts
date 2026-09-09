@@ -20,7 +20,6 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
-import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 import BookingErrorType from '../../booking/BookingErrorType'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -144,8 +143,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
     memento = await createMinute(
       memento,
       recommendationId,
-      'BACKGROUND INFO...',
-      generateRecallMinuteText(recommendation),
+      'Background information',
+      recommendation.bookRecallToPpud?.minute,
       token,
       flags,
     )

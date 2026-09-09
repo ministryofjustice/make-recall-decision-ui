@@ -2879,34 +2879,6 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Booking summary for Joseph Bluggs')
       cy.getText('sentenceEndDate').should('contain', '-')
     })
-
-    it('edit minute', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'some title',
-            type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
-            id: '1234',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/edit-ppud-minute`)
-      cy.pageHeading().should('contain', 'Add note about supporting documents')
-    })
   })
   describe('PPCS Journey without correct mapping or ppud user account', () => {
     beforeEach(() => {

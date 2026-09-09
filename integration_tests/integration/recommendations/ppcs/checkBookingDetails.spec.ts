@@ -9,10 +9,37 @@ import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/mo
 import { Address, RecommendationResponse } from '../../../../server/@types/make-recall-decision-api'
 import { currentHighestRosh, Rosh } from '../../../../server/controllers/recommendations/helpers/rosh'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
+import ppcsPaths from '../../../../server/routes/paths/ppcs.paths'
 
 context('Check Booking Details page', () => {
-  const baseRecommendation = RecommendationResponseGenerator.generate()
-  const testPageUrl = `/recommendations/${baseRecommendation.id}/check-booking-details`
+  const baseRecommendation = RecommendationResponseGenerator.generate({
+    bookRecallToPpud: {
+      // We set the custody values to determinate so we know the legislationReleasedUnder field also shows up every time
+      // We could also fix it to indeterminate and explicitly set legislationReleasedUnder to undefined. The point of
+      // this isn't to test one or another by default, but to have certainty of one or the other. Otherwise, the number
+      // of rows varies depending on the custody value (with legislationReleasedUnder showing up or not) and we'd see
+      // random failures. This will be overridden by the tests checking variations around this
+      custodyGroup: CUSTODY_GROUP.DETERMINATE,
+      custodyTypeBasedOnGroup: CUSTODY_GROUP.DETERMINATE,
+    },
+    prisonOffender: {
+      // Similar to above, we're looking to guarantee our expected value by default. Will be overridden by the tests
+      // checking variations around this
+      status: 'ACTIVE IN',
+    },
+    isMainAddressWherePersonCanBeFound: {
+      // Similar to above, we're lookig to guarantee our expected value by default. Will be overridden by the tests
+      // checking variations around this
+      selected: true,
+    },
+  })
+  // Similar to above, we're lookig to guarantee our expected value by default. Will be overridden by the tests checking
+  // variations around this
+  for (let i = 0; i < baseRecommendation.personOnProbation.addresses.length; i += 1) {
+    baseRecommendation.personOnProbation.addresses[i].noFixedAbode = false
+  }
+
+  const testPageUrl = `/recommendations/${baseRecommendation.id}/${ppcsPaths.checkBookingDetails}?ppcsIndeterminateJourney=1`
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
   const acoSignedStatus = {
     name: RECOMMENDATION_STATUS.ACO_SIGNED,
@@ -82,6 +109,7 @@ context('Check Booking Details page', () => {
       croEdited?: boolean
       custodyStatus?: string
       custodyGroup?: string
+      custodyGroupEditable?: boolean
       currentEstablishment?: string
       pncNumber?: string
       prisonNumber?: string
@@ -117,6 +145,7 @@ context('Check Booking Details page', () => {
     const croEdited = bookingDetails?.croEdited ?? false
     const custodyStatus = bookingDetails?.custodyStatus ?? 'In custody'
     const custodyGroup = bookingDetails?.custodyGroup ?? recommendation.bookRecallToPpud.custodyGroup
+    const custodyGroupEditable = bookingDetails?.custodyGroupEditable ?? true
     const currentEstablishment =
       bookingDetails?.currentEstablishment ?? recommendation.bookRecallToPpud.currentEstablishment
     const pncNumber = bookingDetails?.pncNumber ?? recommendation.personOnProbation.pncNumber
@@ -227,14 +256,19 @@ context('Check Booking Details page', () => {
           contentCheck: checkSummaryListInAccordion({
             rows: [
               { key: 'Custody status', value: custodyStatus },
-              {
-                key: 'Determinate or indeterminate',
-                value: custodyGroup,
-                editLink: {
-                  url: 'edit-custody-group',
-                  accessibleLabel: 'custody group',
-                },
-              },
+              custodyGroupEditable
+                ? {
+                    key: 'Determinate or indeterminate',
+                    value: custodyGroup,
+                    editLink: {
+                      url: 'edit-custody-group',
+                      accessibleLabel: 'custody group',
+                    },
+                  }
+                : {
+                    key: 'Determinate or indeterminate',
+                    value: custodyGroup,
+                  },
               {
                 key: 'Current establishment',
                 value: currentEstablishment,
@@ -389,24 +423,6 @@ context('Check Booking Details page', () => {
             dateOfBirth: baseRecommendation.prisonOffender.dateOfBirth,
             prisonNumber: baseRecommendation.prisonOffender.bookingNo,
             cro: baseRecommendation.personOnProbation.croNumber,
-            custodyGroup: CUSTODY_GROUP.DETERMINATE, // fixed value for this test; the logic linked to the possible values is tested thoroughly elsewhere
-            legislationReleasedUnder: faker.string.alpha(10),
-          },
-          prisonOffender: {
-            ...baseRecommendation.prisonOffender,
-            status: 'ACTIVE IN', // fixed value for this test; the logic linked to the possible values is tested thoroughly elsewhere
-          },
-          personOnProbation: {
-            ...baseRecommendation.personOnProbation,
-            addresses: baseRecommendation.personOnProbation.addresses.map(address => {
-              return {
-                ...address,
-                noFixedAbode: false, // fixed value for this test; the address logic is tested thoroughly elsewhere
-              }
-            }),
-          },
-          isMainAddressWherePersonCanBeFound: {
-            selected: true, // fixed value for this test; the address logic is tested thoroughly elsewhere
           },
         }
         cy.task('getRecommendation', {
@@ -430,39 +446,17 @@ context('Check Booking Details page', () => {
       })
 
       it('Edited badges on all applicable fields', () => {
-        const recommendation = {
-          ...baseRecommendation,
-          bookRecallToPpud: {
-            ...baseRecommendation.bookRecallToPpud,
-            custodyGroup: CUSTODY_GROUP.DETERMINATE, // fixed value for this test; the logic linked to the possible values is tested thoroughly elsewhere
-            legislationReleasedUnder: faker.string.alpha(10),
-          },
-          prisonOffender: {
-            ...baseRecommendation.prisonOffender,
-            status: 'ACTIVE IN', // fixed value for this test; the logic linked to the possible values is tested thoroughly elsewhere
-          },
-          personOnProbation: {
-            ...baseRecommendation.personOnProbation,
-            addresses: baseRecommendation.personOnProbation.addresses.map(address => {
-              return {
-                ...address,
-                noFixedAbode: false, // fixed value for this test; the address logic is tested thoroughly elsewhere
-              }
-            }),
-          },
-          isMainAddressWherePersonCanBeFound: {
-            selected: true, // fixed value for this test; the address logic is tested thoroughly elsewhere
-          },
-        }
+        // The baseRecommendation has random values for values in bookRecallToPpud different from the ones set in
+        // prisonOffender and personOnProbation, so we can use it to test the Edited badges on all applicable fields
         cy.task('getRecommendation', {
           statusCode: 200,
-          response: recommendation,
+          response: baseRecommendation,
         })
         cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
 
         cy.visit(testPageUrl)
 
-        checkBookingDetailsAccordion(recommendation, acoSignedStatus, {
+        checkBookingDetailsAccordion(baseRecommendation, acoSignedStatus, {
           firstNamesEdited: true,
           lastNamesEdited: true,
           dateOfBirthEdited: true,
@@ -494,6 +488,7 @@ context('Check Booking Details page', () => {
         },
         prisonOffender: {
           ...baseRecommendation.prisonOffender,
+          status: undefined,
           releaseDate: undefined,
           image: undefined,
         },
@@ -539,7 +534,7 @@ context('Check Booking Details page', () => {
         ethnicity: 'Enter an ethnicity',
         dateOfBirth: blankIndicator,
         dateOfBirthEdited: false,
-        cro: blankIndicator,
+        cro: 'You must enter a CRO',
         croEdited: false,
         custodyStatus: blankIndicator,
         custodyGroup: 'You must enter determinate or indeterminate',
@@ -578,24 +573,75 @@ context('Check Booking Details page', () => {
 
     // TODO test custody status variations
 
-    // TODO test determinate/indeterminate variations
+    describe('Determinate or indeterminate variations', () => {
+      it('Indeterminate journey flag turned off -> determinate/indeterminate not editable', () => {
+        cy.task('getRecommendation', {
+          statusCode: 200,
+          response: baseRecommendation,
+        })
+        cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
+
+        cy.visit(
+          `/recommendations/${baseRecommendation.id}/${ppcsPaths.checkBookingDetails}?ppcsIndeterminateJourney=0`,
+        )
+
+        checkBookingDetailsAccordion(
+          baseRecommendation,
+          acoSignedStatus,
+          // the njk file isn't responsible for checking the determinate/indeterminate value set, only for not providing
+          // the edit link if the indeterminate journey flag is false, so we let the value be whatever it is and only
+          // care about the edit link in our test
+          {
+            custodyGroupEditable: false,
+          },
+        )
+      })
+
+      describe('Indeterminate journey flag turned on', () => {
+        it('PPUD offender present -> determinate/indeterminate editable', () => {
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: baseRecommendation,
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
+
+          cy.visit(testPageUrl)
+
+          checkBookingDetailsAccordion(baseRecommendation, acoSignedStatus)
+        })
+
+        it('PPUD offender not present -> determinate/indeterminate not editable', () => {
+          const recommendation = {
+            ...baseRecommendation,
+            ppudOffender: undefined,
+          }
+          cy.task('getRecommendation', {
+            statusCode: 200,
+            response: recommendation,
+          })
+          cy.task('getStatuses', { statusCode: 200, response: [...defaultPPCSStatusResponse, acoSignedStatus] })
+
+          cy.visit(testPageUrl)
+
+          checkBookingDetailsAccordion(
+            recommendation,
+            acoSignedStatus,
+            // the njk file isn't responsible for checking the determinate/indeterminate value set, only for not providing
+            // the edit link if there is no record for the offender in PPUD, so we let the value be whatever it is and
+            // only care about the edit link in our test
+            {
+              custodyGroupEditable: false,
+            },
+          )
+        })
+      })
+    })
+
+    // TODO test legislationReleasedUnder logic
 
     describe('Address variations', () => {
-      const recommendation = {
-        ...baseRecommendation,
-        bookRecallToPpud: {
-          ...baseRecommendation.bookRecallToPpud,
-          custodyGroup: CUSTODY_GROUP.DETERMINATE, // fixed value for this test; the logic linked to the possible values is tested thoroughly elsewhere
-          legislationReleasedUnder: faker.string.alpha(10),
-        },
-        prisonOffender: {
-          ...baseRecommendation.prisonOffender,
-          status: 'ACTIVE IN', // fixed value for this test; the logic linked to the possible values is tested thoroughly elsewhere
-        },
-      }
-
       function checkAccordionAddress(checkAddressFunction: (element: Cypress.Chainable<JQuery<HTMLElement>>) => void) {
-        checkBookingDetailsAccordion(recommendation, acoSignedStatus, {
+        checkBookingDetailsAccordion(baseRecommendation, acoSignedStatus, {
           addressCheckFunction: checkAddressFunction,
         })
       }
@@ -604,9 +650,9 @@ context('Check Booking Details page', () => {
         cy.task('getRecommendation', {
           statusCode: 200,
           response: {
-            ...recommendation,
+            ...baseRecommendation,
             personOnProbation: {
-              ...recommendation.personOnProbation,
+              ...baseRecommendation.personOnProbation,
               addresses: undefined,
             },
             isMainAddressWherePersonCanBeFound: {
@@ -634,9 +680,9 @@ context('Check Booking Details page', () => {
         cy.task('getRecommendation', {
           statusCode: 200,
           response: {
-            ...recommendation,
+            ...baseRecommendation,
             personOnProbation: {
-              ...recommendation.personOnProbation,
+              ...baseRecommendation.personOnProbation,
               addresses: undefined,
             },
             isMainAddressWherePersonCanBeFound: {
@@ -666,10 +712,10 @@ context('Check Booking Details page', () => {
         cy.task('getRecommendation', {
           statusCode: 200,
           response: {
-            ...recommendation,
+            ...baseRecommendation,
             personOnProbation: {
-              ...recommendation.personOnProbation,
-              addresses: recommendation.personOnProbation.addresses.map(address => {
+              ...baseRecommendation.personOnProbation,
+              addresses: baseRecommendation.personOnProbation.addresses.map(address => {
                 return {
                   ...address,
                   noFixedAbode: false,
@@ -690,7 +736,7 @@ context('Check Booking Details page', () => {
             cy.get('div.govuk-grid-column-one-third').get('p').should('contain', 'Last known address')
 
             cy.get('div.govuk-grid-column-two-thirds').within(() => {
-              recommendation.personOnProbation.addresses.forEach((address, index) => {
+              baseRecommendation.personOnProbation.addresses.forEach((address, index) => {
                 cy.get('p')
                   .eq(index)
                   .invoke('text')
@@ -713,10 +759,10 @@ context('Check Booking Details page', () => {
         cy.task('getRecommendation', {
           statusCode: 200,
           response: {
-            ...recommendation,
+            ...baseRecommendation,
             personOnProbation: {
-              ...recommendation.personOnProbation,
-              addresses: recommendation.personOnProbation.addresses.map(address => {
+              ...baseRecommendation.personOnProbation,
+              addresses: baseRecommendation.personOnProbation.addresses.map(address => {
                 return {
                   ...address,
                   noFixedAbode: false,
@@ -738,7 +784,7 @@ context('Check Booking Details page', () => {
             cy.get('div.govuk-grid-column-one-third').get('p').should('contain', 'Last known address')
 
             cy.get('div.govuk-grid-column-two-thirds').within(() => {
-              recommendation.personOnProbation.addresses.forEach((address, index) => {
+              baseRecommendation.personOnProbation.addresses.forEach((address, index) => {
                 cy.get('p')
                   .eq(index)
                   .invoke('text')
@@ -750,7 +796,7 @@ context('Check Booking Details page', () => {
                   )
               })
               cy.get('p')
-                .eq(recommendation.personOnProbation.addresses.length)
+                .eq(baseRecommendation.personOnProbation.addresses.length)
                 .invoke('text')
                 .should('contain', 'Additional address')
               cy.get('pre').should('contain', additionalAddressDetails)
@@ -763,9 +809,9 @@ context('Check Booking Details page', () => {
         cy.task('getRecommendation', {
           statusCode: 200,
           response: {
-            ...recommendation,
+            ...baseRecommendation,
             personOnProbation: {
-              ...recommendation.personOnProbation,
+              ...baseRecommendation.personOnProbation,
               addresses: [{ noFixedAbode: true }],
             },
             isMainAddressWherePersonCanBeFound: {
@@ -782,7 +828,7 @@ context('Check Booking Details page', () => {
             cy.get('div.govuk-grid-column-one-third').get('p').should('contain', 'Last known address')
 
             cy.get('div.govuk-grid-column-two-thirds').within(() => {
-              recommendation.personOnProbation.addresses.forEach((address, index) => {
+              baseRecommendation.personOnProbation.addresses.forEach((address, index) => {
                 cy.get('p').eq(index).invoke('text').should('contain', 'No fixed abode')
               })
 
@@ -797,9 +843,9 @@ context('Check Booking Details page', () => {
         cy.task('getRecommendation', {
           statusCode: 200,
           response: {
-            ...recommendation,
+            ...baseRecommendation,
             personOnProbation: {
-              ...recommendation.personOnProbation,
+              ...baseRecommendation.personOnProbation,
               addresses: [{ noFixedAbode: true }],
             },
             isMainAddressWherePersonCanBeFound: {
@@ -817,12 +863,12 @@ context('Check Booking Details page', () => {
             cy.get('div.govuk-grid-column-one-third').get('p').should('contain', 'Last known address')
 
             cy.get('div.govuk-grid-column-two-thirds').within(() => {
-              recommendation.personOnProbation.addresses.forEach((address, index) => {
+              baseRecommendation.personOnProbation.addresses.forEach((address, index) => {
                 cy.get('p').eq(index).invoke('text').should('contain', 'No fixed abode')
               })
 
               cy.get('p')
-                .eq(recommendation.personOnProbation.addresses.length)
+                .eq(baseRecommendation.personOnProbation.addresses.length)
                 .invoke('text')
                 .should('contain', 'Additional address')
               cy.get('pre').should('contain', additionalAddressDetails)
