@@ -56,16 +56,6 @@ export function ppcsCustodyGroup(custodyGroup: CUSTODY_GROUP): Check {
   }
 }
 
-export function isRecommendationFailed(): Check {
-  return (locals: Record<string, unknown>) => {
-    const recommendation = locals.recommendation as RecommendationResponse
-    if (!recommendation) {
-      return false
-    }
-    return recommendation?.bookingMemento.failed
-  }
-}
-
 export function not(check: Check): Check {
   return (locals: Record<string, unknown>) => {
     return !check(locals)
@@ -84,9 +74,9 @@ export function and(...checks: Check[]): Check {
   }
 }
 
-export function bookingFailed(): Check {
+export function bookingToPpudFailed(): Check {
   return (locals: Record<string, unknown>) => {
     const recommendation = locals.recommendation as RecommendationResponse
-    return recommendation.bookingMemento?.failed ?? false
+    return recommendation?.bookingMemento?.failed ?? false
   }
 }

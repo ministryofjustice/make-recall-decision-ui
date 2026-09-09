@@ -140,16 +140,14 @@ async function post(req: Request, res: Response, _: NextFunction) {
       return uploadAdditionalDocument(currentMemento, recommendationId, document.id, token, flags)
     }, Promise.resolve(memento))
 
-    if (recommendation.bookRecallToPpud?.minute) {
-      memento = await createMinute(
-        memento,
-        recommendationId,
-        'Background information',
-        recommendation.bookRecallToPpud?.minute,
-        token,
-        flags,
-      )
-    }
+    memento = await createMinute(
+      memento,
+      recommendationId,
+      'Background information',
+      recommendation.bookRecallToPpud?.minute,
+      token,
+      flags,
+    )
 
     await updateStatuses({
       recommendationId,

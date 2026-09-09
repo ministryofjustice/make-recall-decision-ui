@@ -2,7 +2,7 @@ import {
   authorisationCheck,
   flagIsActive,
   hasRole,
-  isRecommendationFailed,
+  bookingToPpudFailed,
   ppcsCustodyGroup,
   statusIsActive,
 } from './check'
@@ -115,9 +115,9 @@ describe('ppcsCustodyGroup', () => {
   })
 })
 
-describe('isRecommendationFailed', () => {
+describe('bookingToPpudFailed', () => {
   it('should return true when recommendation has failed', () => {
-    const result = isRecommendationFailed()({
+    const result = bookingToPpudFailed()({
       recommendation: {
         bookingMemento: {
           failed: true,
@@ -129,7 +129,7 @@ describe('isRecommendationFailed', () => {
   })
 
   it('should return false when recommendation has not failed', () => {
-    const result = isRecommendationFailed()({
+    const result = bookingToPpudFailed()({
       recommendation: {
         bookingMemento: {
           failed: false,
@@ -141,7 +141,7 @@ describe('isRecommendationFailed', () => {
   })
 
   it('should return false when recommendation is not present', () => {
-    const result = isRecommendationFailed()({})
+    const result = bookingToPpudFailed()({})
 
     expect(result).toBe(false)
   })

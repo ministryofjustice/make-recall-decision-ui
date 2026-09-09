@@ -7,7 +7,7 @@ import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../rec
 import searchPpudController from '../../controllers/recommendation/searchPpudController'
 import noSearchPpudResults from '../../controllers/recommendation/noSearchPpudResults'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { and, bookingFailed, flagIsActive, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
+import { and, bookingToPpudFailed, flagIsActive, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
 import searchPpudResultsController from '../../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../../controllers/recommendation/ppcs/checkBookingDetailsController'
 import editPoliceContactController from '../../controllers/recommendation/editPoliceContactController'
@@ -598,7 +598,7 @@ const ppcsRoutes: RouteDefinition[] = [
   {
     ...createRecommendationRouteTemplate(
       'get',
-      [recommendationStatusCheck(and(statusIsActive(STATUSES.BOOKED_TO_PPUD), bookingFailed()))],
+      [recommendationStatusCheck(and(statusIsActive(STATUSES.BOOKING_ON_STARTED), bookingToPpudFailed()))],
       roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudFail}`,
@@ -608,7 +608,7 @@ const ppcsRoutes: RouteDefinition[] = [
   {
     ...createRecommendationRouteTemplate(
       'get',
-      [recommendationStatusCheck(and(statusIsActive(STATUSES.BOOKED_TO_PPUD), not(bookingFailed())))],
+      [recommendationStatusCheck(and(statusIsActive(STATUSES.BOOKED_TO_PPUD), not(bookingToPpudFailed())))],
       roles,
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudSuccess}`,
