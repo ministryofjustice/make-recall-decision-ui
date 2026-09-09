@@ -171,22 +171,22 @@ async function get(_: Request, res: Response, next: NextFunction) {
   if (hasValue(recommendation.ppudOffender) && hasValue(recommendation.prisonOffender)) {
     const ppudOffender = recommendation.ppudOffender as PpudOffender
     const bookToPpud = recommendation.bookRecallToPpud as BookRecallToPpud
-    if (bookToPpud.firstNames !== ppudOffender.firstNames) {
+    if (ppudOffender.firstNames && bookToPpud.firstNames !== ppudOffender.firstNames) {
       warnings['First name'] = ppudOffender.firstNames
     }
-    if (bookToPpud.lastName !== ppudOffender.familyName) {
+    if (ppudOffender.familyName && bookToPpud.lastName !== ppudOffender.familyName) {
       warnings['Last name'] = ppudOffender.familyName
     }
-    if (bookToPpud.prisonNumber !== ppudOffender.prisonNumber) {
+    if (ppudOffender.prisonNumber && bookToPpud.prisonNumber !== ppudOffender.prisonNumber) {
       warnings['Prison booking number'] = ppudOffender.prisonNumber
     }
-    if (bookToPpud.dateOfBirth !== ppudOffender.dateOfBirth) {
+    if (ppudOffender.dateOfBirth && bookToPpud.dateOfBirth !== ppudOffender.dateOfBirth) {
       warnings['Date of birth'] = formatDateTimeFromIsoString({
         isoDate: ppudOffender.dateOfBirth,
         dateOnly: true,
       })
     }
-    if (bookToPpud.cro !== ppudOffender.croOtherNumber) {
+    if (ppudOffender.croOtherNumber && bookToPpud.cro !== ppudOffender.croOtherNumber) {
       warnings.CRO = ppudOffender.croOtherNumber
     }
   }
