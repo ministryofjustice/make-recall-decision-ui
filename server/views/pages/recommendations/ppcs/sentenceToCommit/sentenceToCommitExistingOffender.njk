@@ -223,8 +223,11 @@
                     </div>
                 </div>
 
-
-                {% include '../../../../partials/recommendation/documentsAndMinutes.njk' %}
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        {% include '../../../../partials/recommendation/documentsAndMinutes.njk' %}
+                    </div>
+                </div>
 
                 {{ formSubmitButton() }}
             </form>
