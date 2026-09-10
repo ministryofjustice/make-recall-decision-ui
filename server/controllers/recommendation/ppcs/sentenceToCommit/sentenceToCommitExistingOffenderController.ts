@@ -2,9 +2,14 @@ import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
 import { PpudSentence } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
+import { getSupportingDocuments } from '../../../../data/makeDecisionApiClient'
 
 async function get(_: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
+  const {
+    recommendation,
+    user: { token },
+    flags,
+  } = res.locals
 
   const recommendationResponse = recommendation as RecommendationResponse
 
@@ -15,6 +20,12 @@ async function get(_: Request, res: Response, next: NextFunction) {
   const sentences = recommendation.ppudOffender.sentences as PpudSentence[]
   const ppudSentence = sentences.find(s => s.id === recommendation.bookRecallToPpud.ppudSentenceId)
 
+  const documents = await getSupportingDocuments({
+    recommendationId: String(recommendationResponse.id),
+    token,
+    featureFlags: flags,
+  })
+
   res.locals = {
     ...res.locals,
     page: {
@@ -22,6 +33,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
     },
     offence,
     ppudSentence,
+    documents,
   }
 
   res.render(`pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitExistingOffender`)

@@ -1,34 +1,37 @@
 import { NextFunction, Request, Response } from 'express'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
-import { getRecommendation, updateRecommendation } from '../../data/makeDecisionApiClient'
-import { RecommendationResponse } from '../../@types/make-recall-decision-api'
+import { updateRecommendation } from '../../data/makeDecisionApiClient'
+import getSentenceToCommitRoute from './ppcs/sentenceToCommitRouter'
+import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+  const savedMinute = recommendation.bookRecallToPpud?.minute
 
-  const minute = (recommendation as RecommendationResponse)?.bookRecallToPpud?.minute
+  const minute = savedMinute ?? generateRecallMinuteText(recommendation)
+
   res.locals = {
     ...res.locals,
     minute,
     page: {
-      id: 'editPpudMinute',
+      id: 'addMinute',
     },
   }
 
-  res.render(`pages/recommendations/editPpudMinute`)
+  res.render('pages/recommendations/addMinute')
   next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {
-  const { recommendationId } = req.params
   const { minute } = req.body
+
   const {
     flags,
     user: { token },
     urlInfo,
   } = res.locals
 
-  const recommendation = await getRecommendation(recommendationId, token)
+  const { recommendation } = res.locals
 
   await updateRecommendation({
     recommendationId: String(recommendation.id),
@@ -41,8 +44,9 @@ async function post(req: Request, res: Response, _: NextFunction) {
     token,
     featureFlags: flags,
   })
-
-  res.redirect(303, nextPageLinkUrl({ nextPageId: 'supporting-documents', urlInfo }))
+  const nextPageId = getSentenceToCommitRoute(recommendation)
+  const nextPagePath = nextPageLinkUrl({ nextPageId, urlInfo })
+  res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 
 export default { get, post }

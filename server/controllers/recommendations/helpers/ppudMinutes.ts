@@ -3,18 +3,28 @@ import { riskOfSeriousHarmLevel } from './rosh'
 import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 const generateRecallMinuteText = (recommendationResponse: RecommendationResponse) => {
-  const extended = recommendationResponse.sentenceGroup === SentenceGroup.EXTENDED ? 'YES' : 'NO'
-  const custody = recommendationResponse.prisonOffender?.status === 'ACTIVE IN' ? 'YES at HMP' : 'NO'
+  const extended = recommendationResponse.sentenceGroup === SentenceGroup.EXTENDED ? 'Yes' : 'No'
+
+  const custody =
+    recommendationResponse.prisonOffender?.status === 'ACTIVE IN'
+      ? `Yes${recommendationResponse.prisonOffender?.locationDescription ? ` (at HMP ${recommendationResponse.prisonOffender?.locationDescription})` : ''}`
+      : 'No'
+
   const rosh = riskOfSeriousHarmLevel(recommendationResponse.currentRoshForPartA)?.toUpperCase()
-  const docMinute = recommendationResponse.bookRecallToPpud?.minute
-    ? `\nNotes regarding documents added from Consider a Recall:\n${recommendationResponse.bookRecallToPpud?.minute}`
-    : ''
+
+  const offence = recommendationResponse.nomisIndexOffence?.allOptions?.find(
+    option => option.offenderChargeId === recommendationResponse.nomisIndexOffence.selected,
+  )
+
+  const sentencingCourt = offence?.courtDescription || ''
 
   return (
-    `BACKGROUND INFO \n` +
+    `Background information\n` +
     `Extended sentence: ${extended}\n` +
-    `Risk of Serious Harm Level: ${rosh}\n` +
-    `In custody: ${custody}${docMinute}`
+    `Risk of serious harm level: ${rosh}\n` +
+    `In custody: ${custody}\n` +
+    `Sentencing court: ${sentencingCourt}\n\n` +
+    `More information\n`
   )
 }
 

@@ -7,7 +7,7 @@ import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../rec
 import searchPpudController from '../../controllers/recommendation/searchPpudController'
 import noSearchPpudResults from '../../controllers/recommendation/noSearchPpudResults'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { and, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
+import { and, bookingToPpudFailed, flagIsActive, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
 import searchPpudResultsController from '../../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../../controllers/recommendation/ppcs/checkBookingDetailsController'
 import editPoliceContactController from '../../controllers/recommendation/editPoliceContactController'
@@ -29,7 +29,7 @@ import supportingDocumentUploadController from '../../controllers/recommendation
 import additionalSupportingDocumentUploadController from '../../controllers/recommendation/additionalSupportingDocumentUploadController'
 import additionalSupportingDocumentReplaceController from '../../controllers/recommendation/additionalSupportingDocumentReplaceController'
 import additionalSupportingDocumentRemoveController from '../../controllers/recommendation/additionalSupportingDocumentRemoveController'
-import editPpudMinuteController from '../../controllers/recommendation/editPpudMinuteController'
+import addMinuteController from '../../controllers/recommendation/addMinuteController'
 import supportingDocumentReplaceController from '../../controllers/recommendation/supportingDocumentReplaceController'
 import supportingDocumentRemoveController from '../../controllers/recommendation/supportingDocumentRemoveController'
 import supportingDocumentDownloadController from '../../controllers/recommendation/supportingDocumentDownloadController'
@@ -267,6 +267,13 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
     handler: supportingDocumentsController.get,
   },
+  // This is actually to handle the "delete" post request to this URL,
+  // rather than the file uploader which is handled before CSRF tokens
+  {
+    ...ppcsAfterSearchPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
+    handler: supportingDocumentsController.post,
+  },
   {
     ...ppcsAfterSearchGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentUpload}`,
@@ -309,13 +316,13 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
   },
   {
     ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.editPpudMinute}`,
-    handler: editPpudMinuteController.get,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.addMinute}`,
+    handler: addMinuteController.get,
   },
   {
     ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.editPpudMinute}`,
-    handler: editPpudMinuteController.post,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.addMinute}`,
+    handler: addMinuteController.post,
   },
   {
     ...ppcsAfterSearchGetTemplate,
@@ -446,6 +453,7 @@ const ppcsDeterminateSentenceRoutes: RouteDefinition[] = [
 const indeterminateSentenceMiddleware = [
   recommendationStatusCheck(
     and(
+      flagIsActive('ppcsIndeterminateJourney'),
       statusIsActive(STATUSES.SENT_TO_PPCS),
       ppcsCustodyGroup(CUSTODY_GROUP.INDETERMINATE),
       not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
@@ -588,13 +596,23 @@ const ppcsRoutes: RouteDefinition[] = [
     handler: bookedToPpudController.get,
   },
   {
-    ...createRecommendationRouteTemplate('get', bookingMiddleware, roles),
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(and(statusIsActive(STATUSES.BOOKING_ON_STARTED), bookingToPpudFailed()))],
+      roles,
+    ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudFail}`,
+    method: 'get',
     handler: bookedToPpudFailController.get,
   },
   {
-    ...createRecommendationRouteTemplate('get', bookingMiddleware, roles),
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(and(statusIsActive(STATUSES.BOOKED_TO_PPUD), not(bookingToPpudFailed())))],
+      roles,
+    ),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudSuccess}`,
+    method: 'get',
     handler: bookedToPpudSuccessController.get,
   },
   ...ppcsRecommendationRoutes,

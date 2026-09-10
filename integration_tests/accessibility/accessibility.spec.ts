@@ -211,15 +211,20 @@ const ppcsUrls = [
   recommendationEndpoint(ppcsPaths.sentenceToCommitExistingOffender, ['SENT_TO_PPCS'], false, {
     custodyGroup: CUSTODY_GROUP.DETERMINATE,
   }),
-  recommendationEndpoint(ppcsPaths.selectIndeterminatePpudSentence, ['SENT_TO_PPCS'], false, {
-    custodyGroup: CUSTODY_GROUP.INDETERMINATE,
-  }),
+  recommendationEndpoint(
+    `${ppcsPaths.selectIndeterminatePpudSentence}?ppcsIndeterminateJourney=1`,
+    ['SENT_TO_PPCS'],
+    false,
+    {
+      custodyGroup: CUSTODY_GROUP.INDETERMINATE,
+    },
+  ),
   recommendationEndpoint('supporting-documents', ['SENT_TO_PPCS']),
   recommendationEndpoint('supporting-document-upload/part-a', ['SENT_TO_PPCS']),
   recommendationEndpoint('additional-supporting-document-upload', ['SENT_TO_PPCS']),
   recommendationEndpoint('additional-supporting-document-replace/12356', ['SENT_TO_PPCS']),
   recommendationEndpoint('additional-supporting-document-remove/12356', ['SENT_TO_PPCS']),
-  recommendationEndpoint('edit-ppud-minute', ['SENT_TO_PPCS']),
+  recommendationEndpoint('add-minute', ['SENT_TO_PPCS']),
   recommendationEndpoint('supporting-document-replace/part-a/11111', ['SENT_TO_PPCS']),
   recommendationEndpoint('supporting-document-remove/11111', ['SENT_TO_PPCS']),
   recommendationEndpoint('book-to-ppud', ['SENT_TO_PPCS']),

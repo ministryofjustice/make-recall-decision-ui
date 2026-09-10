@@ -10,10 +10,10 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full-from-desktop">
 
-            <h1 class='govuk-heading-l'>Double check your booking</h1>
+            <h1 class='govuk-heading-l'>Check the sentence and offence details for {{ recommendation.bookRecallToPpud.firstNames }} {{ recommendation.bookRecallToPpud.lastName }}</h1>
 
             <p class="govuk-body">
-                The details in your booking will update the details in PPUD.
+                Check you’ve selected the right PPUD sentence for the booking. The details in your booking will update the details in PPUD.
             </p>
 
             <form novalidate method="post">
@@ -24,7 +24,7 @@
                     <div class="govuk-grid-column-one-half">
                         <h2 class='govuk-heading-m'>Your booking - from NOMIS</h2>
 
-                        <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                        <dl class="govuk-summary-list govuk-summary-list--no-wrap-keys govuk-!-margin-bottom-4">
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
                                     Custody type
@@ -38,7 +38,10 @@
                                     Offence
                                 </dt>
                                 <dd class="govuk-summary-list__value" data-qa="offenceDescription">
-                                    {{ hyphenForBlank(recommendation.bookRecallToPpud.indexOffence) }}
+                                    {{ bodyParagraph(hyphenForBlank(recommendation.bookRecallToPpud.indexOffence)) }}
+                                    {% if recommendation.bookRecallToPpud.indexOffenceComment %}
+                                      {{ bodyParagraph(recommendation.bookRecallToPpud.indexOffenceComment, "preserve-whitespace") }}
+                                    {% endif %}
                                 </dd>
                             </div>
                             <div class="govuk-summary-list__row">
@@ -138,7 +141,7 @@
                     <div class="govuk-grid-column-one-half">
                         <h2 class='govuk-heading-m'>Selected sentence in PPUD</h2>
 
-                        <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                        <dl class="govuk-summary-list govuk-summary-list--no-wrap-keys govuk-!-margin-bottom-4">
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
                                     Custody type
@@ -220,6 +223,11 @@
                     </div>
                 </div>
 
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        {% include '../../../../partials/recommendation/documentsAndMinutes.njk' %}
+                    </div>
+                </div>
 
                 {{ formSubmitButton() }}
             </form>

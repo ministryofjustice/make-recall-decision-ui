@@ -22,12 +22,7 @@ context('Booked to PPUD failed', () => {
 
     cy.task('getStatuses', {
       statusCode: 200,
-      response: [
-        {
-          name: RECOMMENDATION_STATUS.SENT_TO_PPCS,
-          active: true,
-        },
-      ],
+      response: [{ name: RECOMMENDATION_STATUS.BOOKING_ON_STARTED, active: true }],
     })
   })
 

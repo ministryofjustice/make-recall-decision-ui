@@ -1,13 +1,19 @@
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitController from './sentenceToCommitController'
+import { getSupportingDocuments } from '../../../../data/makeDecisionApiClient'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 
 describe('get', () => {
+  beforeEach(() => {
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([{ filename: 'Part-A.doc', type: 'PPUDPartA' }])
+  })
+
   it('load - with no ppud offender', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
+          id: '123',
           nomisIndexOffence: {
             allOptions: [
               {
@@ -53,6 +59,7 @@ describe('get', () => {
       licenceExpiryDate: '2025-11-17',
       releasingPrison: 'Broad Moor',
     })
+    expect(res.locals.documents).toEqual([{ filename: 'Part-A.doc', type: 'PPUDPartA' }])
     expect(res.locals.errorMessage).toBeUndefined()
     expect(res.render).toHaveBeenCalledWith(`pages/recommendations/ppcs/sentenceToCommit/sentenceToCommit`)
     expect(next).toHaveBeenCalled()
@@ -61,6 +68,7 @@ describe('get', () => {
     const res = mockRes({
       locals: {
         recommendation: {
+          id: '456',
           ppudOffender: {},
           bookRecallToPpud: {
             ppudSentenceId: 'ADD_NEW',

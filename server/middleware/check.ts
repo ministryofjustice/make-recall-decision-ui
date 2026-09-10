@@ -73,3 +73,10 @@ export function and(...checks: Check[]): Check {
     return checks.every(check => check(locals))
   }
 }
+
+export function bookingToPpudFailed(): Check {
+  return (locals: Record<string, unknown>) => {
+    const recommendation = locals.recommendation as RecommendationResponse
+    return recommendation?.bookingMemento?.failed ?? false
+  }
+}

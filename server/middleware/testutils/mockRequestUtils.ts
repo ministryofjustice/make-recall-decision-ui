@@ -8,6 +8,7 @@ export const mockReq = ({
   params = {},
   body = {},
   file = undefined,
+  files = undefined,
   cookies = {},
   method = 'GET',
   headers = {},
@@ -15,9 +16,11 @@ export const mockReq = ({
   originalUrl,
   baseUrl,
   path = '/',
+  xhr = false,
 }: {
   body?: Record<string, string | boolean | string[]>
   file?: Record<string, string | boolean | number | string[] | Buffer>
+  files?: Express.Multer.File[]
   query?: ParsedQs
   params?: ParamsDictionary
   headers?: Record<string, string | boolean>
@@ -27,10 +30,12 @@ export const mockReq = ({
   originalUrl?: string
   baseUrl?: string
   path?: string
+  xhr?: boolean
 } = {}): Request => {
   return {
     query,
     file,
+    files,
     params,
     body,
     headers,
@@ -40,6 +45,7 @@ export const mockReq = ({
     originalUrl,
     baseUrl,
     path,
+    xhr,
   } as Request & { file: Record<string, string | boolean | string[]> }
 }
 
@@ -56,6 +62,7 @@ export const mockRes = ({
   set = jest.fn(),
   writeHead = jest.fn(),
   end = jest.fn(),
+  status = jest.fn(),
 }: {
   locals?: Record<string, unknown>
   token?: string
@@ -69,6 +76,7 @@ export const mockRes = ({
   set?: jest.Mock
   writeHead?: jest.Mock
   end?: jest.Mock
+  status?: jest.Mock
 } = {}): Response => {
   return {
     locals: {
@@ -91,6 +99,7 @@ export const mockRes = ({
     set,
     writeHead,
     end,
+    status,
   } as unknown as Response
 }
 

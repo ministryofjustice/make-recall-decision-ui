@@ -8,14 +8,14 @@
         {% if isIndeterminateSentence %}
             <div class="govuk-panel govuk-panel--confirmation">
                 <h1 class="govuk-panel__title">
-                    Booked on to PPUD
+                    Booked onto PPUD
                 </h1>
 
                 <div class="govuk-panel__body">
                         {{ recommendation.personOnProbation.name }}
                 </div>
                 <div class="govuk-panel__body">
-                    NOMIS number: <strong>{{ recommendation.personOnProbation.nomsNumber }}</strong>
+                    <strong>NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}</strong>
                 </div>
             </div>
             <h2 class="govuk-heading-m">What happens next</h2>
@@ -27,14 +27,14 @@
         {% if isNewSentence %}
             <div class="govuk-panel govuk-panel--confirmation">
                 <h1 class="govuk-panel__title">
-                    Record created and booked on to PPUD
+                    Record created and booked onto PPUD
                 </h1>
 
                 <div class="govuk-panel__body">
                     {{ recommendation.personOnProbation.name }}
                 </div>
                 <div class="govuk-panel__body">
-                    NOMIS number: <strong>{{ recommendation.personOnProbation.nomsNumber }}</strong>
+                    <strong>NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}</strong>
                 </div>
             </div>
             <h2 class="govuk-heading-m">What happens next</h2>
@@ -44,14 +44,14 @@
           {% else %}
             <div class="govuk-panel govuk-panel--confirmation">
                 <h1 class="govuk-panel__title">
-                    Booked on in PPUD
+                    Booked onto PPUD
                 </h1>
 
                 <div class="govuk-panel__body">
                     {{ recommendation.personOnProbation.name }}
                 </div>
                 <div class="govuk-panel__body">
-                    NOMIS number: <strong>{{ recommendation.personOnProbation.nomsNumber }}</strong>
+                    <strong>NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}</strong>
                 </div>
             </div>
             <h2 class="govuk-heading-m">What happens next</h2>
@@ -64,7 +64,7 @@
                 {{ govukButton({
                         text: "Start a new booking",
                         classes: "govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
-                        href: "/ppcs-search"
+                        href: "/"
                     })
                 }}
             </div>

@@ -1,10 +1,15 @@
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitExistingOffenderController from './sentenceToCommitExistingOffenderController'
 import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
+import { getSupportingDocuments } from '../../../../data/makeDecisionApiClient'
 
 jest.mock('../../../../data/makeDecisionApiClient')
 
 describe('get', () => {
+  beforeEach(() => {
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([{ filename: 'Part-A.doc', type: 'PPUDPartA' }])
+  })
+
   it('load - with existing ppud user and selected sentence', async () => {
     const recommendation = RecommendationResponseGenerator.generate()
     const selectedPpudSentence = recommendation.ppudOffender.sentences[0]
@@ -24,6 +29,7 @@ describe('get', () => {
     )
     expect(res.locals.offence).toEqual(selectedIndexOffence)
     expect(res.locals.ppudSentence).toEqual(selectedPpudSentence)
+    expect(res.locals.documents).toEqual([{ filename: 'Part-A.doc', type: 'PPUDPartA' }])
     expect(res.locals.errorMessage).toBeUndefined()
     expect(res.render).toHaveBeenCalledWith(
       `pages/recommendations/ppcs/sentenceToCommit/sentenceToCommitExistingOffender`,

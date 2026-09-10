@@ -18,6 +18,7 @@
 
 .car-accordion {
     .govuk-accordion__section-summary {
-        margin-bottom: govuk-spacing(6)
+        margin-bottom: govuk-spacing(6);
+        color: $govuk-secondary-text-colour;
     }
 }

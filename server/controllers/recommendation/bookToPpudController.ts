@@ -20,7 +20,6 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
-import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -141,14 +140,16 @@ async function post(req: Request, res: Response, _: NextFunction) {
       return uploadAdditionalDocument(currentMemento, recommendationId, document.id, token, flags)
     }, Promise.resolve(memento))
     bookingErrorType = StageEnum.BOOKING_MINUTE
-    memento = await createMinute(
-      memento,
-      recommendationId,
-      'BACKGROUND INFO...',
-      generateRecallMinuteText(recommendation),
-      token,
-      flags,
-    )
+    if (recommendation.bookRecallToPpud?.minute) {
+      memento = await createMinute(
+        memento,
+        recommendationId,
+        'Background information',
+        recommendation.bookRecallToPpud?.minute,
+        token,
+        flags,
+      )
+    }
 
     await updateStatuses({
       recommendationId,
