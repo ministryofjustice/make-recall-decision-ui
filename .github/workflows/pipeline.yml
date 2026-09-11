@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - '**'
+  pull_request:
   workflow_dispatch:
     inputs:
       additional_docker_tag:
@@ -18,6 +19,7 @@ on:
 permissions:
   contents: read
   packages: write
+  pull-requests: write
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
@@ -36,6 +38,19 @@ jobs:
       npm_script: 'test:coverage'
     needs: [node_build]
     secrets: inherit
+  test_comment_on_pr:
+    name: 'Comment on PR (gh)'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: 'Comment on PR'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr comment "$PR_NUMBER" \
+            --repo "${{ github.repository }}" \
+            --body "Test message @ppmg"
   node_integration_tests:
     name: node integration tests
     permissions:
@@ -194,4 +209,3 @@ jobs:
           channel_id: ${{ vars.PROD_RELEASES_SLACK_CHANNEL }}
           SLACK_BOT_TOKEN: ${{ secrets.HMPPS_SRE_SLACK_BOT_TOKEN }}
           input_file: results_slack_message.txt
-
