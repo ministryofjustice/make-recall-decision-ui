@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
-import BookingErrorType from '../../booking/BookingErrorType'
 import config from '../../config'
+import StageEnum from '../../booking/StageEnum'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
-  const isDataError = recommendation.bookingMemento?.errorType === BookingErrorType.DATA
+  const isDataError = recommendation.bookingMemento?.stage === StageEnum.POSTING_RECALL_DATA
+  const isUploadDocsError = recommendation.bookingMemento?.stage === StageEnum.UPLOADING_DOCUMENTS
+  const isMinutesError = recommendation.bookingMemento?.stage === StageEnum.BOOKING_MINUTE
 
   res.locals = {
     ...res.locals,
@@ -13,7 +15,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     recommendation,
     isDataError,
-    errorType: recommendation.bookingMemento?.errorType,
+    isUploadDocsError,
+    isMinutesError,
     uploadFailedDocName: recommendation.bookingMemento?.uploadFailedDocName,
     ppudUrl: config.ppud,
   }
