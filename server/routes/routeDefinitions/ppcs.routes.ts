@@ -48,6 +48,10 @@ import ppcsPaths from '../paths/ppcs.paths'
 import areOffenceChangesNeededController from '../../controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/areOffenceChangesNeededController'
 import bookedToPpudFailController from '../../controllers/recommendation/bookedToPpudFailController'
 import bookedToPpudSuccessController from '../../controllers/recommendation/bookedToPpudSuccessController'
+import ppudUserMappingsController from '../../controllers/recommendation/ppcs/ppudMapping/ppudUserMappingsController'
+import editPpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/editPpudUserMappingController'
+import deletePpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/deletePpudUserMappingController'
+import addPpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/addPpudUserMappingController'
 
 const roles = { allow: [HMPPS_AUTH_ROLE.PPCS] }
 
@@ -80,6 +84,41 @@ const ppcsAfterSearchPostTemplate = createRecommendationRouteTemplate(
 )
 
 const ppcsRecommendationRoutes: RouteDefinition[] = [
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}`,
+    handler: ppudUserMappingsController.get,
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/add`,
+    handler: addPpudUserMappingController.get,
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/add`,
+    handler: addPpudUserMappingController.post,
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId`,
+    handler: editPpudUserMappingController.get,
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId`,
+    handler: editPpudUserMappingController.post,
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId/delete`,
+    handler: deletePpudUserMappingController.get,
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId/delete`,
+    handler: deletePpudUserMappingController.post,
+  },
   {
     ...createRecommendationRouteTemplate('get', [], roles),
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.searchPpud}`,

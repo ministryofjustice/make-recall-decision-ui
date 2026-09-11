@@ -291,3 +291,10 @@ export const ppudSearchActiveUsers = ({ statusCode = 200, response }: { statusCo
     statusCode,
     response,
   })
+
+export const ppudSearchAllPpudUserMappings = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockGet({
+    urlPathPattern: `/user-mapping`,
+    statusCode,
+    response,
+  })

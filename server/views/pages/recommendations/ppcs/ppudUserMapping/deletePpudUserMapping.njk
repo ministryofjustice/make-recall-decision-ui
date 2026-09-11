@@ -1,0 +1,52 @@
+{% extends "../../../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: 'Test admin page', hasErrors: errors }) %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds-from-desktop">
+    <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+    <form novalidate method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              {{ pageHeadings[page.id] }}
+            </h1>
+          </legend>
+          <div class="govuk-form-group">
+            {{ summaryList({
+              id: "userMappingSummaryList",
+              rows: [
+                {
+                  key: "User name",
+                  value: userMapping.userName
+                },
+                {
+                  key: "PPUD full name",
+                  value: userMapping.ppudUserFullName
+                },
+                {
+                  key: "PPUD team name",
+                  value: userMapping.ppudTeamName
+                },
+                {
+                  key: "PPUD user name",
+                  value: userMapping.ppudUserName
+                }
+              ]
+            }) }}
+
+          </div>
+        </fieldset>
+      </div>
+      {{ formSubmitButton( {
+        label: "Delete"
+      }) }}
+    </form>
+
+  </div>
+</div>
+{% endblock %}

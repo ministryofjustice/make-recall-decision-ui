@@ -9,6 +9,7 @@ export enum HMPPS_AUTH_ROLE {
   ODM = 'ROLE_MARD_DUTY_MANAGER',
   RW = 'ROLE_MARD_RESIDENT_WORKER',
   PPCS = 'ROLE_MAKE_RECALL_DECISION_PPCS',
+  PPCS_ADMIN = 'ROLE_MAKE_RECALL_DECISION_PPCS_ADMIN',
 }
 
 export default function authorisationMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -18,6 +19,7 @@ export default function authorisationMiddleware(req: Request, res: Response, nex
     res.locals.user.roles = roles
     res.locals.user.hasSpoRole = roles.includes(HMPPS_AUTH_ROLE.SPO)
     res.locals.user.hasPpcsRole = roles.includes(HMPPS_AUTH_ROLE.PPCS)
+    res.locals.user.hasPpcsAdminRole = roles.includes(HMPPS_AUTH_ROLE.RW) // should be HMPPS_AUTH_ROLE.PPCS_ADMIN but the role is not yet available
     res.locals.user.hasOdmRole = roles.includes(HMPPS_AUTH_ROLE.ODM)
 
     if (res.locals.env === 'preprod') {

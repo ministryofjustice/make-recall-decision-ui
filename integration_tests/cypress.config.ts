@@ -21,6 +21,7 @@ import {
   getUser,
   ppcsSearch,
   ppudSearchActiveUsers,
+  ppudSearchAllPpudUserMappings,
   prisonSentences,
   searchForPrisonOffender,
   searchMappedUsers,
@@ -89,6 +90,7 @@ export default defineConfig({
         downloadSupportingDocument,
         searchMappedUsers,
         ppudSearchActiveUsers,
+        ppudSearchAllPpudUserMappings,
         getFlags,
       })
       return config

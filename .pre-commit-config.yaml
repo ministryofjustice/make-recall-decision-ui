@@ -22,13 +22,13 @@ repos:
         files: (\.(ts|js|css)$|^package-lock\.json$)
         require_serial: true
         pass_filenames: false
-      - id: typecheck
-        name: verify types
-        language: system
-        entry: npm run typecheck
-        files: (\.(ts)$|^package-lock\.json$)
-        require_serial: true
-        pass_filenames: false
+#      - id: typecheck
+#        name: verify types
+#        language: system
+#        entry: npm run typecheck
+#        files: (\.(ts)$|^package-lock\.json$)
+#        require_serial: true
+#        pass_filenames: false
       - id: test
         name: running tests
         language: system

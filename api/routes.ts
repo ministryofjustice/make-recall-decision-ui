@@ -11,4 +11,5 @@ export default {
   recommendations: '/recommendations',
   getUser: '/user',
   searchMappedUser: '/user-mapping/search',
+  userMapping: '/user-mapping',
 }

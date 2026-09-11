@@ -8,6 +8,8 @@ export default {
   noSearchResults: 'no-ppcs-search-results',
   areOffenceChangesNeeded: 'are-offence-changes-needed',
 
+  ppudUserMappings: 'ppud-user-mappings',
+
   // determinate
   selectIndexOffence: 'select-index-offence',
   consecutiveSentenceDetails: 'consecutive-sentence-details',

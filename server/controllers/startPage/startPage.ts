@@ -35,6 +35,8 @@ export const startPage = async (req: Request, res: Response): Promise<Response |
       res.locals.validMappingAndPpudUser = ppudUserRes?.results.length === 1
     }
     res.render('pages/startPPCS')
+  } else if (res.locals.user.hasPpcsAdminRole) {
+    res.render('pages/recommendations/ppcs/ppudUserMapping/ppudUserMappings')
   } else {
     res.locals.searchEndpoint = '/search-by-name'
     res.render('pages/startPage')

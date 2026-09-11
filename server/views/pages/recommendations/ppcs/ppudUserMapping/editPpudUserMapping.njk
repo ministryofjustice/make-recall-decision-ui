@@ -1,0 +1,75 @@
+{% extends "../../../../partials/layout.njk" %}
+
+{% set pageTitle = makePageTitle({ pageHeading: pageHeadings[page.id], hasErrors: errors }) %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds-from-desktop">
+    <h1 class='govuk-heading-l'>{{ pageHeadings[page.id] }}</h1>
+
+    <form novalidate method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              {{ pageHeadings[page.id] }}
+            </h1>
+          </legend>
+          <div class="govuk-form-group">
+            {{ govukInput({
+              label: {
+                text: "User name",
+                classes: "govuk-label--m"
+              },
+              id: "userName",
+              name: "userName",
+              classes: "govuk-input--width-20",
+              value: userMapping.userName,
+              errorMessage: errorMessage(errors.userName)
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "PPUD full name",
+                classes: "govuk-label--m"
+              },
+              id: "ppudUserFullName",
+              name: "ppudUserFullName",
+              classes: "govuk-input--width-20",
+              value: userMapping.ppudUserFullName,
+              errorMessage: errorMessage(errors.ppudUserFullName)
+              }) }}
+
+            {{ govukInput({
+              label: {
+                text: "PPUD team name",
+                classes: "govuk-label--m"
+              },
+              id: "ppudTeamName",
+              name: "ppudTeamName",
+              classes: "govuk-input--width-20",
+              value: userMapping.ppudTeamName,
+              errorMessage: errorMessage(errors.ppudTeamName)
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "PPUD user name",
+                classes: "govuk-label--m"
+              },
+              id: "ppudUserName",
+              name: "ppudUserName",
+              classes: "govuk-input--width-20",
+              value: userMapping.ppudUserName,
+              errorMessage: errorMessage(errors.ppudUserName)
+            }) }}
+          </div>
+        </fieldset>
+      </div>
+      {{ formSubmitButton( { label: action }) }}
+    </form>
+
+  </div>
+</div>
+{% endblock %}

@@ -144,6 +144,14 @@ const strings: Record<string, Record<string, string>> = {
     duplicateTitle: 'Enter a unique document title',
     titleLengthExceeded: 'The title must be less than 250 characters',
     /// PPCS ///
+    // admin pages
+    missingUsername: 'Enter a username',
+    missingPpudFullName: 'Enter a full name',
+    missingPpudTeamName: 'Enter a team name',
+    missingPpudUsername: 'Enter a PPUD username',
+    duplicateUsername: 'There is already an entry for this username. Enter a unique username',
+    duplicatePpudUsername: 'There is already an entry for this PPUD username. Enter a unique PPUD username',
+    duplicatePpudUserFullName: 'There is already an entry for this PPUD full name. Enter a unique PPUD full name',
     // custody group
     missingCustodyGroup: 'Select the correct sentence type',
     invalidCustodyGroup:
@@ -296,6 +304,11 @@ const strings: Record<string, Record<string, string>> = {
     editOffence: 'Edit offence',
     editSentencingCourt: 'Edit sentencing court',
     chargedWithOffence: 'Is {{ fullName }} being recalled because of being charged or convicted for an offence?',
+    /// PPCS Admin ///
+    ppudUserMappings: 'PPUD user mappings',
+    editPpudUserMapping: 'Edit PPUD user mapping',
+    addPpudUserMapping: 'Add PPUD user mapping',
+    deletePpudUserMapping: 'Delete PPUD user mapping',
   },
   labels: {
     yes: 'Yes',
