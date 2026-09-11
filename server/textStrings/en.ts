@@ -283,15 +283,9 @@ const strings: Record<string, Record<string, string>> = {
     spoDeleteConfirmation: 'Delete Confirmation',
     selectPpudSentence: 'Add your booking to PPUD - {{ fullName }}',
     supportingDocuments: 'Add supporting documents for {{ fullName }}',
-    supportingDocumentUpload: 'Upload supporting document',
-    supportingDocumentReplace: 'Replace supporting document',
-    supportingDocumentRemove: 'Remove supporting document',
     bookingSummary: 'Your recall booking - {{ fullName }}',
     whenSpoAgreedRecallDate: 'When did the SPO agree to this recall?',
     editPpudMinute: 'Edit Ppud Note',
-    additionalSupportingDocumentUpload: 'Add additional document',
-    additionalSupportingDocumentReplace: 'Replace additional document',
-    additionalSupportingDocumentRemove: 'Add additional document',
     /// PPCS ///
     // custody group
     editCustodyGroup: 'Is the sentence determinate or indeterminate?',
