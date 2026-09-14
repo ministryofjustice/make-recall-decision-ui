@@ -1,7 +1,7 @@
 import { RouteDefinition } from '../standardRouter'
 import suitabilityForFixedTermRecallController from '../../controllers/recommendation/suitabilityForFixedTermRecallController'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { not, and, statusIsActive } from '../../middleware/check'
+import { and, not, statusIsActive } from '../../middleware/check'
 import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
 import alreadyExistingController from '../../controllers/recommendation/alreadyExistingController'
 import taskListConsiderRecallController from '../../controllers/recommendation/taskListConsiderRecallController'
@@ -62,7 +62,7 @@ import chargedWithOffenceController from '../../controllers/recommendation/charg
 
 const roles = {
   allow: [HMPPS_AUTH_ROLE.PO],
-  deny: [HMPPS_AUTH_ROLE.PPCS],
+  deny: [HMPPS_AUTH_ROLE.PPCS, HMPPS_AUTH_ROLE.PPCS_ADMIN],
 }
 
 const ppGetTemplate = createRecommendationRouteTemplate(
@@ -552,7 +552,7 @@ export const ppRecommendationRoutes: RouteDefinition[] = [
       [recommendationStatusCheck(not(statusIsActive(STATUSES.PP_DOCUMENT_CREATED)))],
       {
         allow: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.SPO],
-        deny: [HMPPS_AUTH_ROLE.PPCS],
+        deny: [HMPPS_AUTH_ROLE.PPCS, HMPPS_AUTH_ROLE.PPCS_ADMIN],
       },
     ),
     path: `${RECOMMENDATION_PREFIX}/${ppPaths.confirmationPartA}`,

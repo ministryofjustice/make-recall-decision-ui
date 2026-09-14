@@ -48,8 +48,13 @@ import ppcsPaths from '../paths/ppcs.paths'
 import areOffenceChangesNeededController from '../../controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/areOffenceChangesNeededController'
 import bookedToPpudFailController from '../../controllers/recommendation/bookedToPpudFailController'
 import bookedToPpudSuccessController from '../../controllers/recommendation/bookedToPpudSuccessController'
+import ppudUserMappingsController from '../../controllers/recommendation/ppcs/ppudMapping/ppudUserMappingsController'
+import editPpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/editPpudUserMappingController'
+import deletePpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/deletePpudUserMappingController'
+import addPpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/addPpudUserMappingController'
+import customizeMessages from '../../controllers/customizeMessages'
 
-const roles = { allow: [HMPPS_AUTH_ROLE.PPCS] }
+const roles = { allow: [HMPPS_AUTH_ROLE.PPCS], deny: [HMPPS_AUTH_ROLE.PPCS_ADMIN] }
 
 const ppcsAfterSearchGetTemplate = createRecommendationRouteTemplate(
   'get',
@@ -491,6 +496,60 @@ const ppcsBookingRoutes: RouteDefinition[] = [
   },
 ]
 
+// For now, we allow PPCS users to access the admin pages for managing PPUD user mappings. In future, we will want to
+// restrict this to a different role.
+const ppcsPpudUserMappingRoutes: RouteDefinition[] = [
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}`,
+    handler: ppudUserMappingsController.get,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/add`,
+    handler: addPpudUserMappingController.get,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/add`,
+    handler: addPpudUserMappingController.post,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId`,
+    handler: editPpudUserMappingController.get,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId`,
+    handler: editPpudUserMappingController.post,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId/delete`,
+    handler: deletePpudUserMappingController.get,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId/delete`,
+    handler: deletePpudUserMappingController.post,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+]
+
 const ppcsRoutes: RouteDefinition[] = [
   {
     path: `/${ppcsPaths.search}`,
@@ -547,6 +606,7 @@ const ppcsRoutes: RouteDefinition[] = [
   ...ppcsDeterminateSentenceRoutes,
   ...ppcsIndeterminateSentenceRoutes,
   ...ppcsBookingRoutes,
+  ...ppcsPpudUserMappingRoutes,
 ]
 
 export default ppcsRoutes
