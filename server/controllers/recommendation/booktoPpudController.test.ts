@@ -225,7 +225,7 @@ describe('post', () => {
   it('post - happy path - with SupportingDocuments', async () => {
     const recommendation = {
       id: '12345',
-      bookRecallToPpud: { minute: 'Minute here' },
+      bookRecallToPpud: {},
     }
     const flags = {}
     const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: true }]
@@ -441,15 +441,6 @@ describe('post', () => {
       flags,
     )
 
-    expect(createMinute).toHaveBeenCalledWith(
-      { uploaded: ['9'] },
-      '1',
-      'Background information',
-      'Minute here',
-      'token',
-      flags,
-    )
-
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
       deActivate: [],
@@ -494,7 +485,7 @@ describe('post', () => {
 
     expect(bookOffender).toHaveBeenCalledWith(
       {
-        stage: StageEnum.POSTING_RECALL_DATA,
+        stage: StageEnum.STARTED,
         uploadFailedDocName: '',
         failed: true,
         failedMessage: '{"something":"text"}',
@@ -508,7 +499,7 @@ describe('post', () => {
       recommendationId: '12345',
       valuesToSave: {
         bookingMemento: {
-          stage: StageEnum.POSTING_RECALL_DATA,
+          stage: StageEnum.STARTED,
           failed: true,
           failedMessage: '{"something":"text"}',
           uploadFailedDocName: '',
@@ -545,7 +536,7 @@ describe('post', () => {
     const recommendation = {
       id: '12345',
       crn: 'X123',
-      bookRecallToPpud: { minute: 'Minute here' },
+      bookRecallToPpud: {},
     }
 
     const flags = {}
@@ -609,7 +600,7 @@ describe('post', () => {
       expect.objectContaining({
         failed: true,
         failedMessage: '{"error":"upload failed"}',
-        stage: StageEnum.UPLOADING_DOCUMENTS,
+        stage: StageEnum.RECALL_BOOKED,
         uploadFailedDocName: 'part-a.docx',
       }),
       '1',
@@ -623,7 +614,7 @@ describe('post', () => {
       recommendationId: '12345',
       valuesToSave: {
         bookingMemento: {
-          stage: StageEnum.UPLOADING_DOCUMENTS,
+          stage: StageEnum.RECALL_BOOKED,
           failed: true,
           failedMessage: '{"error":"upload failed"}',
           uploadFailedDocName: 'part-a.docx',

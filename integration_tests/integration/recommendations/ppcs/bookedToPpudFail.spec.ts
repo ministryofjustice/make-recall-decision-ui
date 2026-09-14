@@ -11,7 +11,7 @@ context('Booked to PPUD failed', () => {
     id: recommendationId,
     bookingMemento: {
       failed: true,
-      stage: StageEnum.POSTING_RECALL_DATA,
+      stage: StageEnum.STARTED,
     },
   })
 
@@ -65,7 +65,7 @@ context('Booked to PPUD failed', () => {
           ...recommendation,
           bookingMemento: {
             failed: true,
-            stage: StageEnum.UPLOADING_DOCUMENTS,
+            stage: StageEnum.MINUTE_BOOKED,
             uploadFailedDocName: 'Licence.pdf',
           },
         },
@@ -103,7 +103,7 @@ context('Booked to PPUD failed', () => {
           ...recommendation,
           bookingMemento: {
             failed: true,
-            stage: StageEnum.UPLOADING_DOCUMENTS,
+            stage: StageEnum.MINUTE_BOOKED,
           },
         },
       })
@@ -129,7 +129,7 @@ context('Booked to PPUD failed', () => {
           ...recommendation,
           bookingMemento: {
             failed: true,
-            stage: StageEnum.BOOKING_MINUTE,
+            stage: StageEnum.RECALL_BOOKED,
           },
         },
       })

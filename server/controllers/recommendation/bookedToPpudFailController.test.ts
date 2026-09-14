@@ -9,7 +9,7 @@ describe('get', () => {
   it('loads the page for a data error', async () => {
     const recommendation = {
       bookingMemento: {
-        stage: StageEnum.POSTING_RECALL_DATA,
+        stage: StageEnum.STARTED,
         uploadFailedDocName: 'licence.pdf',
       },
     }
@@ -45,7 +45,7 @@ describe('get', () => {
   it('loads the page for a documents upload error', async () => {
     const recommendation = {
       bookingMemento: {
-        stage: StageEnum.UPLOADING_DOCUMENTS,
+        stage: StageEnum.MINUTE_BOOKED,
         uploadFailedDocName: 'partA.docx',
       },
     }
@@ -81,7 +81,7 @@ describe('get', () => {
   it('loads the page for a minutes error', async () => {
     const recommendation = {
       bookingMemento: {
-        stage: StageEnum.BOOKING_MINUTE,
+        stage: StageEnum.RECALL_BOOKED,
       },
     }
 

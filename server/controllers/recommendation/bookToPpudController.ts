@@ -42,7 +42,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
-  let bookingErrorType: StageEnum = StageEnum.POSTING_RECALL_DATA
   let uploadingDocName = ''
   let memento: BookingMemento = recommendation.bookingMemento || {
     stage: StageEnum.STARTED,
@@ -65,7 +64,17 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
     memento = await updateRecall(memento, recommendation, token, flags, res.locals.statuses)
 
-    bookingErrorType = StageEnum.UPLOADING_DOCUMENTS
+    if (recommendation.bookRecallToPpud?.minute) {
+      memento = await createMinute(
+        memento,
+        recommendationId,
+        'Background information',
+        recommendation.bookRecallToPpud?.minute,
+        token,
+        flags,
+      )
+    }
+
     const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
 
     const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
@@ -139,17 +148,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
 
       return uploadAdditionalDocument(currentMemento, recommendationId, document.id, token, flags)
     }, Promise.resolve(memento))
-    bookingErrorType = StageEnum.BOOKING_MINUTE
-    if (recommendation.bookRecallToPpud?.minute) {
-      memento = await createMinute(
-        memento,
-        recommendationId,
-        'Background information',
-        recommendation.bookRecallToPpud?.minute,
-        token,
-        flags,
-      )
-    }
 
     await updateStatuses({
       recommendationId,
@@ -172,7 +170,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     if (err.status !== undefined) {
       memento.failed = true
       memento.failedMessage = err.text
-      memento.stage = bookingErrorType
       memento.uploadFailedDocName = uploadingDocName
       await updateRecommendation({
         recommendationId: String(recommendation.id),
