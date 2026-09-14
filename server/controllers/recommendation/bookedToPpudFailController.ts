@@ -4,14 +4,19 @@ import StageEnum from '../../booking/StageEnum'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals
+  const stage = recommendation.bookingMemento?.stage
+  const hasMinute = !!recommendation.bookRecallToPpud?.minute
 
   const isDataError =
-    recommendation.bookingMemento?.stage === StageEnum.STARTED &&
-    recommendation.bookingMemento?.stage !== StageEnum.RECALL_BOOKED
-  const isUploadDocsError = recommendation.bookingMemento?.stage === StageEnum.MINUTE_BOOKED
-  const isMinutesError =
-    recommendation.bookingMemento?.stage === StageEnum.RECALL_BOOKED &&
-    recommendation.bookingMemento?.stage !== StageEnum.MINUTE_BOOKED
+    stage === StageEnum.STARTED ||
+    stage === StageEnum.OFFENDER_BOOKED ||
+    stage === StageEnum.SENTENCE_BOOKED ||
+    stage === StageEnum.OFFENCE_BOOKED ||
+    stage === StageEnum.RELEASE_BOOKED
+
+  const isMinutesError = stage === StageEnum.RECALL_BOOKED && hasMinute
+
+  const isUploadDocsError = stage === StageEnum.MINUTE_BOOKED || (stage === StageEnum.RECALL_BOOKED && !hasMinute)
 
   res.locals = {
     ...res.locals,

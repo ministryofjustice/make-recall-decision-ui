@@ -131,6 +131,9 @@ context('Booked to PPUD failed', () => {
             failed: true,
             stage: StageEnum.RECALL_BOOKED,
           },
+          bookRecallToPpud: {
+            minute: 'Background information',
+          },
         },
       })
     })
