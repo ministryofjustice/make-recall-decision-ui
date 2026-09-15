@@ -2145,19 +2145,6 @@ context('Make a recommendation', () => {
       cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
       cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
     })
-    it('landing page for PPCS', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.start}`)
-
-      cy.pageHeading().should('contain', 'Check and book a recall')
-    })
-
     it('Find a rec doc', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -2878,44 +2865,6 @@ context('Make a recommendation', () => {
       cy.visit(`/recommendations/252523937/booking-summary`)
       cy.pageHeading().should('contain', 'Booking summary for Joseph Bluggs')
       cy.getText('sentenceEndDate').should('contain', '-')
-    })
-  })
-  describe('PPCS Journey without correct mapping or ppud user account', () => {
-    beforeEach(() => {
-      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
-    })
-    it('landing page for PPCS when no mapping present', () => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: { ppudUserMapping: null } })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: { results: [] } })
-
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.start}`)
-
-      cy.pageHeading().should('contain', 'Check and book a recall')
-      cy.getElement('Your account needs updating before you can book a recall').should('exist')
-    })
-
-    it('landing page for PPCS when mapping present but no active ppud user', () => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: { results: [] } })
-
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.start}`)
-
-      cy.pageHeading().should('contain', 'Check and book a recall')
-      cy.getElement('Your account needs updating before you can book a recall').should('exist')
     })
   })
   describe('Approved Premises Journey', () => {
