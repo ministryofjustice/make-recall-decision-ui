@@ -8,7 +8,7 @@ export default function customizeMessages(req: Request, res: Response, next: Nex
   const { recommendation } = res.locals
 
   const stringRenderParams = {
-    fullName: recommendation.personOnProbation.name,
+    fullName: recommendation?.personOnProbation?.name,
   }
 
   res.locals = {
