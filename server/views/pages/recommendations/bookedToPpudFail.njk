@@ -16,20 +16,20 @@
 {% set buttonText = "Open PPUD to add the minute" %}
 {% endif %}
 
-{% block content %} <div class="govuk-grid-row"> <div class="govuk-grid-column-two-thirds-from-desktop"> <h1 class="govuk-heading-l">
-{{ heading }} </h1>
+{% block content %}
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+    <h1 class="govuk-heading-l"> {{ heading }} </h1>
 
-```
-        <p class="govuk-body">
-            {{ message }}
-        </p>
+    <p class="govuk-body">
+        {{ message }}
+    </p>
+    <a class="govuk-link" href="/recommendations/{{ recommendation.id }}/booking-summary">
+        View a summary of information to check in PPUD
+    </a>
 
-        <a class="govuk-link" href="/recommendations/{{ recommendation.id }}/booking-summary">
-            View a summary of information to check in PPUD
-        </a>
-
-        <div class="govuk-!-margin-top-6">
-            {{ govukButton({
+    <div class="govuk-!-margin-top-6">
+        {{ govukButton({
                 text: buttonText,
                 classes: "govuk-button--primary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
                 attributes: {
@@ -37,10 +37,10 @@
                     rel: "noopener noreferrer"
                 },
                 href: ppudUrl
-            }) }}
+            })
+        }}
         </div>
     </div>
 </div>
-```
 
 {% endblock %}
