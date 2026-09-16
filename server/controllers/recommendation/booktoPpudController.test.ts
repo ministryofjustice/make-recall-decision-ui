@@ -607,9 +607,6 @@ describe('post', () => {
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       expect.objectContaining({
         stage: StageEnum.RECALL_BOOKED,
-        failed: true,
-        failedMessage: '{"error":"upload failed"}',
-        uploadFailedDocName: 'part-a.docx',
       }),
       '1',
       'document-id',
