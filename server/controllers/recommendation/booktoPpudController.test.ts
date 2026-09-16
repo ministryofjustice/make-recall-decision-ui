@@ -590,15 +590,26 @@ describe('post', () => {
         type: 'PPUDPartA',
       },
     ])
-    ;(uploadMandatoryDocument as jest.Mock).mockImplementation(() => {
+
+    let mementoAtUploadCall: Record<string, unknown> | undefined
+    ;(uploadMandatoryDocument as jest.Mock).mockImplementation((memento: Record<string, unknown>) => {
+      mementoAtUploadCall = { ...memento }
+
       throw new PpudError(400, '{"error":"upload failed"}')
     })
 
     await bookToPpudController.post(req, res, next)
 
+    expect(mementoAtUploadCall).toEqual({
+      stage: StageEnum.RECALL_BOOKED,
+    })
+
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       expect.objectContaining({
         stage: StageEnum.RECALL_BOOKED,
+        failed: true,
+        failedMessage: '{"error":"upload failed"}',
+        uploadFailedDocName: 'part-a.docx',
       }),
       '1',
       'document-id',
