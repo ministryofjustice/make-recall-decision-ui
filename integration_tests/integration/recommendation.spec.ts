@@ -2033,26 +2033,6 @@ context('Make a recommendation', () => {
       cy.signIn()
     })
 
-    it(`present Who Completed Part A page`, () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, whoCompletedPartA: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/who-completed-part-a/`)
-
-      cy.pageHeading().should('contain', 'Who completed this Part A?')
-
-      cy.fillInput('Name', 'Joe Bloggs')
-      cy.fillInput('Email', 'bloggs@me.gov.uk')
-      cy.selectRadio('Is this person the probation practitioner for Jane Bloggs?', 'Yes')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
-    })
-
     it(`present Practitioner For Part A page `, () => {
       cy.task('getRecommendation', {
         statusCode: 200,

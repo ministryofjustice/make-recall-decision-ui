@@ -1,9 +1,11 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { AnyNoneOrOption, DataGenerator } from '../@generators/dataGenerators'
 import { WhoCompletedPartA } from '../../server/@types/make-recall-decision-api/models/RecommendationResponse'
+import jobTitleEnum from '../../server/controllers/recommendations/formOptions/jobTitle'
 
 export type WhoCompletedPartAOptions = {
   name?: string
+  jobTitle?: string
   email?: string
   telephone?: string
   region?: string
@@ -16,6 +18,7 @@ export const WhoCompletedPartAGenerator: DataGenerator<WhoCompletedPartA, AnyNon
     if (options === 'any') {
       return {
         name: faker.person.fullName(),
+        jobTitle: faker.helpers.arrayElement(jobTitleEnum.filter(j => j.value !== '')).value,
         email: faker.internet.email(),
         telephone: faker.phone.number(),
         region: faker.location.county(),
@@ -30,6 +33,7 @@ export const WhoCompletedPartAGenerator: DataGenerator<WhoCompletedPartA, AnyNon
 
     return {
       name: options.name,
+      jobTitle: options.jobTitle,
       email: options.email,
       telephone: options.telephone,
       region: options.region,

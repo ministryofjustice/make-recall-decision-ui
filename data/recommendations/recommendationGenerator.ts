@@ -18,6 +18,7 @@ import { BookingMementoGenerator, BookingMementoOptions } from './bookingMemento
 import { SentenceGroup } from '../../server/controllers/recommendations/sentenceInformation/formOptions'
 import { CustodyStatusGenerator, CustodyStatusOptions } from './custodyStatusGenerator'
 import regionEnum from '../../server/controllers/recommendations/formOptions/region'
+import jobTitleEnum from '../../server/controllers/recommendations/formOptions/jobTitle'
 import {
   isRecalledOnNewChargedOrConvictedOffenceGenerator,
   IsRecalledOnNewChargedOrConvictedOffenceOptions,
@@ -240,6 +241,7 @@ export const RecommendationResponseGenerator: DataGenerator<RecommendationRespon
       (options?.practitionerForPartA ?? true)
         ? {
             name: faker.person.fullName(),
+            jobTitle: faker.helpers.arrayElement(jobTitleEnum.filter(j => j.value !== '')).value,
             email: faker.internet.email(),
             telephone: faker.phone.number(),
             region: faker.helpers.arrayElement(regionEnum).value,

@@ -115,12 +115,14 @@ const strings: Record<string, Record<string, string>> = {
     noDeletePreviousReleaseIndex: 'Select a previous release to delete',
     missingManagerCountersignatureExposition: 'Add a comment to confirm your countersignature',
     missingWhoCompletedPartAName: 'Enter the name of the person who completed the Part A',
+    missingWhoCompletedPartAJobTitle: 'Select a job title',
     missingWhoCompletedPartAEmail: 'Enter the GOV.UK email of the person who completed the Part A',
     invalidWhoCompletedPartAEmail: 'Enter the email in the correct format, like name@justice.gov.uk',
     nonGovUkWhoCompletedPartAEmail: 'You can only use an email ending in ‘GOV.UK’ for the person completing the Part A',
     missingIsPersonProbationPractitionerForOffender:
       'Select whether this person is the probation practitioner for {{ fullName }}',
     missingPractitionerForPartAName: 'Enter the name of the probation practitioner for {{ fullName }}',
+    missingPractitionerForPartAJobTitle: 'Select a job title',
     missingPractitionerForPartAEmail: 'Enter the GOV.UK email for the probation practitioner for {{ fullName }}',
     invalidPractitionerForPartAEmail: 'Enter the email in the correct format, like name@justice.gov.uk',
     nonGovUkPractitionerForPartAEmail:
