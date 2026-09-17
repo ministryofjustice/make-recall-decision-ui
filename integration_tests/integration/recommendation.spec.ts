@@ -2047,6 +2047,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
 
       cy.fillInput('Name', 'Joe Bloggs')
+      cy.get('#jobTitle').select('Registered Probation Officer')
       cy.fillInput('Email', 'bloggs@me.gov.uk')
 
       cy.clickButton('Continue')

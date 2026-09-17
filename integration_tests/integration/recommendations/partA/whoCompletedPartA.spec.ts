@@ -110,6 +110,7 @@ context('Who Completed Part A Page', () => {
         {
           href: 'isPersonProbationPractitionerForOffender',
           message: `Select whether this person is the probation practitioner for ${recommendation.personOnProbation.name}`,
+          checkFieldHasErrorStyling: false,
         },
       ])
     })
