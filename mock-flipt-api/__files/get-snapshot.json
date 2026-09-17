@@ -26,6 +26,17 @@
       "rollouts": []
     },
     {
+      "key": "ui-newStandardLicenceConditions",
+      "name": "",
+      "description": "",
+      "enabled": true,
+      "type": "BOOLEAN_FLAG_TYPE",
+      "createdAt": "2026-07-21T14:56:55.272567Z",
+      "updatedAt": "2026-07-21T14:56:55.272567Z",
+      "rules": [],
+      "rollouts": []
+    },
+    {
       "key": "ui-ppcsIndeterminateJourney",
       "name": "",
       "description": "",

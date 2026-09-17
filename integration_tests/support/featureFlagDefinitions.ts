@@ -19,6 +19,12 @@ export default [
     enabled: false,
   },
   {
+    name: 'New Standard Licence Conditions',
+    key: 'ui-newStandardLicenceConditions',
+    description: 'Enables the new set of standard licence conditions',
+    enabled: false,
+  },
+  {
     name: 'PPCS Indeterminate Journey',
     key: 'ui-ppcsIndeterminateJourney',
     description: 'Enables the indeterminate sentence journey for CaR PPCS users',
@@ -26,6 +32,6 @@ export default [
   },
   // Note that the flags listed in this file will be recognised as flags in the integration tests, but the enabled value
   // won't have any effect. It looks like this is due to the evaluation step (featureFlagService.isFeatureEnabled) not
-  // being mocked or influence in any way for the tests, resulting in their results not having any 'enabled' value. This
-  // in turns result in all flags having a default value of false for the tests (probably OK in most cases).
+  // being mocked or influenced in any way for the tests, resulting in their results not having any 'enabled' value.
+  // This in turn results in all flags having a default value of false for the tests (probably OK in most cases).
 ]
