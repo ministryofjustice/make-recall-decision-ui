@@ -1,11 +1,11 @@
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { startPage } from './startPage'
 import { ppudSearchActiveUsers, searchMappedUsers } from '../../data/makeDecisionApiClient'
-import searchMappedUsersApiResponse from '../../../api/responses/searchMappedUsers.json'
 import ppudSearchActiveUsersApiResponse from '../../../api/responses/ppudSearchActiveUsers.json'
 import * as caching from '../../data/fetchFromCacheOrApi'
 import config from '../../config'
 import { isDateTimeRangeCurrent } from '../../utils/utils'
+import { PpudUserMappingGenerator } from '../../../data/recommendations/ppcs/ppudUserMappingGenerator'
 
 jest.mock('../../data/makeDecisionApiClient')
 
@@ -29,7 +29,7 @@ describe('startPage', () => {
 
   it('with PPCS role and caches ppud user', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true, username: 'username', userId: '123' } } })
-    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
+    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce({ ppudUserMapping: PpudUserMappingGenerator.generate() })
     ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce(ppudSearchActiveUsersApiResponse)
     const spy = jest.spyOn(caching, 'fetchFromCacheOrApi')
     spy.mockReturnValueOnce(Promise.resolve(ppudSearchActiveUsersApiResponse))
@@ -59,7 +59,7 @@ describe('startPage', () => {
 
   it('with PPCS role and mapped user but no active ppud user', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
-    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
+    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce({ ppudUserMapping: PpudUserMappingGenerator.generate() })
     ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce({ results: [] })
     await startPage(mockReq(), res)
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
@@ -68,7 +68,7 @@ describe('startPage', () => {
 
   it('with PPCS role ensure notification fields returned depending on config', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
-    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
+    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce({ ppudUserMapping: PpudUserMappingGenerator.generate() })
     ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce({ results: [] })
     await startPage(mockReq(), res)
     expect(res.locals.maintenanceBanner).toEqual({
