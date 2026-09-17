@@ -25,7 +25,7 @@ export const startPage = async (req: Request, res: Response): Promise<Response |
     if (mappingRes.ppudUserMapping) {
       const ppudUserRes = await fetchFromCacheOrApi({
         fetchDataFn: async () => {
-          return ppudSearchActiveUsers(token, mappingRes.ppudUserMapping.userName, null)
+          return ppudSearchActiveUsers(token, mappingRes.ppudUserMapping.ppudUserName, null)
         },
         checkWhetherToCacheDataFn: apiResponse => apiResponse.results.length > 0,
         userId,
