@@ -20,6 +20,14 @@ generic-service:
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: false
     FEATURE_FLAGFTR56ENABLED: "2026-03-30T23:00Z" # Midnight BST on 31st March 2026
     PPUD_URL: "https://www.ppud.justice.gov.uk"
+    MAINTENANCE_BANNER_HEADER: "Scheduled maintenance"
+    MAINTENANCE_BANNER_BODY: "Consider a recall will be unavailable between 6pm and 7pm on Monday 21st September 2026. This is so we can update our database."
+    # datetimes must be written in ISO format eg/YYYY-MM-DDTHH:MM:SS
+    MAINTENANCE_BANNER_START_DATE_TIME: "2026-09-16T00:00:00"
+    MAINTENANCE_BANNER_END_DATE_TIME: "2026-09-21T19:00:00"
+    MAINTENANCE_PAGE_BODY: Please follow your business continuity procedures to deal with recalls.
+    MAINTENANCE_PAGE_START_DATE_TIME: "2026-09-21T18:00:00"
+    MAINTENANCE_PAGE_END_DATE_TIME: "2026-09-21T19:00:00"
 
   allowlist:
     north_shields_user: 194.33.192.1/24
