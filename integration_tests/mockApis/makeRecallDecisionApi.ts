@@ -53,6 +53,29 @@ const mockUpdate = ({
     },
   })
 
+const mockDelete = ({
+  urlPathPattern,
+  statusCode = 200,
+  response,
+}: {
+  urlPathPattern: string
+  statusCode: number
+  response: unknown
+}) =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPathPattern,
+    },
+    response: {
+      status: statusCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: response,
+    },
+  })
+
 export const getPersonsByCrn = ({ statusCode, response }) =>
   mockGet({
     urlPathPattern: routes.personSearch,
@@ -159,18 +182,10 @@ export const uploadSupportingDocument = ({ statusCode = 200, response }: { statu
   })
 
 export const deleteSupportingDocument = ({ statusCode = 200, response }: { statusCode?; response }) =>
-  stubFor({
-    request: {
-      method: 'DELETE',
-      urlPathPattern: `${routes.recommendations}/(.*)/documents/(.*)`,
-    },
-    response: {
-      status: statusCode,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: response,
-    },
+  mockDelete({
+    urlPathPattern: `${routes.recommendations}/(.*)/documents/(.*)`,
+    statusCode,
+    response,
   })
 
 export const downloadSupportingDocument = ({ statusCode = 200, response }: { statusCode?; response }) =>
@@ -288,6 +303,41 @@ export const searchMappedUsers = ({ statusCode = 200, response }: { statusCode?;
 export const ppudSearchActiveUsers = ({ statusCode = 200, response }: { statusCode?; response }) =>
   mockUpdate({
     urlPathPattern: `/ppud/user/search`,
+    statusCode,
+    response,
+  })
+
+export const ppudUserMappings = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockGet({
+    urlPathPattern: `/ppud-user-mappings`,
+    statusCode,
+    response,
+  })
+
+export const ppudUserMappingById = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockGet({
+    urlPathPattern: `/ppud-user-mappings/(.*)`,
+    statusCode,
+    response,
+  })
+
+export const createPpudUserMapping = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `/ppud-user-mappings`,
+    statusCode,
+    response,
+  })
+
+export const updatePpudUserMapping = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockUpdate({
+    urlPathPattern: `/ppud-user-mappings/(.*)`,
+    statusCode,
+    response,
+  })
+
+export const deletePpudUserMapping = ({ statusCode = 200, response }: { statusCode?; response }) =>
+  mockDelete({
+    urlPathPattern: `/ppud-user-mappings/(.*)`,
     statusCode,
     response,
   })

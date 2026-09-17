@@ -40,6 +40,7 @@ import { OffenderMovement } from '../@types/make-recall-decision-api/models/pris
 import { OffenderMovementResponse } from '../@types/make-recall-decision-api/models/prison-api/OffenderMovementResponse'
 import { EstablishmentMap } from '../@types/make-recall-decision-api/models/prison-api/EstablishmentMap'
 import { PrisonSentenceSequence } from '../@types/make-recall-decision-api/models/prison-api/PrisonSentenceSequence'
+import { PpudUserMapping } from '../@types/make-recall-decision-api/models/PpudUserMapping'
 
 function restClient(token?: string): RestClient {
   return new RestClient('Make recall decision API Client', config.apis.makeRecallDecisionApi, token)
@@ -533,4 +534,43 @@ export const searchMappedUsers = (userName: string, token: string): Promise<Ppud
     path: `${routes.searchMappedUser}`,
     data: body,
   }) as Promise<PpudUserMappingResponse>
+}
+
+export const getPpudUserMappings = (token: string): Promise<PpudUserMapping[]> => {
+  return restClient(token).get({
+    path: `${routes.userMapping}`,
+  }) as Promise<PpudUserMapping[]>
+}
+
+export const getPpudUserMappingById = (id: string, token: string): Promise<PpudUserMapping> => {
+  return restClient(token).get({
+    path: `${routes.userMapping}/${id}`,
+  }) as Promise<PpudUserMapping>
+}
+
+export const createPpudUserMapping = (
+  ppudUserMappingFull: PpudUserMapping,
+  token: string,
+): Promise<PpudUserMapping> => {
+  return restClient(token).post({
+    path: `${routes.userMapping}`,
+    data: ppudUserMappingFull,
+  }) as Promise<PpudUserMapping>
+}
+
+export const deletePpudUserMappingById = (id: string, token: string): Promise<void> => {
+  return restClient(token).delete({
+    path: `${routes.userMapping}/${id}`,
+  }) as Promise<void>
+}
+
+export const updatePpudUserMapping = (
+  id: string,
+  ppudUserMappingFull: PpudUserMapping,
+  token: string,
+): Promise<PpudUserMapping> => {
+  return restClient(token).put({
+    path: `${routes.userMapping}/${id}`,
+    data: ppudUserMappingFull,
+  }) as Promise<PpudUserMapping>
 }

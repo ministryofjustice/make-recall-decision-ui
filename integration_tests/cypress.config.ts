@@ -21,6 +21,7 @@ import {
   getUser,
   ppcsSearch,
   ppudSearchActiveUsers,
+  ppudUserMappings,
   prisonSentences,
   searchForPrisonOffender,
   searchMappedUsers,
@@ -28,6 +29,10 @@ import {
   searchPpud,
   updateRecommendation,
   updateStatuses,
+  ppudUserMappingById,
+  createPpudUserMapping,
+  updatePpudUserMapping,
+  deletePpudUserMapping,
 } from './mockApis/makeRecallDecisionApi'
 import getFlags from './mockApis/flipt'
 import { readBase64File, readPdf } from './plugins/readFiles'
@@ -89,6 +94,11 @@ export default defineConfig({
         downloadSupportingDocument,
         searchMappedUsers,
         ppudSearchActiveUsers,
+        ppudUserMappings,
+        ppudUserMappingById,
+        createPpudUserMapping,
+        updatePpudUserMapping,
+        deletePpudUserMapping,
         getFlags,
       })
       return config

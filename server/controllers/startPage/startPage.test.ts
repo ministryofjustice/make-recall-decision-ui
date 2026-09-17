@@ -16,6 +16,7 @@ describe('startPage', () => {
     expect(res.locals.searchEndpoint).toEqual('/search-by-name')
     expect(res.render).toHaveBeenCalledWith('pages/startPage')
   })
+
   it('ensure notification fields returned depending on config', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: false } } })
     await startPage(mockReq(), res)
@@ -25,6 +26,7 @@ describe('startPage', () => {
       isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
     })
   })
+
   it('with PPCS role and caches ppud user', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true, username: 'username', userId: '123' } } })
     ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
@@ -45,6 +47,7 @@ describe('startPage', () => {
     })
     expect(res.locals.validMappingAndPpudUser).toEqual(true)
   })
+
   it('with PPCS role and no mapped user', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
     ;(searchMappedUsers as jest.Mock).mockReturnValueOnce({ ppudUserMapping: null })
@@ -53,6 +56,7 @@ describe('startPage', () => {
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
     expect(res.locals.validMappingAndPpudUser).toEqual(undefined)
   })
+
   it('with PPCS role and mapped user but no active ppud user', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
     ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
@@ -61,6 +65,7 @@ describe('startPage', () => {
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
     expect(res.locals.validMappingAndPpudUser).toEqual(false)
   })
+
   it('with PPCS role ensure notification fields returned depending on config', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
     ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
@@ -71,5 +76,11 @@ describe('startPage', () => {
       bodyContent: config.maintenanceBanner.body,
       isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
     })
+  })
+
+  it('with PPCS admin role', async () => {
+    const res = mockRes({ locals: { user: { hasPpcsRole: false, hasPpcsAdminRole: true } } })
+    await startPage(mockReq(), res)
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/ppudUserMapping/ppudUserMappings')
   })
 })
