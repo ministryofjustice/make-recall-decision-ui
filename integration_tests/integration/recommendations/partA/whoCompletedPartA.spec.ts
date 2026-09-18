@@ -4,6 +4,9 @@ import { RecommendationResponseGenerator } from '../../../../data/recommendation
 import config from '../../../../server/config'
 import { testStandardBackLink } from '../../../componentTests/backLink.tests'
 import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
+import { testFormGroup } from '../../../componentTests/formGroup.tests'
+import testRadioButtons from '../../../componentTests/radioButtons.tests'
+import testContinueButton from '../../../componentTests/continueButton.tests'
 
 context('Who Completed Part A Page', () => {
   const recommendationId = faker.number.int()
@@ -28,32 +31,77 @@ context('Who Completed Part A Page', () => {
 
       cy.pageHeading().should('equal', 'Who completed this Part A?')
 
-      cy.get('#name').should('have.attr', 'type', 'text')
-      cy.get('label[for="name"]').should('contain.text', 'Name')
+      const { whoCompletedPartA } = recommendation
+      testFormGroup(cy.get('#name').closest('.govuk-form-group'), {
+        id: 'name',
+        label: 'Name',
+        name: 'name',
+        value: whoCompletedPartA.name,
+      })
 
-      cy.get('#jobTitle').should('exist')
-      cy.get('label[for="jobTitle"]').should('contain.text', 'Job title')
+      testFormGroup(cy.get('#jobTitle').closest('.govuk-form-group'), {
+        id: 'jobTitle',
+        label: 'Job title',
+        name: 'jobTitle',
+        value: whoCompletedPartA.jobTitle,
+        element: 'select',
+      })
 
-      cy.get('#email').should('have.attr', 'type', 'email')
-      cy.get('label[for="email"]').should('contain.text', 'Email')
+      testFormGroup(cy.get('#email').closest('.govuk-form-group'), {
+        id: 'email',
+        label: 'Email',
+        name: 'email',
+        value: whoCompletedPartA.email,
+      })
 
-      cy.get('#telephone').should('have.attr', 'type', 'tel')
-      cy.get('label[for="telephone"]').should('contain.text', 'Telephone')
+      testFormGroup(cy.get('#telephone').closest('.govuk-form-group'), {
+        id: 'telephone',
+        label: 'Telephone',
+        name: 'telephone',
+        value: whoCompletedPartA.telephone,
+      })
       cy.get('#telephone-hint').should('contain.text', 'PPCS may use this number to ask queries')
 
-      cy.get('#region').should('exist')
-      cy.get('label[for="region"]').should('contain.text', 'Region')
+      testFormGroup(cy.get('#region').closest('.govuk-form-group'), {
+        id: 'region',
+        label: 'Region',
+        name: 'region',
+        value: whoCompletedPartA.region,
+        element: 'select',
+      })
 
-      cy.get('#localDeliveryUnit').should('have.attr', 'type', 'text')
-      cy.get('label[for="localDeliveryUnit"]').should('contain.text', 'Local Delivery Unit')
+      testFormGroup(cy.get('#localDeliveryUnit').closest('.govuk-form-group'), {
+        id: 'localDeliveryUnit',
+        label: 'Local Delivery Unit',
+        name: 'localDeliveryUnit',
+        value: whoCompletedPartA.localDeliveryUnit,
+      })
 
-      cy.get('.govuk-radios').should('exist')
-      cy.get('.govuk-fieldset__legend').should(
-        'contain.text',
-        `Is this person the probation practitioner for ${recommendation.personOnProbation.name}?`,
-      )
+      testRadioButtons(cy.get('#isPersonProbationPractitionerForOffender').closest('.govuk-form-group'), {
+        legend: {
+          text: `Is this person the probation practitioner for ${recommendation.personOnProbation.name}?`,
+        },
+        options: [
+          {
+            input: {
+              id: 'isPersonProbationPractitionerForOffender',
+              value: 'YES',
+              checked: whoCompletedPartA.isPersonProbationPractitionerForOffender === true,
+            },
+            label: { text: 'Yes' },
+          },
+          {
+            input: {
+              id: 'isPersonProbationPractitionerForOffender-2',
+              value: 'NO',
+              checked: whoCompletedPartA.isPersonProbationPractitionerForOffender === false,
+            },
+            label: { text: 'No' },
+          },
+        ],
+      })
 
-      cy.get('button').should('have.class', 'govuk-button').should('contain.text', 'Continue')
+      testContinueButton()
     })
 
     it('There are no previous responses to the questions - The input areas are empty', () => {
@@ -76,12 +124,45 @@ context('Who Completed Part A Page', () => {
 
       cy.visit(testPageUrl)
 
-      cy.get('#name').should('have.value', recommendation.whoCompletedPartA.name)
-      cy.get('#jobTitle').should('have.value', recommendation.whoCompletedPartA.jobTitle)
-      cy.get('#email').should('have.value', recommendation.whoCompletedPartA.email)
-      cy.get('#telephone').should('have.value', recommendation.whoCompletedPartA.telephone)
-      cy.get('#region').should('have.value', recommendation.whoCompletedPartA.region)
-      cy.get('#localDeliveryUnit').should('have.value', recommendation.whoCompletedPartA.localDeliveryUnit)
+      const { whoCompletedPartA } = recommendation
+      testFormGroup(cy.get('#name').closest('.govuk-form-group'), {
+        id: 'name',
+        label: 'Name',
+        name: 'name',
+        value: whoCompletedPartA.name,
+      })
+      testFormGroup(cy.get('#jobTitle').closest('.govuk-form-group'), {
+        id: 'jobTitle',
+        label: 'Job title',
+        name: 'jobTitle',
+        value: whoCompletedPartA.jobTitle,
+        element: 'select',
+      })
+      testFormGroup(cy.get('#email').closest('.govuk-form-group'), {
+        id: 'email',
+        label: 'Email',
+        name: 'email',
+        value: whoCompletedPartA.email,
+      })
+      testFormGroup(cy.get('#telephone').closest('.govuk-form-group'), {
+        id: 'telephone',
+        label: 'Telephone',
+        name: 'telephone',
+        value: whoCompletedPartA.telephone,
+      })
+      testFormGroup(cy.get('#region').closest('.govuk-form-group'), {
+        id: 'region',
+        label: 'Region',
+        name: 'region',
+        value: whoCompletedPartA.region,
+        element: 'select',
+      })
+      testFormGroup(cy.get('#localDeliveryUnit').closest('.govuk-form-group'), {
+        id: 'localDeliveryUnit',
+        label: 'Local Delivery Unit',
+        name: 'localDeliveryUnit',
+        value: whoCompletedPartA.localDeliveryUnit,
+      })
     })
 
     it('No responses provided and submit button clicked - errors displayed', () => {

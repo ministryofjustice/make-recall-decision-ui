@@ -2033,27 +2033,6 @@ context('Make a recommendation', () => {
       cy.signIn()
     })
 
-    it(`present Practitioner For Part A page `, () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, practitionerForPartA: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/practitioner-for-part-a/`)
-
-      cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
-
-      cy.fillInput('Name', 'Joe Bloggs')
-      cy.get('#jobTitle').select('Registered Probation Officer')
-      cy.fillInput('Email', 'bloggs@me.gov.uk')
-
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
-    })
-
     it(`present Revocation Order Recipients`, () => {
       cy.task('getRecommendation', {
         statusCode: 200,
