@@ -22,7 +22,9 @@
     "dist",
     "scripts",
     "coverage",
-    "esbuild"
+    "esbuild",
+    "tests/**/*.ts",
+    "tests/**/*.page.ts"
   ],
   "include": ["**/*.js", "**/*.ts"]
 }
