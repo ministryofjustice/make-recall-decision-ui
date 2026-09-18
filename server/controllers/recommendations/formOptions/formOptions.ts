@@ -38,7 +38,7 @@ export const formOptions: FormOptionsType = {
   recallTypeIndeterminate,
   recallTypeExtended,
   recallTypeIndeterminateApi,
-  standardLicenceConditions,
+  standardLicenceConditions: standardLicenceConditions(false),
   custodyStatus,
   alternativesToRecallTried,
   vulnerabilities,
@@ -55,20 +55,34 @@ export const formOptions: FormOptionsType = {
   }),
 }
 
-export const isValueValid = (val: string, optionId: string) =>
-  Boolean(formOptions[optionId].find((option: UiListItem) => option.value === val))
+export const getFormOptions = (newStandardLicenceConditions: boolean): FormOptionsType => ({
+  ...formOptions,
+  standardLicenceConditions: standardLicenceConditions(newStandardLicenceConditions),
+})
+
+export const isValueValid = (val: string, optionId: string, newStandardLicenceConditions = false) => {
+  const options =
+    optionId === 'standardLicenceConditions'
+      ? getFormOptions(newStandardLicenceConditions)[optionId]
+      : formOptions[optionId]
+
+  return Boolean(options.find((option: UiListItem) => option.value === val))
+}
 
 export const optionTextFromValue = (val: string, optionId: string) =>
   formOptions[optionId].find((option: UiListItem) => option.value === val)?.text
 
 export const renderFormOptions = (renderParams: Record<string, string>): Record<string, UiListItem[]> => {
   const copy: Record<string, UiListItem[]> = {}
+
   Object.keys(formOptions).forEach(key => {
     const options = formOptions[key]
+
     copy[key] = options.map((option: UiListItem) => ({
       ...option,
       text: renderTemplateString(option.text, renderParams),
     }))
   })
+
   return copy
 }

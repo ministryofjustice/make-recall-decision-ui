@@ -1,5 +1,5 @@
 import getDisplayValueForOption from './getDisplayValueForOption'
-import { formOptions } from '../formOptions/formOptions'
+import { getFormOptions, formOptions } from '../formOptions/formOptions'
 
 describe('getDisplayValueForOption', () => {
   it('returns the text label for the provided value', () => {
@@ -8,7 +8,10 @@ describe('getDisplayValueForOption', () => {
   })
 
   it("returns the provided value if it's is not found in options", () => {
-    const label = getDisplayValueForOption({ value: 'FIXED_TERM', allOptions: formOptions.standardLicenceConditions })
+    const label = getDisplayValueForOption({
+      value: 'FIXED_TERM',
+      allOptions: getFormOptions(false).standardLicenceConditions,
+    })
     expect(label).toEqual('FIXED_TERM')
   })
 })

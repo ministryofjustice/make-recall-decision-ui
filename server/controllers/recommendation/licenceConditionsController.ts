@@ -3,7 +3,7 @@ import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionA
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import inputDisplayValuesLicenceConditions from '../recommendations/licenceConditions/inputDisplayValues'
 import { CaseSummaryOverviewResponseV2 } from '../../@types/make-recall-decision-api/models/CaseSummaryOverviewResponseV2'
-import { formOptions, isValueValid } from '../recommendations/formOptions/formOptions'
+import { getFormOptions, isValueValid } from '../recommendations/formOptions/formOptions'
 import { isCaseRestrictedOrExcluded, isDefined } from '../../utils/utils'
 import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
@@ -51,6 +51,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }),
     backLinkUrl,
     backLinkText,
+    standardLicenceConditions: getFormOptions(featureFlags.newStandardLicenceConditions).standardLicenceConditions,
   }
 
   const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(recommendation.crn, 'licence-conditions', token)
@@ -64,7 +65,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       hasMultipleActiveCustodial:
         json.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
     },
-    standardLicenceConditions: formOptions.standardLicenceConditions,
+    standardLicenceConditions: getFormOptions(featureFlags.newStandardLicenceConditions).standardLicenceConditions,
   }
 
   raiseWarningBannerEvents(
@@ -102,7 +103,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
   let valuesToSave
   if (caseSummary?.cvlLicence) {
     const allSelectedConditions = isDefined(licenceConditionsBreached) ? makeArray(licenceConditionsBreached) : []
-
     if (allSelectedConditions.length === 0 && !hasAdditionalLicenceConditionsText) {
       req.session.errors = [error('noLicenceConditionsSelected')]
       return res.redirect(303, req.originalUrl)
@@ -173,7 +173,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       })
 
     const invalidStandardCondition = selectedStandardConditions.some(
-      id => !isValueValid(id, 'standardLicenceConditions'),
+      id => !isValueValid(id, 'standardLicenceConditions', flags.newStandardLicenceConditions),
     )
 
     if (
@@ -210,7 +210,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       licenceConditionsBreached: {
         standardLicenceConditions: {
           selected: selectedStandardConditions,
-          allOptions: cleanseUiList(formOptions.standardLicenceConditions),
+          allOptions: cleanseUiList(getFormOptions(false).standardLicenceConditions),
         },
         additionalLicenceConditions: {
           selectedOptions: selectedAdditionalLicenceConditions,

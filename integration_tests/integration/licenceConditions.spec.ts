@@ -1,5 +1,5 @@
 import { sharedPaths } from '../../server/routes/paths/shared.paths'
-import { formOptions } from '../../server/controllers/recommendations/formOptions/formOptions'
+import { getFormOptions } from '../../server/controllers/recommendations/formOptions/formOptions'
 import { caseTemplate } from '../fixtures/CaseTemplateBuilder'
 import {
   basicActiveConvictionTemplate,
@@ -185,7 +185,7 @@ context('Licence conditions', () => {
     cy.pageHeading().should('equal', 'Licence conditions for Joe')
     // Standard licence conditions
     cy.clickButton('Show', { parent: '[data-qa="standard"]' })
-    formOptions.standardLicenceConditions.forEach(condition => cy.getElement(condition.text).should('exist'))
+    getFormOptions(false).standardLicenceConditions.forEach(condition => cy.getElement(condition.text).should('exist'))
     // Additional licence conditions
     cy.getElement('Burglary - 05714').should('exist')
     cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 1)
