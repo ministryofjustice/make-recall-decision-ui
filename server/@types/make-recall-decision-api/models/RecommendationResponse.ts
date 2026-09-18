@@ -126,6 +126,7 @@ export namespace RecommendationResponse {
 
 export type WhoCompletedPartA = {
   name?: string;
+  jobTitle?: string;
   email?: string;
   telephone?: string;
   region?: string;
@@ -135,6 +136,7 @@ export type WhoCompletedPartA = {
 
 export type PractitionerForPartA = {
   name?: string;
+  jobTitle?: string;
   email?: string;
   telephone?: string;
   region?: string;
