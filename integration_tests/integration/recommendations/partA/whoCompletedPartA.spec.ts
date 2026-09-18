@@ -17,7 +17,7 @@ context('Who Completed Part A Page', () => {
   })
 
   describe('Page Data', () => {
-    const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.whoCompletedPartA}`
+    const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.whoCompletedPartA}?newStandardLicenceConditions=1`
 
     it('Standard page load', () => {
       const recommendation = RecommendationResponseGenerator.generate()
@@ -194,6 +194,21 @@ context('Who Completed Part A Page', () => {
           checkFieldHasErrorStyling: false,
         },
       ])
+    })
+  })
+
+  describe('When newStandardLicenceConditions flag is off', () => {
+    const testPageUrlNoFlag = `/recommendations/${recommendationId}/${ppPaths.whoCompletedPartA}`
+
+    it('does not show the job title field', () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+
+      cy.visit(testPageUrlNoFlag)
+
+      cy.get('#name').should('exist')
+      cy.get('#jobTitle').should('not.exist')
+      cy.get('#email').should('exist')
     })
   })
 })
