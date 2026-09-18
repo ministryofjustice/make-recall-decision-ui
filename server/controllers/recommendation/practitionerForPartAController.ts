@@ -5,6 +5,7 @@ import strings from '../../textStrings/en'
 import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import regionEnum from '../recommendations/formOptions/region'
+import jobTitleEnum from '../recommendations/formOptions/jobTitle'
 import { isEmailValid, isGovUkEmail } from '../../utils/validate-formats'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -20,10 +21,12 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     inputDisplayValues: {
       name: isDefined(errors) ? unsavedValues?.name : recommendation.practitionerForPartA?.name,
+      jobTitle: isDefined(errors) ? unsavedValues?.jobTitle : recommendation.practitionerForPartA?.jobTitle,
       email: isDefined(errors) ? unsavedValues?.email : recommendation.practitionerForPartA?.email,
       telephone: isDefined(errors) ? unsavedValues?.telephone : recommendation.practitionerForPartA?.telephone,
     },
     regions: regionEnum,
+    jobTitles: jobTitleEnum,
   }
 
   res.render(`pages/recommendations/practitionerForPartA`)
@@ -32,7 +35,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { name, email, telephone } = req.body
+  const { name, jobTitle, email, telephone } = req.body
 
   const {
     flags,
@@ -47,6 +50,17 @@ async function post(req: Request, res: Response, _: NextFunction) {
     errors.push(
       makeErrorObject({
         id: 'name',
+        text: strings.errors[errorId],
+        errorId,
+      }),
+    )
+  }
+
+  if (!isMandatoryTextValue(jobTitle)) {
+    const errorId = 'missingPractitionerForPartAJobTitle'
+    errors.push(
+      makeErrorObject({
+        id: 'jobTitle',
         text: strings.errors[errorId],
         errorId,
       }),
@@ -86,6 +100,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     req.session.errors = errors
     req.session.unsavedValues = {
       name,
+      jobTitle,
       email,
       telephone,
     }
@@ -97,6 +112,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       practitionerForPartA: {
         name,
+        jobTitle,
         email,
         telephone,
       },

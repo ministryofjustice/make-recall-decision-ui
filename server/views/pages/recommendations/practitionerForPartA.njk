@@ -34,6 +34,17 @@
             value: inputDisplayValues.name,
             errorMessage: errorMessage(errors.name)
           }) }}
+          {{ govukSelect({
+            id: "jobTitle",
+            name: "jobTitle",
+            label: {
+              text: "Job title",
+              classes: "govuk-label--m"
+            },
+            value: inputDisplayValues.jobTitle,
+            items: jobTitles,
+            errorMessage: errorMessage(errors.jobTitle)
+          }) }}
           {{ govukInput({
             label: {
               text: "Email",
