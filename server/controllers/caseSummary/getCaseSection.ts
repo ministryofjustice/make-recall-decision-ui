@@ -20,7 +20,7 @@ import { RecommendationsResponse } from '../../@types/make-recall-decision-api'
 import transformRecommendations from './recommendations/transformRecommendations'
 import { ContactHistoryFilters } from '../../@types/contacts'
 import { CaseSectionId } from '../../@types/pagesForms'
-import { formOptions } from '../recommendations/formOptions/formOptions'
+import { getFormOptions } from '../recommendations/formOptions/formOptions'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { LastCompletedRecommendationsResponse } from '../../@types/make-recall-decision-api/models/LastCompletedRecommendationsResponse'
 
@@ -89,7 +89,7 @@ const getCaseSection = async (
             !!caseSummaryRaw.activeConvictions &&
             caseSummaryRaw.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
         },
-        standardLicenceConditions: formOptions.standardLicenceConditions,
+        standardLicenceConditions: getFormOptions(_.newStandardLicenceConditions).standardLicenceConditions,
       }
       break
     case 'contact-history':

@@ -23,7 +23,7 @@ import { appInsightsTimingMetric } from '../../monitoring/azureAppInsights'
 import { createRedisClient, RedisClient } from '../../data/redisClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { formOptions } from '../recommendations/formOptions/formOptions'
+import { getFormOptions } from '../recommendations/formOptions/formOptions'
 import raiseWarningBannerEvents from '../raiseWarningBannerEvents'
 import createRecommendationBanner from '../../utils/bannerUtils'
 import config from '../../config'
@@ -94,7 +94,9 @@ describe('get', () => {
     expect(res.locals.caseSummary.licenceConvictions.activeCustodial).toStrictEqual(
       caseLicenceConditionsResponse.activeConvictions.filter(conviction => conviction.sentence?.isCustodial),
     )
-    expect(res.locals.caseSummary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
+    expect(res.locals.caseSummary.standardLicenceConditions).toStrictEqual(
+      getFormOptions(false).standardLicenceConditions,
+    )
     expect(res.locals.caseSummary.activeConvictions).toBe(caseLicenceConditionsResponse.activeConvictions)
     expect(raiseWarningBannerEvents).toHaveBeenCalledWith(
       1,

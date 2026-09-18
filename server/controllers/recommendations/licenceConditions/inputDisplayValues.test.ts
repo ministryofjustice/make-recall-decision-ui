@@ -1,12 +1,12 @@
 import inputDisplayValuesLicenceConditions from './inputDisplayValues'
-import { formOptions } from '../formOptions/formOptions'
+import { getFormOptions } from '../formOptions/formOptions'
 
 describe('inputDisplayValuesLicenceConditions', () => {
   const apiValues = {
     licenceConditionsBreached: {
       standardLicenceConditions: {
         selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
-        allOptions: formOptions.standardLicenceConditions,
+        allOptions: getFormOptions(false).standardLicenceConditions,
       },
       additionalLicenceConditions: {
         selectedOptions: [{ mainCatCode: 'NLC5', subCatCode: 'NST14' }],
@@ -67,7 +67,7 @@ describe('inputDisplayValuesLicenceConditions', () => {
         licenceConditionsBreached: {
           standardLicenceConditions: {
             selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
-            allOptions: formOptions.standardLicenceConditions,
+            allOptions: getFormOptions(false).standardLicenceConditions,
           },
         },
       },

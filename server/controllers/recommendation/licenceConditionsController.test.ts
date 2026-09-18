@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import licenceConditionsController from './licenceConditionsController'
-import { formOptions } from '../recommendations/formOptions/formOptions'
+import { getFormOptions } from '../recommendations/formOptions/formOptions'
 import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
 import ppPaths from '../../routes/paths/pp.paths'
@@ -128,7 +128,7 @@ describe('get', () => {
                   ),
                   hasMultipleActiveCustodial: false,
                 },
-                standardLicenceConditions: formOptions.standardLicenceConditions,
+                standardLicenceConditions: getFormOptions(false).standardLicenceConditions,
               })
               if (isApprovedPremisesRoute) {
                 expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
@@ -218,7 +218,7 @@ describe('get', () => {
             const licenceConditionsBreached = {
               standardLicenceConditions: {
                 selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
-                allOptions: formOptions.standardLicenceConditions,
+                allOptions: getFormOptions(false).standardLicenceConditions,
               },
               additionalLicenceConditions: {
                 selectedOptions: [{ mainCatCode: 'NLC5', subCatCode: 'NST14' }],

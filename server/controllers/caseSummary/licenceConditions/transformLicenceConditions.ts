@@ -6,7 +6,7 @@ import {
   UserAccessResponse,
 } from '../../../@types/make-recall-decision-api'
 import { sortListByDateField } from '../../../utils/dates'
-import { formOptions } from '../../recommendations/formOptions/formOptions'
+import { getFormOptions } from '../../recommendations/formOptions/formOptions'
 import { sortList } from '../../../utils/lists'
 import { UiFormOption } from '../../../@types/pagesForms'
 
@@ -63,6 +63,6 @@ export const transformLicenceConditions = (
       hasMultipleActiveCustodial: activeCustodialConvictions.length > 1,
     },
     hasAllConvictionsReleasedOnLicence,
-    standardLicenceConditions: formOptions.standardLicenceConditions,
+    standardLicenceConditions: getFormOptions(false).standardLicenceConditions,
   }
 }
