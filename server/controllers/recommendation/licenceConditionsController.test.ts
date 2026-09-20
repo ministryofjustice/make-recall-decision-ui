@@ -8,6 +8,7 @@ import ppPaths from '../../routes/paths/pp.paths'
 import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
 import { PersonOnProbationGenerator } from '../../../data/recommendations/personOnProbationGenerator'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { cleanseUiList } from '../../utils/lists'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/licenceConditions/transform')
@@ -62,6 +63,15 @@ const TEMPLATE = {
     topupSupervisionStartDate: '2022-06-16',
     topupSupervisionExpiryDate: '2022-06-17',
     standardLicenceConditions: [
+      {
+        code: '9ce9d594-e346-4785-9642-c87e764bee37',
+        text: 'This is a standard licence condition',
+        expandedText: null as string,
+        category: null as string,
+      },
+      null,
+    ],
+    newStandardLicenceConditions: [
       {
         code: '9ce9d594-e346-4785-9642-c87e764bee37',
         text: 'This is a standard licence condition',
@@ -562,6 +572,83 @@ describe('post', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.alternativesTried}`)
     expect(next).not.toHaveBeenCalled() // end of the line for posts.
+  })
+
+  it('post with valid data when new standard licence conditions feature flag is enabled', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+
+    const basePath = `/recommendations/123/`
+
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '1',
+        licenceConditionsBreached: 'standard|GOOD_BEHAVIOUR',
+      },
+    })
+
+    const res = mockRes({
+      locals: {
+        flags: {
+          newStandardLicenceConditions: true,
+        },
+        user: {
+          token: 'token1',
+          username: 'user1',
+          region: 'region1',
+        },
+        recommendation: {
+          personOnProbation: { name: 'Joe Bloggs' },
+        },
+        urlInfo: {
+          basePath,
+        },
+      },
+    })
+
+    const next = mockNext()
+
+    await licenceConditionsController.post(req, res, next)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token',
+      valuesToSave: {
+        activeCustodialConvictionCount: 1,
+        additionalLicenceConditionsText: undefined,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: ['GOOD_BEHAVIOUR'],
+            allOptions: cleanseUiList(formOptions.newStandardLicenceConditions),
+          },
+          additionalLicenceConditions: {
+            selectedOptions: [],
+            allOptions: [
+              {
+                details: undefined,
+                mainCatCode: 'BB4',
+                note: undefined,
+                subCatCode: undefined,
+                title: 'Freedom of movement',
+              },
+              {
+                details: 'On release to be escorted by police to Approved Premises',
+                mainCatCode: 'NLC5',
+                note: undefined,
+                subCatCode: 'NST30',
+                title: 'Poss, own, control, inspect specified items /docs',
+              },
+            ],
+          },
+        },
+      },
+      featureFlags: res.locals.flags,
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.alternativesTried}`)
+    expect(next).not.toHaveBeenCalled()
   })
 
   it('post with valid cvl data', async () => {

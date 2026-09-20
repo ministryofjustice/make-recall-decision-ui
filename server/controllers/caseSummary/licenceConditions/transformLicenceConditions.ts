@@ -38,6 +38,7 @@ export interface TransformedLicenceConditionsResponse {
 
 export const transformLicenceConditions = (
   caseSummary: LicenceConditionsResponse | CaseSummaryOverviewResponse,
+  newStandardLicenceConditions = false,
 ): TransformedLicenceConditionsResponse => {
   let activeConvictions: DecoratedConviction[] = []
   let activeCustodialConvictions: DecoratedConviction[] = []
@@ -63,6 +64,8 @@ export const transformLicenceConditions = (
       hasMultipleActiveCustodial: activeCustodialConvictions.length > 1,
     },
     hasAllConvictionsReleasedOnLicence,
-    standardLicenceConditions: formOptions.standardLicenceConditions,
+    standardLicenceConditions: newStandardLicenceConditions
+      ? formOptions.newStandardLicenceConditions
+      : formOptions.standardLicenceConditions,
   }
 }

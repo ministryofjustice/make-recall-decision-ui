@@ -7,9 +7,13 @@ import {
   RecommendationResponse,
   VulnerabilitiesResponse,
 } from '../../@types/make-recall-decision-api'
+import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('redis')
+jest.mock('./licenceConditions/transformLicenceConditions', () => ({
+  transformLicenceConditions: jest.fn(),
+}))
 
 describe('getCaseSection', () => {
   const crn = ' A1234AB '
@@ -21,6 +25,7 @@ describe('getCaseSection', () => {
   const redisExpire = jest.fn()
 
   beforeEach(() => {
+    jest.clearAllMocks()
     ;(createClient as jest.Mock).mockReturnValue({
       connect: jest.fn().mockResolvedValue(undefined),
       get: redisGet,
@@ -29,6 +34,70 @@ describe('getCaseSection', () => {
       del: redisDel,
       on: jest.fn(),
     })
+  })
+
+  it('passes newStandardLicenceConditions feature flag to transformLicenceConditions for overview', async () => {
+    const apiResponse = {
+      userAccessResponse: {},
+      risk: {
+        riskManagementPlan: {},
+      },
+    }
+
+    const transformedResponse = {
+      ...apiResponse,
+      risk: {
+        riskManagementPlan: {},
+      },
+    }
+
+    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
+    ;(transformLicenceConditions as jest.Mock).mockReturnValue(transformedResponse)
+
+    await getCaseSection(
+      'overview',
+      crn,
+      token,
+      userId,
+      {},
+      {
+        newStandardLicenceConditions: true,
+      },
+    )
+
+    expect(transformLicenceConditions).toHaveBeenCalledWith(apiResponse, true)
+  })
+
+  it('passes false to transformLicenceConditions when newStandardLicenceConditions feature flag is disabled', async () => {
+    const apiResponse = {
+      userAccessResponse: {},
+      risk: {
+        riskManagementPlan: {},
+      },
+    }
+
+    const transformedResponse = {
+      ...apiResponse,
+      risk: {
+        riskManagementPlan: {},
+      },
+    }
+
+    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
+    ;(transformLicenceConditions as jest.Mock).mockReturnValue(transformedResponse)
+
+    await getCaseSection(
+      'overview',
+      crn,
+      token,
+      userId,
+      {},
+      {
+        newStandardLicenceConditions: false,
+      },
+    )
+
+    expect(transformLicenceConditions).toHaveBeenCalledWith(apiResponse, false)
   })
 
   it('caches the contact history response in redis if CRN is not excluded or restricted', async () => {
