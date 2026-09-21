@@ -11,7 +11,7 @@ const createToken = opts => {
     authorities.push(...opts.roles)
   }
   const payload = {
-    user_name: opts.username ?? 'USER1',
+    user_name: opts?.username ?? 'USER1',
     scope: ['read'],
     auth_source: 'nomis',
     authorities,
