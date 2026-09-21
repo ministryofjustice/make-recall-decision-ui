@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import licenceConditionsController from './licenceConditionsController'
+import * as formOptionsModule from '../recommendations/formOptions/formOptions'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
@@ -943,41 +944,70 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 
-  it('post with invalid standard condition', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+  it.each([
+    {
+      newStandardLicenceConditions: true,
+      expectedValidationType: 'newStandardLicenceConditions',
+    },
+    {
+      newStandardLicenceConditions: false,
+      expectedValidationType: 'standardLicenceConditions',
+    },
+  ])(
+    'calls isValueValid with $expectedValidationType when newStandardLicenceConditions=$newStandardLicenceConditions',
+    async ({ newStandardLicenceConditions, expectedValidationType }) => {
+      const isValueValidSpy = jest.spyOn(formOptionsModule, 'isValueValid').mockReturnValue(false)
 
-    const req = mockReq({
-      originalUrl: 'some-url',
-      params: { recommendationId: '123' },
-      body: {
-        crn: 'X098092',
-        activeCustodialConvictionCount: '1',
-        licenceConditionsBreached: 'standard|VALUE',
-      },
-    })
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
 
-    const res = mockRes({
-      locals: {
-        user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/123/` },
-      },
-    })
+      const req = mockReq({
+        originalUrl: 'some-url',
+        params: { recommendationId: '123' },
+        body: {
+          crn: 'X098092',
+          activeCustodialConvictionCount: '1',
+          licenceConditionsBreached: 'standard|VALUE',
+        },
+      })
 
-    await licenceConditionsController.post(req, res, mockNext())
+      const res = mockRes({
+        locals: {
+          user: { token: 'token1' },
+          flags: {
+            newStandardLicenceConditions,
+          },
+          recommendation: {
+            personOnProbation: { name: 'Joe Bloggs' },
+          },
+          urlInfo: {
+            basePath: '/recommendations/123/',
+          },
+        },
+      })
 
-    expect(updateRecommendation).not.toHaveBeenCalled()
-    expect(req.session.errors).toEqual([
-      {
-        errorId: 'noLicenceConditionsSelected',
-        href: '#licenceConditionsBreached',
-        invalidParts: undefined,
-        name: 'licenceConditionsBreached',
-        text: 'Select one or more licence conditions',
-        values: undefined,
-      },
-    ])
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
-  })
+      const next = mockNext()
+
+      await licenceConditionsController.post(req, res, next)
+
+      expect(isValueValidSpy).toHaveBeenCalledWith('VALUE', expectedValidationType)
+
+      expect(updateRecommendation).not.toHaveBeenCalled()
+
+      expect(req.session.errors).toEqual([
+        {
+          errorId: 'noLicenceConditionsSelected',
+          href: '#licenceConditionsBreached',
+          invalidParts: undefined,
+          name: 'licenceConditionsBreached',
+          text: 'Select one or more licence conditions',
+          values: undefined,
+        },
+      ])
+
+      expect(res.redirect).toHaveBeenCalledWith(303, 'some-url')
+      expect(next).not.toHaveBeenCalled()
+
+      isValueValidSpy.mockRestore()
+    },
+  )
 })
