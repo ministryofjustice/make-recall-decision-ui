@@ -50,9 +50,15 @@ jobs:
       - name: Run playwright e2e tests
         working-directory: make-recall-decision-ui
         run: npm run playwright:e2e
-      - name: Upload JUnit results
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - name: publish test report
+        if: ${{ !cancelled() && github.event.repository.visibility == 'public' }}
+        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
         with:
-          name: junit
-          path: make-recall-decision-ui/test_results/playwright/junit.xml
+          artifact: 'npm_integration_test_artifacts_${{ strategy.job-index }}'
+          name: Integration Test Report
+          path: 'test_results/playwright/*.xml'
+          reporter: java-junit
+          fail-on-empty: false
+          fail-on-error: false
+          list-suites: 'failed'
+          list-tests: 'failed'
