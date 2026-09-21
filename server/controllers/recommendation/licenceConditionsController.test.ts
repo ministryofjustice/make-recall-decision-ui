@@ -109,52 +109,70 @@ describe('get', () => {
       ;[true, false].forEach(isApprovedPremisesRoute => {
         if (!(hasFromPageId && isApprovedPremisesRoute)) {
           describe(`on ${isApprovedPremisesRoute ? 'AP' : 'non-AP'} route`, () => {
-            it('load with no data', async () => {
-              ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
+            it.each([true, false])(
+              'load with no data when new standard licence conditions feature flag is %s',
+              async newStandardLicenceConditions => {
+                ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
 
-              const req = isApprovedPremisesRoute
-                ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
-                : mockReq()
-              const urlInfo = UrlInfoGenerator.generate({
-                fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
-              })
-              const res = mockRes({
-                locals: {
-                  recommendation: RecommendationResponseGenerator.generate(),
-                  token: 'token1',
-                  urlInfo,
-                },
-              })
-              const next = mockNext()
-              await licenceConditionsController.get(req, res, next)
+                const req = isApprovedPremisesRoute
+                  ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
+                  : mockReq()
 
-              expect(res.locals.page).toEqual({ id: 'licenceConditions' })
-              expect(res.locals.inputDisplayValues.value).not.toBeDefined()
-              expect(res.locals.caseSummary).toStrictEqual({
-                ...TEMPLATE,
-                licenceConvictions: {
-                  activeCustodial: TEMPLATE.activeConvictions.filter(
-                    conviction => conviction.sentence && conviction.sentence.isCustodial,
-                  ),
-                  hasMultipleActiveCustodial: false,
-                },
-                standardLicenceConditions: formOptions.standardLicenceConditions,
-              })
-              if (isApprovedPremisesRoute) {
-                expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
-                expect(res.locals.backLinkText).toEqual(
-                  `Back to overview for ${res.locals.recommendation.personOnProbation.name}`,
-                )
-              } else if (!hasFromPageId) {
-                expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
-                expect(res.locals.backLinkText).toEqual('Back to Consider a recall questions')
-              } else {
-                expect(res.locals.backLinkUrl).toBeUndefined()
-              }
-              expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
+                const urlInfo = UrlInfoGenerator.generate({
+                  fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
+                })
 
-              expect(next).toHaveBeenCalled()
-            })
+                const res = mockRes({
+                  locals: {
+                    recommendation: RecommendationResponseGenerator.generate(),
+                    token: 'token1',
+                    urlInfo,
+                    flags: {
+                      newStandardLicenceConditions,
+                    },
+                  },
+                })
+
+                const next = mockNext()
+
+                await licenceConditionsController.get(req, res, next)
+
+                const expectedStandardLicenceConditions = newStandardLicenceConditions
+                  ? formOptions.newStandardLicenceConditions
+                  : formOptions.standardLicenceConditions
+
+                expect(res.locals.page).toEqual({ id: 'licenceConditions' })
+                expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+
+                expect(res.locals.standardLicenceConditions).toBe(expectedStandardLicenceConditions)
+
+                expect(res.locals.caseSummary).toStrictEqual({
+                  ...TEMPLATE,
+                  licenceConvictions: {
+                    activeCustodial: TEMPLATE.activeConvictions.filter(
+                      conviction => conviction.sentence && conviction.sentence.isCustodial,
+                    ),
+                    hasMultipleActiveCustodial: false,
+                  },
+                  standardLicenceConditions: expectedStandardLicenceConditions,
+                })
+
+                if (isApprovedPremisesRoute) {
+                  expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
+                  expect(res.locals.backLinkText).toEqual(
+                    `Back to overview for ${res.locals.recommendation.personOnProbation.name}`,
+                  )
+                } else if (!hasFromPageId) {
+                  expect(res.locals.backLinkUrl).toEqual(`${urlInfo.basePath}${ppPaths.taskListConsiderRecall}`)
+                  expect(res.locals.backLinkText).toEqual('Back to Consider a recall questions')
+                } else {
+                  expect(res.locals.backLinkUrl).toBeUndefined()
+                }
+
+                expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
+                expect(next).toHaveBeenCalled()
+              },
+            )
 
             const cvlLicenceConditionsBreached = {
               standardLicenceConditions: {
@@ -314,6 +332,68 @@ describe('get', () => {
       })
     })
   })
+  it.each([true, false])(
+    'builds caseSummary correctly when newStandardLicenceConditions=%s',
+    async newStandardLicenceConditions => {
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
+
+      const req = mockReq()
+
+      const urlInfo = UrlInfoGenerator.generate({
+        fromPageId: ppPaths.taskListConsiderRecall,
+      })
+
+      const res = mockRes({
+        locals: {
+          recommendation: RecommendationResponseGenerator.generate(),
+          user: {
+            username: 'USER1',
+            region: 'N07',
+            token: 'token1',
+          },
+          urlInfo,
+          flags: {
+            newStandardLicenceConditions,
+          },
+        },
+      })
+
+      const next = mockNext()
+
+      await licenceConditionsController.get(req, res, next)
+
+      const expectedActiveCustodial = TEMPLATE.activeConvictions.filter(
+        conviction => conviction.sentence && conviction.sentence.isCustodial,
+      )
+
+      const expectedHasMultipleActiveCustodial =
+        TEMPLATE.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1
+
+      const expectedStandardLicenceConditions = newStandardLicenceConditions
+        ? formOptions.newStandardLicenceConditions
+        : formOptions.standardLicenceConditions
+
+      expect(res.locals.caseSummary).toStrictEqual({
+        ...TEMPLATE,
+        licenceConvictions: {
+          activeCustodial: expectedActiveCustodial,
+          hasMultipleActiveCustodial: expectedHasMultipleActiveCustodial,
+        },
+        standardLicenceConditions: expectedStandardLicenceConditions,
+      })
+
+      expect(res.locals.caseSummary.licenceConvictions.activeCustodial).toEqual(expectedActiveCustodial)
+
+      expect(res.locals.caseSummary.licenceConvictions.hasMultipleActiveCustodial).toBe(
+        expectedHasMultipleActiveCustodial,
+      )
+
+      expect(res.locals.caseSummary.standardLicenceConditions).toBe(expectedStandardLicenceConditions)
+
+      expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
+      expect(next).toHaveBeenCalled()
+    },
+  )
 })
 
 describe('post', () => {
@@ -478,178 +558,85 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/ap-recall-rationale`)
   })
 
-  it('post with valid data', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
-    const basePath = `/recommendations/123/`
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        crn: 'X098092',
-        activeCustodialConvictionCount: '1',
-        licenceConditionsBreached: 'standard|NAME_CHANGE',
-      },
-    })
+  it.each([true, false])(
+    'post with valid data when new standard licence conditions feature flag is %s',
+    async newStandardLicenceConditions => {
+      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
 
-    const res = mockRes({
-      token: 'token1',
-      locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath },
-      },
-    })
-    const next = mockNext()
+      const basePath = `/recommendations/123/`
 
-    await licenceConditionsController.post(req, res, next)
+      const req = mockReq({
+        params: { recommendationId: '123' },
+        body: {
+          crn: 'X098092',
+          activeCustodialConvictionCount: '1',
+          licenceConditionsBreached: `standard|${newStandardLicenceConditions ? 'GOOD_BEHAVIOUR' : 'NAME_CHANGE'}`,
+        },
+      })
 
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token1',
-      valuesToSave: {
-        activeCustodialConvictionCount: 1,
-        licenceConditionsBreached: {
-          standardLicenceConditions: {
-            selected: ['NAME_CHANGE'],
-            allOptions: [
-              {
-                value: 'GOOD_BEHAVIOUR',
-                text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-              },
-              { value: 'NO_OFFENCE', text: 'Not commit any offence' },
-              {
-                value: 'KEEP_IN_TOUCH',
-                text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
-              },
-              {
-                value: 'SUPERVISING_OFFICER_VISIT',
-                text: 'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
-              },
-              {
-                value: 'ADDRESS_APPROVED',
-                text: 'Reside permanently at an address approved by the supervising officer and obtain the prior permission of the supervising officer for any stay of one or more nights at a different address',
-              },
-              {
-                value: 'NO_WORK_UNDERTAKEN',
-                text: 'Not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
-              },
-              {
-                value: 'NO_TRAVEL_OUTSIDE_UK',
-                text: 'Not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
-              },
-              {
-                value: 'NAME_CHANGE',
-                text: 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence',
-              },
-              {
-                value: 'CONTACT_DETAILS',
-                text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
-              },
-            ],
+      const res = mockRes({
+        token: 'token1',
+        locals: {
+          flags: {
+            newStandardLicenceConditions,
           },
-          additionalLicenceConditions: {
-            selectedOptions: [],
-            allOptions: [
-              {
-                details: undefined,
-                mainCatCode: 'BB4',
-                note: undefined,
-                subCatCode: undefined,
-                title: 'Freedom of movement',
-              },
-              {
-                details: 'On release to be escorted by police to Approved Premises',
-                mainCatCode: 'NLC5',
-                note: undefined,
-                subCatCode: 'NST30',
-                title: 'Poss, own, control, inspect specified items /docs',
-              },
-            ],
+          recommendation: {
+            personOnProbation: { name: 'Joe Bloggs' },
+          },
+          urlInfo: {
+            basePath,
           },
         },
-      },
-      featureFlags: res.locals.flags,
-    })
+      })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.alternativesTried}`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
-  })
+      const next = mockNext()
 
-  it('post with valid data when new standard licence conditions feature flag is enabled', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
-    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+      await licenceConditionsController.post(req, res, next)
 
-    const basePath = `/recommendations/123/`
-
-    const req = mockReq({
-      params: { recommendationId: '123' },
-      body: {
-        crn: 'X098092',
-        activeCustodialConvictionCount: '1',
-        licenceConditionsBreached: 'standard|GOOD_BEHAVIOUR',
-      },
-    })
-
-    const res = mockRes({
-      locals: {
-        flags: {
-          newStandardLicenceConditions: true,
-        },
-        user: {
-          token: 'token1',
-          username: 'user1',
-          region: 'region1',
-        },
-        recommendation: {
-          personOnProbation: { name: 'Joe Bloggs' },
-        },
-        urlInfo: {
-          basePath,
-        },
-      },
-    })
-
-    const next = mockNext()
-
-    await licenceConditionsController.post(req, res, next)
-
-    expect(updateRecommendation).toHaveBeenCalledWith({
-      recommendationId: '123',
-      token: 'token',
-      valuesToSave: {
-        activeCustodialConvictionCount: 1,
-        additionalLicenceConditionsText: undefined,
-        licenceConditionsBreached: {
-          standardLicenceConditions: {
-            selected: ['GOOD_BEHAVIOUR'],
-            allOptions: cleanseUiList(formOptions.newStandardLicenceConditions),
-          },
-          additionalLicenceConditions: {
-            selectedOptions: [],
-            allOptions: [
-              {
-                details: undefined,
-                mainCatCode: 'BB4',
-                note: undefined,
-                subCatCode: undefined,
-                title: 'Freedom of movement',
-              },
-              {
-                details: 'On release to be escorted by police to Approved Premises',
-                mainCatCode: 'NLC5',
-                note: undefined,
-                subCatCode: 'NST30',
-                title: 'Poss, own, control, inspect specified items /docs',
-              },
-            ],
+      expect(updateRecommendation).toHaveBeenCalledWith({
+        recommendationId: '123',
+        token: 'token1',
+        valuesToSave: {
+          activeCustodialConvictionCount: 1,
+          additionalLicenceConditionsText: undefined,
+          licenceConditionsBreached: {
+            standardLicenceConditions: {
+              selected: [newStandardLicenceConditions ? 'GOOD_BEHAVIOUR' : 'NAME_CHANGE'],
+              allOptions: cleanseUiList(
+                newStandardLicenceConditions
+                  ? formOptions.newStandardLicenceConditions
+                  : formOptions.standardLicenceConditions,
+              ),
+            },
+            additionalLicenceConditions: {
+              selectedOptions: [],
+              allOptions: [
+                {
+                  details: undefined,
+                  mainCatCode: 'BB4',
+                  note: undefined,
+                  subCatCode: undefined,
+                  title: 'Freedom of movement',
+                },
+                {
+                  details: 'On release to be escorted by police to Approved Premises',
+                  mainCatCode: 'NLC5',
+                  note: undefined,
+                  subCatCode: 'NST30',
+                  title: 'Poss, own, control, inspect specified items /docs',
+                },
+              ],
+            },
           },
         },
-      },
-      featureFlags: res.locals.flags,
-    })
+        featureFlags: res.locals.flags,
+      })
 
-    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.alternativesTried}`)
-    expect(next).not.toHaveBeenCalled()
-  })
+      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.alternativesTried}`)
+      expect(next).not.toHaveBeenCalled()
+    },
+  )
 
   it('post with valid cvl data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)

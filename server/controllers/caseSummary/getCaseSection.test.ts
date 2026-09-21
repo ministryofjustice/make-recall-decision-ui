@@ -8,6 +8,7 @@ import {
   VulnerabilitiesResponse,
 } from '../../@types/make-recall-decision-api'
 import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
+import { formOptions } from '../recommendations/formOptions/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('redis')
@@ -225,6 +226,101 @@ describe('getCaseSection', () => {
     })
     expect(recs.activeRecommendation).toStrictEqual({
       recommendationId: 1860300544,
+    })
+  })
+
+  describe('licence-conditions', () => {
+    const apiResponse = {
+      activeConvictions: [
+        {
+          sentence: {
+            description: 'Extended Determinate Sentence',
+            isCustodial: true,
+            custodialStatusCode: 'B',
+          },
+          licenceConditions: [
+            {
+              startDate: '2022-04-24',
+            },
+          ],
+        },
+      ],
+      activeRecommendation: {
+        recommendationId: 1860300544,
+      },
+      cvlLicence: {
+        licenceStatus: 'ACTIVE',
+        conditionalReleaseDate: '2022-06-10',
+      },
+      hasAllConvictionsReleasedOnLicence: true,
+      personalDetailsOverview: {
+        fullName: 'Joe T Bloggs',
+      },
+    }
+
+    it('returns new standard licence conditions when feature flag is enabled', async () => {
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
+
+      const { caseSummary } = await getCaseSection(
+        'licence-conditions',
+        crn,
+        token,
+        userId,
+        {},
+        {
+          newStandardLicenceConditions: true,
+        },
+      )
+
+      const summary = caseSummary as Record<string, unknown>
+
+      expect(summary.standardLicenceConditions).toBe(formOptions.newStandardLicenceConditions)
+      expect(summary.licenceConvictions).toStrictEqual({
+        activeCustodial: [
+          {
+            licenceConditions: [
+              {
+                startDate: '2022-04-24',
+              },
+            ],
+            sentence: {
+              custodialStatusCode: 'B',
+              description: 'Extended Determinate Sentence',
+              isCustodial: true,
+            },
+          },
+        ],
+        hasMultipleActiveCustodial: false,
+      })
+    })
+
+    it('returns existing standard licence conditions when feature flag is disabled', async () => {
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
+
+      const { caseSummary } = await getCaseSection(
+        'licence-conditions',
+        crn,
+        token,
+        userId,
+        {},
+        {
+          newStandardLicenceConditions: false,
+        },
+      )
+
+      const summary = caseSummary as Record<string, unknown>
+
+      expect(summary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
+    })
+
+    it('returns existing standard licence conditions when feature flag is not provided', async () => {
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
+
+      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
+
+      const summary = caseSummary as Record<string, unknown>
+
+      expect(summary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
     })
   })
 
