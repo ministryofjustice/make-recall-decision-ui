@@ -159,7 +159,7 @@ describe('Practitioner for Part A Controller', () => {
           user: { token: 'token1' },
           recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
           urlInfo: { basePath: `/recommendations/123/` },
-          flags: {},
+          flags: { newStandardLicenceConditions: true },
         },
       })
 
