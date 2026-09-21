@@ -14,7 +14,7 @@
   {
     "key": "ui-newStandardLicenceConditions",
     "description": "bar",
-    "enabled": true,
+    "enabled": false,
     "type": "BOOLEAN_FLAG_TYPE"
   },
   {
