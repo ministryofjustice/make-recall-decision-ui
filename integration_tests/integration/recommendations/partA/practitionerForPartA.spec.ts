@@ -14,7 +14,7 @@ context('Practitioner for Part A Page', () => {
   })
 
   describe('Page Data', () => {
-    const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}`
+    const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}?newStandardLicenceConditions=1`
     it('Standard page load', () => {
       const recommendation = RecommendationResponseGenerator.generate()
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
@@ -114,6 +114,21 @@ context('Practitioner for Part A Page', () => {
           message: `Enter the GOV.UK email for the probation practitioner for ${recommendation.personOnProbation.name}`,
         },
       ])
+    })
+  })
+
+  describe('When newStandardLicenceConditions flag is off', () => {
+    const testPageUrlNoFlag = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}`
+
+    it('does not show the job title field', () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+
+      cy.visit(testPageUrlNoFlag)
+
+      cy.get('#name').should('exist')
+      cy.get('#jobTitle').should('not.exist')
+      cy.get('#email').should('exist')
     })
   })
 })
