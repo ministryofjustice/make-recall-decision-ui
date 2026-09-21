@@ -58,6 +58,7 @@ jobs:
     permissions:
       actions: write
       contents: read
+      checks: write
     needs: [node_build]
       # - node_integration_tests
     secrets: inherit
