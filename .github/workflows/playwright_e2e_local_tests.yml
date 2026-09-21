@@ -13,7 +13,9 @@ jobs:
     name: playwright e2e local tests
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       actions: write
+      checks: write
     strategy:
       fail-fast: false
     steps:
@@ -54,9 +56,8 @@ jobs:
         if: ${{ !cancelled() && github.event.repository.visibility == 'public' }}
         uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
         with:
-          artifact: 'npm_integration_test_artifacts_${{ strategy.job-index }}'
-          name: Integration Test Report
-          path: 'make-recall-decision-ui/test_results/playwright/*.xml'
+          name: Playwright E2E Test Report
+          path: 'make-recall-decision-ui/test_results/playwright/junit.xml'
           reporter: java-junit
           fail-on-empty: false
           fail-on-error: false
