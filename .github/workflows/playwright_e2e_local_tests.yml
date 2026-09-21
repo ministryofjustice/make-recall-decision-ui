@@ -38,6 +38,9 @@ jobs:
         working-directory: make-recall-decision-ui
         shell: bash
         run: sudo npm install -g npm@11
+      - name: Install dependencies
+        working-directory: make-recall-decision-ui
+        run: npm run setup
       - name: Install playwright browsers
         working-directory: make-recall-decision-ui
         run: npx playwright install

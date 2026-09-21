@@ -58,8 +58,8 @@ jobs:
     permissions:
       actions: write
       contents: read
-    needs:
-      - node_integration_tests
+    needs: [node_build]
+      # - node_integration_tests
     secrets: inherit
     uses: ./.github/workflows/playwright_e2e_local_tests.yml
     with:
