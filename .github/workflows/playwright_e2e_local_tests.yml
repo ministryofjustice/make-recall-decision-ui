@@ -1,0 +1,49 @@
+name: playwright e2e local tests
+
+on:
+  workflow_call:
+    inputs:
+      ui-branch-name:
+        description: 'The branch name of make-recall-decision-ui to check out'
+        required: true
+        type: string
+
+jobs:
+  playwright_e2e_local_tests:
+    name: playwright e2e local tests
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Check out make-recall-decision-api repo
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: 'ministryofjustice/make-recall-decision-api'
+          path: 'make-recall-decision-api'
+          persist-credentials: false
+      - name: Check out make-recall-decision-ui repo
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: 'ministryofjustice/make-recall-decision-ui'
+          ref: ${{ inputs.ui-branch_name }}
+          path: 'make-recall-decision-ui'
+          persist-credentials: false
+      - name: Use Node.js .nvmrc
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: 'make-recall-decision-e2e-tests/.nvmrc'
+      - name: Install npm
+        working-directory: make-recall-decision-ui
+        shell: bash
+        run: sudo npm install -g npm@11
+      - name: Install playwright browsers
+        working-directory: make-recall-decision-ui
+        run: npx playwright install
+      - name: Start components
+        working-directory: make-recall-decision-ui
+        run: ./scripts/start-services-for-e2e-tests.sh
+      - name: Run playwright e2e tests
+        working-directory: make-recall-decision-ui
+        run: npm run playwright:e2e
