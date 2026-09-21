@@ -57,7 +57,8 @@ jobs:
         uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
         with:
           name: Playwright E2E Test Report
-          path: 'make-recall-decision-ui/test_results/playwright/junit.xml'
+          path: 'test_results/playwright/junit.xml'
+          working-directory: 'make-recall-decision-ui'
           reporter: java-junit
           fail-on-empty: false
           fail-on-error: false
