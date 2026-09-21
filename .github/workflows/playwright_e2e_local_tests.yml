@@ -50,10 +50,9 @@ jobs:
       - name: Run playwright e2e tests
         working-directory: make-recall-decision-ui
         run: npm run playwright:e2e
-      - name: Publish JUnit report
-        if: always()
-        uses: mikepenz/action-junit-report@cf701569b05ccdd861a76b8607a66d76f6fd4857 # v5.5.1
-        id: junit
+      - name: Upload JUnit results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          check_name: End-to-end test results
-          report_paths: test-results/junit.xml
+          name: junit
+          path: make-recall-decision-ui/test_results/playwright/junit.xml
