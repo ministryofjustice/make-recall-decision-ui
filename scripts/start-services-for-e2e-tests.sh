@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+api_docker_profile=${1:-default}
+
 # Ensure these are all still being used
 
 readonly UI_NAME=make-recall-decision-ui
@@ -21,7 +23,7 @@ printf "\n\nBuilding/starting API components...\n\n"
 export SPRING_PROFILES_ACTIVE=dev,seed-test-data
 export POSTGRES_OPTIONS=sslmode=disable
 docker compose build
-docker compose up -d
+docker compose --profile ${api_docker_profile} up -d
 popd
 
 pushd "${UI_DIR}"
