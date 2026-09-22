@@ -1,5 +1,4 @@
 import StageEnum from './StageEnum'
-import BookingErrorType from './BookingErrorType'
 
 export default interface BookingMemento {
   stage: StageEnum
@@ -9,7 +8,6 @@ export default interface BookingMemento {
   recallId?: string
   failed?: boolean
   failedMessage?: string
-  errorType?: BookingErrorType
   uploadFailedDocName?: string
   uploaded?: string[]
 }

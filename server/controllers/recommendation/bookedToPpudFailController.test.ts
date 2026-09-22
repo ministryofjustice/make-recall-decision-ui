@@ -1,78 +1,113 @@
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import bookedToPpudFailController from './bookedToPpudFailController'
-import BookingErrorType from '../../booking/BookingErrorType'
 import config from '../../config'
+import StageEnum from '../../booking/StageEnum'
 
 jest.mock('../../data/makeDecisionApiClient')
 
 describe('get', () => {
-  it('loads the page for a data error', async () => {
-    const recommendation = {
-      bookingMemento: {
-        errorType: BookingErrorType.DATA,
-        uploadFailedDocName: 'licence.pdf',
-      },
-    }
+  const stages = [
+    {
+      stage: StageEnum.STARTED,
+      hasMinute: false,
+      isDataError: true,
+      isUploadDocsError: false,
+      isMinutesError: false,
+    },
+    {
+      stage: StageEnum.OFFENDER_BOOKED,
+      hasMinute: false,
+      isDataError: true,
+      isUploadDocsError: false,
+      isMinutesError: false,
+    },
+    {
+      stage: StageEnum.SENTENCE_BOOKED,
+      hasMinute: false,
+      isDataError: true,
+      isUploadDocsError: false,
+      isMinutesError: false,
+    },
+    {
+      stage: StageEnum.OFFENCE_BOOKED,
+      hasMinute: false,
+      isDataError: true,
+      isUploadDocsError: false,
+      isMinutesError: false,
+    },
+    {
+      stage: StageEnum.RELEASE_BOOKED,
+      hasMinute: false,
+      isDataError: true,
+      isUploadDocsError: false,
+      isMinutesError: false,
+    },
+    {
+      stage: StageEnum.RECALL_BOOKED,
+      hasMinute: true,
+      isDataError: false,
+      isUploadDocsError: false,
+      isMinutesError: true,
+    },
+    {
+      stage: StageEnum.RECALL_BOOKED,
+      hasMinute: false,
+      isDataError: false,
+      isUploadDocsError: true,
+      isMinutesError: false,
+    },
+    {
+      stage: StageEnum.MINUTE_BOOKED,
+      hasMinute: true,
+      isDataError: false,
+      isUploadDocsError: true,
+      isMinutesError: false,
+    },
+  ]
 
-    const req = mockReq({
-      params: { recommendationId: '1' },
-    })
+  it.each(stages)(
+    'loads the page correctly for $stage with minute present: $hasMinute',
+    async ({ stage, hasMinute, isDataError, isUploadDocsError, isMinutesError }) => {
+      const recommendation = {
+        bookingMemento: {
+          stage,
+          uploadFailedDocName: 'failed-document.pdf',
+        },
+        ...(hasMinute
+          ? {
+              bookRecallToPpud: {
+                minute: 'Background information',
+              },
+            }
+          : {}),
+      }
 
-    const res = mockRes({
-      locals: {
-        recommendation,
-      },
-    })
+      const req = mockReq({
+        params: { recommendationId: '1' },
+      })
 
-    const next = mockNext()
+      const res = mockRes({
+        locals: {
+          recommendation,
+        },
+      })
 
-    await bookedToPpudFailController.get(req, res, next)
+      const next = mockNext()
 
-    expect(res.locals.page).toEqual({
-      id: 'bookedToPpudFail',
-    })
-    expect(res.locals.recommendation).toEqual(recommendation)
-    expect(res.locals.isDataError).toBe(true)
-    expect(res.locals.errorType).toBe(BookingErrorType.DATA)
-    expect(res.locals.uploadFailedDocName).toBe('licence.pdf')
-    expect(res.locals.ppudUrl).toBe(config.ppud)
+      await bookedToPpudFailController.get(req, res, next)
 
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/bookedToPpudFail')
-    expect(next).toHaveBeenCalled()
-  })
+      expect(res.locals.page).toEqual({
+        id: 'bookedToPpudFail',
+      })
+      expect(res.locals.recommendation).toEqual(recommendation)
+      expect(res.locals.isDataError).toBe(isDataError)
+      expect(res.locals.isUploadDocsError).toBe(isUploadDocsError)
+      expect(res.locals.isMinutesError).toBe(isMinutesError)
+      expect(res.locals.uploadFailedDocName).toBe('failed-document.pdf')
+      expect(res.locals.ppudUrl).toBe(config.ppud)
 
-  it('loads the page for a documents error', async () => {
-    const recommendation = {
-      bookingMemento: {
-        errorType: BookingErrorType.DOCUMENTS,
-        uploadFailedDocName: 'partA.docx',
-      },
-    }
-
-    const req = mockReq({
-      params: { recommendationId: '1' },
-    })
-
-    const res = mockRes({
-      locals: {
-        recommendation,
-      },
-    })
-
-    const next = mockNext()
-
-    await bookedToPpudFailController.get(req, res, next)
-
-    expect(res.locals.page).toEqual({
-      id: 'bookedToPpudFail',
-    })
-    expect(res.locals.recommendation).toEqual(recommendation)
-    expect(res.locals.isDataError).toBe(false)
-    expect(res.locals.errorType).toBe(BookingErrorType.DOCUMENTS)
-    expect(res.locals.uploadFailedDocName).toBe('partA.docx')
-    expect(res.locals.ppudUrl).toBe(config.ppud)
-
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/bookedToPpudFail')
-    expect(next).toHaveBeenCalled()
-  })
+      expect(res.render).toHaveBeenCalledWith('pages/recommendations/bookedToPpudFail')
+      expect(next).toHaveBeenCalled()
+    },
+  )
 })

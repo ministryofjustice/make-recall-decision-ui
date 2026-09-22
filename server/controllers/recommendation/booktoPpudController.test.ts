@@ -17,7 +17,6 @@ import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
 import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
-import BookingErrorType from '../../booking/BookingErrorType'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../../booking/bookOffender')
@@ -226,7 +225,7 @@ describe('post', () => {
   it('post - happy path - with SupportingDocuments', async () => {
     const recommendation = {
       id: '12345',
-      bookRecallToPpud: { minute: 'Minute here' },
+      bookRecallToPpud: {},
     }
     const flags = {}
     const statuses = [{ name: 'AP_RECORDED_RATIONALE', active: true }]
@@ -442,15 +441,6 @@ describe('post', () => {
       flags,
     )
 
-    expect(createMinute).toHaveBeenCalledWith(
-      { uploaded: ['9'] },
-      '1',
-      'Background information',
-      'Minute here',
-      'token',
-      flags,
-    )
-
     expect(updateStatuses).toHaveBeenCalledWith({
       activate: [RECOMMENDATION_STATUS.BOOKED_TO_PPUD, RECOMMENDATION_STATUS.REC_CLOSED],
       deActivate: [],
@@ -496,7 +486,6 @@ describe('post', () => {
     expect(bookOffender).toHaveBeenCalledWith(
       {
         stage: StageEnum.STARTED,
-        errorType: BookingErrorType.DATA,
         uploadFailedDocName: '',
         failed: true,
         failedMessage: '{"something":"text"}',
@@ -513,7 +502,6 @@ describe('post', () => {
           stage: StageEnum.STARTED,
           failed: true,
           failedMessage: '{"something":"text"}',
-          errorType: 'DATA',
           uploadFailedDocName: '',
         },
       },
@@ -548,7 +536,7 @@ describe('post', () => {
     const recommendation = {
       id: '12345',
       crn: 'X123',
-      bookRecallToPpud: { minute: 'Minute here' },
+      bookRecallToPpud: {},
     }
 
     const flags = {}
@@ -602,11 +590,19 @@ describe('post', () => {
         type: 'PPUDPartA',
       },
     ])
-    ;(uploadMandatoryDocument as jest.Mock).mockImplementation(() => {
+
+    let mementoAtUploadCall: Record<string, unknown> | undefined
+    ;(uploadMandatoryDocument as jest.Mock).mockImplementation((memento: Record<string, unknown>) => {
+      mementoAtUploadCall = { ...memento }
+
       throw new PpudError(400, '{"error":"upload failed"}')
     })
 
     await bookToPpudController.post(req, res, next)
+
+    expect(mementoAtUploadCall).toEqual({
+      stage: StageEnum.RECALL_BOOKED,
+    })
 
     expect(uploadMandatoryDocument).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -626,7 +622,6 @@ describe('post', () => {
           stage: StageEnum.RECALL_BOOKED,
           failed: true,
           failedMessage: '{"error":"upload failed"}',
-          errorType: 'DOCUMENTS',
           uploadFailedDocName: 'part-a.docx',
         },
       },
