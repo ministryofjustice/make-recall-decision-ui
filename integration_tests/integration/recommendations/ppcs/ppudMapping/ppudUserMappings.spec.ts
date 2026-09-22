@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import ppcsPaths from '../../../../../server/routes/paths/ppcs.paths'
 import { PpudUserMappingGenerator } from '../../../../../data/recommendations/ppcs/ppudUserMappingGenerator'
 import { setUpSessionForPpcsAdmin } from '../util'
+import strings from '../../../../../server/textStrings/en'
 
 context('PPUD Mappings', () => {
   beforeEach(() => {
@@ -14,17 +15,14 @@ context('PPUD Mappings', () => {
 
     cy.visit(`/${ppcsPaths.ppudUserMappings}`)
 
-    cy.pageHeading().should('equal', 'Consider a Recall to PPUD mappings')
+    cy.pageHeading().should('equal', strings.pageHeadings.ppudUserMappings)
 
-    cy.get('.govuk-table').within(() => {
-      cy.get('caption.govuk-table__caption').should('contain.text', 'Mapped users')
-      cy.get('thead.govuk-table__head').within(() => {
-        cy.get('th').should('have.attr', 'scope', 'col').should('have.length', 6)
-        cy.get('th').eq(0).should('contain.text', 'User name')
-        cy.get('th').eq(1).should('contain.text', 'PPUD full name')
-        cy.get('th').eq(2).should('contain.text', 'PPUD team name')
-        cy.get('th').eq(3).should('contain.text', 'PPUD user name')
-      })
+    cy.get('thead.govuk-table__head').within(() => {
+      cy.get('th').should('have.attr', 'scope', 'col').should('have.length', 6)
+      cy.get('th').eq(0).should('contain.text', 'NDelius username')
+      cy.get('th').eq(1).should('contain.text', 'PPUD full name')
+      cy.get('th').eq(2).should('contain.text', 'PPUD team name')
+      cy.get('th').eq(3).should('contain.text', 'PPUD username')
     })
 
     cy.get('.govuk-table__body').within(() => {
