@@ -10,6 +10,7 @@ import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
 import { PersonOnProbationGenerator } from '../../../data/recommendations/personOnProbationGenerator'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import { cleanseUiList } from '../../utils/lists'
+import * as transformLicenceConditionsModule from '../caseSummary/licenceConditions/transformLicenceConditions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/licenceConditions/transform')
@@ -1008,6 +1009,110 @@ describe('post', () => {
       expect(next).not.toHaveBeenCalled()
 
       isValueValidSpy.mockRestore()
+    },
+  )
+
+  it.each([true, false])(
+    'post valid standard licence conditions using transformLicenceConditions when newStandardLicenceConditions=%s',
+    async newStandardLicenceConditions => {
+      ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+
+      const selectedCondition = newStandardLicenceConditions ? 'GOOD_BEHAVIOUR' : 'NAME_CHANGE'
+
+      const transformLicenceConditionsSpy = jest
+        .spyOn(transformLicenceConditionsModule, 'transformLicenceConditions')
+        .mockReturnValue({
+          licenceConvictions: {
+            active: [],
+            activeCustodial: [
+              {
+                licenceConditions: [
+                  {
+                    mainCategory: {
+                      code: 'BB4',
+                      description: 'Freedom of movement',
+                    },
+                  },
+                ],
+              },
+            ],
+            hasMultipleActiveCustodial: false,
+          },
+          hasAllConvictionsReleasedOnLicence: false,
+        })
+
+      const req = mockReq({
+        params: {
+          recommendationId: '123',
+        },
+        body: {
+          crn: 'X098092',
+          activeCustodialConvictionCount: '1',
+          licenceConditionsBreached: `standard|${selectedCondition}`,
+        },
+      })
+
+      const res = mockRes({
+        token: 'token1',
+        locals: {
+          flags: {
+            newStandardLicenceConditions,
+          },
+          recommendation: {
+            personOnProbation: {
+              name: 'Joe Bloggs',
+            },
+          },
+          urlInfo: {
+            basePath: '/recommendations/123/',
+          },
+        },
+      })
+
+      const next = mockNext()
+
+      await licenceConditionsController.post(req, res, next)
+
+      expect(transformLicenceConditionsSpy).toHaveBeenCalledWith(DELIUS_TEMPLATE, newStandardLicenceConditions)
+
+      expect(updateRecommendation).toHaveBeenCalledWith({
+        recommendationId: '123',
+        token: 'token1',
+        valuesToSave: {
+          activeCustodialConvictionCount: 1,
+          additionalLicenceConditionsText: undefined,
+          licenceConditionsBreached: {
+            standardLicenceConditions: {
+              selected: [selectedCondition],
+              allOptions: cleanseUiList(
+                newStandardLicenceConditions
+                  ? formOptions.newStandardLicenceConditions
+                  : formOptions.standardLicenceConditions,
+              ),
+            },
+            additionalLicenceConditions: {
+              selectedOptions: [],
+              allOptions: [
+                {
+                  mainCatCode: 'BB4',
+                  subCatCode: undefined,
+                  title: 'Freedom of movement',
+                  details: undefined,
+                  note: undefined,
+                },
+              ],
+            },
+          },
+        },
+        featureFlags: res.locals.flags,
+      })
+
+      expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.alternativesTried}`)
+
+      expect(next).not.toHaveBeenCalled()
+
+      transformLicenceConditionsSpy.mockRestore()
     },
   )
 })
