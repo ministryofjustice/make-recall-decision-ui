@@ -17,6 +17,7 @@ describe('get', () => {
 
     expect(res.locals.page).toEqual({ id: 'whoCompletedPartA' })
     expect(res.locals.inputDisplayValues.name).not.toBeDefined()
+    expect(res.locals.inputDisplayValues.jobTitle).not.toBeDefined()
     expect(res.locals.inputDisplayValues.email).not.toBeDefined()
     expect(res.locals.inputDisplayValues.telephone).not.toBeDefined()
     expect(res.locals.inputDisplayValues.region).not.toBeDefined()
@@ -33,6 +34,7 @@ describe('get', () => {
         recommendation: {
           whoCompletedPartA: {
             name: 'john',
+            jobTitle: 'Registered Probation Officer',
             email: 'john@me.com',
             telephone: '123456',
             region: 'region A',
@@ -46,6 +48,7 @@ describe('get', () => {
     await whoCompletedPartAController.get(mockReq(), res, mockNext())
 
     expect(res.locals.inputDisplayValues.name).toEqual('john')
+    expect(res.locals.inputDisplayValues.jobTitle).toEqual('Registered Probation Officer')
     expect(res.locals.inputDisplayValues.email).toEqual('john@me.com')
     expect(res.locals.inputDisplayValues.telephone).toEqual('123456')
     expect(res.locals.inputDisplayValues.region).toEqual('region A')
@@ -59,6 +62,7 @@ describe('get', () => {
         errors: { val: 'some error' },
         unsavedValues: {
           name: 'test',
+          jobTitle: 'Other',
           email: 'test@here.com',
           telephone: '555555555555',
           region: 'place B',
@@ -68,6 +72,7 @@ describe('get', () => {
         recommendation: {
           whoCompletedPartA: {
             name: 'john',
+            jobTitle: 'Registered Probation Officer',
             email: 'john@me.com',
             telephone: '123456',
             region: 'region A',
@@ -81,6 +86,7 @@ describe('get', () => {
     await whoCompletedPartAController.get(mockReq(), res, mockNext())
 
     expect(res.locals.inputDisplayValues.name).toEqual('test')
+    expect(res.locals.inputDisplayValues.jobTitle).toEqual('Other')
     expect(res.locals.inputDisplayValues.email).toEqual('test@here.com')
     expect(res.locals.inputDisplayValues.telephone).toEqual('555555555555')
     expect(res.locals.inputDisplayValues.region).toEqual('place B')
@@ -99,6 +105,7 @@ describe('post', () => {
       params: { recommendationId: '123' },
       body: {
         name: 'john',
+        jobTitle: 'Registered Probation Officer',
         email: 'john@test.gov.uk',
         telephone: '5555555',
         region: 'region C',
@@ -124,6 +131,7 @@ describe('post', () => {
       valuesToSave: {
         whoCompletedPartA: {
           name: 'john',
+          jobTitle: 'Registered Probation Officer',
           email: 'john@test.gov.uk',
           telephone: '5555555',
           region: 'region C',
@@ -151,6 +159,7 @@ describe('post', () => {
         region: 'region C',
         localDeliveryUnit: 'place A',
         isPersonProbationPractitionerForOffender: 'NO',
+        jobTitle: 'Other',
       },
     })
 
@@ -189,6 +198,7 @@ describe('post', () => {
         user: { token: 'token1' },
         recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
         urlInfo: { basePath: `/recommendations/123/` },
+        flags: { newStandardLicenceConditions: true },
       },
     })
 
@@ -202,6 +212,14 @@ describe('post', () => {
         invalidParts: undefined,
         name: 'name',
         text: 'Enter the name of the person who completed the Part A',
+        values: undefined,
+      },
+      {
+        errorId: 'missingWhoCompletedPartAJobTitle',
+        href: '#jobTitle',
+        invalidParts: undefined,
+        name: 'jobTitle',
+        text: 'Select a job title',
         values: undefined,
       },
       {
@@ -237,6 +255,7 @@ describe('post', () => {
         region: 'region C',
         localDeliveryUnit: 'place A',
         isPersonProbationPractitionerForOffender: 'NO',
+        jobTitle: 'Other',
       },
     })
 
@@ -277,6 +296,7 @@ describe('post', () => {
         region: 'region C',
         localDeliveryUnit: 'place A',
         isPersonProbationPractitionerForOffender: 'NO',
+        jobTitle: 'Other',
       },
     })
 

@@ -14,7 +14,7 @@ context('Practitioner for Part A Page', () => {
   })
 
   describe('Page Data', () => {
-    const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}`
+    const testPageUrl = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}?newStandardLicenceConditions=1`
     it('Standard page load', () => {
       const recommendation = RecommendationResponseGenerator.generate()
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
@@ -29,7 +29,7 @@ context('Practitioner for Part A Page', () => {
       // Page Heading
       cy.pageHeading().should('equal', `Practitioner for ${recommendation.personOnProbation.name}`)
 
-      cy.get('.govuk-form-group').should('have.length', 3).as('formGroups')
+      cy.get('.govuk-form-group').should('have.length', 4).as('formGroups')
 
       cy.get('@formGroups').eq(0).find('.govuk-label').should('contain.text', 'Name')
       cy.get('@formGroups')
@@ -38,17 +38,20 @@ context('Practitioner for Part A Page', () => {
         .should('have.attr', 'name', 'name')
         .should('have.attr', 'type', 'text')
 
-      cy.get('@formGroups').eq(1).find('.govuk-label').should('contain.text', 'Email')
+      cy.get('@formGroups').eq(1).find('.govuk-label').should('contain.text', 'Job title')
+      cy.get('@formGroups').eq(1).find('select').should('have.attr', 'name', 'jobTitle')
+
+      cy.get('@formGroups').eq(2).find('.govuk-label').should('contain.text', 'Email')
       cy.get('@formGroups')
-        .eq(1)
+        .eq(2)
         .find('.govuk-input')
         .should('have.attr', 'name', 'email')
         .should('have.attr', 'type', 'email')
 
-      cy.get('@formGroups').eq(2).find('.govuk-label').should('contain.text', 'Telephone')
-      cy.get('@formGroups').eq(2).find('.govuk-hint').should('contain.text', 'PPCS may use this number to ask queries')
+      cy.get('@formGroups').eq(3).find('.govuk-label').should('contain.text', 'Telephone')
+      cy.get('@formGroups').eq(3).find('.govuk-hint').should('contain.text', 'PPCS may use this number to ask queries')
       cy.get('@formGroups')
-        .eq(2)
+        .eq(3)
         .find('.govuk-input')
         .should('have.attr', 'name', 'telephone')
         .should('have.attr', 'type', 'tel')
@@ -66,8 +69,9 @@ context('Practitioner for Part A Page', () => {
       cy.get('.govuk-form-group').as('formGroups')
 
       cy.get('@formGroups').eq(0).find('.govuk-input').should('be.empty')
-      cy.get('@formGroups').eq(1).find('.govuk-input').should('be.empty')
+      cy.get('@formGroups').eq(1).find('select').should('have.value', '')
       cy.get('@formGroups').eq(2).find('.govuk-input').should('be.empty')
+      cy.get('@formGroups').eq(3).find('.govuk-input').should('be.empty')
     })
 
     it('There are previous responses to the questions - The input areas are filled in', () => {
@@ -79,9 +83,10 @@ context('Practitioner for Part A Page', () => {
       cy.get('.govuk-form-group').as('formGroups')
 
       cy.get('@formGroups').eq(0).find('.govuk-input').should('have.value', recommendation.practitionerForPartA.name)
-      cy.get('@formGroups').eq(1).find('.govuk-input').should('have.value', recommendation.practitionerForPartA.email)
+      cy.get('@formGroups').eq(1).find('select').should('have.value', recommendation.practitionerForPartA.jobTitle)
+      cy.get('@formGroups').eq(2).find('.govuk-input').should('have.value', recommendation.practitionerForPartA.email)
       cy.get('@formGroups')
-        .eq(2)
+        .eq(3)
         .find('.govuk-input')
         .should('have.value', recommendation.practitionerForPartA.telephone)
     })
@@ -100,10 +105,30 @@ context('Practitioner for Part A Page', () => {
           message: `Enter the name of the probation practitioner for ${recommendation.personOnProbation.name}`,
         },
         {
+          href: 'jobTitle',
+          message: 'Select a job title',
+          errorStyleClass: 'govuk-select--error',
+        },
+        {
           href: 'email',
           message: `Enter the GOV.UK email for the probation practitioner for ${recommendation.personOnProbation.name}`,
         },
       ])
+    })
+  })
+
+  describe('When newStandardLicenceConditions flag is off', () => {
+    const testPageUrlNoFlag = `/recommendations/${recommendationId}/${ppPaths.practitionerForPartA}`
+
+    it('does not show the job title field', () => {
+      const recommendation = RecommendationResponseGenerator.generate()
+      cy.task('getRecommendation', { statusCode: 200, response: recommendation })
+
+      cy.visit(testPageUrlNoFlag)
+
+      cy.get('#name').should('exist')
+      cy.get('#jobTitle').should('not.exist')
+      cy.get('#email').should('exist')
     })
   })
 })

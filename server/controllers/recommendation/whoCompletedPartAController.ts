@@ -6,6 +6,7 @@ import { updateRecommendation } from '../../data/makeDecisionApiClient'
 import { nextPageLinkUrl } from '../recommendations/helpers/urls'
 import { isValueValid } from '../recommendations/formOptions/formOptions'
 import regionEnum from '../recommendations/formOptions/region'
+import jobTitleEnum from '../recommendations/formOptions/jobTitle'
 import { booleanToYesNo } from '../recommendations/formOptions/yesNo'
 import { isEmailValid, isGovUkEmail } from '../../utils/validate-formats'
 
@@ -22,6 +23,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     },
     inputDisplayValues: {
       name: isDefined(errors) ? unsavedValues?.name : recommendation.whoCompletedPartA?.name,
+      jobTitle: isDefined(errors) ? unsavedValues?.jobTitle : recommendation.whoCompletedPartA?.jobTitle,
       email: isDefined(errors) ? unsavedValues?.email : recommendation.whoCompletedPartA?.email,
       telephone: isDefined(errors) ? unsavedValues?.telephone : recommendation.whoCompletedPartA?.telephone,
       region: isDefined(errors) ? unsavedValues?.region : recommendation.whoCompletedPartA?.region,
@@ -33,6 +35,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
         : booleanToYesNo(recommendation.whoCompletedPartA?.isPersonProbationPractitionerForOffender),
     },
     regions: regionEnum,
+    jobTitles: jobTitleEnum,
   }
 
   res.render(`pages/recommendations/whoCompletedPartA`)
@@ -41,7 +44,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
 
 async function post(req: Request, res: Response, _: NextFunction) {
   const { recommendationId } = req.params
-  const { name, email, telephone, region, localDeliveryUnit, isPersonProbationPractitionerForOffender } = req.body
+  const { name, jobTitle, email, telephone, region, localDeliveryUnit, isPersonProbationPractitionerForOffender } =
+    req.body
 
   const {
     flags,
@@ -56,6 +60,17 @@ async function post(req: Request, res: Response, _: NextFunction) {
     errors.push(
       makeErrorObject({
         id: 'name',
+        text: strings.errors[errorId],
+        errorId,
+      }),
+    )
+  }
+
+  if (flags.newStandardLicenceConditions && !isMandatoryTextValue(jobTitle)) {
+    const errorId = 'missingWhoCompletedPartAJobTitle'
+    errors.push(
+      makeErrorObject({
+        id: 'jobTitle',
         text: strings.errors[errorId],
         errorId,
       }),
@@ -109,6 +124,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     req.session.errors = errors
     req.session.unsavedValues = {
       name,
+      jobTitle,
       email,
       telephone,
       region,
@@ -125,6 +141,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     valuesToSave: {
       whoCompletedPartA: {
         name,
+        jobTitle,
         email,
         telephone,
         region,
