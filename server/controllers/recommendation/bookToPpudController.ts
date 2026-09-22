@@ -20,7 +20,6 @@ import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
-import BookingErrorType from '../../booking/BookingErrorType'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -43,7 +42,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
-  let bookingErrorType: BookingErrorType = BookingErrorType.DATA
   let uploadingDocName = ''
   let memento: BookingMemento = recommendation.bookingMemento || {
     stage: StageEnum.STARTED,
@@ -65,7 +63,18 @@ async function post(req: Request, res: Response, _: NextFunction) {
     memento = await updateRelease(memento, recommendation, token, flags)
 
     memento = await updateRecall(memento, recommendation, token, flags, res.locals.statuses)
-    bookingErrorType = BookingErrorType.DOCUMENTS
+
+    if (recommendation.bookRecallToPpud?.minute) {
+      memento = await createMinute(
+        memento,
+        recommendationId,
+        'Background information',
+        recommendation.bookRecallToPpud?.minute,
+        token,
+        flags,
+      )
+    }
+
     const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
 
     const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
@@ -140,17 +149,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
       return uploadAdditionalDocument(currentMemento, recommendationId, document.id, token, flags)
     }, Promise.resolve(memento))
 
-    if (recommendation.bookRecallToPpud?.minute) {
-      memento = await createMinute(
-        memento,
-        recommendationId,
-        'Background information',
-        recommendation.bookRecallToPpud?.minute,
-        token,
-        flags,
-      )
-    }
-
     await updateStatuses({
       recommendationId,
       token,
@@ -172,7 +170,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
     if (err.status !== undefined) {
       memento.failed = true
       memento.failedMessage = err.text
-      memento.errorType = bookingErrorType
       memento.uploadFailedDocName = uploadingDocName
       await updateRecommendation({
         recommendationId: String(recommendation.id),
