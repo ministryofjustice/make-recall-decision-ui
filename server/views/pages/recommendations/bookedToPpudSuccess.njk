@@ -5,14 +5,14 @@
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
 {% if isIndeterminateSentence %}
-{% set confirmationTitle = "Booked onto PPUD" %}
-{% set nextSteps = "You’ve added this recall to PPUD and can issue the revocation order. A parole eligible casework (PEC) manager will be assigned to the case." %}
+    {% set confirmationTitle = "Booked onto PPUD" %}
+    {% set nextSteps = "You’ve added this recall to PPUD and can issue the revocation order. A parole eligible casework (PEC) manager will be assigned to the case." %}
 {% elif isNewSentence %}
-{% set confirmationTitle = "Record created and booked onto PPUD" %}
-{% set nextSteps = "You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use." %}
+    {% set confirmationTitle = "Record created and booked onto PPUD" %}
+    {% set nextSteps = "You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use." %}
 {% else %}
-{% set confirmationTitle = "Booked onto PPUD" %}
-{% set nextSteps = "You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use." %}
+    {% set confirmationTitle = "Booked onto PPUD" %}
+    {% set nextSteps = "You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use." %}
 {% endif %}
 
 {% block content %} <div class="govuk-grid-row"> <div class="govuk-grid-column-two-thirds-from-desktop">
