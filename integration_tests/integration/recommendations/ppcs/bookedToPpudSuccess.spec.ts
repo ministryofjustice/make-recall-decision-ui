@@ -94,9 +94,15 @@ context('Booked to PPUD success', () => {
         .within(() => {
           cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Booked onto PPUD')
 
-          cy.get('.govuk-panel__body').eq(0).should('contain.text', 'John Doe')
+          cy.get('.govuk-panel__body')
+            .eq(0)
+            .should('have.class', 'govuk-!-margin-bottom-0')
+            .and('contain.text', 'John Doe')
 
-          cy.get('.govuk-panel__body').eq(1).should('contain.text', 'NOMIS number: J80002')
+          cy.get('.govuk-panel__body')
+            .eq(1)
+            .should('not.have.class', 'govuk-!-margin-bottom-0')
+            .and('contain.text', 'NOMIS number: J80002')
         })
     })
 
@@ -126,9 +132,15 @@ context('Booked to PPUD success', () => {
         .within(() => {
           cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Booked onto PPUD')
 
-          cy.get('.govuk-panel__body').eq(0).should('contain.text', 'John Doe')
+          cy.get('.govuk-panel__body')
+            .eq(0)
+            .should('have.class', 'govuk-!-margin-bottom-0')
+            .and('contain.text', 'John Doe')
 
-          cy.get('.govuk-panel__body').eq(1).should('contain.text', 'NOMIS number: J80002')
+          cy.get('.govuk-panel__body')
+            .eq(1)
+            .should('not.have.class', 'govuk-!-margin-bottom-0')
+            .and('contain.text', 'NOMIS number: J80002')
         })
     })
 
@@ -158,9 +170,15 @@ context('Booked to PPUD success', () => {
         .within(() => {
           cy.get('.govuk-panel__title').should('be.visible').and('contain.text', 'Record created and booked onto PPUD')
 
-          cy.get('.govuk-panel__body').eq(0).should('contain.text', 'John Doe')
+          cy.get('.govuk-panel__body')
+            .eq(0)
+            .should('have.class', 'govuk-!-margin-bottom-0')
+            .and('contain.text', 'John Doe')
 
-          cy.get('.govuk-panel__body').eq(1).should('contain.text', 'NOMIS number: J80002')
+          cy.get('.govuk-panel__body')
+            .eq(1)
+            .should('not.have.class', 'govuk-!-margin-bottom-0')
+            .and('contain.text', 'NOMIS number: J80002')
         })
     })
 
