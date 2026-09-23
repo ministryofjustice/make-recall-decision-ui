@@ -1,73 +1,55 @@
 {% extends "../../partials/layout.njk" %}
 
+{% from "components/heading/macro.njk" import heading %}
+
 {% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
 
-{% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-        {% if isIndeterminateSentence %}
-            <div class="govuk-panel govuk-panel--confirmation">
-                <h1 class="govuk-panel__title">
-                    Booked onto PPUD
-                </h1>
+{% if isIndeterminateSentence %}
+{% set confirmationTitle = "Booked onto PPUD" %}
+{% set nextSteps = "You’ve added this recall to PPUD and can issue the revocation order. A parole eligible casework (PEC) manager will be assigned to the case." %}
+{% elif isNewSentence %}
+{% set confirmationTitle = "Record created and booked onto PPUD" %}
+{% set nextSteps = "You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use." %}
+{% else %}
+{% set confirmationTitle = "Booked onto PPUD" %}
+{% set nextSteps = "You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use." %}
+{% endif %}
 
-                <div class="govuk-panel__body">
-                        {{ recommendation.personOnProbation.name }}
-                </div>
-                <div class="govuk-panel__body">
-                    <strong>NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}</strong>
-                </div>
+{% block content %} <div class="govuk-grid-row"> <div class="govuk-grid-column-two-thirds-from-desktop">
+
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                {{ confirmationTitle }}
+            </h1>
+
+            <div class="govuk-panel__body govuk-!-margin-bottom-0">
+                {{ recommendation.personOnProbation.name }}
             </div>
-            <h2 class="govuk-heading-m">What happens next</h2>
-            <p class='govuk-body'>
-                You’ve added this recall to PPUD and can issue the revocation order. A parole eligible casework (PEC) manager will be assigned to the case.
-            </p>
-        {% else %}
 
-        {% if isNewSentence %}
-            <div class="govuk-panel govuk-panel--confirmation">
-                <h1 class="govuk-panel__title">
-                    Record created and booked onto PPUD
-                </h1>
-
-                <div class="govuk-panel__body">
-                    {{ recommendation.personOnProbation.name }}
-                </div>
-                <div class="govuk-panel__body">
-                    <strong>NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}</strong>
-                </div>
-            </div>
-            <h2 class="govuk-heading-m">What happens next</h2>
-            <p class='govuk-body'>
-                You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use.
-            </p>
-          {% else %}
-            <div class="govuk-panel govuk-panel--confirmation">
-                <h1 class="govuk-panel__title">
-                    Booked onto PPUD
-                </h1>
-
-                <div class="govuk-panel__body">
-                    {{ recommendation.personOnProbation.name }}
-                </div>
-                <div class="govuk-panel__body">
-                    <strong>NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}</strong>
-                </div>
-            </div>
-            <h2 class="govuk-heading-m">What happens next</h2>
-            <p class='govuk-body'>
-                You’ve added this recall to PPUD. A band 4 case manager will review and decide what recall type to use.
-            </p>
-          {% endif %}
-          {% endif %}
-            <div class='govuk-!-margin-top-6'>
-                {{ govukButton({
-                        text: "Start a new booking",
-                        classes: "govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
-                        href: "/"
-                    })
-                }}
+            <div class="govuk-panel__body">
+                <strong>
+                    NOMIS number: {{ recommendation.personOnProbation.nomsNumber }}
+                </strong>
             </div>
         </div>
+
+        {% set html %}
+            {{ heading("What happens next", 1, "l") }}
+
+            {{ bodyParagraph(nextSteps) }}
+        {% endset %}
+
+        {{ html | safe }}
+
+        <div class="govuk-!-margin-top-6">
+            {{ govukButton({
+                text: "Start a new booking",
+                classes: "govuk-button--secondary govuk-!-margin-top-2 govuk-!-margin-bottom-3",
+                href: "/"
+            }) }}
+        </div>
+
     </div>
+</div>
+
 {% endblock %}
