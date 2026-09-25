@@ -22,7 +22,7 @@ context('Edit PPUD Mapping', () => {
       formGroups: [
         {
           id: 'userName',
-          label: 'User name',
+          label: 'Username',
           name: 'userName',
           value: '',
         },
@@ -40,7 +40,7 @@ context('Edit PPUD Mapping', () => {
         },
         {
           id: 'ppudUserName',
-          label: 'PPUD user name',
+          label: 'PPUD username',
           name: 'ppudUserName',
           value: '',
         },

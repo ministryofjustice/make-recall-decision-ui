@@ -21,7 +21,7 @@ context('Delete PPUD Mapping', () => {
     testSummaryList(cy.get('.govuk-summary-list'), {
       rows: [
         {
-          key: 'User name',
+          key: 'Username',
           value: ppudUserMapping.userName,
         },
         {
@@ -33,7 +33,7 @@ context('Delete PPUD Mapping', () => {
           value: ppudUserMapping.ppudTeamName,
         },
         {
-          key: 'PPUD user name',
+          key: 'PPUD username',
           value: ppudUserMapping.ppudUserName,
         },
       ],
