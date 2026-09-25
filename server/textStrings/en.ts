@@ -307,10 +307,10 @@ const strings: Record<string, Record<string, string>> = {
     editSentencingCourt: 'Edit sentencing court',
     chargedWithOffence: 'Is {{ fullName }} being recalled because of being charged or convicted for an offence?',
     /// PPCS Admin ///
-    ppudUserMappings: 'PPUD user mappings',
-    editPpudUserMapping: 'Edit PPUD user mapping',
-    addPpudUserMapping: 'Add PPUD user mapping',
-    deletePpudUserMapping: 'Delete PPUD user mapping',
+    ppudUserMappings: 'Update or add user mapping information',
+    editPpudUserMapping: 'Edit user mapping information',
+    addPpudUserMapping: 'Add user mapping information',
+    deletePpudUserMapping: 'Delete user mapping information',
   },
   labels: {
     yes: 'Yes',
