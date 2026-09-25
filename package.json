@@ -26,7 +26,11 @@
     "accessibility-test-ui": "cypress open --config specPattern=integration_tests/accessibility/*.spec.ts --config-file integration_tests/cypress.config.ts",
     "clean": "rm -rf dist build node_modules stylesheets",
     "setup": "npm ci && hmpps-npm-script-run-allowlist",
-    "setup:no-audit": "npm ci --no-audit && hmpps-npm-script-run-allowlist"
+    "setup:no-audit": "npm ci --no-audit && hmpps-npm-script-run-allowlist",
+    "playwright:e2e": "bddgen --config=tests/playwright.e2e.config.ts && playwright test --config=tests/playwright.e2e.config.ts",
+    "playwright:e2e:ui": "bddgen --config=tests/playwright.e2e.config.ts && playwright test --headed --config=tests/playwright.e2e.config.ts",
+    "playwright:integration": "playwright test --config=tests/playwright.integration.config.ts",
+    "playwright:integration:ui": "playwright test --config=tests/playwright.integration.config.ts --headed"
   },
   "engines": {
     "node": "^24",
@@ -156,6 +160,7 @@
     "@ministryofjustice/eslint-config-hmpps": "2.0.0-alpha.1",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "3.0.1",
+    "@playwright/test": "1.62.1",
     "@tsconfig/node24": "24.0.4",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
@@ -201,6 +206,7 @@
     "nock": "^13.5.4",
     "nodemon": "^3.1.0",
     "pdf-parse": "^1.1.1",
+    "playwright-bdd": "9.2.0",
     "prettier": "^3.2.5",
     "sass": "^1.74.1",
     "supertest": "^7.0.0",

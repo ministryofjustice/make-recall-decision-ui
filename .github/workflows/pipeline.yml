@@ -53,6 +53,18 @@ jobs:
       npm_script: 'accessibility-test'
       test_results_artifact_name: 'npm_accessibility_test_artifacts'
       redis_tag: '7'
+  playwright_e2e_local_tests:
+    name: Run playwright e2e tests locally
+    permissions:
+      actions: write
+      contents: read
+      checks: write
+    needs: [node_build]
+      # - node_integration_tests
+    secrets: inherit
+    uses: ./.github/workflows/playwright_e2e_local_tests.yml
+    with:
+      ui-branch-name: ${{ github.ref }}
   e2e_local_tests:
     name: Run e2e tests locally
     if: github.ref == 'refs/heads/main'
@@ -194,4 +206,3 @@ jobs:
           channel_id: ${{ vars.PROD_RELEASES_SLACK_CHANNEL }}
           SLACK_BOT_TOKEN: ${{ secrets.HMPPS_SRE_SLACK_BOT_TOKEN }}
           input_file: results_slack_message.txt
-

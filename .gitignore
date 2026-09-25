@@ -130,3 +130,10 @@ cypress/downloads
 
 .DS_Store
 *.iml
+
+# Playwright
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+.features-gen
