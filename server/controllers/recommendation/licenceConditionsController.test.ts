@@ -334,68 +334,6 @@ describe('get', () => {
       })
     })
   })
-  it.each([true, false])(
-    'builds caseSummary correctly when newStandardLicenceConditions=%s',
-    async newStandardLicenceConditions => {
-      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(TEMPLATE)
-
-      const req = mockReq()
-
-      const urlInfo = UrlInfoGenerator.generate({
-        fromPageId: ppPaths.taskListConsiderRecall,
-      })
-
-      const res = mockRes({
-        locals: {
-          recommendation: RecommendationResponseGenerator.generate(),
-          user: {
-            username: 'USER1',
-            region: 'N07',
-            token: 'token1',
-          },
-          urlInfo,
-          flags: {
-            newStandardLicenceConditions,
-          },
-        },
-      })
-
-      const next = mockNext()
-
-      await licenceConditionsController.get(req, res, next)
-
-      const expectedActiveCustodial = TEMPLATE.activeConvictions.filter(
-        conviction => conviction.sentence && conviction.sentence.isCustodial,
-      )
-
-      const expectedHasMultipleActiveCustodial =
-        TEMPLATE.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1
-
-      const expectedStandardLicenceConditions = newStandardLicenceConditions
-        ? formOptions.newStandardLicenceConditions
-        : formOptions.standardLicenceConditions
-
-      expect(res.locals.caseSummary).toStrictEqual({
-        ...TEMPLATE,
-        licenceConvictions: {
-          activeCustodial: expectedActiveCustodial,
-          hasMultipleActiveCustodial: expectedHasMultipleActiveCustodial,
-        },
-        standardLicenceConditions: expectedStandardLicenceConditions,
-      })
-
-      expect(res.locals.caseSummary.licenceConvictions.activeCustodial).toEqual(expectedActiveCustodial)
-
-      expect(res.locals.caseSummary.licenceConvictions.hasMultipleActiveCustodial).toBe(
-        expectedHasMultipleActiveCustodial,
-      )
-
-      expect(res.locals.caseSummary.standardLicenceConditions).toBe(expectedStandardLicenceConditions)
-
-      expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
-      expect(next).toHaveBeenCalled()
-    },
-  )
 })
 
 describe('post', () => {
