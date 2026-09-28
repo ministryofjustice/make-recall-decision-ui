@@ -11,7 +11,7 @@
         {% endif %}
         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
             <h2 class='govuk-heading-m' tabindex="0">Standard licence conditions</h2>
-            {% for standardCondition in formOptions.standardLicenceConditions %}
+            {% for standardCondition in standardLicenceConditions %}
                 <div class="govuk-checkboxes__item">
                     <input class="govuk-checkboxes__input" id="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}" name="licenceConditionsBreached" type="checkbox" value="standard|{{ standardCondition.value }}" {% if inputDisplayValues.standardLicenceConditions and standardCondition.value in inputDisplayValues.standardLicenceConditions %} checked {% endif %}>
                         <label class="govuk-label govuk-checkboxes__label" for="{% if loop.index == 1 %}licenceConditionsBreached{% else %}standard-{{ loop.index }}{% endif %}">

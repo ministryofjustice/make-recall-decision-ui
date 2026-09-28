@@ -261,4 +261,58 @@ context('Licence conditions', () => {
     cy.pageHeading().should('equal', 'Licence conditions for Joe')
     cy.get('[data-qa="additional"]').should('not.exist')
   })
+
+  it('shows new standard licence conditions when new standard licence conditions feature flag is enabled', () => {
+    cy.task(
+      'getCaseV2',
+      caseTemplate()
+        .withActiveConviction(
+          basicActiveConvictionTemplate()
+            .withDescription('Burglary - 05714')
+            .withLicenceCondition(
+              deliusLicenceConditionFreedomOfMovement().withNotes('Must not enter Islington borough.'),
+            ),
+        )
+        .withNoCvlLicence()
+        .build(),
+    )
+
+    cy.task('getActiveRecommendation', {
+      statusCode: 200,
+      response: { recommendationId: 12345 },
+    })
+
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: { ...completeRecommendationResponse },
+    })
+
+    cy.task('getStatuses', {
+      statusCode: 200,
+      response: [],
+    })
+
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions?newStandardLicenceConditions=1`)
+
+    cy.pageHeading().should('equal', 'Licence conditions for Joe')
+
+    cy.clickButton('Show', { parent: '[data-qa="standard"]' })
+
+    // New standard licence conditions are displayed
+    formOptions.newStandardLicenceConditions.forEach(condition => {
+      cy.getElement(condition.text).should('exist')
+    })
+
+    // Old standard licence conditions are not displayed
+    formOptions.standardLicenceConditions.forEach(condition => {
+      cy.getElement(condition.text).should('not.exist')
+    })
+
+    // Additional licence conditions are unaffected
+    cy.getElement('Burglary - 05714').should('exist')
+    cy.get('[data-qa="additional"] .app-summary-card').should('have.length', 1)
+    cy.getElement('Freedom of movement').should('exist')
+    cy.getText('condition-description').should('equal', 'On release to be escorted by police to Approved Premises')
+    cy.getText('condition-note').should('equal', 'Must not enter Islington borough.')
+  })
 })

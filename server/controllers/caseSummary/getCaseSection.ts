@@ -32,7 +32,7 @@ const getCaseSection = async (
   token: string,
   userId: string,
   reqQuery: ParsedQs,
-  _: Record<string, boolean>,
+  featureFlags: Record<string, boolean>,
 ) => {
   let sectionLabel
   let caseSummary
@@ -47,7 +47,10 @@ const getCaseSection = async (
       caseSummaryRaw = await getCaseSummary<CaseSummaryOverviewResponse>(trimmedCrn, sectionId, token)
       appInsightsTimingMetric({ name: 'getCaseOverview', startTime })
       if (!isCaseRestrictedOrExcluded(caseSummaryRaw.userAccessResponse)) {
-        caseSummary = transformLicenceConditions(caseSummaryRaw) as unknown as CaseSummaryOverviewResponse
+        caseSummary = transformLicenceConditions(
+          caseSummaryRaw,
+          featureFlags.newStandardLicenceConditions,
+        ) as unknown as CaseSummaryOverviewResponse
         caseSummary.risk.riskManagementPlan = transformRiskManagementPlan(caseSummary.risk.riskManagementPlan)
       }
       sectionLabel = 'Overview'
@@ -89,7 +92,9 @@ const getCaseSection = async (
             !!caseSummaryRaw.activeConvictions &&
             caseSummaryRaw.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
         },
-        standardLicenceConditions: formOptions.standardLicenceConditions,
+        standardLicenceConditions: featureFlags.newStandardLicenceConditions
+          ? formOptions.newStandardLicenceConditions
+          : formOptions.standardLicenceConditions,
       }
       break
     case 'contact-history':
