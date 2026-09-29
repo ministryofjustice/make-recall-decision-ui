@@ -65,7 +65,7 @@ export const newStandardLicenceConditions = [
   {
     id: 4,
     value: 'NO_WORK_UNDERTAKEN',
-    text: 'Tell your supervising officer about any new work, or a type of work, you want to do. Get their approval before you start this work',
+    text: 'Tell your supervising officer about any new work, or a type of work, you want to do. Get their approval before you start this work.',
   },
   {
     id: 5,
