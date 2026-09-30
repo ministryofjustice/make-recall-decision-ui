@@ -67,7 +67,7 @@ jobs:
       ui-branch-name: ${{ github.ref }}
   e2e_local_tests:
     name: Run e2e tests locally
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     permissions:
       actions: write
       contents: read
