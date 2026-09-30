@@ -59,7 +59,7 @@ export const newStandardLicenceConditions = [
   },
   {
     id: 3,
-    value: 'SUPERVISING_OFFICER_VISIT',
+    value: 'ADDRESS_APPROVED',
     text: 'Get permission from your supervising officer to stay at an address and if you want to stay somewhere else for one or more nights.',
   },
   {
