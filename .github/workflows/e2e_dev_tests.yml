@@ -36,7 +36,7 @@ jobs:
         with:
           working-directory: make-recall-decision-e2e-tests
           publish-summary: false
-          browser: chrome
+          browser: electron
           config-file: 'e2e_tests/cypress.config.ts'
           config: baseUrl=https://make-recall-decision-dev.hmpps.service.justice.gov.uk
           install-command: npm run setup
