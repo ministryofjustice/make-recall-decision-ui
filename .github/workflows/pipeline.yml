@@ -55,7 +55,7 @@ jobs:
       redis_tag: '7'
   e2e_local_tests:
     name: Run e2e tests locally
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     permissions:
       actions: write
       contents: read
@@ -194,4 +194,3 @@ jobs:
           channel_id: ${{ vars.PROD_RELEASES_SLACK_CHANNEL }}
           SLACK_BOT_TOKEN: ${{ secrets.HMPPS_SRE_SLACK_BOT_TOKEN }}
           input_file: results_slack_message.txt
-
