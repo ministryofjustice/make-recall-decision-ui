@@ -20,7 +20,7 @@ const getBuildConfig = () => {
         path.join(cwd, 'server/**/*.ts'),
         path.join(cwd, 'api/**/*.ts'),
         'server/**/*.njk',
-      ]).filter(file => !file.endsWith('.test.ts') && !file.endsWith('.config.ts')),
+      ]).filter(file => !file.endsWith('.test.ts') && !file.endsWith('.config.ts') && !file.endsWith('.spec.ts')),
       copy: [
         {
           from: path.join(cwd, 'server/views/**/*'),
