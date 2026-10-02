@@ -22,7 +22,7 @@ export const startPage = async (req: Request, res: Response): Promise<Response |
     if (res.locals.hasValidPpudUserMapping) {
       res.render('pages/startPPCS')
     } else {
-      res.render('pages/recommendations/ppcs/ppudUserMapping/ppudUserNotMapped')
+      res.render('pages/ppudUserNotMapped')
     }
   } else if (res.locals.user.hasPpcsAdminRole) {
     // Will need to implement a different start page for PPCS Admins once there is a specific role for them

@@ -86,7 +86,7 @@ describe('startPage', () => {
     })
 
     expect(res.locals.hasValidPpudUserMapping).toEqual(false)
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/ppudUserMapping/ppudUserNotMapped')
+    expect(res.render).toHaveBeenCalledWith('pages/ppudUserNotMapped')
   })
 
   it('sets maintenance banner fields for PPCS users', async () => {

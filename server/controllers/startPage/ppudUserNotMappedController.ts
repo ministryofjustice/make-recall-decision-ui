@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import config from '../../../../config'
+import config from '../../config'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   res.locals = {
@@ -10,7 +10,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     ppudUrl: config.ppud,
   }
 
-  res.render('pages/recommendations/ppcs/ppudMapping/ppudUserNotMapped')
+  res.render('pages/ppudUserNotMapped')
   next()
 }
 
