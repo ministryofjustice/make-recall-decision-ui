@@ -50,9 +50,16 @@ context('PPCS Start Page', () => {
         },
       })
 
+      cy.task('ppudSearchActiveUsers', {
+        statusCode: 200,
+        response: {
+          results: [],
+        },
+      })
+
       cy.visit(sharedPaths.start)
 
-      cy.pageHeading().should('not.contain', 'Check and book a recall')
+      cy.pageHeading().should('contain', 'You cannot book on a recall')
     })
 
     it('shows PPUD user not mapped page when mapping exists but PPUD user is inactive', () => {
@@ -70,7 +77,7 @@ context('PPCS Start Page', () => {
 
       cy.visit(sharedPaths.start)
 
-      cy.pageHeading().should('not.contain', 'Check and book a recall')
+      cy.pageHeading().should('contain', 'You cannot book on a recall')
     })
   })
 })

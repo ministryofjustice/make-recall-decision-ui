@@ -1,12 +1,12 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "../partials/layout.njk" %}
 {% from "components/heading/macro.njk" import heading %}
+{% from "components/bodyParagraph/macro.njk" import bodyParagraph %}
 
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
 
         {{ heading('You cannot book on a recall', 1, "l") }}
-
         {{ bodyParagraph( "Your NDelius and PPUD accounts need to be connected before you can book on a recall." ) }}
         {{ bodyParagraph( "Go to the user admin page to update your accounts." ) }}
 
@@ -22,6 +22,6 @@
             Back to sign in
         </a>
 
+        </div>
     </div>
-
 {% endblock %}
