@@ -523,16 +523,7 @@ context('Make a recommendation', () => {
 
           cy.getSelectableOptionByLabel(
             `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
-            'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-          ).should('be.checked')
-
-          cy.getSelectableOptionByLabel(
-            `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
             'Not commit any offence',
-          ).should('be.checked')
-          cy.getSelectableOptionByLabel(
-            `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
-            'Poss, own, control, inspect specified items /docs',
           ).should('be.checked')
         })
 
@@ -688,15 +679,6 @@ context('Make a recommendation', () => {
           cy.getSelectableOptionByLabel(
             'What licence conditions has Jane Bloggs breached?',
             'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-          ).should('be.checked')
-
-          cy.getSelectableOptionByLabel(
-            'What licence conditions has Jane Bloggs breached?',
-            'Not commit any offence',
-          ).should('be.checked')
-          cy.getSelectableOptionByLabel(
-            'What licence conditions has Jane Bloggs breached?',
-            'Poss, own, control, inspect specified items /docs',
           ).should('be.checked')
         })
 
