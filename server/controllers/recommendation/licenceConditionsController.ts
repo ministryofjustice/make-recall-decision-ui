@@ -51,9 +51,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }),
     backLinkUrl,
     backLinkText,
-    standardLicenceConditions: featureFlags.newStandardLicenceConditions
-      ? formOptions.newStandardLicenceConditions
-      : formOptions.standardLicenceConditions,
+    standardLicenceConditions: formOptions.standardLicenceConditions,
   }
 
   const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(recommendation.crn, 'licence-conditions', token)
@@ -67,9 +65,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
       hasMultipleActiveCustodial:
         json.activeConvictions.filter(conviction => conviction.sentence?.isCustodial).length > 1,
     },
-    standardLicenceConditions: featureFlags.newStandardLicenceConditions
-      ? formOptions.newStandardLicenceConditions
-      : formOptions.standardLicenceConditions,
+    standardLicenceConditions: formOptions.standardLicenceConditions,
   }
 
   raiseWarningBannerEvents(
@@ -177,10 +173,8 @@ async function post(req: Request, res: Response, _: NextFunction) {
         return { mainCatCode, subCatCode }
       })
 
-    const invalidStandardCondition = selectedStandardConditions.some(id =>
-      flags.newStandardLicenceConditions
-        ? !isValueValid(id, 'newStandardLicenceConditions')
-        : !isValueValid(id, 'standardLicenceConditions'),
+    const invalidStandardCondition = selectedStandardConditions.some(
+      id => !isValueValid(id, 'standardLicenceConditions'),
     )
 
     if (
@@ -191,7 +185,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       return res.redirect(303, req.originalUrl)
     }
 
-    const { licenceConvictions } = transformLicenceConditions(caseSummary, flags.newStandardLicenceConditions)
+    const { licenceConvictions } = transformLicenceConditions(caseSummary)
     if (licenceConvictions.hasMultipleActiveCustodial) {
       req.session.errors = [error('hasMultipleActiveCustodial')]
       return res.redirect(303, req.originalUrl)
@@ -217,11 +211,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
       licenceConditionsBreached: {
         standardLicenceConditions: {
           selected: selectedStandardConditions,
-          allOptions: cleanseUiList(
-            flags.newStandardLicenceConditions
-              ? formOptions.newStandardLicenceConditions
-              : formOptions.standardLicenceConditions,
-          ),
+          allOptions: cleanseUiList(formOptions.standardLicenceConditions),
         },
         additionalLicenceConditions: {
           selectedOptions: selectedAdditionalLicenceConditions,

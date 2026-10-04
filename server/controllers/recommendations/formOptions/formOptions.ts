@@ -15,7 +15,7 @@ import roshLevels from '../rosh/formOptions'
 import hasVictimsInContactScheme from '../victimContactScheme/formOptions'
 import { vulnerabilities } from '../vulnerabilities/formOptions'
 import whyConsideredRecall from '../whyConsideredRecall/formOptions'
-import standardLicenceConditions, { newStandardLicenceConditions } from './licenceConditions'
+import standardLicenceConditions from './licenceConditions'
 import spoRecallTypeEnum from './spoRecallTypeEnum'
 import { sentenceGroup } from '../sentenceInformation/formOptions'
 
@@ -39,7 +39,6 @@ export const formOptions: FormOptionsType = {
   recallTypeExtended,
   recallTypeIndeterminateApi,
   standardLicenceConditions,
-  newStandardLicenceConditions,
   custodyStatus,
   alternativesToRecallTried,
   vulnerabilities,

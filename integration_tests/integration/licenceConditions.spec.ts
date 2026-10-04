@@ -262,7 +262,7 @@ context('Licence conditions', () => {
     cy.get('[data-qa="additional"]').should('not.exist')
   })
 
-  it('shows new standard licence conditions when new standard licence conditions feature flag is enabled', () => {
+  it('shows standard licence conditions', () => {
     cy.task(
       'getCaseV2',
       caseTemplate()
@@ -292,20 +292,15 @@ context('Licence conditions', () => {
       response: [],
     })
 
-    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions?newStandardLicenceConditions=1`)
+    cy.visit(`${sharedPaths.cases}/X34983/licence-conditions`)
 
     cy.pageHeading().should('equal', 'Licence conditions for Joe')
 
     cy.clickButton('Show', { parent: '[data-qa="standard"]' })
 
-    // New standard licence conditions are displayed
-    formOptions.newStandardLicenceConditions.forEach(condition => {
-      cy.getElement(condition.text).should('exist')
-    })
-
-    // Old standard licence conditions are not displayed
+    // Standard licence conditions are displayed
     formOptions.standardLicenceConditions.forEach(condition => {
-      cy.getElement(condition.text).should('not.exist')
+      cy.getElement(condition.text).should('exist')
     })
 
     // Additional licence conditions are unaffected

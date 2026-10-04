@@ -37,7 +37,7 @@ describe('getCaseSection', () => {
     })
   })
 
-  it('passes newStandardLicenceConditions feature flag to transformLicenceConditions for overview', async () => {
+  it('passes caseSummary to transformLicenceConditions for overview', async () => {
     const apiResponse = {
       userAccessResponse: {},
       risk: {
@@ -55,50 +55,9 @@ describe('getCaseSection', () => {
     ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
     ;(transformLicenceConditions as jest.Mock).mockReturnValue(transformedResponse)
 
-    await getCaseSection(
-      'overview',
-      crn,
-      token,
-      userId,
-      {},
-      {
-        newStandardLicenceConditions: true,
-      },
-    )
+    await getCaseSection('overview', crn, token, userId, {}, {})
 
-    expect(transformLicenceConditions).toHaveBeenCalledWith(apiResponse, true)
-  })
-
-  it('passes false to transformLicenceConditions when newStandardLicenceConditions feature flag is disabled', async () => {
-    const apiResponse = {
-      userAccessResponse: {},
-      risk: {
-        riskManagementPlan: {},
-      },
-    }
-
-    const transformedResponse = {
-      ...apiResponse,
-      risk: {
-        riskManagementPlan: {},
-      },
-    }
-
-    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
-    ;(transformLicenceConditions as jest.Mock).mockReturnValue(transformedResponse)
-
-    await getCaseSection(
-      'overview',
-      crn,
-      token,
-      userId,
-      {},
-      {
-        newStandardLicenceConditions: false,
-      },
-    )
-
-    expect(transformLicenceConditions).toHaveBeenCalledWith(apiResponse, false)
+    expect(transformLicenceConditions).toHaveBeenCalledWith(apiResponse)
   })
 
   it('caches the contact history response in redis if CRN is not excluded or restricted', async () => {
@@ -258,23 +217,14 @@ describe('getCaseSection', () => {
       },
     }
 
-    it('returns new standard licence conditions when feature flag is enabled', async () => {
+    it('returns standard licence conditions', async () => {
       ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
 
-      const { caseSummary } = await getCaseSection(
-        'licence-conditions',
-        crn,
-        token,
-        userId,
-        {},
-        {
-          newStandardLicenceConditions: true,
-        },
-      )
+      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
 
       const summary = caseSummary as Record<string, unknown>
 
-      expect(summary.standardLicenceConditions).toBe(formOptions.newStandardLicenceConditions)
+      expect(summary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
       expect(summary.licenceConvictions).toStrictEqual({
         activeCustodial: [
           {
@@ -294,26 +244,7 @@ describe('getCaseSection', () => {
       })
     })
 
-    it('returns existing standard licence conditions when feature flag is disabled', async () => {
-      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
-
-      const { caseSummary } = await getCaseSection(
-        'licence-conditions',
-        crn,
-        token,
-        userId,
-        {},
-        {
-          newStandardLicenceConditions: false,
-        },
-      )
-
-      const summary = caseSummary as Record<string, unknown>
-
-      expect(summary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
-    })
-
-    it('returns existing standard licence conditions when feature flag is not provided', async () => {
+    it('returns standard licence conditions when feature flag is not provided', async () => {
       ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
 
       const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
