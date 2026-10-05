@@ -3,6 +3,27 @@ import searchMappedUserResponse from '../../../../api/responses/searchMappedUser
 import searchActiveUsersResponse from '../../../../api/responses/ppudSearchActiveUsers.json'
 import setUpSessionForPpcs from './util'
 
+const assertPpudUserNotMappedPageContent = () => {
+  cy.pageHeading().should('contain', 'You cannot book on a recall')
+
+  cy.get('p').should('contain', 'Your NDelius and PPUD accounts need to be connected before you can book on a recall.')
+  cy.get('p').should('contain', 'Go to the user admin page to update your accounts.')
+  cy.get('p').should('contain', 'You will need your:')
+
+  cy.get('[data-qa="required-details"]').within(() => {
+    cy.get('li').should('have.length', 4)
+    cy.get('li').eq(0).should('contain', 'NDelius username')
+    cy.get('li').eq(1).should('contain', 'PPUD username')
+    cy.get('li').eq(2).should('contain', 'full name as it appears in PPUD')
+    cy.get('li').eq(3).should('contain', 'team name as it appears in PPUD')
+  })
+
+  cy.contains('a.govuk-link', 'Back to sign in').should('have.attr', 'href', '/sign-out')
+
+  // the PPCS start page content must not be shown
+  cy.get('.govuk-button--start').should('not.exist')
+}
+
 context('PPCS Start Page', () => {
   beforeEach(() => {
     setUpSessionForPpcs()
@@ -33,25 +54,43 @@ context('PPCS Start Page', () => {
     })
   })
 
-  describe('landing page for PPCS without correct mapping or ppud user account', () => {
-    it('shows error when no mapping present', () => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: { ppudUserMapping: null } })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: { results: [] } })
+  describe('PPCS user without a valid PPUD user mapping', () => {
+    it('shows PPUD user not mapped page when no mapping is present', () => {
+      cy.task('searchMappedUsers', {
+        statusCode: 200,
+        response: {
+          ppudUserMapping: null,
+        },
+      })
 
-      cy.visit(`${sharedPaths.start}`)
+      cy.task('ppudSearchActiveUsers', {
+        statusCode: 200,
+        response: {
+          results: [],
+        },
+      })
 
-      cy.pageHeading().should('contain', 'Check and book a recall')
-      cy.getElement('Your account needs updating before you can book a recall').should('exist')
+      cy.visit(sharedPaths.start)
+
+      assertPpudUserNotMappedPageContent()
     })
 
-    it('shows error when mapping present but no active ppud user', () => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: { results: [] } })
+    it('shows PPUD user not mapped page when mapping exists but PPUD user is inactive', () => {
+      cy.task('searchMappedUsers', {
+        statusCode: 200,
+        response: searchMappedUserResponse,
+      })
 
-      cy.visit(`${sharedPaths.start}`)
+      cy.task('ppudSearchActiveUsers', {
+        statusCode: 200,
+        response: {
+          results: [],
+        },
+      })
 
-      cy.pageHeading().should('contain', 'Check and book a recall')
-      cy.getElement('Your account needs updating before you can book a recall').should('exist')
+      cy.visit(sharedPaths.start)
+
+      assertPpudUserNotMappedPageContent()
     })
   })
 })

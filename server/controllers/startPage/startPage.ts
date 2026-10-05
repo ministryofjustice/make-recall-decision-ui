@@ -1,14 +1,11 @@
 import { Request, Response } from 'express'
 import config from '../../config'
 import { isDateTimeRangeCurrent } from '../../utils/utils'
-import { ppudSearchActiveUsers, searchMappedUsers } from '../../data/makeDecisionApiClient'
-import { fetchFromCacheOrApi } from '../../data/fetchFromCacheOrApi'
+import hasValidPpudUserMapping from '../../booking/hasValidPpudUserMapping'
 
 export enum HMPPS_AUTH_ROLE {
   PPCS = 'ROLE_MAKE_RECALL_DECISION_PPCS',
 }
-
-const ONE_WEEK_TTL_OVERRIDE_SECONDS = 60 * 60 * 24 * 7
 
 export const startPage = async (req: Request, res: Response): Promise<Response | void> => {
   res.locals.maintenanceBanner = {
@@ -21,20 +18,12 @@ export const startPage = async (req: Request, res: Response): Promise<Response |
   } = res.locals
 
   if (res.locals.user.hasPpcsRole) {
-    const mappingRes = await searchMappedUsers(username, token)
-    if (mappingRes.ppudUserMapping) {
-      const ppudUserRes = await fetchFromCacheOrApi({
-        fetchDataFn: async () => {
-          return ppudSearchActiveUsers(token, mappingRes.ppudUserMapping.ppudUserName, null)
-        },
-        checkWhetherToCacheDataFn: apiResponse => apiResponse.results.length > 0,
-        userId,
-        redisKey: `ppudUserResponse:${username}`,
-        ttlOverrideSeconds: ONE_WEEK_TTL_OVERRIDE_SECONDS,
-      })
-      res.locals.validMappingAndPpudUser = ppudUserRes?.results.length === 1
+    res.locals.hasValidPpudUserMapping = await hasValidPpudUserMapping({ username, userId, token })
+    if (res.locals.hasValidPpudUserMapping) {
+      res.render('pages/startPPCS')
+    } else {
+      res.render('pages/ppudUserNotMapped')
     }
-    res.render('pages/startPPCS')
   } else if (res.locals.user.hasPpcsAdminRole) {
     // Will need to implement a different start page for PPCS Admins once there is a specific role for them
     res.render('pages/recommendations/ppcs/ppudUserMapping/ppudUserMappings')
