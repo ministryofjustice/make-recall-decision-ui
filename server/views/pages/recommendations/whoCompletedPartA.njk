@@ -34,7 +34,6 @@
                                 value: inputDisplayValues.name,
                                 errorMessage: errorMessage(errors.name)
                             }) }}
-                            {% if flags.newStandardLicenceConditions %}
                             {{ govukSelect({
                               id: "jobTitle",
                               name: "jobTitle",
@@ -46,7 +45,6 @@
                               items: jobTitles,
                               errorMessage: errorMessage(errors.jobTitle)
                             }) }}
-                            {% endif %}
                             {{ govukInput({
                                 label: {
                                     text: "Email",
