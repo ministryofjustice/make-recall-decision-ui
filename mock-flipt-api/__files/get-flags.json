@@ -12,12 +12,6 @@
     "type": "BOOLEAN_FLAG_TYPE"
   },
   {
-    "key": "ui-newStandardLicenceConditions",
-    "description": "bar",
-    "enabled": false,
-    "type": "BOOLEAN_FLAG_TYPE"
-  },
-  {
     "key": "ui-ppcsIndeterminateJourney",
     "description": "bar",
     "enabled": true,

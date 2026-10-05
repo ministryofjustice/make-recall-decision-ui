@@ -66,7 +66,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     )
   }
 
-  if (flags.newStandardLicenceConditions && !isMandatoryTextValue(jobTitle)) {
+  if (!isMandatoryTextValue(jobTitle)) {
     const errorId = 'missingWhoCompletedPartAJobTitle'
     errors.push(
       makeErrorObject({
