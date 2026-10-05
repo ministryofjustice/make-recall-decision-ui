@@ -101,15 +101,15 @@
   },
   "licenceConditionsBreached": {
     "standardLicenceConditions": {
-      "selected": ["GOOD_BEHAVIOUR", "NO_OFFENCE"],
+      "selected": ["GOOD_BEHAVIOUR", "KEEP_IN_TOUCH"],
       "allOptions": [
         {
           "value": "GOOD_BEHAVIOUR",
-          "text": "Be of good behaviour"
+          "text": "Behave well in a way that supports the purpose of you being on licence, and do not commit any crime."
         },
         {
-          "value": "NO_OFFENCE",
-          "text": "Not to commit any offence"
+          "value": "KEEP_IN_TOUCH",
+          "text": "Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live."
         }
       ]
     },

@@ -19,16 +19,19 @@ describe('get', () => {
           crn: 'X123',
           licenceConditionsBreached: {
             standardLicenceConditions: {
-              selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE', 'KEEP_IN_TOUCH'],
+              selected: ['GOOD_BEHAVIOUR', 'KEEP_IN_TOUCH', 'ADDRESS_APPROVED'],
               allOptions: [
                 {
                   value: 'GOOD_BEHAVIOUR',
-                  text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+                  text: 'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
                 },
-                { value: 'NO_OFFENCE', text: 'Not commit any offence' },
                 {
                   value: 'KEEP_IN_TOUCH',
-                  text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
+                  text: 'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
+                },
+                {
+                  value: 'ADDRESS_APPROVED',
+                  text: 'Get permission from your supervising officer to stay at an address and if you want to stay somewhere else for one or more nights.',
                 },
               ],
             },
@@ -82,9 +85,9 @@ describe('get', () => {
     expect(res.locals.offenderName).toEqual('Joe Bloggs')
     expect(res.locals.triggerLeadingToRecall).toBeUndefined()
     expect(res.locals.standardLicenceConditions).toEqual([
-      'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-      'Not commit any offence',
-      'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
+      'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
+      'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
+      'Get permission from your supervising officer to stay at an address and if you want to stay somewhere else for one or more nights.',
     ])
     expect(res.locals.additionalLicenceConditions).toEqual([
       {
@@ -123,12 +126,15 @@ describe('get', () => {
               allOptions: [
                 {
                   value: 'GOOD_BEHAVIOUR',
-                  text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+                  text: 'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
                 },
-                { value: 'NO_OFFENCE', text: 'Not commit any offence' },
                 {
                   value: 'KEEP_IN_TOUCH',
-                  text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
+                  text: 'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
+                },
+                {
+                  value: 'ADDRESS_APPROVED',
+                  text: 'Get permission from your supervising officer to stay at an address and if you want to stay somewhere else for one or more nights.',
                 },
               ],
             },

@@ -19,12 +19,6 @@ export default [
     enabled: false,
   },
   {
-    name: 'New Standard Licence Conditions',
-    key: 'ui-newStandardLicenceConditions',
-    description: 'Enables the new set of standard licence conditions',
-    enabled: false,
-  },
-  {
     name: 'PPCS Indeterminate Journey',
     key: 'ui-ppcsIndeterminateJourney',
     description: 'Enables the indeterminate sentence journey for CaR PPCS users',

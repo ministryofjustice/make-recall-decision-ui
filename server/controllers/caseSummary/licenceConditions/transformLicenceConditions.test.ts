@@ -154,14 +154,8 @@ describe('transformLicenceConditions', () => {
     ])
   })
 
-  it('uses new standard licence conditions when newStandardLicenceConditions is true', () => {
-    const transformed = transformLicenceConditions({ activeConvictions: [] }, true)
-
-    expect(transformed.standardLicenceConditions).toEqual(formOptions.newStandardLicenceConditions)
-  })
-
-  it('uses existing standard licence conditions when newStandardLicenceConditions is false', () => {
-    const transformed = transformLicenceConditions({ activeConvictions: [] }, false)
+  it('returns standard licence conditions', () => {
+    const transformed = transformLicenceConditions({ activeConvictions: [] })
 
     expect(transformed.standardLicenceConditions).toEqual(formOptions.standardLicenceConditions)
   })

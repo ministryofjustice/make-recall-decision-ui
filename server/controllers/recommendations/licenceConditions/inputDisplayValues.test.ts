@@ -5,7 +5,7 @@ describe('inputDisplayValuesLicenceConditions', () => {
   const apiValues = {
     licenceConditionsBreached: {
       standardLicenceConditions: {
-        selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+        selected: ['GOOD_BEHAVIOUR', 'KEEP_IN_TOUCH'],
         allOptions: formOptions.standardLicenceConditions,
       },
       additionalLicenceConditions: {
@@ -54,7 +54,7 @@ describe('inputDisplayValuesLicenceConditions', () => {
           subCatCode: 'NST14',
         },
       ],
-      standardLicenceConditions: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+      standardLicenceConditions: ['GOOD_BEHAVIOUR', 'KEEP_IN_TOUCH'],
     })
   })
 
@@ -66,14 +66,14 @@ describe('inputDisplayValuesLicenceConditions', () => {
       apiValues: {
         licenceConditionsBreached: {
           standardLicenceConditions: {
-            selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+            selected: ['GOOD_BEHAVIOUR', 'KEEP_IN_TOUCH'],
             allOptions: formOptions.standardLicenceConditions,
           },
         },
       },
     })
     expect(inputDisplayValues).toEqual({
-      standardLicenceConditions: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+      standardLicenceConditions: ['GOOD_BEHAVIOUR', 'KEEP_IN_TOUCH'],
     })
   })
 
