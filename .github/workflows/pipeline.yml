@@ -113,13 +113,13 @@ jobs:
       sentry_environment: DEV
       sentry_create_release: true
       app_version: '${{ needs.build.outputs.app_version }}'
-  # e2e_dev_tests:
-  #   name: e2e tests against dev
-  #   if: github.ref == 'refs/heads/main'
-  #   needs:
-  #     - deploy_dev
-  #   secrets: inherit
-  #   uses: ./.github/workflows/e2e_dev_tests.yml
+  e2e_dev_tests:
+    name: e2e tests against dev
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_dev
+    secrets: inherit
+    uses: ./.github/workflows/e2e_dev_tests.yml
   deploy_preprod:
     name: Deploy to the preprod environment
     if: github.ref == 'refs/heads/main'
@@ -127,7 +127,7 @@ jobs:
       - build
       - helm_lint
       - deploy_dev
-      # - e2e_dev_tests
+      - e2e_dev_tests
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2
     secrets: inherit
     with:
