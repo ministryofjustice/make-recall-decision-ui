@@ -332,6 +332,11 @@ const ppcsDeterminateSentenceRoutes: RouteDefinition[] = [
     handler: consecutiveSentenceDetailsController.get,
   },
   {
+    ...ppcsDeterminateSentencePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.consecutiveSentenceDetails}`,
+    handler: consecutiveSentenceDetailsController.post,
+  },
+  {
     ...ppcsDeterminateSentenceGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.matchIndexOffence}`,
     handler: matchIndexOffenceController.get,
