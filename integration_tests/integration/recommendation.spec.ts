@@ -460,15 +460,15 @@ context('Make a recommendation', () => {
               },
               licenceConditionsBreached: {
                 standardLicenceConditions: {
-                  selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+                  selected: ['GOOD_BEHAVIOUR', 'KEEP_IN_TOUCH'],
                   allOptions: [
                     {
                       value: 'GOOD_BEHAVIOUR',
-                      text: 'Be of good behaviour',
+                      text: 'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
                     },
                     {
-                      value: 'NO_OFFENCE',
-                      text: 'Not to commit any offence',
+                      value: 'KEEP_IN_TOUCH',
+                      text: 'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
                     },
                   ],
                 },
@@ -523,7 +523,16 @@ context('Make a recommendation', () => {
 
           cy.getSelectableOptionByLabel(
             `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
-            'Not commit any offence',
+            'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
+          ).should('be.checked')
+
+          cy.getSelectableOptionByLabel(
+            `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
+            'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
+          ).should('be.checked')
+          cy.getSelectableOptionByLabel(
+            `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
+            'Poss, own, control, inspect specified items /docs',
           ).should('be.checked')
         })
 
@@ -678,7 +687,16 @@ context('Make a recommendation', () => {
 
           cy.getSelectableOptionByLabel(
             'What licence conditions has Jane Bloggs breached?',
-            'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+            'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
+          ).should('be.checked')
+
+          cy.getSelectableOptionByLabel(
+            'What licence conditions has Jane Bloggs breached?',
+            'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
+          ).should('be.checked')
+          cy.getSelectableOptionByLabel(
+            'What licence conditions has Jane Bloggs breached?',
+            'Poss, own, control, inspect specified items /docs',
           ).should('be.checked')
         })
 
@@ -1373,7 +1391,10 @@ context('Make a recommendation', () => {
 
       cy.getElement({ qaAttr: 'licence-conditions-breached' }).click()
 
-      cy.getText('licence-conditions-breached-panel').should('contain', 'Be of good behaviour')
+      cy.getText('licence-conditions-breached-panel').should(
+        'contain',
+        'Behave well in a way that supports the purpose of you being on licence',
+      )
 
       cy.clickButton('Continue')
 
@@ -2867,7 +2888,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Record the decison in NDelius')
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
-      cy.getText('reason').should('contain', 'Be of good behaviour')
+      cy.getText('reason').should('contain', 'Behave well in a way that supports the purpose of you being on licence')
       cy.getText('reason').should('contain', 'Manager(s) name: John Doe')
     })
     it('present AP rationale confirmation', () => {
@@ -2889,7 +2910,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Decision not to recall')
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
-      cy.getText('reason').should('contain', 'Be of good behaviour')
+      cy.getText('reason').should('contain', 'Behave well in a way that supports the purpose of you being on licence')
       cy.getText('reason').should('contain', 'Manager(s) name: John Doe')
     })
     it('present AP why no recall', () => {
