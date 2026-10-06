@@ -77,7 +77,20 @@
                                 </dd>
                             </div>
 
-                            {% if offence.terms.length < 2 %}
+                            {% if totalSentenceLength %}
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Sentence length
+                                    </dt>
+                                    <dd class="govuk-summary-list__value" data-qa="sentenceLength">
+                                        {{ hyphenForBlank( formatTerm({
+                                            years: totalSentenceLength.partYears,
+                                            months: totalSentenceLength.partMonths,
+                                            days: totalSentenceLength.partDays
+                                        }) ) }}
+                                    </dd>
+                                </div>
+                            {% elif offence.terms.length < 2 %}
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         Sentence length

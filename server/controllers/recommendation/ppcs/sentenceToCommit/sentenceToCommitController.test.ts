@@ -1,3 +1,4 @@
+import CUSTODY_GROUP from '../../../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import sentenceToCommitController from './sentenceToCommitController'
 import { getSupportingDocuments } from '../../../../data/makeDecisionApiClient'
@@ -87,6 +88,37 @@ describe('get', () => {
     const next = mockNext()
 
     await sentenceToCommitController.get(mockReq(), res, next)
+  })
+})
+
+describe('get - total sentence length', () => {
+  beforeEach(() => {
+    ;(getSupportingDocuments as jest.Mock).mockResolvedValue([])
+  })
+  const totalSentenceLength = { partYears: 2, partMonths: 1, partDays: 3 }
+  const buildRes = (consecutiveCount: number | undefined) =>
+    mockRes({
+      locals: {
+        recommendation: {
+          id: '123',
+          nomisIndexOffence: {
+            allOptions: [{ offenderChargeId: 1, terms: [], consecutiveCount }],
+            selected: 1,
+          },
+          bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE, totalSentenceLength },
+        },
+      },
+    })
+
+  it('is set when the selected offence is part of a consecutive sequence', async () => {
+    const res = buildRes(2)
+    await sentenceToCommitController.get(mockReq(), res, mockNext())
+    expect(res.locals.totalSentenceLength).toEqual(totalSentenceLength)
+  })
+  it('is not set when the selected offence has no consecutive sentences', async () => {
+    const res = buildRes(undefined)
+    await sentenceToCommitController.get(mockReq(), res, mockNext())
+    expect(res.locals.totalSentenceLength).toBeUndefined()
   })
 })
 
