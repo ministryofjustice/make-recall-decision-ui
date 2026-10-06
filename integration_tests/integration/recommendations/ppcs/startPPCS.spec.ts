@@ -7,7 +7,9 @@ const assertPpudUserNotMappedPageContent = () => {
   cy.pageHeading().should('contain', 'You cannot book on a recall')
 
   cy.get('p').should('contain', 'Your NDelius and PPUD accounts need to be connected before you can book on a recall.')
-  cy.get('p').should('contain', 'Go to the user admin page to update your accounts.')
+  cy.get('[data-qa="user-admin-link"]')
+    .should('contain', 'user admin page')
+    .and('have.attr', 'href', '/ppud-user-mappings')
   cy.get('p').should('contain', 'You will need your:')
 
   cy.get('[data-qa="required-details"]').within(() => {
@@ -18,8 +20,10 @@ const assertPpudUserNotMappedPageContent = () => {
     cy.get('li').eq(3).should('contain', 'team name as it appears in PPUD')
   })
 
-  cy.contains('a.govuk-link', 'Back to sign in').should('have.attr', 'href', '/sign-out')
-
+  cy.contains('a.govuk-link', 'Back to sign in')
+    .should('have.attr', 'href', '/sign-out')
+    .parent()
+    .should('have.class', 'govuk-body')
   // the PPCS start page content must not be shown
   cy.get('.govuk-button--start').should('not.exist')
 }

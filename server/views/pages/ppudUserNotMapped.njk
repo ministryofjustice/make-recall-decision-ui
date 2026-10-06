@@ -8,7 +8,7 @@
 
         {{ heading('You cannot book on a recall', 1, "l") }}
         {{ bodyParagraph( "Your NDelius and PPUD accounts need to be connected before you can book on a recall." ) }}
-        {{ bodyParagraph( "Go to the user admin page to update your accounts." ) }}
+        <p class="govuk-body">Go to the <a class="govuk-link" href="/ppud-user-mappings" data-qa="user-admin-link">user admin page</a> to update your accounts.</p>
 
         <p class="govuk-body govuk-!-margin-bottom-1"> You will need your: </p>
             <ul class='govuk-list govuk-list--bullet' data-qa="required-details">
@@ -18,9 +18,9 @@
                 <li> team name as it appears in PPUD </li>
             </ul>
 
-        <a class="govuk-link" href="/sign-out">
-            Back to sign in
-        </a>
+        <p class="govuk-body govuk-!-margin-top-6">
+            <a class="govuk-link" href="/sign-out">Back to sign in</a>
+        </p>
 
         </div>
     </div>
