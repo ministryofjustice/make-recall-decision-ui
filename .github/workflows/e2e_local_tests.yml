@@ -66,7 +66,7 @@ jobs:
         run: sudo npm install -g npm@11
       - name: Start components
         working-directory: make-recall-decision-ui
-        run: ./scripts/start-services-for-e2e-tests.sh new-standard-licence-conditions
+        run: ./scripts/start-services-for-e2e-tests.sh
       - uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/actions/cypress/create_timings_file@bd2ccc17cfc6c285638a4be7bbb280527a30c328 # v1.1.0
         with:
           timings: ${{ needs.get-timings.outputs.timings }}
