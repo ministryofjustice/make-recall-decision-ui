@@ -5,4 +5,8 @@
 - [ ] E2E tests are **not required** for this UI change.
 - [ ] E2E tests **are required**. Link to the E2E tests PR: 
 
-> **Reviewers:** Please verify that exactly one option is selected before approving this PR.
+## SAR Changes
+
+- [ ] I have **checked with the BAs** whether any SAR changes are required, and **all required tickets are already in place**.
+
+> **Reviewers:** Please ensure that exactly one E2E option is selected and the SAR confirmation checkbox has been checked before approving this PR.
