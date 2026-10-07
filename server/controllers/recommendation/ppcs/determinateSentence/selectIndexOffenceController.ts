@@ -179,11 +179,10 @@ async function post(req: Request, res: Response, next: NextFunction) {
     s => s.indexSentence.offences?.[0]?.offenderChargeId === indexOffenceData.offenderChargeId,
   )
   const sentenceHasConsecutive = sentenceForOffence.sentencesInSequence != null
-  // MRD-3362 - a total sentence length only applies to the offence sequence it was entered for,
-  // so it must be re-entered if a different index offence is selected
+  const previouslySelected = recommendation.nomisIndexOffence?.selected
   const clearTotalSentenceLength =
     recommendation.bookRecallToPpud?.totalSentenceLength != null &&
-    Number(recommendation.nomisIndexOffence?.selected) !== Number(indexOffence)
+    (previouslySelected == null || Number(previouslySelected) !== indexOffenceData.offenderChargeId)
 
   await updateRecommendation({
     recommendationId,
