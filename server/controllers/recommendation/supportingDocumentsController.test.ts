@@ -27,7 +27,7 @@ describe('get', () => {
   it('loads', async () => {
     const mockDoc = {
       title: 'Part A',
-      type: '',
+      type: 'OtherDocument',
       filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
       id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
     }
@@ -103,7 +103,7 @@ describe('post request', () => {
         recommendationId: '123',
         title: '',
         token: 'token',
-        type: '',
+        type: 'OtherDocument',
       })
       expect(res.status).toHaveBeenCalledWith(201)
       expect(req.session.errors).toBe(undefined)
@@ -222,7 +222,7 @@ describe('post request', () => {
         recommendationId: '123',
         title: '',
         token: 'token',
-        type: '',
+        type: 'OtherDocument',
       })
       expect(res.redirect).toHaveBeenCalledWith(303, '/example-url')
       expect(req.session.errors).toBe(undefined)

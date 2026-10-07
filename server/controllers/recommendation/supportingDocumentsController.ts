@@ -149,7 +149,9 @@ async function handleUpload(req: Request, res: Response) {
       title: '',
       filename: file.originalname,
       mimetype: file.mimetype,
-      type: '', // No longer needed
+      // We no longer have visibility on the document type, so all documents
+      // are "OtherDocument" now to allow for uploading to PPUD
+      type: 'OtherDocument',
       data,
       featureFlags: flags,
     })
