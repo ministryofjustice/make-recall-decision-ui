@@ -13,7 +13,6 @@ import updateRelease from '../../booking/updateRelease'
 import updateRecall from '../../booking/updateRecall'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import StageEnum from '../../booking/StageEnum'
-import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
 import RECOMMENDATION_STATUS from '../../middleware/recommendationStatus'
@@ -24,7 +23,6 @@ jest.mock('../../booking/updateRecall')
 jest.mock('../../booking/updateRelease')
 jest.mock('../../booking/createOrUpdateSentence')
 jest.mock('../../booking/updateOffence')
-jest.mock('../../booking/uploadMandatoryDocument')
 jest.mock('../../booking/uploadAdditionalDocument')
 jest.mock('../../booking/createMinute')
 jest.mock('../../monitoring/azureAppInsights')
@@ -251,96 +249,22 @@ describe('post', () => {
     ;(updateOffence as jest.Mock).mockResolvedValue({ stage: StageEnum.OFFENCE_BOOKED })
     ;(updateRelease as jest.Mock).mockResolvedValue({ stage: StageEnum.RELEASE_BOOKED })
     ;(updateRecall as jest.Mock).mockResolvedValue({ stage: StageEnum.RECALL_BOOKED })
-
-    const PPUDPartA = {
-      title: '',
-      type: 'PPUDPartA',
-      filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-    }
-
-    const PPUDLicenceDocument = {
-      title: '',
-      type: 'PPUDLicenceDocument',
-      filename: 'licence.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491dff',
-    }
-
-    const PPUDProbationEmail = {
-      title: '',
-      type: 'PPUDProbationEmail',
-      filename: 'email.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
-    }
-
-    const PPUDOASys = {
-      title: '',
-      type: 'PPUDOASys',
-      filename: 'email.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
-    }
-
-    const PPUDPrecons = {
-      title: '',
-      type: 'PPUDPrecons',
-      filename: 'email.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491dbb',
-    }
-
-    const PPUDPSR = {
-      title: '',
-      type: 'PPUDPSR',
-      filename: 'psr.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491dcc',
-    }
-
-    const PPUDChargeSheet = {
-      title: '',
-      type: 'PPUDChargeSheet',
-      filename: 'psr.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491ddd',
-    }
+    ;(uploadAdditionalDocument as jest.Mock).mockImplementation(async memento => memento)
 
     const OtherDocument = {
       title: 'some title 1',
       type: 'OtherDocument',
       filename: 'licence.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d11',
+      id: 'file-1',
     }
-
     const OtherDocument2 = {
       title: 'some title 2',
       type: 'OtherDocument',
       filename: 'licence.docx',
-      id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d22',
+      id: 'file-2',
     }
 
-    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([
-      PPUDPartA,
-      PPUDLicenceDocument,
-      PPUDProbationEmail,
-      PPUDOASys,
-      PPUDPrecons,
-      PPUDPSR,
-      PPUDChargeSheet,
-      OtherDocument,
-      OtherDocument2,
-    ])
-    ;(uploadMandatoryDocument as jest.Mock)
-      .mockReturnValueOnce({ uploaded: ['1'] })
-      .mockReturnValueOnce({ uploaded: ['1', '2'] })
-      .mockReturnValueOnce({ uploaded: ['1', '2', '3'] })
-      .mockReturnValueOnce({ uploaded: ['1', '2', '3', '4'] })
-      .mockReturnValueOnce({ uploaded: ['1', '2', '3', '4', '5'] })
-      .mockReturnValueOnce({ uploaded: ['1', '2', '3', '4', '5', '6'] })
-      .mockReturnValueOnce({ uploaded: ['1', '2', '3', '4', '5', '6', '7'] })
-    ;(uploadAdditionalDocument as jest.Mock)
-      .mockReturnValueOnce({
-        uploaded: ['8'],
-      })
-      .mockReturnValueOnce({
-        uploaded: ['9'],
-      })
+    ;(getSupportingDocuments as jest.Mock).mockReturnValueOnce([OtherDocument, OtherDocument2])
 
     await bookToPpudController.post(req, res, next)
 
@@ -368,75 +292,23 @@ describe('post', () => {
       statuses,
     )
 
-    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { stage: 'RECALL_BOOKED' },
-      '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-      'PPUDPartA',
-      'token',
-      flags,
-    )
-    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { uploaded: ['1'] },
-      '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491dff',
-      'PPUDLicenceDocument',
-      'token',
-      flags,
-    )
-    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { uploaded: ['1', '2'] },
-      '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
-      'PPUDProbationEmail',
-      'token',
-      flags,
-    )
-    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { uploaded: ['1', '2', '3'] },
-      '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491daa',
-      'PPUDOASys',
-      'token',
-      flags,
-    )
-    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { uploaded: ['1', '2', '3', '4'] },
-      '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491dbb',
-      'PPUDPrecons',
-      'token',
-      flags,
-    )
-    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { uploaded: ['1', '2', '3', '4', '5'] },
-      '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491dcc',
-      'PPUDPSR',
-      'token',
-      flags,
-    )
-    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
-      { uploaded: ['1', '2', '3', '4', '5', '6'] },
-      '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491ddd',
-      'PPUDChargeSheet',
-      'token',
-      flags,
-    )
     expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
       1,
-      { uploaded: ['1', '2', '3', '4', '5', '6', '7'] },
+      {
+        stage: StageEnum.RECALL_BOOKED,
+      },
       '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491d11',
+      'file-1',
       'token',
       flags,
     )
     expect(uploadAdditionalDocument).toHaveBeenNthCalledWith(
       2,
-      { uploaded: ['8'] },
+      {
+        stage: StageEnum.RECALL_BOOKED,
+      },
       '1',
-      'e0cc157d-5c31-4c2f-984f-4bc7b5491d22',
+      'file-2',
       'token',
       flags,
     )
@@ -586,15 +458,14 @@ describe('post', () => {
     ;(getSupportingDocuments as jest.Mock).mockResolvedValue([
       {
         id: 'document-id',
-        filename: 'part-a.docx',
-        type: 'PPUDPartA',
+        filename: 'other-document.docx',
+        type: 'OtherDocument',
       },
     ])
 
     let mementoAtUploadCall: Record<string, unknown> | undefined
-    ;(uploadMandatoryDocument as jest.Mock).mockImplementation((memento: Record<string, unknown>) => {
+    ;(uploadAdditionalDocument as jest.Mock).mockImplementation((memento: Record<string, unknown>) => {
       mementoAtUploadCall = { ...memento }
-
       throw new PpudError(400, '{"error":"upload failed"}')
     })
 
@@ -604,13 +475,12 @@ describe('post', () => {
       stage: StageEnum.RECALL_BOOKED,
     })
 
-    expect(uploadMandatoryDocument).toHaveBeenCalledWith(
+    expect(uploadAdditionalDocument).toHaveBeenCalledWith(
       expect.objectContaining({
         stage: StageEnum.RECALL_BOOKED,
       }),
       '1',
       'document-id',
-      'PPUDPartA',
       'token',
       flags,
     )
@@ -622,7 +492,7 @@ describe('post', () => {
           stage: StageEnum.RECALL_BOOKED,
           failed: true,
           failedMessage: '{"error":"upload failed"}',
-          uploadFailedDocName: 'part-a.docx',
+          uploadFailedDocName: 'other-document.docx',
         },
       },
       token: 'token',
