@@ -66,7 +66,7 @@ jobs:
         run: sudo npm install -g npm@11
       - name: Start components
         working-directory: make-recall-decision-ui
-        run: ./scripts/start-services-for-e2e-tests.sh new-standard-licence-conditions
+        run: ./scripts/start-services-for-e2e-tests.sh
       - uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/actions/cypress/create_timings_file@bd2ccc17cfc6c285638a4be7bbb280527a30c328 # v1.1.0
         with:
           timings: ${{ needs.get-timings.outputs.timings }}
@@ -114,11 +114,11 @@ jobs:
       - name: Record API docker logs
         if: failure()
         working-directory: make-recall-decision-api
-        run: docker-compose logs
+        run: docker compose logs
       - name: Record UI docker logs
         if: failure()
         working-directory: make-recall-decision-ui
-        run: docker-compose logs
+        run: docker compose logs
       - name: Upload screenshots
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
