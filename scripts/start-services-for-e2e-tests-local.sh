@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+api_docker_profile=${1:-default}
+
 BUILD_HMPPS_AUTH=false
 RUN_DOCKER_COMPOSE_PULL=false
 
@@ -59,7 +61,7 @@ pushd "${API_DIR}"
 printf "\n\nBuilding/starting API components...\n\n"
 export SPRING_PROFILES_ACTIVE=dev
 export POSTGRES_OPTIONS=sslmode=disable
-docker compose up -d --scale=${API_NAME}=0
+docker compose --profile ${api_docker_profile} up -d --scale=${API_NAME}=0
 ./gradlew --stop
 
 SYSTEM_CLIENT_ID=make-recall-decision-api \
