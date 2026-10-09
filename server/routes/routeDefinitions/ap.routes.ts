@@ -12,6 +12,7 @@ import apPaths from '../paths/ap.paths'
 
 const roles = {
   allow: [HMPPS_AUTH_ROLE.PO, HMPPS_AUTH_ROLE.RW, HMPPS_AUTH_ROLE.ODM],
+  deny: [HMPPS_AUTH_ROLE.PPCS, HMPPS_AUTH_ROLE.PPCS_ADMIN],
 }
 
 const apGetTemplate = createRecommendationRouteTemplate(

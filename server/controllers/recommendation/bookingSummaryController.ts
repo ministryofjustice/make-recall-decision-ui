@@ -3,13 +3,14 @@ import { RecommendationResponse } from '../../@types/make-recall-decision-api'
 import { RecommendationStatusResponse } from '../../@types/make-recall-decision-api/models/RecommendationStatusReponse'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
 import { currentHighestRosh } from '../recommendations/helpers/rosh'
+import config from '../../config'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const { recommendation, statuses } = res.locals
 
   const recommendationResponse = recommendation as RecommendationResponse
 
-  const offence = recommendationResponse.nomisIndexOffence.allOptions.find(
+  const offence = recommendationResponse.nomisIndexOffence?.allOptions?.find(
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
 
@@ -40,6 +41,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     acoSigned,
     poRecallConsultSpo,
     recallReceived,
+    ppudUrl: config.ppud,
   }
 
   res.render(`pages/recommendations/bookingSummary`)

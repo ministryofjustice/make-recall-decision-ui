@@ -222,7 +222,7 @@ describe('update sentence', () => {
         const selectedOffence = recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0]
         const custodialTerm = selectedOffence.terms[0]
         const expectedSentenceLength = {
-          partDays: custodialTerm.days,
+          partDays: custodialTerm.days + custodialTerm.weeks * 7, // Weeks are now converted into days
           partMonths: custodialTerm.months,
           partYears: custodialTerm.years,
         }
@@ -236,6 +236,96 @@ describe('update sentence', () => {
         testSentenceCreation(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
 
         testSentenceUpdate(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
+      })
+
+      describe('converts weeks to days in a selected index offence with a custodial term', () => {
+        const termOptions: TermOptions[] = [{ chronos: { years: 0, months: 0, weeks: 2, days: 0 }, code: 'IMP' }]
+        const recommendationWithCustodialTerm = {
+          ...recommendation,
+          nomisIndexOffence: {
+            ...recommendation.nomisIndexOffence,
+            allOptions: OfferedOffenceGenerator.generateSeries([
+              {
+                offenderChargeId: recommendation.nomisIndexOffence.selected,
+                terms: termOptions,
+              },
+              {},
+              {},
+            ]),
+          },
+        }
+
+        const expectedSentenceLength = {
+          partDays: 14, // Weeks are now converted into days
+          partMonths: 0,
+          partYears: 0,
+        }
+        const expectedSentenceRequest = expectedDeterminateSentenceRequest(
+          recommendationWithCustodialTerm.bookRecallToPpud,
+          recommendationWithCustodialTerm.nomisIndexOffence.allOptions[0],
+          expectedSentenceLength,
+          recommendationWithCustodialTerm.sentenceGroup,
+        )
+
+        testSentenceCreation(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
+
+        testSentenceUpdate(recommendationWithCustodialTerm, bookingMemento, expectedSentenceRequest)
+      })
+    })
+
+    describe('for determinate sentence with a total sentence length (consecutive sequence)', () => {
+      const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: { custodyGroup: CUSTODY_GROUP.DETERMINATE },
+      })
+      const totalSentenceLength = { partYears: 4, partMonths: 7, partDays: 21 }
+      const allOptions = OfferedOffenceGenerator.generateSeries([
+        {
+          offenderChargeId: recommendation.nomisIndexOffence.selected,
+          terms: [{ chronos: 'all', code: 'IMP' }],
+        },
+        {},
+      ])
+
+      describe('uses the total sentence length instead of the NOMIS custodial term', () => {
+        const recommendationWithTotal: RecommendationResponse = {
+          ...recommendation,
+          nomisIndexOffence: {
+            ...recommendation.nomisIndexOffence,
+            allOptions: [{ ...allOptions[0], consecutiveCount: 2 }, allOptions[1]],
+          },
+          bookRecallToPpud: { ...recommendation.bookRecallToPpud, totalSentenceLength },
+        }
+        const expectedSentenceRequest = expectedDeterminateSentenceRequest(
+          recommendationWithTotal.bookRecallToPpud,
+          recommendationWithTotal.nomisIndexOffence.allOptions[0],
+          totalSentenceLength,
+          recommendationWithTotal.sentenceGroup,
+        )
+
+        testSentenceCreation(recommendationWithTotal, bookingMemento, expectedSentenceRequest)
+
+        testSentenceUpdate(recommendationWithTotal, bookingMemento, expectedSentenceRequest)
+      })
+
+      describe('ignores a total sentence length when the selected offence is not part of a sequence', () => {
+        const recommendationWithStaleTotal: RecommendationResponse = {
+          ...recommendation,
+          nomisIndexOffence: { ...recommendation.nomisIndexOffence, allOptions },
+          bookRecallToPpud: { ...recommendation.bookRecallToPpud, totalSentenceLength },
+        }
+        const custodialTerm = allOptions[0].terms[0]
+        const expectedSentenceRequest = expectedDeterminateSentenceRequest(
+          recommendationWithStaleTotal.bookRecallToPpud,
+          recommendationWithStaleTotal.nomisIndexOffence.allOptions[0],
+          {
+            partDays: custodialTerm.days + custodialTerm.weeks * 7,
+            partMonths: custodialTerm.months,
+            partYears: custodialTerm.years,
+          },
+          recommendationWithStaleTotal.sentenceGroup,
+        )
+
+        testSentenceUpdate(recommendationWithStaleTotal, bookingMemento, expectedSentenceRequest)
       })
     })
 

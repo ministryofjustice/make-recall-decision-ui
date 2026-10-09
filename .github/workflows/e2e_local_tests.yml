@@ -80,7 +80,7 @@ jobs:
           echo "tags=not @E2E and not @smoke" >> $GITHUB_ENV
       - name: Run the tests
         id: e2e_tests
-        uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
+        uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7.4.1
         with:
           working-directory: make-recall-decision-e2e-tests
           publish-summary: false
@@ -114,11 +114,11 @@ jobs:
       - name: Record API docker logs
         if: failure()
         working-directory: make-recall-decision-api
-        run: docker-compose logs
+        run: docker compose logs
       - name: Record UI docker logs
         if: failure()
         working-directory: make-recall-decision-ui
-        run: docker-compose logs
+        run: docker compose logs
       - name: Upload screenshots
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

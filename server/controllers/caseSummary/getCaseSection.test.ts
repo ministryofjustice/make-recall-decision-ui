@@ -7,9 +7,14 @@ import {
   RecommendationResponse,
   VulnerabilitiesResponse,
 } from '../../@types/make-recall-decision-api'
+import { transformLicenceConditions } from './licenceConditions/transformLicenceConditions'
+import { formOptions } from '../recommendations/formOptions/formOptions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('redis')
+jest.mock('./licenceConditions/transformLicenceConditions', () => ({
+  transformLicenceConditions: jest.fn(),
+}))
 
 describe('getCaseSection', () => {
   const crn = ' A1234AB '
@@ -21,6 +26,7 @@ describe('getCaseSection', () => {
   const redisExpire = jest.fn()
 
   beforeEach(() => {
+    jest.clearAllMocks()
     ;(createClient as jest.Mock).mockReturnValue({
       connect: jest.fn().mockResolvedValue(undefined),
       get: redisGet,
@@ -29,6 +35,29 @@ describe('getCaseSection', () => {
       del: redisDel,
       on: jest.fn(),
     })
+  })
+
+  it('passes caseSummary to transformLicenceConditions for overview', async () => {
+    const apiResponse = {
+      userAccessResponse: {},
+      risk: {
+        riskManagementPlan: {},
+      },
+    }
+
+    const transformedResponse = {
+      ...apiResponse,
+      risk: {
+        riskManagementPlan: {},
+      },
+    }
+
+    ;(getCaseSummary as jest.Mock).mockResolvedValue(apiResponse)
+    ;(transformLicenceConditions as jest.Mock).mockReturnValue(transformedResponse)
+
+    await getCaseSection('overview', crn, token, userId, {}, {})
+
+    expect(transformLicenceConditions).toHaveBeenCalledWith(apiResponse)
   })
 
   it('caches the contact history response in redis if CRN is not excluded or restricted', async () => {
@@ -156,6 +185,73 @@ describe('getCaseSection', () => {
     })
     expect(recs.activeRecommendation).toStrictEqual({
       recommendationId: 1860300544,
+    })
+  })
+
+  describe('licence-conditions', () => {
+    const apiResponse = {
+      activeConvictions: [
+        {
+          sentence: {
+            description: 'Extended Determinate Sentence',
+            isCustodial: true,
+            custodialStatusCode: 'B',
+          },
+          licenceConditions: [
+            {
+              startDate: '2022-04-24',
+            },
+          ],
+        },
+      ],
+      activeRecommendation: {
+        recommendationId: 1860300544,
+      },
+      cvlLicence: {
+        licenceStatus: 'ACTIVE',
+        conditionalReleaseDate: '2022-06-10',
+      },
+      hasAllConvictionsReleasedOnLicence: true,
+      personalDetailsOverview: {
+        fullName: 'Joe T Bloggs',
+      },
+    }
+
+    it('returns standard licence conditions', async () => {
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
+
+      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
+
+      const summary = caseSummary as Record<string, unknown>
+
+      expect(summary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
+      expect(summary.licenceConvictions).toStrictEqual({
+        activeCustodial: [
+          {
+            licenceConditions: [
+              {
+                startDate: '2022-04-24',
+              },
+            ],
+            sentence: {
+              custodialStatusCode: 'B',
+              description: 'Extended Determinate Sentence',
+              isCustodial: true,
+            },
+          },
+        ],
+        hasMultipleActiveCustodial: false,
+      })
+    })
+
+    it('returns standard licence conditions when feature flag is not provided', async () => {
+      ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(apiResponse)
+
+      const { caseSummary } = await getCaseSection('licence-conditions', crn, token, userId, {}, {})
+
+      const summary = caseSummary as Record<string, unknown>
+
+      expect(summary.standardLicenceConditions).toBe(formOptions.standardLicenceConditions)
     })
   })
 

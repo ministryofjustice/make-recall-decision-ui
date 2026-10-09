@@ -1,5 +1,7 @@
 export type PpudUserMapping = {
+  id?: string,
   userName: string,
-  fullName: string,
-  teamName: string,
+  ppudUserFullName: string,
+  ppudTeamName: string,
+  ppudUserName: string,
 };

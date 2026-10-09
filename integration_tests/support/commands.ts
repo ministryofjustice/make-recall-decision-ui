@@ -14,6 +14,7 @@ import getRecommendationsResponse from '../../api/responses/get-case-recommendat
 Cypress.Commands.add('signIn', (opts = {}) => {
   cy.task('stubSignIn', opts)
   cy.task('stubAuthUser')
+  cy.task('getFlags')
   cy.mockCaseSummaryData()
   cy.request('/')
   return cy.task('getSignInUrl').then(cy.visit)

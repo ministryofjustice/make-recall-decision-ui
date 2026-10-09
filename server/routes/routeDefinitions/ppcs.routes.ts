@@ -7,7 +7,7 @@ import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../rec
 import searchPpudController from '../../controllers/recommendation/searchPpudController'
 import noSearchPpudResults from '../../controllers/recommendation/noSearchPpudResults'
 import recommendationStatusCheck, { STATUSES } from '../../middleware/recommendationStatusCheck'
-import { and, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
+import { and, bookingToPpudFailed, flagIsActive, not, ppcsCustodyGroup, statusIsActive } from '../../middleware/check'
 import searchPpudResultsController from '../../controllers/recommendation/searchPpudResultsController'
 import checkBookingDetailsController from '../../controllers/recommendation/ppcs/checkBookingDetailsController'
 import editPoliceContactController from '../../controllers/recommendation/editPoliceContactController'
@@ -24,15 +24,8 @@ import editEthnicityController from '../../controllers/recommendation/editEthnic
 import editDateOfBirthController from '../../controllers/recommendation/editDateOfBirthController'
 import editProbationAreaController from '../../controllers/recommendation/editProbationAreaController'
 import editLegislationReleasedUnderController from '../../controllers/recommendation/editLegislationReleasedUnderController'
+import addMinuteController from '../../controllers/recommendation/addMinuteController'
 import supportingDocumentsController from '../../controllers/recommendation/supportingDocumentsController'
-import supportingDocumentUploadController from '../../controllers/recommendation/supportingDocumentUploadController'
-import additionalSupportingDocumentUploadController from '../../controllers/recommendation/additionalSupportingDocumentUploadController'
-import additionalSupportingDocumentReplaceController from '../../controllers/recommendation/additionalSupportingDocumentReplaceController'
-import additionalSupportingDocumentRemoveController from '../../controllers/recommendation/additionalSupportingDocumentRemoveController'
-import editPpudMinuteController from '../../controllers/recommendation/editPpudMinuteController'
-import supportingDocumentReplaceController from '../../controllers/recommendation/supportingDocumentReplaceController'
-import supportingDocumentRemoveController from '../../controllers/recommendation/supportingDocumentRemoveController'
-import supportingDocumentDownloadController from '../../controllers/recommendation/supportingDocumentDownloadController'
 import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 import selectIndexOffenceController from '../../controllers/recommendation/ppcs/determinateSentence/selectIndexOffenceController'
 import consecutiveSentenceDetailsController from '../../controllers/recommendation/ppcs/determinateSentence/consecutiveSentenceDetailsController'
@@ -53,8 +46,15 @@ import editOffenceController from '../../controllers/recommendation/ppcs/indeter
 import editSentencingCourt from '../../controllers/recommendation/ppcs/indeterminateSentence/edit/editSentencingCourt'
 import ppcsPaths from '../paths/ppcs.paths'
 import areOffenceChangesNeededController from '../../controllers/recommendation/ppcs/determinateSentence/areOffenceChangesNeeded/areOffenceChangesNeededController'
+import bookedToPpudFailController from '../../controllers/recommendation/bookedToPpudFailController'
+import bookedToPpudSuccessController from '../../controllers/recommendation/bookedToPpudSuccessController'
+import ppudUserMappingsController from '../../controllers/recommendation/ppcs/ppudMapping/ppudUserMappingsController'
+import editPpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/editPpudUserMappingController'
+import deletePpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/deletePpudUserMappingController'
+import addPpudUserMappingController from '../../controllers/recommendation/ppcs/ppudMapping/addPpudUserMappingController'
+import customizeMessages from '../../controllers/customizeMessages'
 
-const roles = { allow: [HMPPS_AUTH_ROLE.PPCS] }
+const roles = { allow: [HMPPS_AUTH_ROLE.PPCS], deny: [HMPPS_AUTH_ROLE.PPCS_ADMIN] }
 
 const ppcsAfterSearchGetTemplate = createRecommendationRouteTemplate(
   'get',
@@ -265,80 +265,22 @@ const ppcsRecommendationRoutes: RouteDefinition[] = [
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
     handler: supportingDocumentsController.get,
   },
+  // This is actually to handle the "delete" post request to this URL,
+  // rather than the file uploader which is handled before CSRF tokens
+  {
+    ...ppcsAfterSearchPostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocuments}`,
+    handler: supportingDocumentsController.post,
+  },
   {
     ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentUpload}`,
-    handler: supportingDocumentUploadController.get,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.addMinute}`,
+    handler: addMinuteController.get,
   },
   {
     ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentUpload}`,
-    handler: supportingDocumentUploadController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentUpload}`,
-    handler: additionalSupportingDocumentUploadController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentUpload}`,
-    handler: additionalSupportingDocumentUploadController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentReplace}`,
-    handler: additionalSupportingDocumentReplaceController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentReplace}`,
-    handler: additionalSupportingDocumentReplaceController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentRemove}`,
-    handler: additionalSupportingDocumentRemoveController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.additionalSupportingDocumentRemove}`,
-    handler: additionalSupportingDocumentRemoveController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.editPpudMinute}`,
-    handler: editPpudMinuteController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.editPpudMinute}`,
-    handler: editPpudMinuteController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentReplace}`,
-    handler: supportingDocumentReplaceController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentReplace}`,
-    handler: supportingDocumentReplaceController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentRemove}`,
-    handler: supportingDocumentRemoveController.get,
-  },
-  {
-    ...ppcsAfterSearchPostTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentRemove}`,
-    handler: supportingDocumentRemoveController.post,
-  },
-  {
-    ...ppcsAfterSearchGetTemplate,
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.supportingDocumentDownload}`,
-    handler: supportingDocumentDownloadController.get,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.addMinute}`,
+    handler: addMinuteController.post,
   },
 ]
 
@@ -388,6 +330,11 @@ const ppcsDeterminateSentenceRoutes: RouteDefinition[] = [
     ...ppcsDeterminateSentenceGetTemplate,
     path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.consecutiveSentenceDetails}`,
     handler: consecutiveSentenceDetailsController.get,
+  },
+  {
+    ...ppcsDeterminateSentencePostTemplate,
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.consecutiveSentenceDetails}`,
+    handler: consecutiveSentenceDetailsController.post,
   },
   {
     ...ppcsDeterminateSentenceGetTemplate,
@@ -444,6 +391,7 @@ const ppcsDeterminateSentenceRoutes: RouteDefinition[] = [
 const indeterminateSentenceMiddleware = [
   recommendationStatusCheck(
     and(
+      flagIsActive('ppcsIndeterminateJourney'),
       statusIsActive(STATUSES.SENT_TO_PPCS),
       ppcsCustodyGroup(CUSTODY_GROUP.INDETERMINATE),
       not(statusIsActive(STATUSES.BOOKING_ON_STARTED)),
@@ -553,6 +501,60 @@ const ppcsBookingRoutes: RouteDefinition[] = [
   },
 ]
 
+// For now, we allow PPCS users to access the admin pages for managing PPUD user mappings. In future, we will want to
+// restrict this to a different role.
+const ppcsPpudUserMappingRoutes: RouteDefinition[] = [
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}`,
+    handler: ppudUserMappingsController.get,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/add`,
+    handler: addPpudUserMappingController.get,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/add`,
+    handler: addPpudUserMappingController.post,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId`,
+    handler: editPpudUserMappingController.get,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId`,
+    handler: editPpudUserMappingController.post,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'get',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId/delete`,
+    handler: deletePpudUserMappingController.get,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+  {
+    method: 'post',
+    path: `/${ppcsPaths.ppudUserMappings}/:ppudUserMappingId/delete`,
+    handler: deletePpudUserMappingController.post,
+    roles,
+    additionalMiddleware: [customizeMessages],
+  },
+]
+
 const ppcsRoutes: RouteDefinition[] = [
   {
     path: `/${ppcsPaths.search}`,
@@ -585,10 +587,31 @@ const ppcsRoutes: RouteDefinition[] = [
     method: 'get',
     handler: bookedToPpudController.get,
   },
+  {
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(and(statusIsActive(STATUSES.BOOKING_ON_STARTED), bookingToPpudFailed()))],
+      roles,
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudFail}`,
+    method: 'get',
+    handler: bookedToPpudFailController.get,
+  },
+  {
+    ...createRecommendationRouteTemplate(
+      'get',
+      [recommendationStatusCheck(and(statusIsActive(STATUSES.BOOKED_TO_PPUD), not(bookingToPpudFailed())))],
+      roles,
+    ),
+    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpudSuccess}`,
+    method: 'get',
+    handler: bookedToPpudSuccessController.get,
+  },
   ...ppcsRecommendationRoutes,
   ...ppcsDeterminateSentenceRoutes,
   ...ppcsIndeterminateSentenceRoutes,
   ...ppcsBookingRoutes,
+  ...ppcsPpudUserMappingRoutes,
 ]
 
 export default ppcsRoutes

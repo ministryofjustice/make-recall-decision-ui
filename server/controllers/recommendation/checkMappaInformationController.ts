@@ -50,15 +50,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
     token,
   })
 
-  let nextPageUrl
-
-  if (featureFlags?.ftr56SentenceConviction) {
-    nextPageUrl = ppPaths.chargedWithOffence
-  } else {
-    nextPageUrl = ppPaths.suitabilityForFixedTermRecall
-  }
-
-  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/${nextPageUrl}`
+  const nextPagePath = `${sharedPaths.recommendations}/${recommendationId}/${ppPaths.chargedWithOffence}`
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

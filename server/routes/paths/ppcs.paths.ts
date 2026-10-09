@@ -8,11 +8,12 @@ export default {
   noSearchResults: 'no-ppcs-search-results',
   areOffenceChangesNeeded: 'are-offence-changes-needed',
 
+  ppudUserMappings: 'ppud-user-mappings',
+
   // determinate
   selectIndexOffence: 'select-index-offence',
   consecutiveSentenceDetails: 'consecutive-sentence-details',
   matchIndexOffence: 'match-index-offence',
-  determinatePpudSentences: 'determinate-ppud-sentences',
   editCustodyType: 'custody-type',
   sentenceToCommit: 'sentence-to-commit',
 
@@ -22,6 +23,7 @@ export default {
 
   // indeterminate
   selectIndeterminatePpudSentence: 'select-indeterminate-ppud-sentence',
+  determinatePpudSentences: 'determinate-ppud-sentences',
   sentenceToCommitIndeterminate: 'sentence-to-commit-indeterminate',
   indeterminateEdit: {
     releaseDate: 'edit-release-date',
@@ -50,15 +52,10 @@ export default {
   editProbationArea: 'edit-probation-area',
   editLegislationReleasedUnder: 'edit-legislation-released-under',
   supportingDocuments: 'supporting-documents',
-  supportingDocumentUpload: 'supporting-document-upload/:type',
-  additionalSupportingDocumentUpload: 'additional-supporting-document-upload',
-  additionalSupportingDocumentReplace: 'additional-supporting-document-replace/:id',
-  additionalSupportingDocumentRemove: 'additional-supporting-document-remove/:id',
-  editPpudMinute: 'edit-ppud-minute',
-  supportingDocumentReplace: 'supporting-document-replace/:type/:id',
-  supportingDocumentRemove: 'supporting-document-remove/:id',
-  supportingDocumentDownload: 'supporting-document-download/:id',
+  addMinute: 'add-minute',
   bookedToPpud: 'booked-to-ppud',
   bookToPpud: 'book-to-ppud',
+  bookedToPpudFail: 'booked-to-ppud-fail',
+  bookedToPpudSuccess: 'booked-to-ppud-success',
   bookingSummary: 'booking-summary',
 }

@@ -1,0 +1,49 @@
+{% extends "../../partials/layout.njk" %}
+
+{% from "components/heading/macro.njk" import heading %}
+{% set pageTitle = makePageTitle({ pageHeading: pageTitles[page.id], hasErrors: errors }) %}
+
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            {% include '../../partials/error-summary.njk' %}
+
+            <form novalidate method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {% set html %}
+                    {{ heading(
+                        "Add a minute for " + recommendation.personOnProbation.name,
+                        1,
+                        "l"
+                    ) }}
+
+                    {{ bodyParagraph(
+                         "Check that the background information is accurate."
+                    ) }}
+
+                    {{ bodyParagraph(
+                         "Under more information, record any issues with the supporting documents and add information that should be included in the minute on PPUD."
+                    ) }}
+                {% endset %}
+
+                {{ govukTextarea({
+                    name: "minute",
+                    id: "minute",
+                    rows: "16",
+                    value: minute,
+                    label: {
+                        html: html
+                    },
+                    errorMessage: errorMessage(errors.minute)
+                }) }}
+
+                {{ formSubmitButton() }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

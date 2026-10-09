@@ -5,5 +5,6 @@ export type PpudCreateRecallRequest = {
   policeForce: string,
   probationArea: string,
   receivedDateTime: string,
+  recallTypeForPpud: string,
   riskOfContrabandDetails: string,
 };

@@ -6,7 +6,7 @@ const buildStrings = (): StringsDefinition => {
 
   const moduleStrings = modules.reduce((acc, module) => {
     const { strings } = module
-    Object.keys(strings).map((section: string) => {
+    Object.keys(strings).map((section: string): void => {
       acc[section] = { ...acc[section], ...strings[section] }
       return null
     })
@@ -44,6 +44,13 @@ const buildStrings = (): StringsDefinition => {
       invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
       saveChanges: 'An error occurred saving your changes',
       noIndexOffenceSelected: 'Select an index offence',
+      missingTotalSentenceLength: 'Enter the years, months and days. Enter ‘0’ if there is no years, months or days',
+      missingTotalSentenceLengthYears: 'Enter the years. Enter ‘0’ if there are no years',
+      missingTotalSentenceLengthMonths: 'Enter the months. Enter ‘0’ if there are no months',
+      missingTotalSentenceLengthDays: 'Enter the days. Enter ‘0’ if there are no days',
+      invalidTotalSentenceLengthYears: 'Years must be a whole number, like 2',
+      invalidTotalSentenceLengthMonths: 'Months must be a whole number, like 6',
+      invalidTotalSentenceLengthDays: 'Days must be a whole number, like 14',
       noPpudSentenceSelected: 'Select an existing sentence or add a new one',
       noRecallTypeSelectedDiscretionary:
         "Select if you're recommending a fixed term recall, standard recall or no recall",
@@ -58,8 +65,6 @@ const buildStrings = (): StringsDefinition => {
       noEmergencyRecallSelected: 'Select whether this is an emergency recall or not',
       noIsMappaCategory4: 'Select whether {{ fullName }} is in MAPPA category 4',
       noIsMappaLevel2Or3: "Select whether {{ fullName }}'s MAPPA level is 2 or 3",
-      noIsChargedWithOffence:
-        'Select whether {{ fullName }} is being recalled because of being charged with an offence',
       noIsServingTerroristOrNationalSecurityOffence:
         'Select whether {{ fullName }} is serving a sentence for a terrorist or national security offence',
       noIsAtRiskOfInvolvedInForeignPowerThreat:
@@ -133,6 +138,7 @@ const buildStrings = (): StringsDefinition => {
       noDeletePreviousReleaseIndex: 'Select a previous release to delete',
       missingManagerCountersignatureExposition: 'Add a comment to confirm your countersignature',
       missingWhoCompletedPartAName: 'Enter the name of the person who completed the Part A',
+      missingWhoCompletedPartAJobTitle: 'Select a job title',
       missingWhoCompletedPartAEmail: 'Enter the GOV.UK email of the person who completed the Part A',
       invalidWhoCompletedPartAEmail: 'Enter the email in the correct format, like name@justice.gov.uk',
       nonGovUkWhoCompletedPartAEmail:
@@ -140,6 +146,7 @@ const buildStrings = (): StringsDefinition => {
       missingIsPersonProbationPractitionerForOffender:
         'Select whether this person is the probation practitioner for {{ fullName }}',
       missingPractitionerForPartAName: 'Enter the name of the probation practitioner for {{ fullName }}',
+      missingPractitionerForPartAJobTitle: 'Select a job title',
       missingPractitionerForPartAEmail: 'Enter the GOV.UK email for the probation practitioner for {{ fullName }}',
       invalidPractitionerForPartAEmail: 'Enter the email in the correct format, like name@justice.gov.uk',
       nonGovUkPractitionerForPartAEmail:
@@ -150,14 +157,27 @@ const buildStrings = (): StringsDefinition => {
       invalidPPCSEmail: 'Enter an email address in the correct format, like name@example.com',
       noReleaseUnderECSLSelected: 'Select whether {{ fullName }} has been released on an ECSL',
       ppudBookingError: 'Something went wrong sending the booking to PPUD.  You may have to book this recall manually.',
-      fileSizeExceeded: 'The file must be smaller than 25MB',
-      invalidFilename: 'The filename should not contain the following characters: < > : " / \\ | ? *',
+      fileSizeExceeded: "'{{ filename }}' must be smaller than 25MB. Delete it and upload a smaller version",
+      invalidFilename:
+        'The filename should not contain the following characters: < > : " / \\ | ? *. Delete it to upload again',
+      invalidFiletype: "'{{ filename }}' must be a Word, PDF or plain text (txt) file. Delete it to upload again",
       uploadFileFailure: 'The selected file could not be uploaded - try again',
+      deleteFileFailure: 'The selected file could not be deleted - try again',
       missingTitle: 'Enter a document title',
       missingFile: 'Upload a document',
+      missingFileUpload: 'Select a file to upload',
+      duplicateFilename: "'{{ filename }}' has already been uploaded. Delete it to continue",
       duplicateTitle: 'Enter a unique document title',
       titleLengthExceeded: 'The title must be less than 250 characters',
       /// PPCS ///
+      // admin pages
+      missingUserName: 'Enter a username',
+      missingPpudUserFullName: 'Enter a full name',
+      missingPpudTeamName: 'Enter a team name',
+      missingPpudUserName: 'Enter a PPUD username',
+      duplicateUserName: 'There is already an entry for this username. Enter a unique username',
+      duplicatePpudUserName: 'There is already an entry for this PPUD username. Enter a unique PPUD username',
+      duplicatePpudUserFullName: 'There is already an entry for this PPUD full name. Enter a unique PPUD full name',
       // custody group
       missingCustodyGroup: 'Select the correct sentence type',
       invalidCustodyGroup:
@@ -278,6 +298,7 @@ const buildStrings = (): StringsDefinition => {
       sentenceToCommitIndeterminate: 'Your recall booking for {{ fullName }}',
       bookToPpud: 'Book {{ fullName }} onto PPUD',
       bookedToPpud: 'Case created and booked onto PPUD',
+      bookedToPpudSuccess: 'Case created and booked onto PPUD',
       editCustodyType: 'Which custody type is {{ fullName }} subject to?',
       editCurrentEstablishment: 'Edit current establishment',
       editPoliceContact: 'Edit police local contact details',
@@ -300,15 +321,9 @@ const buildStrings = (): StringsDefinition => {
       spoDeleteConfirmation: 'Delete Confirmation',
       selectPpudSentence: 'Add your booking to PPUD - {{ fullName }}',
       supportingDocuments: 'Add supporting documents for {{ fullName }}',
-      supportingDocumentUpload: 'Upload supporting document',
-      supportingDocumentReplace: 'Replace supporting document',
-      supportingDocumentRemove: 'Remove supporting document',
       bookingSummary: 'Your recall booking - {{ fullName }}',
       whenSpoAgreedRecallDate: 'When did the SPO agree to this recall?',
       editPpudMinute: 'Edit Ppud Note',
-      additionalSupportingDocumentUpload: 'Add additional document',
-      additionalSupportingDocumentReplace: 'Replace additional document',
-      additionalSupportingDocumentRemove: 'Add additional document',
       /// PPCS ///
       // custody group
       editCustodyGroup: 'Is the sentence determinate or indeterminate?',
@@ -319,6 +334,11 @@ const buildStrings = (): StringsDefinition => {
       editOffence: 'Edit offence',
       editSentencingCourt: 'Edit sentencing court',
       chargedWithOffence: 'Is {{ fullName }} being recalled because of being charged or convicted for an offence?',
+      /// PPCS Admin ///
+      ppudUserMappings: 'Update or add user mapping information',
+      editPpudUserMapping: 'Edit user mapping information',
+      addPpudUserMapping: 'Add user mapping information',
+      deletePpudUserMapping: 'Delete user mapping information',
     },
     labels: {
       ...moduleStrings?.labels,

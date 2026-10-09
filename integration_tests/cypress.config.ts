@@ -16,9 +16,12 @@ import {
   getReferenceList,
   getStatuses,
   getSupportingDocuments,
+  uploadSupportingDocument,
+  deleteSupportingDocument,
   getUser,
   ppcsSearch,
   ppudSearchActiveUsers,
+  ppudUserMappings,
   prisonSentences,
   searchForPrisonOffender,
   searchMappedUsers,
@@ -26,7 +29,12 @@ import {
   searchPpud,
   updateRecommendation,
   updateStatuses,
+  ppudUserMappingById,
+  createPpudUserMapping,
+  updatePpudUserMapping,
+  deletePpudUserMapping,
 } from './mockApis/makeRecallDecisionApi'
+import getFlags from './mockApis/flipt'
 import { readBase64File, readPdf } from './plugins/readFiles'
 import readDocX from '../cypress_shared/plugins'
 import { resetStubs } from './mockApis/wiremock'
@@ -81,9 +89,17 @@ export default defineConfig({
         getReferenceList,
         getActiveRecommendation,
         getSupportingDocuments,
+        uploadSupportingDocument,
+        deleteSupportingDocument,
         downloadSupportingDocument,
         searchMappedUsers,
         ppudSearchActiveUsers,
+        ppudUserMappings,
+        ppudUserMappingById,
+        createPpudUserMapping,
+        updatePpudUserMapping,
+        deletePpudUserMapping,
+        getFlags,
       })
       return config
     },

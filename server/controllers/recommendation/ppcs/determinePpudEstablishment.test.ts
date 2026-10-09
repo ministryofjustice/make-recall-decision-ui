@@ -29,6 +29,7 @@ const RECOMMENDATION_TEMPLATE: RecommendationResponse = {
     ethnicity: 'string',
     cro: 'string',
     pnc: 'string',
+    releaseDate: 'string',
   },
   personOnProbation: {},
 }
@@ -59,6 +60,10 @@ const PRISON_OFFENDER_TEMPLATE: PrisonOffenderSearchResponse = {
   },
   identifiers: [],
   image: 'string',
+  sentenceDetail: {
+    licenceExpiryDate: 'string',
+    releaseDate: 'string',
+  },
 }
 const TOKEN = 'token'
 

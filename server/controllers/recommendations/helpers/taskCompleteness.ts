@@ -60,7 +60,6 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
       hasData(recommendation.cvlLicenceConditionsBreached?.additionalLicenceConditions?.selected) ||
       hasData(recommendation.cvlLicenceConditionsBreached?.bespokeLicenceConditions?.selected) ||
       hasData(recommendation.additionalLicenceConditionsText),
-    isChargedWithOffence: hasValue(recommendation.isChargedWithOffence),
     isServingTerroristOrNationalSecurityOffence: hasValue(recommendation.isServingTerroristOrNationalSecurityOffence),
     isAtRiskOfInvolvedInForeignPowerThreat: hasValue(recommendation.isAtRiskOfInvolvedInForeignPowerThreat),
     wasReferredToParoleBoard244ZB: hasValue(recommendation.wasReferredToParoleBoard244ZB),
@@ -69,18 +68,21 @@ export const taskCompleteness = (recommendation: RecommendationResponse, _featur
     isServingDCRSentence: hasValue(recommendation.isServingDCRSentence),
     isYouthSentenceOver12Months: hasValue(recommendation.isYouthSentenceOver12Months),
     isYouthChargedWithSeriousOffence: hasValue(recommendation.isYouthChargedWithSeriousOffence),
+    isRecalledOnNewChargedOrConvictedOffence: hasValue(
+      recommendation.isRecalledOnNewChargedOrConvictedOffence?.selected,
+    ),
   }
 
   const { triggerLeadingToRecall } = statuses
 
   const isAdultSDSSuitabilityCriteriaSet =
-    statuses.isChargedWithOffence &&
     statuses.isServingTerroristOrNationalSecurityOffence &&
     statuses.isAtRiskOfInvolvedInForeignPowerThreat &&
     statuses.wasReferredToParoleBoard244ZB &&
     statuses.wasRepatriatedForMurder &&
     statuses.isServingSOPCSentence &&
-    statuses.isServingDCRSentence
+    statuses.isServingDCRSentence &&
+    statuses.isRecalledOnNewChargedOrConvictedOffence
 
   const isYouthSDSSuitabilityCriteriaSet =
     statuses.isYouthSentenceOver12Months && statuses.isYouthChargedWithSeriousOffence

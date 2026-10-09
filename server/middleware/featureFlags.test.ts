@@ -3,9 +3,10 @@ import { faker } from '@faker-js/faker'
 import productionEnvValues from '../testUtils/testConstants'
 import { determineEnvFeatureOverride, readFeatureFlags } from './featureFlags'
 import { mockReq, mockRes } from './testutils/mockRequestUtils'
+import FeatureFlagService from '../services/featureFlagService'
 
+const mockFFServiceGetAll = jest.spyOn(FeatureFlagService.prototype, 'getAll')
 const featureKey = (flagKey: string) => `FEATURE_${flagKey.toUpperCase()}`
-const flagQueriesEnabedKey = 'FEATURE_FLAG_QUERY_PARAMETERS_ENABLED'
 
 const invalidFeatureDateValueCases = [
   { name: 'Future date', value: faker.date.future().toISOString() },
@@ -39,9 +40,9 @@ describe('determineEnvFeatureOverride', () => {
 describe('readFeatureFlags', () => {
   const INITAL_ENV = process.env
 
-  const testFlagKey = 'testFlag'
+  const testFlagKey = 'ui-testFlag'
   function testFlag(def: boolean) {
-    return { testFlag: { default: def, description: 'Test  Description', label: 'Test Label' } }
+    return { enabled: def, description: 'Test  Description', label: 'Test Label', key: testFlagKey }
   }
 
   const neitherReq = () => mockReq()
@@ -57,14 +58,18 @@ describe('readFeatureFlags', () => {
   const next = jest.fn()
 
   beforeEach(() => {
+    jest.clearAllMocks()
     resultRes = mockRes()
   })
 
   describe('Uses the default if flag not present in request query or cookies', () => {
     ;[true, false].forEach(def => {
-      it(`- Default value: ${def}`, () => {
+      it(`- Default value: ${def}`, async () => {
         const req = neitherReq()
-        readFeatureFlags(testFlag(def))(req, resultRes, next)
+        mockFFServiceGetAll.mockResolvedValueOnce([{ ...testFlag(def) }])
+
+        await readFeatureFlags()(req, resultRes, next)
+
         expect(resultRes.locals.flags).toEqual({
           testFlag: def,
         })
@@ -72,41 +77,50 @@ describe('readFeatureFlags', () => {
     })
   })
 
-  describe('When environment feature settings override is not enabled', () => {
+  describe('When the .env feature flag override is not enabled', () => {
     invalidFeatureDateValueCases.forEach(({ name, value }) => {
       let featureDisabledProcessEnv: NodeJS.ProcessEnv
+
       beforeEach(() => {
-        process.env[featureKey(testFlagKey)] = `${value}`
-        process.env[flagQueriesEnabedKey] = `${true}`
+        jest.clearAllMocks()
+        // The env feature flag override will always be false as we're using invalid cases
+        process.env[featureKey('testFlag')] = `${value}`
+        // But we allow it to be overridden using the cookies/params method
+        process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED = `${true}`
+        // This will set the "default" value of the test feature flag to true
+        mockFFServiceGetAll.mockResolvedValueOnce([{ ...testFlag(true) }])
         featureDisabledProcessEnv = process.env
       })
+
       afterEach(() => {
         process.env = INITAL_ENV
       })
+
       describe(`- Not enabled value: ${name} - ${value}`, () => {
-        it('Overrides a default of true if flag is "0" in request query', () => {
-          readFeatureFlags(testFlag(true))(queryReq(false), resultRes, next)
+        it('Overrides a default of true if flag is "0" in request query', async () => {
+          await readFeatureFlags()(queryReq(false), resultRes, next)
           expect(resultRes.locals.flags).toEqual({
             testFlag: false,
           })
         })
 
-        it('Overrides a default of true if flag is "0" in request cookies', () => {
-          readFeatureFlags(testFlag(true))(cookieReq(false), resultRes, next)
+        it('Overrides a default of true if flag is "0" in request cookies', async () => {
+          await readFeatureFlags()(cookieReq(false), resultRes, next)
           expect(resultRes.locals.flags).toEqual({
             testFlag: false,
           })
         })
 
-        it('Uses request query over cookies', () => {
-          readFeatureFlags(testFlag(true))(cookieAndQueryReq(true, false), resultRes, next)
+        it('Uses request query over cookies', async () => {
+          await readFeatureFlags()(cookieAndQueryReq(true, false), resultRes, next)
           expect(resultRes.locals.flags).toEqual({
             testFlag: false,
           })
         })
 
-        it('Overrides a default of false if flag is "1" in request query', () => {
-          readFeatureFlags(testFlag(false))(queryReq(true), resultRes, next)
+        it('Overrides a default of false if flag is "1" in request query', async () => {
+          mockFFServiceGetAll.mockResolvedValueOnce([{ ...testFlag(false) }])
+          await readFeatureFlags()(queryReq(true), resultRes, next)
           expect(resultRes.locals.flags).toEqual({
             testFlag: true,
           })
@@ -115,6 +129,7 @@ describe('readFeatureFlags', () => {
         describe('Returns the default value regardless of other cookie/query values when the environment is a "production" value', () => {
           productionEnvValues.forEach(env => {
             beforeEach(() => {
+              jest.clearAllMocks()
               process.env.ENVIRONMENT = env
             })
             afterEach(() => {
@@ -122,16 +137,14 @@ describe('readFeatureFlags', () => {
             })
             describe(`- Environment value: ${env}`, () => {
               beforeEach(() => {
-                process.env[flagQueriesEnabedKey] = `${false}`
+                process.env.FEATURE_FLAG_QUERY_PARAMETERS_ENABLED = `${false}`
               })
               ;[true, false].forEach(def => {
-                it(`- Default value: ${def}`, () => {
+                it(`- Default value: ${def}`, async () => {
+                  mockFFServiceGetAll.mockReset()
+                  mockFFServiceGetAll.mockResolvedValueOnce([{ ...testFlag(def) }])
                   const cookieQueryValue = !def
-                  readFeatureFlags(testFlag(def))(
-                    cookieAndQueryReq(cookieQueryValue, cookieQueryValue),
-                    resultRes,
-                    next,
-                  )
+                  await readFeatureFlags()(cookieAndQueryReq(cookieQueryValue, cookieQueryValue), resultRes, next)
                   expect(resultRes.locals.flags).toEqual({
                     testFlag: def,
                   })
@@ -144,18 +157,19 @@ describe('readFeatureFlags', () => {
     })
   })
 
-  describe('When environment feature settings override is enabled', () => {
+  describe('When the .env feature flag override is enabled', () => {
     let featureEnabledProcessEnv: NodeJS.ProcessEnv
     beforeEach(() => {
-      process.env[featureKey(testFlagKey)] = faker.date.past().toISOString()
+      process.env[featureKey('testFlag')] = faker.date.past().toISOString()
       featureEnabledProcessEnv = process.env
+      mockFFServiceGetAll.mockResolvedValueOnce([{ ...testFlag(false) }])
     })
     afterEach(() => {
       process.env = INITAL_ENV
     })
 
-    it('Returns true when no other flags are set', () => {
-      readFeatureFlags(testFlag(false))(neitherReq(), resultRes, next)
+    it('Returns true when no other flags are set', async () => {
+      await readFeatureFlags()(neitherReq(), resultRes, next)
       expect(resultRes.locals.flags).toEqual({
         testFlag: true,
       })
@@ -170,28 +184,28 @@ describe('readFeatureFlags', () => {
           afterEach(() => {
             process.env = featureEnabledProcessEnv
           })
-          it(`- Environment value: ${env}`, () => {
-            readFeatureFlags(testFlag(false))(neitherReq(), resultRes, next)
+          it(`- Environment value: ${env}`, async () => {
+            await readFeatureFlags()(neitherReq(), resultRes, next)
             expect(resultRes.locals.flags).toEqual({
               testFlag: true,
             })
           })
         })
       })
-      it('- flag is "0" in cookie', () => {
-        readFeatureFlags(testFlag(false))(cookieReq(false), resultRes, next)
+      it('- flag is "0" in cookie', async () => {
+        await readFeatureFlags()(cookieReq(false), resultRes, next)
         expect(resultRes.locals.flags).toEqual({
           testFlag: true,
         })
       })
-      it('- flag is "0" in query', () => {
-        readFeatureFlags(testFlag(false))(queryReq(false), resultRes, next)
+      it('- flag is "0" in query', async () => {
+        await readFeatureFlags()(queryReq(false), resultRes, next)
         expect(resultRes.locals.flags).toEqual({
           testFlag: true,
         })
       })
-      it('- flag is "0" in both cookie and query', () => {
-        readFeatureFlags(testFlag(false))(cookieAndQueryReq(false, false), resultRes, next)
+      it('- flag is "0" in both cookie and query', async () => {
+        await readFeatureFlags()(cookieAndQueryReq(false, false), resultRes, next)
         expect(resultRes.locals.flags).toEqual({
           testFlag: true,
         })

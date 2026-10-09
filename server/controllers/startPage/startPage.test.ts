@@ -1,75 +1,130 @@
 import { mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import { startPage } from './startPage'
-import { ppudSearchActiveUsers, searchMappedUsers } from '../../data/makeDecisionApiClient'
-import searchMappedUsersApiResponse from '../../../api/responses/searchMappedUsers.json'
-import ppudSearchActiveUsersApiResponse from '../../../api/responses/ppudSearchActiveUsers.json'
-import * as caching from '../../data/fetchFromCacheOrApi'
 import config from '../../config'
 import { isDateTimeRangeCurrent } from '../../utils/utils'
+import hasValidPpudUserMapping from '../../booking/hasValidPpudUserMapping'
 
-jest.mock('../../data/makeDecisionApiClient')
+jest.mock('../../booking/hasValidPpudUserMapping')
+
+const mockHasValidPpudUserMapping = hasValidPpudUserMapping as jest.MockedFunction<typeof hasValidPpudUserMapping>
 
 describe('startPage', () => {
-  it('normal operation', async () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('renders the standard start page for a user without PPCS role', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: false } } })
+
     await startPage(mockReq(), res)
+
     expect(res.locals.searchEndpoint).toEqual('/search-by-name')
     expect(res.render).toHaveBeenCalledWith('pages/startPage')
+    expect(mockHasValidPpudUserMapping).not.toHaveBeenCalled()
   })
-  it('ensure notification fields returned depending on config', async () => {
+
+  it('sets maintenance banner fields depending on config', async () => {
     const res = mockRes({ locals: { user: { hasPpcsRole: false } } })
+
     await startPage(mockReq(), res)
+
     expect(res.locals.maintenanceBanner).toEqual({
       headerText: config.maintenanceBanner.header,
       bodyContent: config.maintenanceBanner.body,
       isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
     })
   })
-  it('with PPCS role and caches ppud user', async () => {
-    const res = mockRes({ locals: { user: { hasPpcsRole: true, username: 'username', userId: '123' } } })
-    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
-    ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce(ppudSearchActiveUsersApiResponse)
-    const spy = jest.spyOn(caching, 'fetchFromCacheOrApi')
-    spy.mockReturnValueOnce(Promise.resolve(ppudSearchActiveUsersApiResponse))
 
-    await startPage(mockReq(), res)
-
-    expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
-    expect(spy).toHaveBeenCalledTimes(1)
-    expect(spy).toHaveBeenNthCalledWith(1, {
-      checkWhetherToCacheDataFn: expect.any(Function),
-      fetchDataFn: expect.any(Function),
-      redisKey: `ppudUserResponse:${res.locals.user.username}`,
-      ttlOverrideSeconds: 60 * 60 * 24 * 7,
-      userId: res.locals.user.userId,
+  it('renders PPCS start page when user has a valid PPUD mapping', async () => {
+    const res = mockRes({
+      locals: {
+        user: {
+          hasPpcsRole: true,
+          username: 'username',
+          userId: '123',
+          token: 'token',
+        },
+      },
     })
-    expect(res.locals.validMappingAndPpudUser).toEqual(true)
-  })
-  it('with PPCS role and no mapped user', async () => {
-    const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
-    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce({ ppudUserMapping: null })
-    ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce({})
+
+    mockHasValidPpudUserMapping.mockResolvedValueOnce(true)
+
     await startPage(mockReq(), res)
+
+    expect(mockHasValidPpudUserMapping).toHaveBeenCalledTimes(1)
+    expect(mockHasValidPpudUserMapping).toHaveBeenCalledWith({
+      username: 'username',
+      userId: '123',
+      token: 'token',
+    })
+
+    expect(res.locals.hasValidPpudUserMapping).toEqual(true)
     expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
-    expect(res.locals.validMappingAndPpudUser).toEqual(undefined)
   })
-  it('with PPCS role and mapped user but no active ppud user', async () => {
-    const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
-    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
-    ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce({ results: [] })
+
+  it('renders PPUD user not mapped page when user does not have a valid mapping', async () => {
+    const res = mockRes({
+      locals: {
+        user: {
+          hasPpcsRole: true,
+          username: 'username',
+          userId: '123',
+          token: 'token',
+        },
+      },
+    })
+
+    mockHasValidPpudUserMapping.mockResolvedValueOnce(false)
+
     await startPage(mockReq(), res)
-    expect(res.render).toHaveBeenCalledWith('pages/startPPCS')
-    expect(res.locals.validMappingAndPpudUser).toEqual(false)
+
+    expect(mockHasValidPpudUserMapping).toHaveBeenCalledTimes(1)
+    expect(mockHasValidPpudUserMapping).toHaveBeenCalledWith({
+      username: 'username',
+      userId: '123',
+      token: 'token',
+    })
+
+    expect(res.locals.hasValidPpudUserMapping).toEqual(false)
+    expect(res.render).toHaveBeenCalledWith('pages/ppudUserNotMapped')
   })
-  it('with PPCS role ensure notification fields returned depending on config', async () => {
-    const res = mockRes({ locals: { user: { hasPpcsRole: true } } })
-    ;(searchMappedUsers as jest.Mock).mockReturnValueOnce(searchMappedUsersApiResponse)
-    ;(ppudSearchActiveUsers as jest.Mock).mockReturnValueOnce({ results: [] })
+
+  it('sets maintenance banner fields for PPCS users', async () => {
+    const res = mockRes({
+      locals: {
+        user: {
+          hasPpcsRole: true,
+          username: 'username',
+          userId: '123',
+          token: 'token',
+        },
+      },
+    })
+
+    mockHasValidPpudUserMapping.mockResolvedValueOnce(false)
+
     await startPage(mockReq(), res)
+
     expect(res.locals.maintenanceBanner).toEqual({
       headerText: config.maintenanceBanner.header,
       bodyContent: config.maintenanceBanner.body,
       isHidden: !isDateTimeRangeCurrent(config.maintenanceBanner.startDateTime, config.maintenanceBanner.endDateTime),
     })
+  })
+
+  it('renders PPUD user mappings page for PPCS admin role', async () => {
+    const res = mockRes({
+      locals: {
+        user: {
+          hasPpcsRole: false,
+          hasPpcsAdminRole: true,
+        },
+      },
+    })
+
+    await startPage(mockReq(), res)
+
+    expect(res.render).toHaveBeenCalledWith('pages/recommendations/ppcs/ppudUserMapping/ppudUserMappings')
+    expect(mockHasValidPpudUserMapping).not.toHaveBeenCalled()
   })
 })

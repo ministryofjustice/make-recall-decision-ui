@@ -1,9 +1,10 @@
-import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
-import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 import { availableRecallTypes, availableRecallTypesForRecommendation } from './availableRecallTypes'
 import { formOptions } from '../formOptions/formOptions'
-import { isFixedTermRecallMandatoryForRecommendation } from '../../../utils/fixedTermRecallUtils'
-import { SentenceGroup } from '../sentenceInformation/formOptions'
+import {
+  isFixedTermRecallMandatoryForRecommendation,
+  isStandardRecallMandatoryForRecommendation,
+} from '../../../utils/fixedTermRecallUtils'
+import { RecommendationResponseGenerator } from '../../../../data/recommendations/recommendationGenerator'
 
 jest.mock('../../../utils/fixedTermRecallUtils')
 
@@ -36,55 +37,44 @@ describe('availableRecallTypes', () => {
 })
 
 describe('availableRecallTypesForRecommendation', () => {
-  describe('Adult SDS sentence', () => {
-    const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate({
-      sentenceGroup: SentenceGroup.ADULT_SDS,
-    })
-    it('FTR mandatory -> only FTR and No Recall available', () => {
-      const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-        ['FIXED_TERM', 'NO_RECALL'].includes(entry.value),
-      )
-      ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
+  const recommendation = RecommendationResponseGenerator.generate()
 
-      const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
+  it('FTR mandatory -> only FTR and No Recall available', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
+      ['FIXED_TERM', 'NO_RECALL'].includes(entry.value),
+    )
+    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
 
-      expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-    })
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
 
-    it('FTR not mandatory -> only Standard and No Recall available', () => {
-      const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-        ['STANDARD', 'NO_RECALL'].includes(entry.value),
-      )
-      ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
-
-      const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
-
-      expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-    })
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+    expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+    expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
   })
 
-  describe('Youth SDS sentence', () => {
-    const recommendation: RecommendationResponse = RecommendationResponseGenerator.generate({
-      sentenceGroup: SentenceGroup.YOUTH_SDS,
-    })
-    it('FTR mandatory -> only FTR and No Recall available', () => {
-      const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
-        ['FIXED_TERM', 'NO_RECALL'].includes(entry.value),
-      )
-      ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
+  it('FTR not mandatory & Standard mandatory -> only Standard and No Recall available', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType.filter(entry =>
+      ['STANDARD', 'NO_RECALL'].includes(entry.value),
+    )
+    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+    ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(true)
 
-      const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
 
-      expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-    })
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+    expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+    expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+  })
 
-    it('FTR not mandatory -> Standard, FTR and No Recall available', () => {
-      const expectedAvailableRecallTypes = formOptions.recallType
-      ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+  it('FTR not mandatory & Standard not mandatory -> FTR, Standard and No Recall available', () => {
+    const expectedAvailableRecallTypes = formOptions.recallType
+    ;(isFixedTermRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
+    ;(isStandardRecallMandatoryForRecommendation as jest.Mock).mockReturnValueOnce(false)
 
-      const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
+    const actualAvailableRecallTypes = availableRecallTypesForRecommendation(recommendation)
 
-      expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
-    })
+    expect(actualAvailableRecallTypes).toEqual(expectedAvailableRecallTypes)
+    expect(isFixedTermRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
+    expect(isStandardRecallMandatoryForRecommendation).toHaveBeenCalledWith(recommendation)
   })
 })

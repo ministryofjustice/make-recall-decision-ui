@@ -1,5 +1,6 @@
 import { RecommendationResponse } from '../@types/make-recall-decision-api'
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 export const isFixedTermRecallMandatoryForRecommendation = (recommendation: RecommendationResponse) =>
   isFixedTermRecallMandatory(recommendation.sentenceGroup, {
@@ -7,7 +8,7 @@ export const isFixedTermRecallMandatoryForRecommendation = (recommendation: Reco
     wasRepatriatedForMurder: recommendation?.wasRepatriatedForMurder,
     isServingSOPCSentence: recommendation?.isServingSOPCSentence,
     isServingDCRSentence: recommendation?.isServingDCRSentence,
-    isChargedWithOffence: recommendation?.isChargedWithOffence,
+    isRecalledOnNewChargedOrConvictedOffence: recommendation?.isRecalledOnNewChargedOrConvictedOffence?.selected,
     isServingTerroristOrNationalSecurityOffence: recommendation?.isServingTerroristOrNationalSecurityOffence,
     isAtRiskOfInvolvedInForeignPowerThreat: recommendation?.isAtRiskOfInvolvedInForeignPowerThreat,
     isYouthSentenceOver12Months: recommendation?.isYouthSentenceOver12Months,
@@ -21,7 +22,7 @@ type MandatoryFTRCriteria = {
   wasRepatriatedForMurder?: boolean
   isServingSOPCSentence?: boolean
   isServingDCRSentence?: boolean
-  isChargedWithOffence?: boolean
+  isRecalledOnNewChargedOrConvictedOffence?: IsRecalledOnNewChargedOrConvictedOffence.selected
   isServingTerroristOrNationalSecurityOffence?: boolean
   isAtRiskOfInvolvedInForeignPowerThreat?: boolean
   isYouthSentenceOver12Months?: boolean
@@ -32,16 +33,21 @@ type MandatoryFTRCriteria = {
 
 const isFixedTermRecallMandatory = (sentenceGroup: SentenceGroup, criteria: MandatoryFTRCriteria) => {
   if (sentenceGroup === SentenceGroup.ADULT_SDS) {
-    return !(
-      (criteria.wasReferredToParoleBoard244ZB ?? true) ||
-      (criteria.wasRepatriatedForMurder ?? true) ||
-      (criteria.isServingSOPCSentence ?? true) ||
-      (criteria.isServingDCRSentence ?? true) ||
-      (criteria.isChargedWithOffence ?? true) ||
-      (criteria.isServingTerroristOrNationalSecurityOffence ?? true) ||
-      (criteria.isAtRiskOfInvolvedInForeignPowerThreat ?? true) ||
-      (criteria.isMappaCategory4 ?? true) ||
-      (criteria.isMappaLevel2Or3 ?? true)
+    return (
+      [
+        IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+        IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+      ].includes(criteria.isRecalledOnNewChargedOrConvictedOffence) &&
+      !(
+        (criteria.wasReferredToParoleBoard244ZB ?? true) ||
+        (criteria.wasRepatriatedForMurder ?? true) ||
+        (criteria.isServingSOPCSentence ?? true) ||
+        (criteria.isServingDCRSentence ?? true) ||
+        (criteria.isServingTerroristOrNationalSecurityOffence ?? true) ||
+        (criteria.isAtRiskOfInvolvedInForeignPowerThreat ?? true) ||
+        (criteria.isMappaCategory4 ?? true) ||
+        (criteria.isMappaLevel2Or3 ?? true)
+      )
     )
   }
 

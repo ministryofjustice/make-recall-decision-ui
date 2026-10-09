@@ -18,6 +18,7 @@ import ppPaths from '../../server/routes/paths/pp.paths'
 import { RecommendationResponseGenerator } from '../../data/recommendations/recommendationGenerator'
 import { CustodyStatus } from '../../server/@types/make-recall-decision-api/models/CustodyStatus'
 import selected = CustodyStatus.selected
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 const recommendationMock = RecommendationResponseGenerator.generate({
   sentenceGroup: SentenceGroup.ADULT_SDS,
@@ -26,7 +27,6 @@ const recommendationMock = RecommendationResponseGenerator.generate({
   triggerLeadingToRecall: true,
   previousReleases: true,
   licenceConditionsBreached: true,
-  isChargedWithOffence: true,
   isServingTerroristOrNationalSecurityOffence: true,
   isAtRiskOfInvolvedInForeignPowerThreat: true,
   wasReferredToParoleBoard244ZB: true,
@@ -35,6 +35,9 @@ const recommendationMock = RecommendationResponseGenerator.generate({
   isServingDCRSentence: true,
   isYouthSentenceOver12Months: true,
   isYouthChargedWithSeriousOffence: true,
+  isRecalledOnNewChargedOrConvictedOffence: {
+    selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+  },
   personOnProbation: {
     name: 'Jane Bloggs',
     hasBeenReviewed: true,
@@ -457,15 +460,15 @@ context('Make a recommendation', () => {
               },
               licenceConditionsBreached: {
                 standardLicenceConditions: {
-                  selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+                  selected: ['GOOD_BEHAVIOUR', 'KEEP_IN_TOUCH'],
                   allOptions: [
                     {
                       value: 'GOOD_BEHAVIOUR',
-                      text: 'Be of good behaviour',
+                      text: 'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
                     },
                     {
-                      value: 'NO_OFFENCE',
-                      text: 'Not to commit any offence',
+                      value: 'KEEP_IN_TOUCH',
+                      text: 'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
                     },
                   ],
                 },
@@ -520,12 +523,12 @@ context('Make a recommendation', () => {
 
           cy.getSelectableOptionByLabel(
             `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
-            'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+            'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
           ).should('be.checked')
 
           cy.getSelectableOptionByLabel(
             `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
-            'Not commit any offence',
+            'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
           ).should('be.checked')
           cy.getSelectableOptionByLabel(
             `What licence conditions has ${recommendationMock.personOnProbation?.name} breached?`,
@@ -684,12 +687,12 @@ context('Make a recommendation', () => {
 
           cy.getSelectableOptionByLabel(
             'What licence conditions has Jane Bloggs breached?',
-            'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
+            'Behave well in a way that supports the purpose of you being on licence, and do not commit any crime.',
           ).should('be.checked')
 
           cy.getSelectableOptionByLabel(
             'What licence conditions has Jane Bloggs breached?',
-            'Not commit any offence',
+            'Keep in touch and meet with your supervising officer in the way they tell you to. This includes meeting them where you live.',
           ).should('be.checked')
           cy.getSelectableOptionByLabel(
             'What licence conditions has Jane Bloggs breached?',
@@ -1388,7 +1391,10 @@ context('Make a recommendation', () => {
 
       cy.getElement({ qaAttr: 'licence-conditions-breached' }).click()
 
-      cy.getText('licence-conditions-breached-panel').should('contain', 'Be of good behaviour')
+      cy.getText('licence-conditions-breached-panel').should(
+        'contain',
+        'Behave well in a way that supports the purpose of you being on licence',
+      )
 
       cy.clickButton('Continue')
 
@@ -2030,46 +2036,6 @@ context('Make a recommendation', () => {
       cy.signIn()
     })
 
-    it(`present Who Completed Part A page`, () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, whoCompletedPartA: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/who-completed-part-a/`)
-
-      cy.pageHeading().should('contain', 'Who completed this Part A?')
-
-      cy.fillInput('Name', 'Joe Bloggs')
-      cy.fillInput('Email', 'bloggs@me.gov.uk')
-      cy.selectRadio('Is this person the probation practitioner for Jane Bloggs?', 'Yes')
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
-    })
-
-    it(`present Practitioner For Part A page `, () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null, practitionerForPartA: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.recommendations}/${recommendationId}/practitioner-for-part-a/`)
-
-      cy.pageHeading().should('contain', 'Practitioner for Jane Bloggs')
-
-      cy.fillInput('Name', 'Joe Bloggs')
-      cy.fillInput('Email', 'bloggs@me.gov.uk')
-
-      cy.clickButton('Continue')
-      cy.pageHeading().should('equal', `Part A for ${recommendationResponse.personOnProbation.name}`)
-    })
-
     it(`present Revocation Order Recipients`, () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -2142,19 +2108,6 @@ context('Make a recommendation', () => {
       cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
       cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
     })
-    it('landing page for PPCS', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.start}`)
-
-      cy.pageHeading().should('contain', 'Check and book a recall')
-    })
-
     it('Find a rec doc', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -2651,65 +2604,6 @@ context('Make a recommendation', () => {
       cy.getText('localPoliceContact').should('contain', 'joe.bloggs@gmail.com')
     })
 
-    it('edit MAPPA Level', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: {},
-          ppudOffender: {},
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('getReferenceList', {
-        name: 'mappa-levels',
-        statusCode: 200,
-        response: {
-          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPA'],
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/edit-mappa-level`)
-      cy.pageHeading().should('contain', 'Edit MAPPA level')
-
-      cy.getText('mappaLevel').should('contain', 'Level 0')
-    })
-
-    it('edit MAPPA Level - unknown', () => {
-      const completeRecommendationResponseWithoutMappaLevel = JSON.parse(JSON.stringify(completeRecommendationResponse))
-      delete completeRecommendationResponseWithoutMappaLevel.personOnProbation.mappa.level
-
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponseWithoutMappaLevel,
-          prisonOffender: {},
-          bookRecallToPpud: {},
-          ppudOffender: {},
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-      cy.task('getReferenceList', {
-        name: 'mappa-levels',
-        statusCode: 200,
-        response: {
-          values: ['Level 1 – Single Agency Management', 'Level 2 – Local Inter-Agency Management', 'Level 3 – MAPPA'],
-        },
-      })
-
-      cy.visit(`/recommendations/252523937/edit-mappa-level`)
-      cy.pageHeading().should('contain', 'Edit MAPPA level')
-
-      cy.getText('mappaLevel').should('contain', 'Unknown')
-    })
-
     it('select determinate ppud sentence - NOMIS sentence is in single-sentence sequence (non-null sentenceEndDate)', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
@@ -2820,19 +2714,31 @@ context('Make a recommendation', () => {
       cy.getText('1-sentenceExpiryDate').should('contain', '2 March 1969')
     })
 
-    it('sentence to commit - multiple terms', () => {
+    it('booked to ppud', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
           prisonOffender: {},
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyType: 'custody type',
-            indexOffence: 'index offence',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
+        },
+      })
+      cy.task('getStatuses', {
+        statusCode: 200,
+        response: [{ name: RECOMMENDATION_STATUS.BOOKED_TO_PPUD, active: true }],
+      })
+
+      cy.visit(`/recommendations/252523937/booked-to-ppud`)
+      cy.pageHeading().should('contain', 'Booked onto PPUD')
+    })
+
+    it('booking summary - NOMIS sentence is part of single-sentence sequence (non-null sentenceEndDate)', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: {
+          ...completeRecommendationResponse,
+          prisonOffender: {},
+          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.DETERMINATE },
           nomisIndexOffence: {
             allOptions: [
               {
@@ -2841,6 +2747,7 @@ context('Make a recommendation', () => {
                 offenderChargeId: 3934369,
                 offenceDate: '2023-11-17',
                 sentenceDate: '2023-11-16',
+                sentenceEndDate: '3021-11-15',
                 sentenceSequenceExpiryDate: '3022-11-15',
                 releaseDate: '2025-01-01',
                 licenceExpiryDate: '2025-01-02',
@@ -2854,13 +2761,6 @@ context('Make a recommendation', () => {
                     days: 0,
                     code: 'IMP',
                   },
-                  {
-                    years: 2,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'LIC',
-                  },
                 ],
               },
             ],
@@ -2870,28 +2770,19 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
+        response: [
+          { name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true },
+          { name: RECOMMENDATION_STATUS.BOOKED_TO_PPUD, active: true },
+        ],
       })
 
-      cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
-
-      cy.getText('custodyType').should('contain', 'custody type')
-      cy.getText('offenceDescription').should('contain', 'index offence')
-      cy.getText('offenceDate').should('contain', '17 November 2023')
-      cy.getText('releaseDate').should('contain', '1 January 2025')
-      cy.getText('courtDescription').should('contain', 'court description')
-      cy.getText('sentenceDate').should('contain', '16 November 2023')
-      cy.getText('licenceExpiryDate').should('contain', '2 January 2025')
-      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
-
-      cy.getText('1-termType').should('contain', 'Custodial term')
-      cy.getText('1-term').should('contain', '4 years')
-      cy.getText('2-termType').should('contain', 'Extended term')
-      cy.getText('2-term').should('contain', '2 years')
+      cy.visit(`/recommendations/252523937/booking-summary`)
+      cy.pageHeading().should('contain', 'Booking summary for Joseph Bluggs')
+      cy.getText('sentenceEndDate').should('contain', '15 November 3021')
+      cy.getElement('sentenceSequenceExpiryDate').should('not.exist')
     })
 
-    it('sentence to commit - single term', () => {
+    it('booking summary - NOMIS sentence is part of multi-sentence sequence (no sentenceEndDate)', () => {
       cy.task('getRecommendation', {
         statusCode: 200,
         response: {
@@ -2928,521 +2819,6 @@ context('Make a recommendation', () => {
       })
       cy.task('getStatuses', {
         statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
-
-      cy.getText('sentenceLength').should('contain', '4 years')
-    })
-
-    it('sentence to commit - NOMIS sentence is part of single-sentence sequence (non-null sentenceEndDate)', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyType: 'custody type',
-            indexOffence: 'index offence',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3021-11-15',
-                sentenceSequenceExpiryDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                  {
-                    years: 2,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'LIC',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
-
-      cy.getText('sentenceEndDate').should('contain', '15 November 3021')
-      cy.getElement('sentenceSequenceExpiryDate').should('not.exist')
-    })
-
-    it('sentence to commit - NOMIS sentence is part of multi-sentence sequence (no sentenceEndDate)', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            custodyType: 'custody type',
-            indexOffence: 'index offence',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceSequenceExpiryDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                  {
-                    years: 2,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'LIC',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/sentence-to-commit`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
-
-      cy.getElement('sentenceEndDate').should('not.exist')
-      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
-    })
-
-    it('sentence to commit existing offender - NOMIS sentence is part of single-sentence sequence (non-null sentenceEndDate)', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          ppudOffender: {
-            sentences: [
-              {
-                id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Determinate',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-                releases: [
-                  {
-                    dateOfRelease: '2013-02-02',
-                  },
-                  {
-                    dateOfRelease: '2015-02-09',
-                  },
-                  {
-                    dateOfRelease: '2005-02-02',
-                  },
-                ],
-              },
-            ],
-          },
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            ppudSentenceId: '1',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3021-11-15',
-                sentenceSequenceExpiryDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/sentence-to-commit-existing-offender`)
-      cy.pageHeading().should('contain', 'Double check your booking')
-      cy.getText('sentenceEndDate').should('contain', '15 November 3021')
-      cy.getElement('sentenceSequenceExpiryDate').should('not.exist')
-    })
-
-    it('sentence to commit existing offender - NOMIS sentence is part of multi-sentence sequence (no sentenceEndDate)', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          ppudOffender: {
-            sentences: [
-              {
-                id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Determinate',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-                releases: [
-                  {
-                    dateOfRelease: '2013-02-02',
-                  },
-                  {
-                    dateOfRelease: '2015-02-09',
-                  },
-                  {
-                    dateOfRelease: '2005-02-02',
-                  },
-                ],
-              },
-            ],
-          },
-          bookRecallToPpud: {
-            firstNames: 'Joseph',
-            lastName: 'Bluggs',
-            ppudSentenceId: '1',
-            custodyGroup: CUSTODY_GROUP.DETERMINATE,
-          },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceSequenceExpiryDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/sentence-to-commit-existing-offender`)
-      cy.pageHeading().should('contain', 'Double check your booking')
-      cy.getElement('sentenceEndDate').should('not.exist')
-      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
-    })
-
-    it('select indeterminate ppud sentence', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          sentenceGroup: SentenceGroup.INDETERMINATE,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-          ppudOffender: {
-            id: '1',
-            sentences: [
-              {
-                id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Mandatory (MLP)',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-                tariffExpiryDate: '1970-03-02',
-              },
-            ],
-          },
-          convictionDetail: {
-            indexOffenceDescription: 'Burglary',
-            sentenceExpiryDate: '2024-05-10',
-            dateOfSentence: '2022-03-11',
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Select a sentence for your booking')
-
-      cy.get('div[id=nomis-sentence-details-offence-row] dd').should('contain.text', 'Burglary')
-      cy.get('div[id=nomis-sentence-details-date-of-sentence-row] dd').should('contain.text', '11 March 2022')
-      cy.get('div[id=nomis-sentence-details-sentence-type-row] dd').should('contain.text', CUSTODY_GROUP.INDETERMINATE)
-      cy.get('div[id=nomis-sentence-details-sentence-expiry-date-row] dd').should('contain.text', '10 May 2024')
-
-      cy.get('div[id=1-offence-row] dd').should('contain.text', 'some offence')
-      cy.get('div[id=1-custody-type-row] dd').should('contain.text', 'Mandatory (MLP)')
-      cy.get('div[id=1-date-of-sentence-row] dd').should('contain.text', '12 June 2003')
-      cy.get('div[id=1-tariff-expiry-date-row] dd').should('contain.text', '2 March 1970')
-
-      cy.get('h2').should('have.class', 'govuk-heading-m').should('contain.text', 'Add your booking to PPUD')
-      cy.get('p.govuk-body')
-        .contains(
-          'Select the sentence for this booking. If the correct sentence is not listed, it needs to be added to PPUD.',
-        )
-        .should('exist')
-      // check the determinate sentence content is not present
-      cy.get('#determinateSentencesDetails').should('not.exist')
-    })
-
-    it('select indeterminate ppud sentence - show determinate sentence details', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          sentenceGroup: SentenceGroup.INDETERMINATE,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-          ppudOffender: {
-            id: '1',
-            sentences: [
-              {
-                id: '1',
-                dateOfSentence: '2003-06-12',
-                custodyType: 'Mandatory (MLP)',
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-              },
-              {
-                id: '2',
-                dateOfSentence: '2004-06-12',
-                custodyType: 'Determinate', // determinate sentences
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'some offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-              },
-              {
-                id: '3',
-                dateOfSentence: '2004-06-12',
-                custodyType: 'EDS', // determinate sentences
-                licenceExpiryDate: null,
-                mappaLevel: 'Level 2 – Local Inter-Agency Management',
-                offence: {
-                  indexOffence: 'another offence',
-                  dateOfIndexOffence: null,
-                },
-                sentenceExpiryDate: '1969-03-02',
-              },
-            ],
-          },
-          convictionDetail: {
-            indexOffenceDescription: 'Burglary',
-            sentenceExpiryDate: '2024-05-10',
-            dateOfSentence: '2022-03-11',
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Select a sentence for your booking')
-      cy.get('#determinateSentencesDetails')
-        .find('.govuk-details__summary-text')
-        .should('contain.text', '2 determinate sentences')
-
-      cy.get('#determinateSentencesDetails')
-        .find('.govuk-details__text')
-        .should('contain.text', 'You can view the determinate sentences for Jane Bloggs')
-    })
-
-    it('select indeterminate ppud sentence - show notification banner when there are no indeterminate sentences', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          sentenceGroup: SentenceGroup.INDETERMINATE,
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs', custodyGroup: CUSTODY_GROUP.INDETERMINATE },
-          ppudOffender: {
-            id: '1',
-            sentences: [],
-          },
-          convictionDetail: {
-            indexOffenceDescription: 'Burglary',
-            sentenceExpiryDate: '2024-05-10',
-            dateOfSentence: '2022-03-11',
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/select-indeterminate-ppud-sentence`)
-      cy.pageHeading().should('contain', 'Select a sentence for your booking')
-
-      cy.get('#govuk-notification-banner-title').should('contain.text', 'No indeterminate sentences found in PPUD')
-      cy.get('.govuk-notification-banner__content').should(
-        'contain.text',
-        'The sentence needs to be added to PPUD and the booking on completed there.',
-      )
-
-      cy.get('#return-to-booking-details-button')
-        .should('have.attr', 'href', '/recommendations/1/check-booking-details')
-        .invoke('text')
-        .then(text => {
-          const normalized = text.replace(/\s+/g, ' ').trim()
-          expect(normalized).to.eq('Return to booking details')
-        })
-    })
-
-    it('booked to ppud', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.BOOKED_TO_PPUD, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/booked-to-ppud`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
-    })
-
-    it('booking summary - NOMIS sentence is part of single-sentence sequence (non-null sentenceEndDate)', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceEndDate: '3021-11-15',
-                sentenceSequenceExpiryDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
         response: [
           { name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true },
           { name: RECOMMENDATION_STATUS.BOOKED_TO_PPUD, active: true },
@@ -3450,297 +2826,8 @@ context('Make a recommendation', () => {
       })
 
       cy.visit(`/recommendations/252523937/booking-summary`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
-      cy.getText('sentenceEndDate').should('contain', '15 November 3021')
-      cy.getElement('sentenceSequenceExpiryDate').should('not.exist')
-    })
-
-    it('booking summary - NOMIS sentence is part of multi-sentence sequence (no sentenceEndDate)', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-          prisonOffender: {},
-          bookRecallToPpud: { firstNames: 'Joseph', lastName: 'Bluggs' },
-          nomisIndexOffence: {
-            allOptions: [
-              {
-                sentenceTypeDescription: 'sentence type description',
-                offenceDescription: 'offence description',
-                offenderChargeId: 3934369,
-                offenceDate: '2023-11-17',
-                sentenceDate: '2023-11-16',
-                sentenceSequenceExpiryDate: '3022-11-15',
-                releaseDate: '2025-01-01',
-                licenceExpiryDate: '2025-01-02',
-                releasingPrison: 'releasing prison',
-                courtDescription: 'court description',
-                terms: [
-                  {
-                    years: 4,
-                    months: 0,
-                    weeks: 0,
-                    days: 0,
-                    code: 'IMP',
-                  },
-                ],
-              },
-            ],
-            selected: 3934369,
-          },
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [
-          { name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true },
-          { name: RECOMMENDATION_STATUS.BOOKED_TO_PPUD, active: true },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/booking-summary`)
-      cy.pageHeading().should('contain', 'Your recall booking - Joseph Bluggs')
-      cy.getElement('sentenceEndDate').should('not.exist')
-      cy.getText('sentenceSequenceExpiryDate').should('contain', '15 November 3022')
-    })
-
-    it('supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'Part A',
-            type: 'PPUDPartA',
-            filename: 'NAT_Recall_Part_A_02022024_Bloggs_J_X098092.docx',
-            id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/supporting-documents`)
-      cy.pageHeading().should('contain', 'Add supporting documents for Jane Bloggs')
-      cy.getText('filename').should('contain', 'NAT_Recall_Part_A_02022024_Bloggs_J_X098092.docx')
-    })
-
-    it('uploading supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/supporting-document-upload/part-a`)
-      cy.pageHeading().should('contain', 'Upload Part A')
-    })
-
-    it('replace supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'Part A',
-            type: 'PPUDPartA',
-            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
-            id: 'e0cc157d-5c31-4c2f-984f-4bc7b5491d9d',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/supporting-document-replace/part-a/1234`)
-      cy.pageHeading().should('contain', 'Upload Part A')
-    })
-
-    it('remove supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'Part A',
-            type: 'PPUDPartA',
-            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
-            id: '1234',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/supporting-document-remove/1234`)
-      cy.pageHeading().should('contain', 'Remove Part A')
-    })
-
-    it('uploading additional supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.visit(`/recommendations/252523937/additional-supporting-document-upload`)
-      cy.pageHeading().should('contain', 'Add additional document')
-    })
-
-    it('replace additional supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'some title',
-            type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
-            id: '1234',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/additional-supporting-document-replace/1234`)
-      cy.pageHeading().should('contain', 'Replace additional document')
-    })
-
-    it('remove additional supporting documents', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'some title',
-            type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
-            id: '1234',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/additional-supporting-document-remove/1234`)
-      cy.pageHeading().should('contain', "Remove the additional document 'some title'")
-    })
-
-    it('edit minute', () => {
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: {
-          ...completeRecommendationResponse,
-        },
-      })
-      cy.task('getStatuses', {
-        statusCode: 200,
-        response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
-      })
-
-      cy.task('getSupportingDocuments', {
-        statusCode: 200,
-        response: [
-          {
-            title: 'some title',
-            type: 'OtherDocument',
-            filename: 'NAT_Recall_Part_A_02022024_Bloggs_H_X098092.docx',
-            id: '1234',
-          },
-        ],
-      })
-
-      cy.visit(`/recommendations/252523937/edit-ppud-minute`)
-      cy.pageHeading().should('contain', 'Add note about supporting documents')
-    })
-  })
-  describe('PPCS Journey without correct mapping or ppud user account', () => {
-    beforeEach(() => {
-      cy.signIn({ roles: ['ROLE_MAKE_RECALL_DECISION_PPCS'] })
-    })
-    it('landing page for PPCS when no mapping present', () => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: { ppudUserMapping: null } })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: { results: [] } })
-
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.start}`)
-
-      cy.pageHeading().should('contain', 'Check and book a recall')
-      cy.getElement('Your account needs updating before you can book a recall').should('exist')
-    })
-
-    it('landing page for PPCS when mapping present but no active ppud user', () => {
-      cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
-      cy.task('ppudSearchActiveUsers', { statusCode: 200, response: { results: [] } })
-
-      cy.task('getRecommendation', {
-        statusCode: 200,
-        response: { ...completeRecommendationResponse, recallConsideredList: null },
-      })
-      cy.task('getStatuses', { statusCode: 200, response: [] })
-      cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
-
-      cy.visit(`${sharedPaths.start}`)
-
-      cy.pageHeading().should('contain', 'Check and book a recall')
-      cy.getElement('Your account needs updating before you can book a recall').should('exist')
+      cy.pageHeading().should('contain', 'Booking summary for Joseph Bluggs')
+      cy.getText('sentenceEndDate').should('contain', '-')
     })
   })
   describe('Approved Premises Journey', () => {
@@ -3801,7 +2888,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Record the decison in NDelius')
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
-      cy.getText('reason').should('contain', 'Be of good behaviour')
+      cy.getText('reason').should('contain', 'Behave well in a way that supports the purpose of you being on licence')
       cy.getText('reason').should('contain', 'Manager(s) name: John Doe')
     })
     it('present AP rationale confirmation', () => {
@@ -3823,7 +2910,7 @@ context('Make a recommendation', () => {
       cy.pageHeading().should('contain', 'Decision not to recall')
 
       cy.getText('reason').should('contain', 'some lorem ipsum stuff')
-      cy.getText('reason').should('contain', 'Be of good behaviour')
+      cy.getText('reason').should('contain', 'Behave well in a way that supports the purpose of you being on licence')
       cy.getText('reason').should('contain', 'Manager(s) name: John Doe')
     })
     it('present AP why no recall', () => {

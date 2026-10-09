@@ -6,6 +6,7 @@ import {
   isRecommendationDiscretionaryRecall,
   isStandardRecallMandatoryForRecommendation,
 } from './fixedTermRecallUtils'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 describe('isFixedTermRecallMandatoryForRecommendation', () => {
   describe('when sentence Group is YOUTH_SDS', () => {
@@ -61,7 +62,7 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
         isFixedTermRecallMandatoryForRecommendation(
           RecommendationResponseGenerator.generate({
             sentenceGroup: SentenceGroup.ADULT_SDS,
-            isChargedWithOffence: undefined,
+            isRecalledOnNewChargedOrConvictedOffence: undefined,
             isServingTerroristOrNationalSecurityOffence: undefined,
             isAtRiskOfInvolvedInForeignPowerThreat: undefined,
             wasReferredToParoleBoard244ZB: undefined,
@@ -74,71 +75,88 @@ describe('isFixedTermRecallMandatoryForRecommendation', () => {
         ),
       ).toBeFalsy()
     })
-
-    it('returns true when all exclusion criteria fields are false', () => {
-      expect(
-        isFixedTermRecallMandatoryForRecommendation(
-          RecommendationResponseGenerator.generate({
-            sentenceGroup: SentenceGroup.ADULT_SDS,
-            wasReferredToParoleBoard244ZB: false,
-            wasRepatriatedForMurder: false,
-            isServingSOPCSentence: false,
-            isServingDCRSentence: false,
-            isChargedWithOffence: false,
-            isServingTerroristOrNationalSecurityOffence: false,
-            isAtRiskOfInvolvedInForeignPowerThreat: false,
-            isMappaCategory4: false,
-            isMappaLevel2Or3: false,
-          }),
-        ),
-      ).toBeTruthy()
-    })
-
-    describe(' Returns false when any exclusion criteria fields are true', () => {
-      generateBooleanCombinations(9)
-        .filter(c => c.some(b => b))
-        .forEach(combination => {
-          it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
-            expect(
-              isFixedTermRecallMandatoryForRecommendation(
-                RecommendationResponseGenerator.generate({
-                  sentenceGroup: SentenceGroup.ADULT_SDS,
-                  isChargedWithOffence: combination[0],
-                  isServingTerroristOrNationalSecurityOffence: combination[1],
-                  isAtRiskOfInvolvedInForeignPowerThreat: combination[2],
-                  wasReferredToParoleBoard244ZB: combination[3],
-                  wasRepatriatedForMurder: combination[4],
-                  isServingSOPCSentence: combination[5],
-                  isServingDCRSentence: combination[6],
-                  isMappaCategory4: combination[7],
-                  isMappaLevel2Or3: combination[8],
-                }),
-              ),
-            ).toBeFalsy()
-          })
-        })
-    })
-  })
-})
-
-describe(' Returns false when any exclusion criteria fields are true', () => {
-  generateBooleanCombinations(7)
-    .filter(c => c.some(b => b))
-    .forEach(combination => {
-      it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]}`, () => {
+    ;[
+      IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+      IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+    ].forEach(isRecalledOnNewChargedOrConvictedOffence => {
+      it(`returns true when all exclusion criteria fields are false and isRecalledOnNewChargedOrConvictedOffence is ${isRecalledOnNewChargedOrConvictedOffence}`, () => {
         expect(
-          isFixedTermRecallMandatoryForRecommendation({
-            wasReferredToParoleBoard244ZB: combination[0],
-            wasRepatriatedForMurder: combination[1],
-            isServingSOPCSentence: combination[2],
-            isServingDCRSentence: combination[3],
-            isChargedWithOffence: combination[4],
-            isMappaCategory4: combination[5],
-            isMappaLevel2Or3: combination[6],
-          }),
-        ).toBeFalsy()
+          isFixedTermRecallMandatoryForRecommendation(
+            RecommendationResponseGenerator.generate({
+              sentenceGroup: SentenceGroup.ADULT_SDS,
+              wasReferredToParoleBoard244ZB: false,
+              wasRepatriatedForMurder: false,
+              isServingSOPCSentence: false,
+              isServingDCRSentence: false,
+              isRecalledOnNewChargedOrConvictedOffence: {
+                selected: isRecalledOnNewChargedOrConvictedOffence,
+              },
+              isServingTerroristOrNationalSecurityOffence: false,
+              isAtRiskOfInvolvedInForeignPowerThreat: false,
+              isMappaCategory4: false,
+              isMappaLevel2Or3: false,
+            }),
+          ),
+        ).toBeTruthy()
       })
     })
+
+    describe(` Returns false when isRecalledOnNewChargedOrConvictedOffence is Only Charged`, () => {
+      generateBooleanCombinations(8).forEach(combination => {
+        it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]}`, () => {
+          expect(
+            isFixedTermRecallMandatoryForRecommendation(
+              RecommendationResponseGenerator.generate({
+                sentenceGroup: SentenceGroup.ADULT_SDS,
+                isRecalledOnNewChargedOrConvictedOffence: {
+                  selected: IsRecalledOnNewChargedOrConvictedOffence.selected.ONLY_CHARGED,
+                },
+                isServingTerroristOrNationalSecurityOffence: combination[0],
+                isAtRiskOfInvolvedInForeignPowerThreat: combination[1],
+                wasReferredToParoleBoard244ZB: combination[2],
+                wasRepatriatedForMurder: combination[3],
+                isServingSOPCSentence: combination[4],
+                isServingDCRSentence: combination[5],
+                isMappaCategory4: combination[6],
+                isMappaLevel2Or3: combination[7],
+              }),
+            ),
+          ).toBeFalsy()
+        })
+      })
+    })
+    ;[
+      IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+      IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+    ].forEach(isRecalledOnNewChargedOrConvictedOffence => {
+      describe(` Returns false when isRecalledOnNewChargedOrConvictedOffence is ${isRecalledOnNewChargedOrConvictedOffence} and any exclusion criteria fields are true`, () => {
+        generateBooleanCombinations(8)
+          .filter(c => c.some(b => b))
+          .forEach(combination => {
+            it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]}}`, () => {
+              expect(
+                isFixedTermRecallMandatoryForRecommendation(
+                  RecommendationResponseGenerator.generate({
+                    sentenceGroup: SentenceGroup.ADULT_SDS,
+                    isRecalledOnNewChargedOrConvictedOffence: {
+                      selected: isRecalledOnNewChargedOrConvictedOffence,
+                    },
+                    isServingTerroristOrNationalSecurityOffence: combination[0],
+                    isAtRiskOfInvolvedInForeignPowerThreat: combination[1],
+                    wasReferredToParoleBoard244ZB: combination[2],
+                    wasRepatriatedForMurder: combination[3],
+                    isServingSOPCSentence: combination[4],
+                    isServingDCRSentence: combination[5],
+                    isMappaCategory4: combination[6],
+                    isMappaLevel2Or3: combination[7],
+                  }),
+                ),
+              ).toBeFalsy()
+            })
+          })
+      })
+    })
+  })
 })
 
 describe('isRecommendationDiscretionaryRecall', () => {
@@ -179,7 +197,7 @@ describe('isStandardRecallMandatoryForRecommendation', () => {
           wasRepatriatedForMurder: undefined,
           isServingSOPCSentence: undefined,
           isServingDCRSentence: undefined,
-          isChargedWithOffence: undefined,
+          isRecalledOnNewChargedOrConvictedOffence: undefined,
           isServingTerroristOrNationalSecurityOffence: undefined,
           isAtRiskOfInvolvedInForeignPowerThreat: undefined,
           isYouthSentenceOver12Months: undefined,
@@ -215,46 +233,85 @@ describe('isStandardRecallMandatoryForRecommendation', () => {
       ),
     ).toBeTruthy()
   })
-  it(' Returns false when is Adult SDS and all adult exclusion criteria fields are false', () => {
-    expect(
-      isStandardRecallMandatoryForRecommendation(
-        RecommendationResponseGenerator.generate({
-          sentenceGroup: SentenceGroup.ADULT_SDS,
-          isMappaCategory4: false,
-          isMappaLevel2Or3: false,
-          wasReferredToParoleBoard244ZB: false,
-          wasRepatriatedForMurder: false,
-          isServingSOPCSentence: false,
-          isServingDCRSentence: false,
-          isChargedWithOffence: false,
-          isServingTerroristOrNationalSecurityOffence: false,
-          isAtRiskOfInvolvedInForeignPowerThreat: false,
-        }),
-      ),
-    ).toBeFalsy()
+  ;[
+    IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+    IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+  ].forEach(isRecalledOnNewChargedOrConvictedOffence => {
+    it(` Returns false when is Adult SDS and all adult exclusion criteria fields are false and isRecalledOnNewChargedOrConvictedOffence is ${isRecalledOnNewChargedOrConvictedOffence}`, () => {
+      expect(
+        isStandardRecallMandatoryForRecommendation(
+          RecommendationResponseGenerator.generate({
+            sentenceGroup: SentenceGroup.ADULT_SDS,
+            isMappaCategory4: false,
+            isMappaLevel2Or3: false,
+            wasReferredToParoleBoard244ZB: false,
+            wasRepatriatedForMurder: false,
+            isServingSOPCSentence: false,
+            isServingDCRSentence: false,
+            isRecalledOnNewChargedOrConvictedOffence: {
+              selected: isRecalledOnNewChargedOrConvictedOffence,
+            },
+            isServingTerroristOrNationalSecurityOffence: false,
+            isAtRiskOfInvolvedInForeignPowerThreat: false,
+          }),
+        ),
+      ).toBeFalsy()
+    })
   })
-  describe(' Returns true when is Adult SDS and any adult exclusion criteria fields are true', () => {
-    generateBooleanCombinations(9)
-      .filter(c => c.some(b => b))
-      .forEach(combination => {
-        it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
-          expect(
-            isStandardRecallMandatoryForRecommendation(
-              RecommendationResponseGenerator.generate({
-                sentenceGroup: SentenceGroup.ADULT_SDS,
-                isMappaCategory4: combination[0],
-                isMappaLevel2Or3: combination[1],
-                wasReferredToParoleBoard244ZB: combination[2],
-                wasRepatriatedForMurder: combination[3],
-                isServingSOPCSentence: combination[4],
-                isServingDCRSentence: combination[5],
-                isChargedWithOffence: combination[6],
-                isServingTerroristOrNationalSecurityOffence: combination[7],
-                isAtRiskOfInvolvedInForeignPowerThreat: combination[8],
-              }),
-            ),
-          ).toBeTruthy()
+  ;[
+    IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+    IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+  ].forEach(isRecalledOnNewChargedOrConvictedOffence => {
+    describe(` Returns true when is Adult SDS and isRecalledOnNewChargedOrConvictedOffence is ${isRecalledOnNewChargedOrConvictedOffence} and any adult exclusion criteria fields are true`, () => {
+      generateBooleanCombinations(8)
+        .filter(c => c.some(b => b))
+        .forEach(combination => {
+          it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]}}`, () => {
+            expect(
+              isStandardRecallMandatoryForRecommendation(
+                RecommendationResponseGenerator.generate({
+                  sentenceGroup: SentenceGroup.ADULT_SDS,
+                  isMappaCategory4: combination[0],
+                  isMappaLevel2Or3: combination[1],
+                  wasReferredToParoleBoard244ZB: combination[2],
+                  wasRepatriatedForMurder: combination[3],
+                  isServingSOPCSentence: combination[4],
+                  isServingDCRSentence: combination[5],
+                  isRecalledOnNewChargedOrConvictedOffence: {
+                    selected: isRecalledOnNewChargedOrConvictedOffence,
+                  },
+                  isServingTerroristOrNationalSecurityOffence: combination[6],
+                  isAtRiskOfInvolvedInForeignPowerThreat: combination[7],
+                }),
+              ),
+            ).toBeTruthy()
+          })
         })
+    })
+  })
+
+  describe(` Returns true when is Adult SDS and isRecalledOnNewChargedOrConvictedOffence is Only Charged`, () => {
+    generateBooleanCombinations(9).forEach(combination => {
+      it(`${combination[0]} - ${combination[1]} - ${combination[2]} - ${combination[3]} - ${combination[4]} - ${combination[5]} - ${combination[6]} - ${combination[7]} - ${combination[8]}`, () => {
+        expect(
+          isStandardRecallMandatoryForRecommendation(
+            RecommendationResponseGenerator.generate({
+              sentenceGroup: SentenceGroup.ADULT_SDS,
+              isMappaCategory4: combination[0],
+              isMappaLevel2Or3: combination[1],
+              wasReferredToParoleBoard244ZB: combination[2],
+              wasRepatriatedForMurder: combination[3],
+              isServingSOPCSentence: combination[4],
+              isServingDCRSentence: combination[5],
+              isRecalledOnNewChargedOrConvictedOffence: {
+                selected: IsRecalledOnNewChargedOrConvictedOffence.selected.ONLY_CHARGED,
+              },
+              isServingTerroristOrNationalSecurityOffence: combination[6],
+              isAtRiskOfInvolvedInForeignPowerThreat: combination[7],
+            }),
+          ),
+        ).toBeTruthy()
       })
+    })
   })
 })

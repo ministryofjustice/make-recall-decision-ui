@@ -35,13 +35,16 @@
   "jest": {
     "preset": "ts-jest",
     "transform": {
-      "^.+\\.tsx?$": [
+      "^.+\\.(t|j)sx?$": [
         "ts-jest",
         {
           "isolatedModules": true
         }
       ]
     },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@faker-js/faker)/)"
+    ],
     "collectCoverageFrom": [
       "server/**/*.{ts,js,jsx,mjs}"
     ],
@@ -96,7 +99,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.1036.0",
-    "@faker-js/faker": "^9.7.0",
+    "@faker-js/faker": "^10.6.0",
+    "@flipt-io/flipt-client-js": "0.5.0",
     "@microsoft/applicationinsights-web": "^3.1.2",
     "@ministryofjustice/frontend": "8.0.0",
     "@ministryofjustice/hmpps-probation-frontend-components": "1.0.1",
@@ -104,7 +108,7 @@
     "@sentry/tracing": "^7.109.0",
     "@types/express-serve-static-core": "^4.19.0",
     "@types/multer": "^1.4.11",
-    "@types/qs": "^6.9.14",
+    "@types/qs": "^6.15.1",
     "accessible-autocomplete": "^3.0.1",
     "agentkeepalive": "^4.2.1",
     "applicationinsights": "^2.9.8",
@@ -112,7 +116,7 @@
     "body-parser": "^1.20.3",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
-    "compression": "^1.7.4",
+    "compression": "^1.8.2",
     "connect-flash": "^0.1.1",
     "connect-redis": "^7.1.1",
     "cookie-parser": "^1.4.7",
@@ -129,8 +133,8 @@
     "jquery": "^3.6.3",
     "jwt-decode": "^4.0.0",
     "luxon": "^3.2.1",
-    "mammoth": "^1.11.0",
-    "multer": "^2.0.2",
+    "mammoth": "^1.13.0",
+    "multer": "^2.4.0",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.3",
     "openapi-typescript-codegen": "^0.29.0",
@@ -206,14 +210,13 @@
     "xml2js": "^0.6.0"
   },
   "overrides": {
+    "@opentelemetry/core": "2.10.0",
     "csurf": {
       "cookie": "0.7.2"
     },
-    "diff": "8.0.3",
-    "mocha": {
-      "serialize-javascript": "7.0.5"
+    "express": {
+      "proxy-addr": "2.0.8"
     },
-    "systeminformation": "^5.31.6",
-    "js-yaml": "4.2.0"
+    "moment": "2.31.0"
   }
 }

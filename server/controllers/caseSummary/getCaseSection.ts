@@ -32,7 +32,7 @@ const getCaseSection = async (
   token: string,
   userId: string,
   reqQuery: ParsedQs,
-  _: Record<string, boolean>,
+  _featureFlags: Record<string, boolean>,
 ) => {
   let sectionLabel
   let caseSummary

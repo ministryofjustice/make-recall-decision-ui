@@ -1,0 +1,47 @@
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+<div class="moj-multi-file-upload {{- " " + params.classes if params.classes}}" data-module="moj-multi-file-upload" {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}"{% endfor %}>
+  <div class="moj-multi-file-upload__upload">
+    {{ params.uploadHtml | safe }}
+  </div>
+
+  <div class="moj-multi-file__uploaded-files {% if params.uploadedFiles.items.length == 0 %}moj-hidden{% endif%}">
+    <h2 class="govuk-heading-m">{{ params.uploadedFiles.heading.html | safe if params.uploadedFiles.heading.html else params.uploadedFiles.heading.text }}</h2>
+    {% if params.uploadedFiles.hint %}
+      <p class="govuk-body">
+        {{ params.uploadedFiles.hint | safe }}
+      </p>
+    {% endif %}
+    <dl class="govuk-summary-list moj-multi-file-upload__list">
+      {% if params.uploadedFiles.items and params.uploadedFiles.items.length > 0 %}
+        {% for item in params.uploadedFiles.items %}
+          <div class="govuk-summary-list__row moj-multi-file-upload__row">
+            <dt class="govuk-summary-list__value">
+              <div class="govuk-!-margin-bottom-0 govuk-form-group">
+                <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2 moj-multi-file-upload__message">{{item.filename}}</p>
+                <span class="moj-multi-file-upload__progress">
+                  <strong class="govuk-tag govuk-tag--green">
+                    Uploaded
+                  </strong>
+                </span>
+              </div>
+            </dt>
+            <dd class="govuk-summary-list__actions moj-multi-file-upload__actions">
+              <button
+                type="submit"
+                name="delete"
+                class="moj-multi-file-upload__delete govuk-button govuk-button--secondary govuk-!-margin-bottom-0 reset-button link-button"
+                value="{{ item.id }}"
+              >
+                Delete <span class="govuk-visually-hidden">{{ item.filename }}</span>
+              </button>
+            </dd>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </dl>
+  </div>
+</div>

@@ -11,6 +11,10 @@ import { getDeterminateSentences } from '../../helpers/ppudSentence/ppudSentence
 
 jest.mock('../../data/makeDecisionApiClient')
 
+jest.mock('../../helpers/ppudSentence/ppudSentenceHelper', () => ({
+  getDeterminateSentences: jest.fn(),
+}))
+
 describe('Select Determinate PPUD Sentence Controller', () => {
   describe('get', () => {
     const recommendation = RecommendationResponseGenerator.generate()
@@ -18,7 +22,10 @@ describe('Select Determinate PPUD Sentence Controller', () => {
     const next = mockNext()
     const determinateSentences: PpudDetailsSentence[] = [ppudDetailsSentence()]
     ;(getDeterminateSentences as jest.Mock).mockReturnValueOnce(determinateSentences)
-
+    beforeEach(() => {
+      jest.clearAllMocks()
+      ;(getDeterminateSentences as jest.Mock).mockReturnValue(determinateSentences)
+    })
     describe('Non conditional logic:', () => {
       beforeEach(async () => {
         await selectPpudSentenceController.get(mockReq(), res, next)

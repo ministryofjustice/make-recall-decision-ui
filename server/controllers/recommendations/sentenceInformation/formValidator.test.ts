@@ -116,11 +116,11 @@ describe('validateSentenceInformation', () => {
     }
 
     const emptyAdultSuitabilityCriteria: Partial<RecommendationResponse> = {
+      isRecalledOnNewChargedOrConvictedOffence: null,
       wasReferredToParoleBoard244ZB: null,
       wasRepatriatedForMurder: null,
       isServingSOPCSentence: null,
       isServingDCRSentence: null,
-      isChargedWithOffence: null,
       isServingTerroristOrNationalSecurityOffence: null,
       isAtRiskOfInvolvedInForeignPowerThreat: null,
     }

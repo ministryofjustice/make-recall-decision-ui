@@ -15,6 +15,10 @@ export type PrisonOffenderSearchResponse = {
   }
   identifiers: Identifier[],
   image: string
+  sentenceDetail: {
+    licenceExpiryDate: string
+    releaseDate: string
+  }
 };
 
 export type Identifier = {

@@ -3,7 +3,7 @@ export interface SummaryList {
   matchLength?: boolean
 }
 
-interface SummaryListRow {
+export interface SummaryListRow {
   key: string
   value?: string
   valueRegex?: RegExp
@@ -23,6 +23,8 @@ export const testSummaryList = (element: Cypress.Chainable<JQuery<HTMLElement>>,
     summaryRows.should('have.length', params.rows.length)
   }
   summaryRows.each((row, index) => {
+    if (index >= params.rows.length) return
+
     const item = params.rows[index]
     const label = item.editLink?.label ?? 'Edit'
     cy.wrap(row).within(() => {

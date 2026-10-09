@@ -3,9 +3,12 @@ import { testForErrorSummary } from '../../../componentTests/errors.tests'
 import { sharedPaths } from '../../../../server/routes/paths/shared.paths'
 import testRadioButtons from '../../../componentTests/radioButtons.tests'
 import { RecallTypeSelectedValue } from '../../../../server/@types/make-recall-decision-api/models/RecallTypeSelectedValue'
+import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
 
 describe('recall type extended', () => {
-  const recommendation = RecommendationResponseGenerator.generate()
+  const recommendation = RecommendationResponseGenerator.generate({
+    sentenceGroup: SentenceGroup.EXTENDED,
+  })
   const testPageUrl = `${sharedPaths.recommendations}/${recommendation.id}/recall-type-extended`
 
   beforeEach(() => {
@@ -66,6 +69,7 @@ describe('recall type extended', () => {
 
   it('should remember the selected recall type', () => {
     const recommendationWithRecallTypeSelected = RecommendationResponseGenerator.generate({
+      sentenceGroup: SentenceGroup.EXTENDED,
       recallType: {
         selected: {
           value: RecallTypeSelectedValue.value.STANDARD,

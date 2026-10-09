@@ -5,21 +5,26 @@ describe('suitability for fixed term recall form options', () => {
   it('should return the correct options for ADULT_SDS', () => {
     const result = suitabilityFormOptions('Test Test', SentenceGroup.ADULT_SDS)
 
-    expect(result).toEqual({
+    const expectedOptions = {
       isAtRiskOfInvolvedInForeignPowerThreat: {
         label: 'Is Test Test considered to be a person at risk of being involved in foreign power threat activity?',
       },
-      isChargedWithOffence: { label: 'Is Test Test being recalled because of being charged with an offence?' },
       isServingDCRSentence: { label: 'Is Test Test serving a Discretionary conditional release (DCR) sentence?' },
-      isServingSOPCSentence: { label: 'Is Test Test serving a Sentence for offenders of particular concern (SOPC)?' },
+      isServingSOPCSentence: {
+        label: 'Is Test Test serving a Sentence for offenders of particular concern (SOPC)?',
+      },
       isServingTerroristOrNationalSecurityOffence: {
         label: 'Is Test Test serving a sentence for a terrorist or national security offence?',
       },
       wasReferredToParoleBoard244ZB: {
         label: 'Was Test Test referred to the Parole Board under section 244ZB (power to detain) on this sentence?',
       },
-      wasRepatriatedForMurder: { label: 'Has Test Test been repatriated to the UK following a sentence for murder?' },
-    })
+      wasRepatriatedForMurder: {
+        label: 'Has Test Test been repatriated to the UK following a sentence for murder?',
+      },
+    }
+
+    expect(result).toEqual(expectedOptions)
   })
 
   it('should return the correct options for YOUTH_SDS', () => {

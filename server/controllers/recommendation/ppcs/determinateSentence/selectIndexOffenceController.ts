@@ -179,6 +179,10 @@ async function post(req: Request, res: Response, next: NextFunction) {
     s => s.indexSentence.offences?.[0]?.offenderChargeId === indexOffenceData.offenderChargeId,
   )
   const sentenceHasConsecutive = sentenceForOffence.sentencesInSequence != null
+  const previouslySelected = recommendation.nomisIndexOffence?.selected
+  const clearTotalSentenceLength =
+    recommendation.bookRecallToPpud?.totalSentenceLength != null &&
+    (previouslySelected == null || Number(previouslySelected) !== indexOffenceData.offenderChargeId)
 
   await updateRecommendation({
     recommendationId,
@@ -190,6 +194,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
       bookRecallToPpud: {
         ...recommendation.bookRecallToPpud,
         sentenceDate: indexOffenceData.sentenceDate,
+        ...(clearTotalSentenceLength && { totalSentenceLength: null }),
       },
     },
     token,

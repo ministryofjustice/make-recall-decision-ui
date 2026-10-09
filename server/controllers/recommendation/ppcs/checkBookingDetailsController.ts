@@ -15,7 +15,7 @@ import { formatDateTimeFromIsoString } from '../../../utils/dates/formatting'
 import { makeErrorObject } from '../../../utils/errors'
 import strings from '../../../textStrings/en'
 
-import checkIfAddressesAreEmpty from '../../../utils/addressChecker'
+import allAddressesAreEmpty from '../../../utils/addressChecker'
 import { currentHighestRosh } from '../../recommendations/helpers/rosh'
 import { NamedFormError } from '../../../@types/pagesForms'
 import { determinePpudEstablishment } from './determinePpudEstablishment'
@@ -75,6 +75,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
           ethnicity: nomisPrisonOffender.physicalAttributes.ethnicity,
           cro: nomisPrisonOffender.identifiers.find(id => id.type === 'CRO')?.value,
           pnc: nomisPrisonOffender.identifiers.find(id => id.type === 'PNC')?.value,
+          releaseDate: nomisPrisonOffender.sentenceDetail?.releaseDate,
         }
         recommendation.prisonOffender = valuesToSave.prisonOffender
       }
@@ -91,7 +92,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   const edited = {} as Record<string, boolean>
 
-  // if recommendation does not have working values for book to ppud, add them.
+  // if the recommendation does not have working values for book to ppud, add them.
   if (!hasValue(recommendation.bookRecallToPpud)) {
     const { decisionDateTime } = recommendation as RecommendationResponse
     let firstName = ''
@@ -120,6 +121,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       // if its non OOH, force ppcs users to enter the date and time they received the recall,
       // even if it is the same as the decision date/time, see: MRD-3042
       receivedDateTime: isOutOfHoursRecall ? decisionDateTime : null,
+      custodyGroup: flags.ppcsIndeterminateJourney ? undefined : CUSTODY_GROUP.DETERMINATE,
       currentEstablishment,
     } as BookRecallToPpud
     recommendation.bookRecallToPpud = valuesToSave.bookRecallToPpud
@@ -168,28 +170,24 @@ async function get(_: Request, res: Response, next: NextFunction) {
 
   if (hasValue(recommendation.ppudOffender) && hasValue(recommendation.prisonOffender)) {
     const ppudOffender = recommendation.ppudOffender as PpudOffender
-    const prisonOffender = recommendation.prisonOffender as PrisonOffender
     const bookToPpud = recommendation.bookRecallToPpud as BookRecallToPpud
-    if (prisonOffender.firstName !== ppudOffender.firstNames && bookToPpud.firstNames !== ppudOffender.firstNames) {
-      warnings['PPUD-First name'] = ppudOffender.firstNames
+    if (ppudOffender.firstNames && bookToPpud.firstNames !== ppudOffender.firstNames) {
+      warnings['First name'] = ppudOffender.firstNames
     }
-    if (prisonOffender.lastName !== ppudOffender.familyName && bookToPpud.lastName !== ppudOffender.familyName) {
-      warnings['PPUD-Last name'] = ppudOffender.familyName
+    if (ppudOffender.familyName && bookToPpud.lastName !== ppudOffender.familyName) {
+      warnings['Last name'] = ppudOffender.familyName
     }
-    if (
-      prisonOffender.bookingNo !== ppudOffender.prisonNumber &&
-      bookToPpud.prisonNumber !== ppudOffender.prisonNumber
-    ) {
-      warnings['PPUD-Prison booking number'] = ppudOffender.prisonNumber
+    if (ppudOffender.prisonNumber && bookToPpud.prisonNumber !== ppudOffender.prisonNumber) {
+      warnings['Prison booking number'] = ppudOffender.prisonNumber
     }
-    if (
-      prisonOffender.dateOfBirth !== ppudOffender.dateOfBirth &&
-      bookToPpud.dateOfBirth !== ppudOffender.dateOfBirth
-    ) {
-      warnings['PPUD-Date of birth'] = formatDateTimeFromIsoString({
+    if (ppudOffender.dateOfBirth && bookToPpud.dateOfBirth !== ppudOffender.dateOfBirth) {
+      warnings['Date of birth'] = formatDateTimeFromIsoString({
         isoDate: ppudOffender.dateOfBirth,
         dateOnly: true,
       })
+    }
+    if (ppudOffender.croOtherNumber && bookToPpud.cro !== ppudOffender.croOtherNumber) {
+      warnings.CRO = ppudOffender.croOtherNumber
     }
   }
 
@@ -200,7 +198,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
   let hasLastKnownAddress: boolean = false
 
   if (addresses) {
-    hasLastKnownAddress = !checkIfAddressesAreEmpty(addresses)
+    hasLastKnownAddress = !allAddressesAreEmpty(addresses)
   }
 
   res.locals = {
@@ -245,6 +243,7 @@ async function post(req: Request, res: Response, next: NextFunction) {
 
   validateBookRecallToPpudField(bookRecallToPpud, 'gender', 'missingGender', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'ethnicity', 'missingEthnicity', errors)
+  validateBookRecallToPpudField(bookRecallToPpud, 'cro', 'missingCro', errors)
   validateBookRecallToPpudField(bookRecallToPpud, 'custodyGroup', 'missingCustodyGroup', errors)
 
   if (bookRecallToPpud.custodyGroup === CUSTODY_GROUP.DETERMINATE) {

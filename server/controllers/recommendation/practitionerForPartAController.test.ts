@@ -22,11 +22,9 @@ describe('Practitioner for Part A Controller', () => {
       expect(res.locals.page).toEqual({ id: 'practitionerForPartA' })
 
       expect(res.locals.inputDisplayValues.name).not.toBeDefined()
+      expect(res.locals.inputDisplayValues.jobTitle).not.toBeDefined()
       expect(res.locals.inputDisplayValues.email).not.toBeDefined()
       expect(res.locals.inputDisplayValues.telephone).not.toBeDefined()
-      expect(res.locals.inputDisplayValues.region).not.toBeDefined()
-      expect(res.locals.inputDisplayValues.localDeliveryUnit).not.toBeDefined()
-      expect(res.locals.inputDisplayValues.isPersonProbationPractitionerForOffender).not.toBeDefined()
       expect(res.locals.regions).toEqual(regionEnum)
       expect(res.render).toHaveBeenCalledWith('pages/recommendations/practitionerForPartA')
 
@@ -36,6 +34,7 @@ describe('Practitioner for Part A Controller', () => {
     it('load with existing data', async () => {
       const practitionerForPartA: PractitionerForPartA = {
         name: 'jane',
+        jobTitle: 'Probation Services Officer',
         email: 'jane@me.com',
         telephone: '55555',
       }
@@ -52,20 +51,21 @@ describe('Practitioner for Part A Controller', () => {
       await practitionerForPartAController.get(mockReq(), res, mockNext())
 
       expect(res.locals.inputDisplayValues.name).toEqual(practitionerForPartA.name)
+      expect(res.locals.inputDisplayValues.jobTitle).toEqual(practitionerForPartA.jobTitle)
       expect(res.locals.inputDisplayValues.email).toEqual(practitionerForPartA.email)
       expect(res.locals.inputDisplayValues.telephone).toEqual(practitionerForPartA.telephone)
-      expect(res.locals.inputDisplayValues.region).not.toBeDefined()
-      expect(res.locals.inputDisplayValues.localDeliveryUnit).not.toBeDefined()
     })
 
     it('initial load with error data', async () => {
       const practitionerForPartA: PractitionerForPartA = {
         name: 'jane',
+        jobTitle: 'Probation Services Officer',
         email: 'jane@me.com',
         telephone: '55555',
       }
       const unsavedValues: Record<string, string> = {
         name: 'test',
+        jobTitle: 'Other',
         email: 'test@here.com',
         telephone: '555555555555',
       }
@@ -84,10 +84,9 @@ describe('Practitioner for Part A Controller', () => {
       await practitionerForPartAController.get(mockReq(), res, mockNext())
 
       expect(res.locals.inputDisplayValues.name).toEqual(unsavedValues.name)
+      expect(res.locals.inputDisplayValues.jobTitle).toEqual(unsavedValues.jobTitle)
       expect(res.locals.inputDisplayValues.email).toEqual(unsavedValues.email)
       expect(res.locals.inputDisplayValues.telephone).toEqual(unsavedValues.telephone)
-      expect(res.locals.inputDisplayValues.region).not.toBeDefined()
-      expect(res.locals.inputDisplayValues.localDeliveryUnit).not.toBeDefined()
 
       expect(res.locals.errors).toEqual({ val: 'some error' })
     })
@@ -100,6 +99,7 @@ describe('Practitioner for Part A Controller', () => {
       const basePath = `/recommendations/123/`
       const body: Record<string, string> = {
         name: 'jane',
+        jobTitle: 'Probation Services Officer',
         email: 'jane@test.gov.uk',
         telephone: '5555555',
       }
@@ -127,6 +127,7 @@ describe('Practitioner for Part A Controller', () => {
         valuesToSave: {
           practitionerForPartA: {
             name: body.name,
+            jobTitle: body.jobTitle,
             email: body.email,
             telephone: body.telephone,
           },
@@ -175,6 +176,14 @@ describe('Practitioner for Part A Controller', () => {
           values: undefined,
         },
         {
+          errorId: 'missingPractitionerForPartAJobTitle',
+          href: '#jobTitle',
+          invalidParts: undefined,
+          name: 'jobTitle',
+          text: 'Select a job title',
+          values: undefined,
+        },
+        {
           errorId: 'missingPractitionerForPartAEmail',
           href: '#email',
           invalidParts: undefined,
@@ -194,6 +203,7 @@ describe('Practitioner for Part A Controller', () => {
         params: { recommendationId: '123' },
         body: {
           name: 'jane',
+          jobTitle: 'Probation Services Officer',
           email: 'doe',
           telephone: '5555555',
         },
@@ -232,6 +242,7 @@ describe('Practitioner for Part A Controller', () => {
         params: { recommendationId: '123' },
         body: {
           name: 'jane',
+          jobTitle: 'Probation Services Officer',
           email: 'test@non.govuk.email.com',
           telephone: '5555555',
         },

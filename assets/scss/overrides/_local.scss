@@ -17,6 +17,7 @@
 @import "../../../server/views/components/notification-banner/index.scss";
 @import "../../../server/views/components/accordion/index.scss";
 @import "../../../server/views/components/alert-borderless/index.scss";
+@import "multi-file-upload";
 
 pre {
   white-space: pre-line
@@ -306,4 +307,8 @@ pre {
 .guidance-panel {
   border-left-color: govuk-colour('blue');
   background-color: #eaf4f9;
+}
+
+.car-v-align-top {
+  vertical-align: top !important;
 }

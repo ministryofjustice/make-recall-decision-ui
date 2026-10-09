@@ -8,6 +8,14 @@ context('Overview', () => {
 
   beforeEach(() => {
     cy.signIn()
+    cy.task('getRecommendation', {
+      statusCode: 200,
+      response: {
+        createdByUserFullName: 'Test User',
+        createdDate: '2024-01-01T00:00:00.000Z',
+        personOnProbation: { name: 'Jane Bloggs' },
+      },
+    })
   })
 
   it('shows licence and offence information', () => {

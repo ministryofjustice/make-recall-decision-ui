@@ -1,5 +1,6 @@
 import { transformLicenceConditions } from './transformLicenceConditions'
 import { LicenceConditionsResponse } from '../../../@types/make-recall-decision-api'
+import { formOptions } from '../../recommendations/formOptions/formOptions'
 
 describe('transformLicenceConditions', () => {
   it('should add an active convictions list with custodial and non-custodial convictions, ordered by sentence expiry date', () => {
@@ -151,5 +152,11 @@ describe('transformLicenceConditions', () => {
       ],
       [],
     ])
+  })
+
+  it('returns standard licence conditions', () => {
+    const transformed = transformLicenceConditions({ activeConvictions: [] })
+
+    expect(transformed.standardLicenceConditions).toEqual(formOptions.standardLicenceConditions)
   })
 })

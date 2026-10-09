@@ -1,7 +1,9 @@
 import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
-import { isFixedTermRecallMandatoryForRecommendation } from '../../../utils/fixedTermRecallUtils'
+import {
+  isFixedTermRecallMandatoryForRecommendation,
+  isStandardRecallMandatoryForRecommendation,
+} from '../../../utils/fixedTermRecallUtils'
 import { FormOption, formOptions } from '../formOptions/formOptions'
-import { SentenceGroup } from '../sentenceInformation/formOptions'
 
 export function availableRecallTypes(isFtrMandatory: boolean, isStandardMandatory: boolean): FormOption[] {
   if (isFtrMandatory) {
@@ -16,10 +18,8 @@ export function availableRecallTypes(isFtrMandatory: boolean, isStandardMandator
 }
 
 export function availableRecallTypesForRecommendation(recommendation: RecommendationResponse): FormOption[] {
-  const isFtrMandatory = isFixedTermRecallMandatoryForRecommendation(recommendation)
-
   return availableRecallTypes(
-    isFtrMandatory,
-    recommendation.sentenceGroup === SentenceGroup.ADULT_SDS && !isFtrMandatory,
+    isFixedTermRecallMandatoryForRecommendation(recommendation),
+    isStandardRecallMandatoryForRecommendation(recommendation),
   )
 }

@@ -13,6 +13,7 @@ import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/for
 import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import { sharedPaths } from '../../routes/paths/shared.paths'
+import { hasValue } from '../../utils/utils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const {
@@ -51,7 +52,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
   }
 
   const formOptions = getFormOptions(recommendation.personOnProbation.name, recommendation.sentenceGroup)
-
   const inputDisplayValues = suitabilityInputDisplayValues(formOptions, unsavedValues, recommendation)
 
   const warningPanelDetails = {
@@ -63,7 +63,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     // The rationale is exclusively recorded for the YOUTH_SDS flow
     // so the warning is only required when the sentenceGroup is YOUTH_SDS
     recommendation.sentenceGroup === SentenceGroup.YOUTH_SDS &&
-    recommendation.recallType !== null &&
+    hasValue(recommendation.recallType) &&
     isRecommendationDiscretionaryRecall(recommendation)
       ? warningPanelDetails
       : undefined
@@ -101,7 +101,6 @@ async function post(req: Request, res: Response, _: NextFunction) {
   const valuesToSave: Record<string, unknown> = {}
 
   const fieldIds = [...Object.keys(getFormOptions(recommendation.personOnProbation.name, recommendation.sentenceGroup))]
-
   const unsavedValues = Object.fromEntries(fieldIds.map(key => [key, req.body[key]]))
 
   // Loop through the unsaved values to generate an array of errors

@@ -12,10 +12,16 @@ import {
   isStandardRecallMandatoryForRecommendation,
 } from '../../utils/fixedTermRecallUtils'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
+import recallTypePath from '../../utils/routing'
 
 function get(_: Request, res: Response, next: NextFunction) {
   const { recommendation } = res.locals as {
     recommendation: RecommendationResponse
+  }
+
+  if (![SentenceGroup.ADULT_SDS, SentenceGroup.YOUTH_SDS].includes(recommendation.sentenceGroup)) {
+    const redirectionPath = recallTypePath(recommendation)
+    return res.redirect(303, `${res.locals.urlInfo.basePath}${redirectionPath}`)
   }
 
   res.locals = {
@@ -36,7 +42,7 @@ function get(_: Request, res: Response, next: NextFunction) {
   }
 
   res.render(`pages/recommendations/recallType`)
-  next()
+  return next()
 }
 
 async function post(req: Request, res: Response, _: NextFunction) {

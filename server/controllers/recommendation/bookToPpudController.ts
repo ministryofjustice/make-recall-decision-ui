@@ -17,21 +17,15 @@ import StageEnum from '../../booking/StageEnum'
 import { appInsightsEvent } from '../../monitoring/azureAppInsights'
 import EVENTS from '../../utils/constants'
 import { STATUSES } from '../../middleware/recommendationStatusCheck'
-import uploadMandatoryDocument from '../../booking/uploadMandatoryDocument'
 import uploadAdditionalDocument from '../../booking/uploadAdditionalDocument'
 import createMinute from '../../booking/createMinute'
-import generateRecallMinuteText from '../recommendations/helpers/ppudMinutes'
-import CUSTODY_GROUP from '../../@types/make-recall-decision-api/models/ppud/CustodyGroup'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { recommendation } = res.locals
-  const isInDeterminateSentences = recommendation.bookRecallToPpud?.custodyGroup === CUSTODY_GROUP.INDETERMINATE
   res.locals = {
     ...res.locals,
     page: {
       id: 'bookToPpud',
     },
-    isInDeterminateSentences,
   }
 
   res.render(`pages/recommendations/bookToPpud`)
@@ -47,7 +41,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
   } = res.locals
 
   const recommendation = (await getRecommendation(recommendationId, token)) as RecommendationResponse
-
+  let uploadingDocName = ''
   let memento: BookingMemento = recommendation.bookingMemento || {
     stage: StageEnum.STARTED,
   }
@@ -65,87 +59,31 @@ async function post(req: Request, res: Response, _: NextFunction) {
     memento = await createOrUpdateSentence(memento, recommendation, token, flags)
 
     memento = await updateOffence(memento, recommendation, token, flags)
-
     memento = await updateRelease(memento, recommendation, token, flags)
 
-    memento = await updateRecall(memento, recommendation, token, flags)
+    memento = await updateRecall(memento, recommendation, token, flags, res.locals.statuses)
+
+    if (recommendation.bookRecallToPpud?.minute) {
+      memento = await createMinute(
+        memento,
+        recommendationId,
+        'Background information',
+        recommendation.bookRecallToPpud?.minute,
+        token,
+        flags,
+      )
+    }
 
     const documents = await getSupportingDocuments({ recommendationId, token, featureFlags: flags })
+    const additionalDocuments = documents.filter(doc => doc.type === 'OtherDocument')
 
-    const PPUDPartA = documents.find(doc => doc.type === 'PPUDPartA')
-    if (PPUDPartA) {
-      memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPartA?.id, 'PPUDPartA', token, flags)
-    }
+    memento = await additionalDocuments.reduce<Promise<BookingMemento>>(async (mementoPromise, document) => {
+      const currentMemento = await mementoPromise
 
-    const PPUDLicenceDocument = documents.find(doc => doc.type === 'PPUDLicenceDocument')
-    if (PPUDLicenceDocument) {
-      memento = await uploadMandatoryDocument(
-        memento,
-        recommendationId,
-        PPUDLicenceDocument?.id,
-        'PPUDLicenceDocument',
-        token,
-        flags,
-      )
-    }
+      uploadingDocName = document.filename
 
-    const PPUDProbationEmail = documents.find(doc => doc.type === 'PPUDProbationEmail')
-    if (PPUDProbationEmail) {
-      memento = await uploadMandatoryDocument(
-        memento,
-        recommendationId,
-        PPUDProbationEmail?.id,
-        'PPUDProbationEmail',
-        token,
-        flags,
-      )
-    }
-
-    const PPUDOASys = documents.find(doc => doc.type === 'PPUDOASys')
-    if (PPUDOASys) {
-      memento = await uploadMandatoryDocument(memento, recommendationId, PPUDOASys?.id, 'PPUDOASys', token, flags)
-    }
-
-    const PPUDPrecons = documents.find(doc => doc.type === 'PPUDPrecons')
-    if (PPUDPrecons) {
-      memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPrecons?.id, 'PPUDPrecons', token, flags)
-    }
-
-    const PPUDPSR = documents.find(doc => doc.type === 'PPUDPSR')
-    if (PPUDPSR) {
-      memento = await uploadMandatoryDocument(memento, recommendationId, PPUDPSR?.id, 'PPUDPSR', token, flags)
-    }
-
-    const PPUDChargeSheet = documents.find(doc => doc.type === 'PPUDChargeSheet')
-    if (PPUDChargeSheet) {
-      memento = await uploadMandatoryDocument(
-        memento,
-        recommendationId,
-        PPUDChargeSheet?.id,
-        'PPUDChargeSheet',
-        token,
-        flags,
-      )
-    }
-
-    const additional = documents.filter(doc => doc.type === 'OtherDocument').map(d => d.id)
-
-    memento = await additional.reduce<Promise<BookingMemento>>(
-      (mementoPromise, id) =>
-        mementoPromise.then(currentMemento =>
-          uploadAdditionalDocument(currentMemento, recommendationId, id, token, flags),
-        ),
-      Promise.resolve(memento),
-    )
-
-    memento = await createMinute(
-      memento,
-      recommendationId,
-      'BACKGROUND INFO...',
-      generateRecallMinuteText(recommendation),
-      token,
-      flags,
-    )
+      return uploadAdditionalDocument(currentMemento, recommendationId, document.id, token, flags)
+    }, Promise.resolve(memento))
 
     await updateStatuses({
       recommendationId,
@@ -168,7 +106,7 @@ async function post(req: Request, res: Response, _: NextFunction) {
     if (err.status !== undefined) {
       memento.failed = true
       memento.failedMessage = err.text
-
+      memento.uploadFailedDocName = uploadingDocName
       await updateRecommendation({
         recommendationId: String(recommendation.id),
         valuesToSave: {
@@ -189,12 +127,12 @@ async function post(req: Request, res: Response, _: NextFunction) {
         flags,
       )
 
-      return res.redirect(303, req.originalUrl)
+      return res.redirect(303, nextPageLinkUrl({ nextPageId: 'booked-to-ppud-fail', urlInfo }))
     }
     throw err
   }
 
-  const nextPagePath = nextPageLinkUrl({ nextPageId: 'booked-to-ppud', urlInfo })
+  const nextPagePath = nextPageLinkUrl({ nextPageId: 'booked-to-ppud-success', urlInfo })
   return res.redirect(303, nextPageLinkUrl({ nextPagePath, urlInfo }))
 }
 

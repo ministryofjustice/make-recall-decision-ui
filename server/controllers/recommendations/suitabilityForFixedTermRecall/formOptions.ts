@@ -3,9 +3,6 @@ import { SentenceGroup } from '../sentenceInformation/formOptions'
 export default (popName: string, sentenceGroup: SentenceGroup) => {
   if (sentenceGroup === SentenceGroup.ADULT_SDS) {
     return {
-      isChargedWithOffence: {
-        label: `Is ${popName} being recalled because of being charged with an offence?`,
-      },
       isServingTerroristOrNationalSecurityOffence: {
         label: `Is ${popName} serving a sentence for a terrorist or national security offence?`,
       },

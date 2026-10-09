@@ -108,7 +108,6 @@ export type RecommendationResponse = {
   wasRepatriatedForMurder?: boolean,
   isServingSOPCSentence?: boolean,
   isServingDCRSentence?: boolean,
-  isChargedWithOffence?: boolean,
   isServingTerroristOrNationalSecurityOffence?: boolean,
   isAtRiskOfInvolvedInForeignPowerThreat?: boolean,
   isYouthSentenceOver12Months?: boolean,
@@ -127,6 +126,7 @@ export namespace RecommendationResponse {
 
 export type WhoCompletedPartA = {
   name?: string;
+  jobTitle?: string;
   email?: string;
   telephone?: string;
   region?: string;
@@ -136,6 +136,7 @@ export type WhoCompletedPartA = {
 
 export type PractitionerForPartA = {
   name?: string;
+  jobTitle?: string;
   email?: string;
   telephone?: string;
   region?: string;
@@ -193,6 +194,7 @@ export type BookRecallToPpud = {
   policeForce?: string,
   probationArea?: string,
   sentenceDate?: string,
+  totalSentenceLength?: PpudSentenceLength,
   gender?: string,
   ethnicity: string,
   legislationReleasedUnder?: string,
@@ -226,6 +228,7 @@ export type PrisonOffender = {
   ethnicity: string,
   cro: string,
   pnc: string,
+  releaseDate: string,
 }
 
 // The PPUD types below are aligned with those defined in PpudDetailsResponse.ts

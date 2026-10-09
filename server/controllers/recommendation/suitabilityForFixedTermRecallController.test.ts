@@ -7,15 +7,35 @@ import getCaseSection from '../caseSummary/getCaseSection'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
 import { nextPagePreservingFromPageAndAnchor } from '../recommendations/helpers/urls'
 import { isRecommendationDiscretionaryRecall } from '../../utils/fixedTermRecallUtils'
+import { RecallTypeSelectedValue } from '../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
 import { SentenceGroup } from '../recommendations/sentenceInformation/formOptions'
 import ErrorGenerator from '../../../data/common/errorGenerator'
+import getFormOptions from '../recommendations/suitabilityForFixedTermRecall/formOptions'
+import suitabilityInputDisplayValues from '../recommendations/suitabilityForFixedTermRecall/inputDisplayValues'
+import getSentenceGroupDetailsFromEnum from '../recommendations/helpers/getSentenceGroupDetails'
+import ppPaths from '../../routes/paths/pp.paths'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../caseSummary/getCaseSection')
 jest.mock('../recommendations/helpers/urls')
 jest.mock('../../utils/fixedTermRecallUtils')
-
+jest.mock('../recommendations/suitabilityForFixedTermRecall/formOptions')
+jest.mock('../recommendations/suitabilityForFixedTermRecall/inputDisplayValues')
+jest.mock('../recommendations/helpers/getSentenceGroupDetails')
 describe('get', () => {
+  const formOptions = {
+    firstOption: { label: faker.lorem.sentence() },
+    secondOption: { label: faker.lorem.sentence() },
+  }
+  const displayValues = {
+    firstOption: { label: faker.lorem.sentence(), value: faker.lorem.word() },
+    secondOption: { label: faker.lorem.sentence(), value: faker.lorem.word() },
+  }
+  const sentenceGroupDetails = {
+    text: faker.lorem.sentence(),
+    value: faker.lorem.word(),
+  }
+
   beforeEach(() => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
       caseSummary: { licence: 'case summary data' },
@@ -23,25 +43,37 @@ describe('get', () => {
     ;(getCaseSection as jest.Mock).mockReturnValueOnce({
       caseSummary: { mappa: 'mappa summary data' },
     })
+    ;(getFormOptions as jest.Mock).mockReturnValue(formOptions)
+    ;(suitabilityInputDisplayValues as jest.Mock).mockReturnValue(displayValues)
+    ;(getSentenceGroupDetailsFromEnum as jest.Mock).mockReturnValue(sentenceGroupDetails)
+    ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValue(false)
   })
 
   it('load with no data', async () => {
+    const recommendation = RecommendationResponseGenerator.generate({
+      sentenceGroup: faker.helpers.arrayElement(
+        Object.values(SentenceGroup).filter(
+          sentenceGroup => ![SentenceGroup.EXTENDED, SentenceGroup.INDETERMINATE].includes(sentenceGroup),
+        ),
+      ),
+    })
     const res = mockRes({
       locals: {
-        recommendation: {
-          personOnProbation: {
-            name: faker.person.fullName(),
-          },
-          recallType: null,
-        },
+        recommendation,
         token: 'token1',
       },
     })
+
     const next = mockNext()
     await suitabilityForFixedTermRecallController.get(mockReq(), res, next)
     expect(res.locals.caseSummary).toEqual({ licence: 'case summary data', mappa: 'mappa summary data' })
     expect(res.locals.page).toEqual({ id: 'suitabilityForFixedTermRecall' })
+    expect(res.locals.inputDisplayValues).toEqual(displayValues)
+    expect(res.locals.sentenceGroupDetails).toEqual(sentenceGroupDetails)
 
+    expect(getFormOptions).toHaveBeenCalledWith(recommendation.personOnProbation.name, recommendation.sentenceGroup)
+    expect(suitabilityInputDisplayValues).toHaveBeenCalledWith(formOptions, undefined, recommendation)
+    expect(getSentenceGroupDetailsFromEnum).toHaveBeenCalledWith(recommendation.sentenceGroup)
     expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
     expect(next).toHaveBeenCalled()
   })
@@ -66,21 +98,24 @@ describe('get', () => {
   })
 
   describe('redirects when sentenceGroup is not Determinate', () => {
-    ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(testCase => {
-      it(`redirects when sentence group is ${testCase}`, async () => {
+    ;[SentenceGroup.INDETERMINATE, SentenceGroup.EXTENDED].forEach(sentenceGroup => {
+      it(`redirects when sentence group is ${sentenceGroup}`, async () => {
+        const recommendation = RecommendationResponseGenerator.generate({
+          sentenceGroup,
+        })
         const res = mockRes({
           locals: {
-            recommendation: {
-              id: '1',
-              sentenceGroup: testCase,
-            },
+            recommendation,
             token: 'token1',
           },
         })
 
         await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-        expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/1/indeterminate-details`)
+        expect(res.redirect).toHaveBeenCalledWith(
+          303,
+          `/recommendations/${recommendation.id}/${ppPaths.indeterminateDetails}`,
+        )
       })
     })
   })
@@ -107,7 +142,23 @@ describe('get', () => {
     })
   })
 
-  it('does not show the warning banner when sentenceGRoup is ADULT_SDS', async () => {
+  it('does not show the warning banner when sentenceGroup is YOUTH_SDS but the recallType is null', async () => {
+    ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValueOnce(true)
+    const res = mockRes({
+      locals: {
+        recommendation: RecommendationResponseGenerator.generate({
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+          recallType: 'none',
+        }),
+      },
+    })
+
+    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.page.warningPanel).toBeUndefined()
+  })
+
+  it('does not show the warning banner when sentenceGroup is ADULT_SDS', async () => {
     const res = mockRes({
       locals: {
         recommendation: {
@@ -122,23 +173,51 @@ describe('get', () => {
 
     await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-    expect(res.locals.page.warningPanel).toBe(undefined)
+    expect(res.locals.page.warningPanel).toBeUndefined()
   })
 
-  it('renders the correct template', async () => {
+  it('does not show warning banner when recall is not discretionary', async () => {
+    ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValue(false)
+
+    const recommendation = RecommendationResponseGenerator.generate({
+      sentenceGroup: SentenceGroup.YOUTH_SDS,
+      recallType: {
+        selected: {
+          value: RecallTypeSelectedValue.value.STANDARD,
+        },
+      },
+    })
+
     const res = mockRes({
       locals: {
-        recommendation: {
-          personOnProbation: {
-            name: faker.person.fullName(),
-          },
-        },
+        recommendation,
+        token: 'token1',
       },
     })
 
     await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
 
-    expect(res.render).toHaveBeenCalledWith('pages/recommendations/suitabilityForFixedTermRecall')
+    expect(res.locals.page.warningPanel).toBeUndefined()
+  })
+
+  it('does not show warning banner when recallType is empty', async () => {
+    ;(isRecommendationDiscretionaryRecall as jest.Mock).mockReturnValue(true)
+
+    const recommendation = RecommendationResponseGenerator.generate({
+      sentenceGroup: SentenceGroup.YOUTH_SDS,
+      recallType: undefined,
+    })
+
+    const res = mockRes({
+      locals: {
+        recommendation,
+        token: 'token1',
+      },
+    })
+
+    await suitabilityForFixedTermRecallController.get(mockReq(), res, mockNext())
+
+    expect(res.locals.page.warningPanel).toBeUndefined()
   })
 })
 
@@ -151,130 +230,84 @@ describe('post', () => {
   const basePath = `/recommendations/123/`
 
   describe('post with valid data', () => {
-    ;[
-      {
-        recommendationOptions: {
-          sentenceGroup: SentenceGroup.YOUTH_SDS,
-          isMappaCategory4: true,
-          isMappaLevel2Or3: true,
-          isYouthSentenceOver12Months: true,
-          isYouthChargedWithSeriousOffence: true,
-        },
-        postBody: {
-          // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
-          // it's still required in the Part A so we're just checking it's being updated in the API
-          isMappaCategory4: 'YES',
-          isMappaLevel2Or3: 'YES',
-          isYouthSentenceOver12Months: 'YES',
-          isYouthChargedWithSeriousOffence: 'YES',
-        },
-        recallTypePreserved: true,
-      },
-      {
-        recommendationOptions: {
-          sentenceGroup: SentenceGroup.YOUTH_SDS,
-          isMappaCategory4: false,
-          isMappaLevel2Or3: false,
-          isYouthSentenceOver12Months: false,
-          isYouthChargedWithSeriousOffence: false,
-        },
-        postBody: {
-          // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
-          // it's still required in the Part A so we're just checking it's being updated in the API
-          isMappaCategory4: 'YES',
-          isMappaLevel2Or3: 'YES',
-          isYouthSentenceOver12Months: 'YES',
-          isYouthChargedWithSeriousOffence: 'YES',
-        },
-        recallTypePreserved: false,
-      },
-      {
-        recommendationOptions: {
-          sentenceGroup: SentenceGroup.ADULT_SDS,
-          isChargedWithOffence: true,
-          isServingTerroristOrNationalSecurityOffence: true,
-          isAtRiskOfInvolvedInForeignPowerThreat: true,
-          wasReferredToParoleBoard244ZB: true,
-          wasRepatriatedForMurder: true,
-          isServingSOPCSentence: true,
-          isServingDCRSentence: true,
-        },
-        postBody: {
-          isChargedWithOffence: 'YES',
-          isServingTerroristOrNationalSecurityOffence: 'YES',
-          isAtRiskOfInvolvedInForeignPowerThreat: 'YES',
-          wasReferredToParoleBoard244ZB: 'YES',
-          wasRepatriatedForMurder: 'YES',
-          isServingSOPCSentence: 'YES',
-          isServingDCRSentence: 'YES',
-        },
-        recallTypePreserved: true,
-      },
-      {
-        recommendationOptions: {
-          sentenceGroup: SentenceGroup.ADULT_SDS,
-          isChargedWithOffence: true,
-          isServingTerroristOrNationalSecurityOffence: true,
-          isAtRiskOfInvolvedInForeignPowerThreat: true,
-          wasReferredToParoleBoard244ZB: true,
-          wasRepatriatedForMurder: true,
-          isServingSOPCSentence: true,
-          isServingDCRSentence: true,
-        },
-        postBody: {
-          isChargedWithOffence: 'NO',
-          isServingTerroristOrNationalSecurityOffence: 'NO',
-          isAtRiskOfInvolvedInForeignPowerThreat: 'NO',
-          wasReferredToParoleBoard244ZB: 'NO',
-          wasRepatriatedForMurder: 'NO',
-          isServingSOPCSentence: 'NO',
-          isServingDCRSentence: 'NO',
-        },
-        recallTypePreserved: false,
-      },
-    ].forEach(testCase => {
-      it(`${testCase.recallTypePreserved ? 'does not clear' : 'clears'} the recallType and rationale if the criteria has ${testCase.recallTypePreserved ? 'not ' : ''}changed`, async () => {
-        const req = mockReq({
-          params: { recommendationId: '123' },
-          body: {
-            ...testCase.postBody,
-          },
-        })
-        const priorRecommendation = RecommendationResponseGenerator.generate({
-          recallType: 'any',
-          ...testCase.recommendationOptions,
-        })
-        const res = mockRes({
-          token: 'token1',
-          locals: {
-            recommendation: priorRecommendation,
-            urlInfo: { basePath },
-            statuses: [],
-          },
-        })
-        const next = mockNext()
-
-        await suitabilityForFixedTermRecallController.post(req, res, next)
-
-        expect(updateRecommendation).toHaveBeenCalledWith({
-          recommendationId: '123',
-          token: 'token1',
-          valuesToSave: {
-            ...Object.fromEntries(Object.entries(testCase.postBody).map(([key, value]) => [key, value === 'YES'])),
-            ...(!testCase.recallTypePreserved
+    const formOptions = {
+      firstOption: { label: faker.lorem.sentence() },
+      secondOption: { label: faker.lorem.sentence() },
+    }
+    const formOptionsAnswers = {
+      firstOption: faker.helpers.arrayElement(['YES', 'NO']),
+      secondOption: faker.helpers.arrayElement(['YES', 'NO']),
+    }
+    ;[true, false].forEach(recallTypePreserved => {
+      ;[SentenceGroup.YOUTH_SDS, SentenceGroup.ADULT_SDS].forEach(sentenceGroup => {
+        describe(`with sentence group ${sentenceGroup}`, () => {
+          it(`${recallTypePreserved ? 'does not clear' : 'clears'} the recallType and rationale if the criteria has ${recallTypePreserved ? 'not ' : ''}changed`, async () => {
+            const postBody =
+              sentenceGroup === SentenceGroup.YOUTH_SDS
+                ? {
+                    // NB: Whilst the MAPPA category 4 value isn't relevant to the mandatory FTR criteria,
+                    // it's still required in the Part A so we're just checking it's being updated in the API
+                    isMappaCategory4: faker.helpers.arrayElement(['YES', 'NO']),
+                    isMappaLevel2Or3: faker.helpers.arrayElement(['YES', 'NO']),
+                    ...formOptionsAnswers,
+                  }
+                : formOptionsAnswers
+            const req = mockReq({
+              params: { recommendationId: '123' },
+              body: {
+                ...postBody,
+              },
+            })
+            const priorRecommendation = RecommendationResponseGenerator.generate({
+              sentenceGroup,
+              recallType: 'any',
+            })
+            const previousAnswers = recallTypePreserved
               ? {
-                  recallType: {
-                    selected: { value: null },
-                    allOptions: priorRecommendation.recallType.allOptions,
-                  },
+                  firstOption: formOptionsAnswers.firstOption === 'YES',
+                  secondOption: formOptionsAnswers.secondOption === 'YES',
                 }
-              : {}),
-          },
-          featureFlags: {},
-        })
+              : {
+                  firstOption: formOptionsAnswers.firstOption !== 'YES',
+                  secondOption: formOptionsAnswers.secondOption !== 'YES',
+                }
+            const res = mockRes({
+              token: 'token1',
+              locals: {
+                recommendation: {
+                  ...priorRecommendation,
+                  ...previousAnswers,
+                },
+                urlInfo: { basePath },
+                statuses: [],
+              },
+            })
+            const next = mockNext()
+            ;(getFormOptions as jest.Mock).mockReturnValue(formOptions)
 
-        expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
-        expect(next).not.toHaveBeenCalled() // end of the line for posts.
+            await suitabilityForFixedTermRecallController.post(req, res, next)
+
+            expect(updateRecommendation).toHaveBeenCalledWith({
+              recommendationId: '123',
+              token: 'token1',
+              valuesToSave: {
+                ...Object.fromEntries(Object.entries(postBody).map(([key, value]) => [key, value === 'YES'])),
+                ...(!recallTypePreserved
+                  ? {
+                      recallType: {
+                        selected: { value: null },
+                        allOptions: priorRecommendation.recallType.allOptions,
+                      },
+                    }
+                  : {}),
+              },
+              featureFlags: {},
+            })
+
+            expect(res.redirect).toHaveBeenCalledWith(303, expectedResolvedRedirectUrl)
+            expect(next).not.toHaveBeenCalled() // end of the line for posts.
+          })
+        })
       })
     })
   })
@@ -298,10 +331,20 @@ describe('post', () => {
         },
         urlInfo: { basePath },
         statuses: [],
-        flags: {},
       },
     })
     const next = mockNext()
+
+    // we require form option keys for which there is an error entry of the form 'no<fieldKey>',
+    // hence why we use real form options rather than generic values as we have done above
+    ;(getFormOptions as jest.Mock).mockReturnValue({
+      isYouthSentenceOver12Months: {
+        label: `Is ${res.locals.recommendation.personOnProbation.name}'s sentence 12 months or over?`,
+      },
+      isYouthChargedWithSeriousOffence: {
+        label: `Is ${res.locals.recommendation.personOnProbation.name} being recalled because of being charged with a serious offence?`,
+      },
+    })
 
     await suitabilityForFixedTermRecallController.post(req, res, next)
     expect(updateRecommendation).not.toHaveBeenCalled()
@@ -329,5 +372,136 @@ describe('post', () => {
       isYouthChargedWithSeriousOffence: '',
     })
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+  })
+
+  it('post with invalid option value generates validation error', async () => {
+    const req = mockReq({
+      params: { recommendationId: '123' },
+      originalUrl: 'some-url',
+      body: {
+        isYouthSentenceOver12Months: 'INVALID',
+        isYouthChargedWithSeriousOffence: 'YES',
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: {
+          personOnProbation: {
+            name: 'Test User',
+          },
+          sentenceGroup: SentenceGroup.YOUTH_SDS,
+        },
+        urlInfo: { basePath },
+      },
+    })
+
+    ;(getFormOptions as jest.Mock).mockReturnValue({
+      isYouthSentenceOver12Months: {
+        label: 'Sentence over 12 months',
+      },
+      isYouthChargedWithSeriousOffence: {
+        label: 'Serious offence',
+      },
+    })
+
+    await suitabilityForFixedTermRecallController.post(req, res, mockNext())
+
+    expect(updateRecommendation).not.toHaveBeenCalled()
+
+    expect(req.session.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'isYouthSentenceOver12Months',
+          errorId: 'noIsYouthSentenceOver12Months',
+        }),
+      ]),
+    )
+
+    expect(res.redirect).toHaveBeenCalledWith(303, 'some-url')
+  })
+
+  it('adds MAPPA values when sentence group is YOUTH_SDS', async () => {
+    ;(getFormOptions as jest.Mock).mockReturnValue({
+      isYouthSentenceOver12Months: {
+        label: 'Sentence over 12 months',
+      },
+    })
+
+    const req = mockReq({
+      params: {
+        recommendationId: '123',
+      },
+      body: {
+        isYouthSentenceOver12Months: 'YES',
+        isMappaLevel2Or3: 'YES',
+        isMappaCategory4: 'NO',
+      },
+    })
+
+    const recommendation = RecommendationResponseGenerator.generate({
+      sentenceGroup: SentenceGroup.YOUTH_SDS,
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation,
+        urlInfo: {
+          basePath,
+        },
+      },
+    })
+
+    await suitabilityForFixedTermRecallController.post(req, res, mockNext())
+
+    expect(updateRecommendation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        valuesToSave: expect.objectContaining({
+          isYouthSentenceOver12Months: true,
+          isMappaLevel2Or3: true,
+          isMappaCategory4: false,
+        }),
+      }),
+    )
+  })
+
+  it('redirects to recall type page preserving url info', async () => {
+    ;(getFormOptions as jest.Mock).mockReturnValue({
+      firstOption: {
+        label: 'First option',
+      },
+    })
+
+    const req = mockReq({
+      params: {
+        recommendationId: '123',
+      },
+      body: {
+        firstOption: 'YES',
+      },
+    })
+
+    const urlInfo = {
+      basePath,
+      fromPage: 'summary',
+      anchor: 'section',
+    }
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        recommendation: RecommendationResponseGenerator.generate(),
+        urlInfo,
+      },
+    })
+
+    await suitabilityForFixedTermRecallController.post(req, res, mockNext())
+
+    expect(nextPagePreservingFromPageAndAnchor).toHaveBeenCalledWith({
+      pageUrlSlug: 'recall-type',
+      urlInfo,
+    })
   })
 })

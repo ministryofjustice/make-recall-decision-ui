@@ -11,6 +11,7 @@ import { RecommendationResponseGenerator } from '../../../data/recommendations/r
 import { CustodyStatus } from '../../@types/make-recall-decision-api/models/CustodyStatus'
 import selected = CustodyStatus.selected
 import { RecallTypeSelectedValue } from '../../@types/make-recall-decision-api/models/RecallTypeSelectedValue'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/vulnerabilitiesDetails/formValidator')
@@ -28,7 +29,6 @@ describe('get', () => {
     triggerLeadingToRecall: false,
     previousReleases: true,
     licenceConditionsBreached: true,
-    isChargedWithOffence: true,
     personOnProbation: {
       name: 'Jane Bloggs',
       hasBeenReviewed: true,
@@ -63,6 +63,9 @@ describe('get', () => {
     isServingDCRSentence: true,
     isYouthSentenceOver12Months: true,
     isYouthChargedWithSeriousOffence: true,
+    isRecalledOnNewChargedOrConvictedOffence: {
+      selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+    },
   })
 
   const taskCompleteness = {
@@ -96,7 +99,6 @@ describe('get', () => {
       whoCompletedPartA: true,
       ppcsQueryEmails: true,
       revocationOrderRecipients: true,
-      isChargedWithOffence: true,
       isServingTerroristOrNationalSecurityOffence: true,
       isAtRiskOfInvolvedInForeignPowerThreat: true,
       wasReferredToParoleBoard244ZB: true,
@@ -105,6 +107,7 @@ describe('get', () => {
       isServingDCRSentence: true,
       isYouthSentenceOver12Months: true,
       isYouthChargedWithSeriousOffence: true,
+      isRecalledOnNewChargedOrConvictedOffence: true,
     },
   }
 
@@ -198,7 +201,6 @@ describe('get', () => {
     expect(res.locals.taskCompleteness).toEqual({
       ...taskCompleteness,
       isReadyForCounterSignature: true,
-
       areAllComplete: false,
     })
 

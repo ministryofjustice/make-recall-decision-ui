@@ -51,6 +51,7 @@ async function get(req: Request, res: Response, next: NextFunction) {
     }),
     backLinkUrl,
     backLinkText,
+    standardLicenceConditions: formOptions.standardLicenceConditions,
   }
 
   const json = await getCaseSummaryV2<CaseSummaryOverviewResponseV2>(recommendation.crn, 'licence-conditions', token)

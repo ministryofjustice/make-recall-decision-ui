@@ -21,7 +21,7 @@
 
                 <h2 class='govuk-heading-m'>Your recall booking</h2>
 
-                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                <dl class="govuk-summary-list govuk-!-margin-bottom-4" id="sentence-details-list">
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Custody type
@@ -35,7 +35,10 @@
                             Offence
                         </dt>
                         <dd class="govuk-summary-list__value" data-qa="offenceDescription">
-                            {{ hyphenForBlank(recommendation.bookRecallToPpud.indexOffence) }}
+                            {{ bodyParagraph(hyphenForBlank(recommendation.bookRecallToPpud.indexOffence)) }}
+                            {% if recommendation.bookRecallToPpud.indexOffenceComment %}
+                              {{ bodyParagraph(recommendation.bookRecallToPpud.indexOffenceComment, "preserve-whitespace") }}
+                            {% endif %}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -72,7 +75,20 @@
                         </dd>
                     </div>
 
-                    {% if offence.terms.length < 2 %}
+                    {% if totalSentenceLength %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Sentence length
+                            </dt>
+                            <dd class="govuk-summary-list__value" data-qa="sentenceLength">
+                                {{ hyphenForBlank( formatTerm({
+                                    years: totalSentenceLength.partYears,
+                                    months: totalSentenceLength.partMonths,
+                                    days: totalSentenceLength.partDays
+                                }) ) }}
+                            </dd>
+                        </div>
+                    {% elif offence.terms.length < 2 %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
                                 Sentence length
@@ -132,6 +148,9 @@
                         </div>
                     {% endif %}
                 </dl>
+
+                {% include '../../../../partials/recommendation/documentsAndMinutes.njk' %}
+
                 {{ formSubmitButton() }}
             </form>
         </div>

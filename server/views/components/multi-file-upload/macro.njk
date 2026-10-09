@@ -1,0 +1,25 @@
+{#
+Wrapper around the MOJ Multi File Upload component. Renders a file upload area with a list of
+previously uploaded files, each with a delete button.
+
+Parameters (all within the main input params object):
+@param classes:        optional string (additional CSS classes for the container element)
+@param attributes:     optional object (key-value pairs of HTML attributes for the container element)
+@param uploadHtml:     string (raw HTML for the upload input area, rendered inside .moj-multi-file-upload__upload)
+@param uploadedFiles:  object describing the uploaded files section:
+    {
+        heading: {
+            text: string (plain text heading), OR
+            html: string (HTML heading, takes precedence over text)
+        },
+        hint: optional string (HTML hint text shown below the heading),
+        items: array of uploaded file objects, each with:
+            {
+                id:       string (the file ID, used as the value of the delete button),
+                filename: string (the display name of the file)
+            }
+    }
+#}
+{% macro carMultiFileUpload(params) %}
+  {%- include "./template.njk" -%}
+{% endmacro %}

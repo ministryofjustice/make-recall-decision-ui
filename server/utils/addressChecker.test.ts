@@ -1,10 +1,10 @@
 // addressChecker.test.ts
-import checkIfAddressesAreEmpty from './addressChecker'
+import allAddressesAreEmpty from './addressChecker'
 
 describe('checkAddresses', () => {
   test('returns true when all addresses are empty', () => {
     const addresses = [{ line1: '', line2: '', town: '', postcode: '', noFixedAbode: false }]
-    expect(checkIfAddressesAreEmpty(addresses)).toBe(true)
+    expect(allAddressesAreEmpty(addresses)).toBe(true)
   })
 
   test('returns false when the array contains one empty object and one with a fake address', () => {
@@ -18,7 +18,7 @@ describe('checkAddresses', () => {
         noFixedAbode: false,
       },
     ]
-    expect(checkIfAddressesAreEmpty(addresses)).toBe(false)
+    expect(allAddressesAreEmpty(addresses)).toBe(false)
   })
 
   test('returns false when any address contains data', () => {
@@ -33,10 +33,10 @@ describe('checkAddresses', () => {
         noFixedAbode: false,
       },
     ]
-    expect(checkIfAddressesAreEmpty(addresses)).toBe(false)
+    expect(allAddressesAreEmpty(addresses)).toBe(false)
   })
 
   test('returns true for an empty array', () => {
-    expect(checkIfAddressesAreEmpty()).toBe(true)
+    expect(allAddressesAreEmpty()).toBe(true)
   })
 })

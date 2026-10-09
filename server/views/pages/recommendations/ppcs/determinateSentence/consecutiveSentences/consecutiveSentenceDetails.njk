@@ -40,7 +40,81 @@
                     {% for consecToLine, sentences in pageData.sentenceInfo.sentencesInSequence %}
                         {{ concurrentSentencesSummary(loop.index, consecToLine, sentences, pageData.sentenceInfo.indexSentence.lineSequence) }}
                     {% endfor %}
-                    {{ linkAsButton('continue', "Continue", pageData.nextPagePath) }}
+
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+                    <form novalidate method="post">
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                        {% set yearsError = errors['totalSentenceLength-years'] %}
+                        {% set monthsError = errors['totalSentenceLength-months'] %}
+                        {% set daysError = errors['totalSentenceLength-days'] %}
+                        {% set sentenceLengthErrorHtml %}
+                            {%- for err in [yearsError, monthsError, daysError] -%}
+                                {%- if err -%}{{ err.text }}{% if not loop.last %}<br>{% endif %}{%- endif -%}
+                            {%- endfor -%}
+                        {% endset %}
+                        {% set allPartsInError = yearsError and 'months' in yearsError.invalidParts %}
+
+                        {% set helpHtml %}
+                            <p class="govuk-body">Sentence length information comes from NOMIS and is recorded in years, months, weeks and days.</p>
+                            <p class="govuk-body">Before entering a total sentence length, you must convert it to years, months and days.</p>
+                            <p class="govuk-body govuk-!-margin-bottom-1">To do this:</p>
+                            <ol class="govuk-list govuk-list--number">
+                                <li>add together all sentence lengths in the consecutive sequence</li>
+                                <li>convert any weeks into days</li>
+                                <li>enter the total sentence length in years, months and days</li>
+                            </ol>
+                            <p class="govuk-body">You can use up to 364 days when converting weeks to days.</p>
+                        {% endset %}
+
+                        {% set helpDetailsHtml %}
+                            {{ govukDetails({
+                                summaryText: "Help with the total sentence length",
+                                html: helpHtml,
+                                classes: "govuk-!-margin-bottom-4",
+                                attributes: { 'data-qa': 'totalSentenceLength-help' }
+                            }) }}
+                        {% endset %}
+
+                        {{ govukDateInput({
+                            id: "totalSentenceLength",
+                            fieldset: {
+                                legend: {
+                                    text: "Calculate the total sentence length",
+                                    classes: "govuk-fieldset__legend--m"
+                                }
+                            },
+                            hint: { text: "Add the sentence lengths in this sequence together." },
+                            formGroup: { beforeInputs: { html: helpDetailsHtml } },
+                            errorMessage: { html: sentenceLengthErrorHtml | safe } if (yearsError or monthsError or daysError) else undefined,
+                            items: [
+                                {
+                                    name: "years",
+                                    label: "Years",
+                                    classes: "govuk-input--width-3" + (" govuk-input--error" if (yearsError or allPartsInError) else ""),
+                                    inputmode: "numeric",
+                                    value: pageData.totalSentenceLength.years
+                                },
+                                {
+                                    name: "months",
+                                    label: "Months",
+                                    classes: "govuk-input--width-3" + (" govuk-input--error" if (monthsError or allPartsInError) else ""),
+                                    inputmode: "numeric",
+                                    value: pageData.totalSentenceLength.months
+                                },
+                                {
+                                    name: "days",
+                                    label: "Days",
+                                    classes: "govuk-input--width-4" + (" govuk-input--error" if (daysError or allPartsInError) else ""),
+                                    inputmode: "numeric",
+                                    value: pageData.totalSentenceLength.days
+                                }
+                            ]
+                        }) }}
+
+                        {{ formSubmitButton({ marginTop: "2" }) }}
+                    </form>
                 </div>
             </div>
         </div>

@@ -9,4 +9,13 @@ const setUpSessionForPpcs = () => {
   })
 }
 
+const setUpSessionForPpcsAdmin = () => {
+  setUpSessionForPpcs()
+  // TODO switch to PPCS admin user once the role is ready
+  // cy.session('login', () => {
+  //   cy.signIn({ roles: [HMPPS_AUTH_ROLE.PPCS_ADMIN] })
+  // })
+}
+
 export default setUpSessionForPpcs
+export { setUpSessionForPpcsAdmin }

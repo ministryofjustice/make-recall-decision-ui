@@ -3,6 +3,7 @@ import { RecommendationResponseGenerator } from '../../../../data/recommendation
 import { randomiseCriteria } from '../../../../data/utils'
 import { SentenceGroup } from '../../../../server/controllers/recommendations/sentenceInformation/formOptions'
 import config from '../../../../server/config'
+import { IsRecalledOnNewChargedOrConvictedOffence } from '../../../../server/@types/make-recall-decision-api/models/IsRecalledOnNewChargedOrConvictedOffence'
 
 context('Recall Type Page', () => {
   const testPageUrl = `/recommendations/123456789/recall-type`
@@ -54,7 +55,6 @@ context('Recall Type Page', () => {
           wasRepatriatedForMurder: boolean
           isServingSOPCSentence: boolean
           isServingDCRSentence: boolean
-          isChargedWithOffence: boolean
           isServingTerroristOrNationalSecurityOffence: boolean
           isAtRiskOfInvolvedInForeignPowerThreat: boolean
         }>(
@@ -65,7 +65,6 @@ context('Recall Type Page', () => {
             { key: 'wasRepatriatedForMurder', generate: 'boolean' },
             { key: 'isServingSOPCSentence', generate: 'boolean' },
             { key: 'isServingDCRSentence', generate: 'boolean' },
-            { key: 'isChargedWithOffence', generate: 'boolean' },
             { key: 'isServingTerroristOrNationalSecurityOffence', generate: 'boolean' },
             { key: 'isAtRiskOfInvolvedInForeignPowerThreat', generate: 'boolean' },
           ],
@@ -81,9 +80,11 @@ context('Recall Type Page', () => {
           wasRepatriatedForMurder: randomCriteria.wasRepatriatedForMurder,
           isServingSOPCSentence: randomCriteria.isServingSOPCSentence,
           isServingDCRSentence: randomCriteria.isServingDCRSentence,
-          isChargedWithOffence: randomCriteria.isChargedWithOffence,
           isServingTerroristOrNationalSecurityOffence: randomCriteria.isServingTerroristOrNationalSecurityOffence,
           isAtRiskOfInvolvedInForeignPowerThreat: randomCriteria.isAtRiskOfInvolvedInForeignPowerThreat,
+          isRecalledOnNewChargedOrConvictedOffence: {
+            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.CHARGED_AND_CONVICTED,
+          },
         })
 
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithExceptionCriteria })
@@ -96,7 +97,7 @@ context('Recall Type Page', () => {
         cy.pageHeading().should('equal', 'What do you recommend?')
 
         cy.get('.moj-ticket-panel').within(() => {
-          cy.get('h3').should(
+          cy.get('h2').should(
             'contain.text',
             `${recommendationWithExceptionCriteria.personOnProbation.name} must be given a standard recall, if recalled`,
           )
@@ -143,9 +144,11 @@ context('Recall Type Page', () => {
           wasRepatriatedForMurder: false,
           isServingSOPCSentence: false,
           isServingDCRSentence: false,
-          isChargedWithOffence: false,
           isServingTerroristOrNationalSecurityOffence: false,
           isAtRiskOfInvolvedInForeignPowerThreat: false,
+          isRecalledOnNewChargedOrConvictedOffence: {
+            selected: IsRecalledOnNewChargedOrConvictedOffence.selected.NO,
+          },
         })
 
         cy.task('getRecommendation', { statusCode: 200, response: recommendationWithoutExceptionCriteria })
@@ -158,7 +161,7 @@ context('Recall Type Page', () => {
         cy.pageHeading().should('equal', 'What do you recommend?')
 
         cy.get('.moj-ticket-panel').within(() => {
-          cy.get('h3').should(
+          cy.get('h2').should(
             'contain.text',
             `${recommendationWithoutExceptionCriteria.personOnProbation.name} must be given a fixed term recall, if recalled`,
           )
@@ -244,7 +247,6 @@ context('Recall Type Page', () => {
           wasRepatriatedForMurder: randomCriteria.wasRepatriatedForMurder,
           isServingSOPCSentence: randomCriteria.isServingSOPCSentence,
           isServingDCRSentence: randomCriteria.isServingDCRSentence,
-          isChargedWithOffence: randomCriteria.isChargedWithOffence,
           isServingTerroristOrNationalSecurityOffence: randomCriteria.isServingTerroristOrNationalSecurityOffence,
           isAtRiskOfInvolvedInForeignPowerThreat: randomCriteria.isAtRiskOfInvolvedInForeignPowerThreat,
         })
@@ -372,7 +374,7 @@ context('Recall Type Page', () => {
         cy.pageHeading().should('equal', 'What do you recommend?')
 
         cy.get('.moj-ticket-panel').within(() => {
-          cy.get('h3').should(
+          cy.get('h2').should(
             'contain.text',
             `${recommendationWithoutExceptionCriteria.personOnProbation.name} must be given a fixed term recall, if recalled`,
           )

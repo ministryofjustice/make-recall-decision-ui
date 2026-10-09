@@ -27,11 +27,14 @@ context('Determinate Sentence - Are Offence Changes Needed Page', () => {
   const defaultPPCSStatusResponse = [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }]
   describe('Page Data', () => {
     describe('initial page load', () => {
-      describe('with no option pre-selected', () => {
+      describe('with no option pre-selected and no index offence comment', () => {
         const recommendationWithNoOptionSelected = RecommendationResponseGenerator.generate({
           bookRecallToPpud: {
             custodyGroup: CUSTODY_GROUP.DETERMINATE,
             changeOffenceOrAddComment: 'none',
+          },
+          ppudOffender: {
+            sentences: [{ offence: { indexOffenceComment: 'none' } }],
           },
         })
         const selectedPpudSentence = faker.helpers.arrayElement(
@@ -120,7 +123,7 @@ function testPageContent(recommendationId: string, selectedPpudSentence: PpudSen
     .should('contain.text', 'You selected this offence from PPUD:')
     .should('contain.text', selectedPpudSentence.offence.indexOffence)
     .should('contain.text', 'Additional comments')
-    .should('contain.text', selectedPpudSentence.offence.indexOffenceComment ?? 'None')
+    .should('contain.text', selectedPpudSentence.offence.indexOffenceComment ?? 'No comment recorded in PPUD')
     .should('contain.text', 'Date of sentence')
     .should(
       'contain.text',

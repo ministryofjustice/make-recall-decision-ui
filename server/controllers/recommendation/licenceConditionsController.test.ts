@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { mockNext, mockReq, mockRes } from '../../middleware/testutils/mockRequestUtils'
 import licenceConditionsController from './licenceConditionsController'
+import * as formOptionsModule from '../recommendations/formOptions/formOptions'
 import { formOptions } from '../recommendations/formOptions/formOptions'
 import { getCaseSummaryV2, updateRecommendation } from '../../data/makeDecisionApiClient'
 import recommendationApiResponse from '../../../api/responses/get-recommendation.json'
@@ -8,6 +9,8 @@ import ppPaths from '../../routes/paths/pp.paths'
 import { UrlInfoGenerator } from '../../../data/common/urlInfoGenerator'
 import { PersonOnProbationGenerator } from '../../../data/recommendations/personOnProbationGenerator'
 import { RecommendationResponseGenerator } from '../../../data/recommendations/recommendationGenerator'
+import { cleanseUiList } from '../../utils/lists'
+import * as transformLicenceConditionsModule from '../caseSummary/licenceConditions/transformLicenceConditions'
 
 jest.mock('../../data/makeDecisionApiClient')
 jest.mock('../recommendations/licenceConditions/transform')
@@ -105,21 +108,31 @@ describe('get', () => {
               const req = isApprovedPremisesRoute
                 ? mockReq({ originalUrl: `${faker.internet.url()}/ap-licence-conditions` })
                 : mockReq()
+
               const urlInfo = UrlInfoGenerator.generate({
                 fromPageId: hasFromPageId ? ppPaths.taskListConsiderRecall : 'none',
               })
+
               const res = mockRes({
                 locals: {
                   recommendation: RecommendationResponseGenerator.generate(),
                   token: 'token1',
                   urlInfo,
+                  flags: {},
                 },
               })
+
               const next = mockNext()
+
               await licenceConditionsController.get(req, res, next)
+
+              const expectedStandardLicenceConditions = formOptions.standardLicenceConditions
 
               expect(res.locals.page).toEqual({ id: 'licenceConditions' })
               expect(res.locals.inputDisplayValues.value).not.toBeDefined()
+
+              expect(res.locals.standardLicenceConditions).toBe(expectedStandardLicenceConditions)
+
               expect(res.locals.caseSummary).toStrictEqual({
                 ...TEMPLATE,
                 licenceConvictions: {
@@ -128,8 +141,9 @@ describe('get', () => {
                   ),
                   hasMultipleActiveCustodial: false,
                 },
-                standardLicenceConditions: formOptions.standardLicenceConditions,
+                standardLicenceConditions: expectedStandardLicenceConditions,
               })
+
               if (isApprovedPremisesRoute) {
                 expect(res.locals.backLinkUrl).toEqual(`/cases/${res.locals.recommendation.crn}/overview`)
                 expect(res.locals.backLinkText).toEqual(
@@ -141,8 +155,8 @@ describe('get', () => {
               } else {
                 expect(res.locals.backLinkUrl).toBeUndefined()
               }
-              expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
 
+              expect(res.render).toHaveBeenCalledWith('pages/recommendations/licenceConditions')
               expect(next).toHaveBeenCalled()
             })
 
@@ -217,7 +231,7 @@ describe('get', () => {
 
             const licenceConditionsBreached = {
               standardLicenceConditions: {
-                selected: ['GOOD_BEHAVIOUR', 'NO_OFFENCE'],
+                selected: ['GOOD_BEHAVIOUR', 'KEEP_IN_TOUCH'],
                 allOptions: formOptions.standardLicenceConditions,
               },
               additionalLicenceConditions: {
@@ -471,23 +485,31 @@ describe('post', () => {
   it('post with valid data', async () => {
     ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
     ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+
     const basePath = `/recommendations/123/`
+
     const req = mockReq({
       params: { recommendationId: '123' },
       body: {
         crn: 'X098092',
         activeCustodialConvictionCount: '1',
-        licenceConditionsBreached: 'standard|NAME_CHANGE',
+        licenceConditionsBreached: `standard|GOOD_BEHAVIOUR`,
       },
     })
 
     const res = mockRes({
       token: 'token1',
       locals: {
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath },
+        flags: {},
+        recommendation: {
+          personOnProbation: { name: 'Joe Bloggs' },
+        },
+        urlInfo: {
+          basePath,
+        },
       },
     })
+
     const next = mockNext()
 
     await licenceConditionsController.post(req, res, next)
@@ -497,44 +519,11 @@ describe('post', () => {
       token: 'token1',
       valuesToSave: {
         activeCustodialConvictionCount: 1,
+        additionalLicenceConditionsText: undefined,
         licenceConditionsBreached: {
           standardLicenceConditions: {
-            selected: ['NAME_CHANGE'],
-            allOptions: [
-              {
-                value: 'GOOD_BEHAVIOUR',
-                text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-              },
-              { value: 'NO_OFFENCE', text: 'Not commit any offence' },
-              {
-                value: 'KEEP_IN_TOUCH',
-                text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
-              },
-              {
-                value: 'SUPERVISING_OFFICER_VISIT',
-                text: 'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
-              },
-              {
-                value: 'ADDRESS_APPROVED',
-                text: 'Reside permanently at an address approved by the supervising officer and obtain the prior permission of the supervising officer for any stay of one or more nights at a different address',
-              },
-              {
-                value: 'NO_WORK_UNDERTAKEN',
-                text: 'Not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
-              },
-              {
-                value: 'NO_TRAVEL_OUTSIDE_UK',
-                text: 'Not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
-              },
-              {
-                value: 'NAME_CHANGE',
-                text: 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence',
-              },
-              {
-                value: 'CONTACT_DETAILS',
-                text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
-              },
-            ],
+            selected: ['GOOD_BEHAVIOUR'],
+            allOptions: cleanseUiList(formOptions.standardLicenceConditions),
           },
           additionalLicenceConditions: {
             selectedOptions: [],
@@ -561,7 +550,7 @@ describe('post', () => {
     })
 
     expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.alternativesTried}`)
-    expect(next).not.toHaveBeenCalled() // end of the line for posts.
+    expect(next).not.toHaveBeenCalled()
   })
 
   it('post with valid cvl data', async () => {
@@ -669,41 +658,7 @@ describe('post', () => {
         licenceConditionsBreached: {
           standardLicenceConditions: {
             selected: [],
-            allOptions: [
-              {
-                value: 'GOOD_BEHAVIOUR',
-                text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-              },
-              { value: 'NO_OFFENCE', text: 'Not commit any offence' },
-              {
-                value: 'KEEP_IN_TOUCH',
-                text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
-              },
-              {
-                value: 'SUPERVISING_OFFICER_VISIT',
-                text: 'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
-              },
-              {
-                value: 'ADDRESS_APPROVED',
-                text: 'Reside permanently at an address approved by the supervising officer and obtain the prior permission of the supervising officer for any stay of one or more nights at a different address',
-              },
-              {
-                value: 'NO_WORK_UNDERTAKEN',
-                text: 'Not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
-              },
-              {
-                value: 'NO_TRAVEL_OUTSIDE_UK',
-                text: 'Not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
-              },
-              {
-                value: 'NAME_CHANGE',
-                text: 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence',
-              },
-              {
-                value: 'CONTACT_DETAILS',
-                text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
-              },
-            ],
+            allOptions: cleanseUiList(formOptions.standardLicenceConditions),
           },
           additionalLicenceConditions: {
             selectedOptions: [],
@@ -767,41 +722,7 @@ describe('post', () => {
         licenceConditionsBreached: {
           standardLicenceConditions: {
             selected: [],
-            allOptions: [
-              {
-                value: 'GOOD_BEHAVIOUR',
-                text: 'Be of good behaviour and not behave in a way which undermines the purpose of the licence period',
-              },
-              { value: 'NO_OFFENCE', text: 'Not commit any offence' },
-              {
-                value: 'KEEP_IN_TOUCH',
-                text: 'Keep in touch with the supervising officer in accordance with instructions given by the supervising officer',
-              },
-              {
-                value: 'SUPERVISING_OFFICER_VISIT',
-                text: 'Receive visits from the supervising officer in accordance with instructions given by the supervising officer',
-              },
-              {
-                value: 'ADDRESS_APPROVED',
-                text: 'Reside permanently at an address approved by the supervising officer and obtain the prior permission of the supervising officer for any stay of one or more nights at a different address',
-              },
-              {
-                value: 'NO_WORK_UNDERTAKEN',
-                text: 'Not undertake work, or a particular type of work, unless it is approved by the supervising officer and notify the supervising officer in advance of any proposal to undertake work or a particular type of work',
-              },
-              {
-                value: 'NO_TRAVEL_OUTSIDE_UK',
-                text: 'Not travel outside the United Kingdom, the Channel Islands or the Isle of Man except with the prior permission of your supervising officer or for the purposes of immigration deportation or removal',
-              },
-              {
-                value: 'NAME_CHANGE',
-                text: 'Tell your supervising officer if you use a name which is different to the name or names which appear on your licence',
-              },
-              {
-                value: 'CONTACT_DETAILS',
-                text: 'Tell your supervising officer if you change or add any contact details, including phone number or email',
-              },
-            ],
+            allOptions: cleanseUiList(formOptions.standardLicenceConditions),
           },
           additionalLicenceConditions: {
             selectedOptions: [],
@@ -869,8 +790,9 @@ describe('post', () => {
     expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
   })
 
-  it('post with invalid standard condition', async () => {
-    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+  it('calls isValueValid with standardLicenceConditions', async () => {
+    const isValueValidSpy = jest.spyOn(formOptionsModule, 'isValueValid').mockReturnValue(false)
+
     ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
 
     const req = mockReq({
@@ -886,14 +808,24 @@ describe('post', () => {
     const res = mockRes({
       locals: {
         user: { token: 'token1' },
-        recommendation: { personOnProbation: { name: 'Joe Bloggs' } },
-        urlInfo: { basePath: `/recommendations/123/` },
+        flags: {},
+        recommendation: {
+          personOnProbation: { name: 'Joe Bloggs' },
+        },
+        urlInfo: {
+          basePath: '/recommendations/123/',
+        },
       },
     })
 
-    await licenceConditionsController.post(req, res, mockNext())
+    const next = mockNext()
+
+    await licenceConditionsController.post(req, res, next)
+
+    expect(isValueValidSpy).toHaveBeenCalledWith('VALUE', 'standardLicenceConditions')
 
     expect(updateRecommendation).not.toHaveBeenCalled()
+
     expect(req.session.errors).toEqual([
       {
         errorId: 'noLicenceConditionsSelected',
@@ -904,6 +836,105 @@ describe('post', () => {
         values: undefined,
       },
     ])
-    expect(res.redirect).toHaveBeenCalledWith(303, `some-url`)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, 'some-url')
+    expect(next).not.toHaveBeenCalled()
+
+    isValueValidSpy.mockRestore()
+  })
+
+  it('post valid standard licence conditions using transformLicenceConditions', async () => {
+    ;(updateRecommendation as jest.Mock).mockResolvedValue(recommendationApiResponse)
+    ;(getCaseSummaryV2 as jest.Mock).mockResolvedValue(DELIUS_TEMPLATE)
+
+    const selectedCondition = 'GOOD_BEHAVIOUR'
+
+    const transformLicenceConditionsSpy = jest
+      .spyOn(transformLicenceConditionsModule, 'transformLicenceConditions')
+      .mockReturnValue({
+        licenceConvictions: {
+          active: [],
+          activeCustodial: [
+            {
+              licenceConditions: [
+                {
+                  mainCategory: {
+                    code: 'BB4',
+                    description: 'Freedom of movement',
+                  },
+                },
+              ],
+            },
+          ],
+          hasMultipleActiveCustodial: false,
+        },
+        hasAllConvictionsReleasedOnLicence: false,
+      })
+
+    const req = mockReq({
+      params: {
+        recommendationId: '123',
+      },
+      body: {
+        crn: 'X098092',
+        activeCustodialConvictionCount: '1',
+        licenceConditionsBreached: `standard|${selectedCondition}`,
+      },
+    })
+
+    const res = mockRes({
+      token: 'token1',
+      locals: {
+        flags: {},
+        recommendation: {
+          personOnProbation: {
+            name: 'Joe Bloggs',
+          },
+        },
+        urlInfo: {
+          basePath: '/recommendations/123/',
+        },
+      },
+    })
+
+    const next = mockNext()
+
+    await licenceConditionsController.post(req, res, next)
+
+    expect(transformLicenceConditionsSpy).toHaveBeenCalledWith(DELIUS_TEMPLATE)
+
+    expect(updateRecommendation).toHaveBeenCalledWith({
+      recommendationId: '123',
+      token: 'token1',
+      valuesToSave: {
+        activeCustodialConvictionCount: 1,
+        additionalLicenceConditionsText: undefined,
+        licenceConditionsBreached: {
+          standardLicenceConditions: {
+            selected: [selectedCondition],
+            allOptions: cleanseUiList(formOptions.standardLicenceConditions),
+          },
+          additionalLicenceConditions: {
+            selectedOptions: [],
+            allOptions: [
+              {
+                mainCatCode: 'BB4',
+                subCatCode: undefined,
+                title: 'Freedom of movement',
+                details: undefined,
+                note: undefined,
+              },
+            ],
+          },
+        },
+      },
+      featureFlags: res.locals.flags,
+    })
+
+    expect(res.redirect).toHaveBeenCalledWith(303, `/recommendations/123/${ppPaths.alternativesTried}`)
+
+    expect(next).not.toHaveBeenCalled()
+
+    transformLicenceConditionsSpy.mockRestore()
   })
 })

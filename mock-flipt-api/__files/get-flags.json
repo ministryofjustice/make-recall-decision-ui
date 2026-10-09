@@ -1,0 +1,20 @@
+[
+  {
+    "key": "ui-flagRecommendationsPage",
+    "description": "foo",
+    "enabled": true,
+    "type": "BOOLEAN_FLAG_TYPE"
+  },
+  {
+    "key": "ui-flagDeleteRecommendation",
+    "description": "bar",
+    "enabled": true,
+    "type": "BOOLEAN_FLAG_TYPE"
+  },
+  {
+    "key": "ui-ppcsIndeterminateJourney",
+    "description": "bar",
+    "enabled": true,
+    "type": "BOOLEAN_FLAG_TYPE"
+  }
+]

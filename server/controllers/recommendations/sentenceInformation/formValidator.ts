@@ -55,11 +55,11 @@ const validateSentenceInformation = async ({
   } else {
     switch (previousSentenceGroup as SentenceGroup) {
       case SentenceGroup.ADULT_SDS:
+        valuesToSave.isRecalledOnNewChargedOrConvictedOffence = null
         valuesToSave.wasReferredToParoleBoard244ZB = null
         valuesToSave.wasRepatriatedForMurder = null
         valuesToSave.isServingSOPCSentence = null
         valuesToSave.isServingDCRSentence = null
-        valuesToSave.isChargedWithOffence = null
         valuesToSave.isServingTerroristOrNationalSecurityOffence = null
         valuesToSave.isAtRiskOfInvolvedInForeignPowerThreat = null
         valuesToSave.isThisAnEmergencyRecall = null
