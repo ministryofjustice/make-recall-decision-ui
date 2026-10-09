@@ -28,6 +28,13 @@ const strings: Record<string, Record<string, string>> = {
     invalidCrnFormat: 'Enter a Case Reference Number (CRN) in the correct format, for example X123456',
     saveChanges: 'An error occurred saving your changes',
     noIndexOffenceSelected: 'Select an index offence',
+    missingTotalSentenceLength: 'Enter the years, months and days. Enter ‘0’ if there is no years, months or days',
+    missingTotalSentenceLengthYears: 'Enter the years. Enter ‘0’ if there are no years',
+    missingTotalSentenceLengthMonths: 'Enter the months. Enter ‘0’ if there are no months',
+    missingTotalSentenceLengthDays: 'Enter the days. Enter ‘0’ if there are no days',
+    invalidTotalSentenceLengthYears: 'Years must be a whole number, like 2',
+    invalidTotalSentenceLengthMonths: 'Months must be a whole number, like 6',
+    invalidTotalSentenceLengthDays: 'Days must be a whole number, like 14',
     noPpudSentenceSelected: 'Select an existing sentence or add a new one',
     noRecallTypeSelectedDiscretionary:
       "Select if you're recommending a fixed term recall, standard recall or no recall",

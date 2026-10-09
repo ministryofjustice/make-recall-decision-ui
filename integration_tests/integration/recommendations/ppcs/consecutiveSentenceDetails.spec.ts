@@ -7,6 +7,7 @@ import CUSTODY_GROUP from '../../../../server/@types/make-recall-decision-api/mo
 import { PrisonSentence } from '../../../../server/@types/make-recall-decision-api/models/PrisonSentence'
 import { PrisonSentenceOptions } from '../../../../data/prisonSentences/prisonSentenceGenerator'
 import setUpSessionForPpcs from './util'
+import { testForErrorPageTitle, testForErrorSummary } from '../../../componentTests/errors.tests'
 
 context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', () => {
   const crn = 'X34983'
@@ -133,12 +134,35 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
           'The index offence is the first sentence in the consecutive sequence.',
         )
       })
-      it('Continue link as button', () => {
-        cy.get('a#continue')
-          .should('exist')
-          .should('have.class', 'govuk-button')
-          .should('have.attr', 'role', 'button')
-          .should('have.attr', 'href', `/recommendations/${recommendationId}/select-ppud-sentence`)
+      describe('Total sentence length', () => {
+        it('Heading, hint and inputs', () => {
+          cy.get('legend').should('contain.text', 'Calculate the total sentence length')
+          cy.get('#totalSentenceLength-hint').should(
+            'contain.text',
+            'Add the sentence lengths in this sequence together.',
+          )
+          ;['years', 'months', 'days'].forEach(part => {
+            cy.get(`#totalSentenceLength-${part}`).should('exist').and('have.attr', 'name', part).and('have.value', '')
+          })
+          cy.get('button.govuk-button').should('contain.text', 'Continue')
+        })
+        it('Help text is collapsed by default and expands', () => {
+          cy.get('[data-qa="totalSentenceLength-help"]').as('help').should('not.have.attr', 'open')
+          cy.get('@help').find('summary').should('contain.text', 'Help with the total sentence length').click()
+          cy.get('@help').should('have.attr', 'open')
+          cy.get('@help')
+            .find('.govuk-details__text')
+            .should('contain.text', 'Sentence length information comes from NOMIS')
+            .and('contain.text', 'convert any weeks into days')
+            .and('contain.text', 'You can use up to 364 days when converting weeks to days.')
+        })
+        it('Valid submission redirects to the next page', () => {
+          cy.get('#totalSentenceLength-years').type('2')
+          cy.get('#totalSentenceLength-months').type('0')
+          cy.get('#totalSentenceLength-days').type('14')
+          cy.get('button.govuk-button').click()
+          cy.location('pathname').should('eq', `/recommendations/${recommendationId}/select-ppud-sentence`)
+        })
       })
 
       describe('Sentence details', () => {
@@ -253,6 +277,52 @@ context('Determinate Sentence - Consecutive/Concurrent Sentence Details Page', (
             { key: expectedLabels.sentenceLength, value: expectedFourthTimeSentenceLength },
           ])
         })
+      })
+    })
+  })
+
+  describe('Total sentence length - error messages', () => {
+    beforeEach(() => {
+      cy.task('getRecommendation', { statusCode: 200, response: defaultRecommendationResponse })
+      cy.task('getStatuses', { statusCode: 200, response: defaultPPCSStatusResponse })
+      cy.task('updateRecommendation', {
+        statusCode: 200,
+        response: defaultUpdateRecommendationResponse(crn, recommendationId),
+      })
+      cy.task('prisonSentences', { statusCode: 200, response: defaultPrisonSentenceSequence })
+      cy.visit(testPageUrl)
+    })
+
+    it('All parts empty', () => {
+      cy.get('button.govuk-button').click()
+      testForErrorPageTitle()
+      testForErrorSummary([
+        {
+          href: 'totalSentenceLength-years',
+          message: 'Enter the years, months and days. Enter ‘0’ if there is no years, months or days',
+          errorComponentId: 'totalSentenceLength-error',
+        },
+      ])
+      cy.get('#totalSentenceLength-months').should('have.class', 'govuk-input--error')
+      cy.get('#totalSentenceLength-days').should('have.class', 'govuk-input--error')
+    })
+
+    const singleMissing = [
+      { part: 'years', message: 'Enter the years. Enter ‘0’ if there are no years' },
+      { part: 'months', message: 'Enter the months. Enter ‘0’ if there are no months' },
+      { part: 'days', message: 'Enter the days. Enter ‘0’ if there are no days' },
+    ]
+    singleMissing.forEach(({ part, message }) => {
+      it(`Missing ${part}`, () => {
+        ;['years', 'months', 'days'].filter(p => p !== part).forEach(p => cy.get(`#totalSentenceLength-${p}`).type('1'))
+        cy.get('button.govuk-button').click()
+        testForErrorPageTitle()
+        testForErrorSummary([
+          { href: `totalSentenceLength-${part}`, message, errorComponentId: 'totalSentenceLength-error' },
+        ])
+        ;['years', 'months', 'days']
+          .filter(p => p !== part)
+          .forEach(p => cy.get(`#totalSentenceLength-${p}`).should('have.value', '1'))
       })
     })
   })

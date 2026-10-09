@@ -485,6 +485,37 @@ describe('Select Index Offence Controller', () => {
         }))
       it('- Executes the next function', async () => expect(next).toHaveBeenCalled())
     })
+    describe('Clearing the total sentence length:', () => {
+      const totalSentenceLength = { partYears: 1, partMonths: 2, partDays: 3 }
+      const callWith = async (previouslySelected: number | undefined, newSelection: number) => {
+        const recommendation = {
+          ...defaultPostRecommendation,
+          nomisIndexOffence: {
+            ...defaultPostRecommendation.nomisIndexOffence,
+            selected: previouslySelected,
+          },
+          bookRecallToPpud: { ...defaultPostRecommendation.bookRecallToPpud, totalSentenceLength },
+        }
+        ;(prisonSentences as jest.Mock).mockResolvedValue([defaultPostSentenceSequence])
+        ;(getRecommendation as jest.Mock).mockResolvedValue(recommendation)
+        ;(updateRecommendation as jest.Mock).mockReset()
+        await selectIndexOffenceController.post(
+          mockReq({ params: { recommendationId: '123' }, body: { indexOffence: newSelection.toString() } }),
+          mockRes({ locals: { urlInfo: { basePath: `/recommendations/123/` } } }),
+          next,
+        )
+        return (updateRecommendation as jest.Mock).mock.calls[0][0].valuesToSave.bookRecallToPpud
+      }
+
+      it('- Clears it when a different index offence is selected', async () => {
+        const saved = await callWith(expectedSelectedOffenceIndex + 1, expectedSelectedOffenceIndex)
+        expect(saved.totalSentenceLength).toBeNull()
+      })
+      it('- Keeps it when the same index offence is re-submitted', async () => {
+        const saved = await callWith(expectedSelectedOffenceIndex, expectedSelectedOffenceIndex)
+        expect(saved.totalSentenceLength).toEqual(totalSentenceLength)
+      })
+    })
     describe('Conditional logic:', () => {
       describe('No index offence provided', () => {
         const expectedOriginUrl = 'origin/url'

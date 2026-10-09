@@ -194,6 +194,7 @@ export type BookRecallToPpud = {
   policeForce?: string,
   probationArea?: string,
   sentenceDate?: string,
+  totalSentenceLength?: PpudSentenceLength,
   gender?: string,
   ethnicity: string,
   legislationReleasedUnder?: string,
