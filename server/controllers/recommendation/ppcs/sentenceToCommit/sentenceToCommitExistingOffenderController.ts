@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { RecommendationResponse } from '../../../../@types/make-recall-decision-api'
 import { nextPageLinkUrl } from '../../../recommendations/helpers/urls'
+import getTotalSentenceLength from '../../../../utils/totalSentenceLength'
 import { PpudSentence } from '../../../../@types/make-recall-decision-api/models/RecommendationResponse'
 import { getSupportingDocuments } from '../../../../data/makeDecisionApiClient'
 
@@ -32,6 +33,7 @@ async function get(_: Request, res: Response, next: NextFunction) {
       id: 'sentenceToCommitExistingOffender',
     },
     offence,
+    totalSentenceLength: getTotalSentenceLength(recommendationResponse),
     ppudSentence,
     documents,
   }

@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { RecommendationResponseGenerator } from '../../../../../data/recommendations/recommendationGenerator'
 import { PrisonSentenceSequenceGenerator } from '../../../../../data/prisonSentences/prisonSentenceSequenceGenerator'
-import { prisonSentences } from '../../../../data/makeDecisionApiClient'
+import { prisonSentences, updateRecommendation } from '../../../../data/makeDecisionApiClient'
 import { mockNext, mockReq, mockRes } from '../../../../middleware/testutils/mockRequestUtils'
 import consecutiveSentenceDetailsController from './consecutiveSentenceDetailsController'
 import { PrisonSentence } from '../../../../@types/make-recall-decision-api/models/PrisonSentence'
@@ -293,63 +293,203 @@ describe('Consecutive Sentence Details Controller', () => {
           })
         })
       })
-      describe('Res locals', () => {
-        describe('Page Data:', () => {
-          describe('Next Page Path:', () => {
-            const testCases: {
-              useCaseDescription: string
-              recommendation: RecommendationResponse
-              redirectionPageId: string
-            }[] = [
-              {
-                useCaseDescription: 'When no PPUD offender was selected',
-                recommendation: RecommendationResponseGenerator.generate({
-                  nomisIndexOffence: {
-                    selectedIndex: 0,
-                  },
-                  ppudOffender: 'none',
-                }),
-                redirectionPageId: ppcsPaths.matchIndexOffence,
-              },
-              {
-                useCaseDescription: 'When a PPUD offender with no sentences was selected',
-                recommendation: RecommendationResponseGenerator.generate({
-                  nomisIndexOffence: {
-                    selectedIndex: 0,
-                  },
-                  ppudOffender: {
-                    sentences: [],
-                  },
-                }),
-                redirectionPageId: ppcsPaths.matchIndexOffence,
-              },
-              {
-                useCaseDescription: 'When a PPUD offender with sentences was selected',
-                recommendation: RecommendationResponseGenerator.generate({
-                  nomisIndexOffence: {
-                    selectedIndex: 0,
-                  },
-                }),
-                redirectionPageId: ppcsPaths.selectPpudSentence,
-              },
-            ]
-            const basePath = '/recommendations/123/'
-            it.each(testCases)('$useCaseDescription', async ({ recommendation, redirectionPageId }) => {
-              ;(prisonSentences as jest.Mock).mockResolvedValue(defaultGetSentenceSequence)
-              const resForTestCase = mockRes({
-                locals: {
-                  recommendation,
-                  urlInfo: {
-                    basePath,
-                  },
-                },
-              })
-              await consecutiveSentenceDetailsController.get(req, resForTestCase, next)
-
-              expect(resForTestCase.locals.pageData.nextPagePath).toBeDefined()
-              expect(resForTestCase.locals.pageData.nextPagePath).toEqual(`${basePath}${redirectionPageId}`)
-            })
+      describe('Total sentence length:', () => {
+        beforeEach(() => {
+          ;(prisonSentences as jest.Mock).mockResolvedValue(defaultGetSentenceSequence)
+        })
+        it('- Uses the saved value when there are no unsaved values', async () => {
+          const recommendation = RecommendationResponseGenerator.generate({
+            nomisIndexOffence: { selectedIndex: 0 },
           })
+          recommendation.bookRecallToPpud.totalSentenceLength = { partYears: 2, partMonths: 3, partDays: 10 }
+          const resForTest = mockRes({ locals: { recommendation, urlInfo: { basePath: '/recommendations/123/' } } })
+          await consecutiveSentenceDetailsController.get(req, resForTest, next)
+
+          expect(resForTest.locals.pageData.totalSentenceLength).toEqual({ years: 2, months: 3, days: 10 })
+        })
+        it('- Is empty when nothing saved', async () => {
+          const recommendation = RecommendationResponseGenerator.generate({
+            nomisIndexOffence: { selectedIndex: 0 },
+          })
+          recommendation.bookRecallToPpud.totalSentenceLength = undefined
+          const resForTest = mockRes({ locals: { recommendation, urlInfo: { basePath: '/recommendations/123/' } } })
+          await consecutiveSentenceDetailsController.get(req, resForTest, next)
+
+          expect(resForTest.locals.pageData.totalSentenceLength).toEqual({
+            years: undefined,
+            months: undefined,
+            days: undefined,
+          })
+        })
+        it('- Prefers unsaved values (after a validation error)', async () => {
+          const unsaved = { years: '1', months: '', days: 'x' }
+          const resForTest = mockRes({
+            locals: {
+              recommendation: defaultGetRecommendation,
+              urlInfo: { basePath: '/recommendations/123/' },
+              unsavedValues: { totalSentenceLength: unsaved },
+            },
+          })
+          await consecutiveSentenceDetailsController.get(req, resForTest, next)
+
+          expect(resForTest.locals.pageData.totalSentenceLength).toEqual(unsaved)
+        })
+      })
+    })
+  })
+
+  describe('post', () => {
+    const basePath = '/recommendations/123/'
+    const originalUrl = '/recommendations/123/consecutive-sentence-details'
+
+    const callPost = async (body: Record<string, string>, recommendation?: RecommendationResponse) => {
+      const rec =
+        recommendation ??
+        RecommendationResponseGenerator.generate({
+          nomisIndexOffence: { selectedIndex: 0 },
+        })
+      const req = mockReq({ params: { recommendationId: '123' }, body, originalUrl })
+      const res = mockRes({ locals: { recommendation: rec, urlInfo: { basePath } } })
+      await consecutiveSentenceDetailsController.post(req, res, next)
+      return { req, res, rec }
+    }
+
+    beforeEach(() => {
+      ;(updateRecommendation as jest.Mock).mockReset()
+      ;(updateRecommendation as jest.Mock).mockResolvedValue({})
+    })
+
+    describe('Valid input', () => {
+      it('- Saves the total sentence length and redirects to select PPUD sentence', async () => {
+        const { res, rec } = await callPost({ years: '2', months: '0', days: ' 14 ' })
+
+        expect(updateRecommendation).toHaveBeenCalledWith({
+          recommendationId: '123',
+          valuesToSave: {
+            bookRecallToPpud: {
+              ...rec.bookRecallToPpud,
+              totalSentenceLength: { partYears: 2, partMonths: 0, partDays: 14 },
+            },
+          },
+          token: 'token',
+          featureFlags: {},
+        })
+        expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.selectPpudSentence}`)
+      })
+      it('- Redirects to match index offence when the PPUD offender has no sentences', async () => {
+        const rec = RecommendationResponseGenerator.generate({
+          nomisIndexOffence: { selectedIndex: 0 },
+          ppudOffender: { sentences: [] },
+        })
+        const { res } = await callPost({ years: '0', months: '0', days: '0' }, rec)
+
+        expect(res.redirect).toHaveBeenCalledWith(303, `${basePath}${ppcsPaths.matchIndexOffence}`)
+      })
+    })
+
+    describe('Invalid input', () => {
+      const testCases: {
+        description: string
+        body: Record<string, string>
+        expected: { href: string; text: string; errorId: string }[]
+      }[] = [
+        {
+          description: 'all parts empty',
+          body: { years: '', months: '', days: '' },
+          expected: [
+            {
+              href: '#totalSentenceLength-years',
+              text: 'Enter the years, months and days. Enter ‘0’ if there is no years, months or days',
+              errorId: 'missingTotalSentenceLength',
+            },
+          ],
+        },
+        {
+          description: 'years missing',
+          body: { years: '', months: '1', days: '1' },
+          expected: [
+            {
+              href: '#totalSentenceLength-years',
+              text: 'Enter the years. Enter ‘0’ if there are no years',
+              errorId: 'missingTotalSentenceLengthYears',
+            },
+          ],
+        },
+        {
+          description: 'months missing',
+          body: { years: '1', months: ' ', days: '1' },
+          expected: [
+            {
+              href: '#totalSentenceLength-months',
+              text: 'Enter the months. Enter ‘0’ if there are no months',
+              errorId: 'missingTotalSentenceLengthMonths',
+            },
+          ],
+        },
+        {
+          description: 'days missing',
+          body: { years: '1', months: '1', days: '' },
+          expected: [
+            {
+              href: '#totalSentenceLength-days',
+              text: 'Enter the days. Enter ‘0’ if there are no days',
+              errorId: 'missingTotalSentenceLengthDays',
+            },
+          ],
+        },
+        {
+          description: 'months and days missing',
+          body: { years: '1', months: '', days: '' },
+          expected: [
+            {
+              href: '#totalSentenceLength-months',
+              text: 'Enter the months. Enter ‘0’ if there are no months',
+              errorId: 'missingTotalSentenceLengthMonths',
+            },
+            {
+              href: '#totalSentenceLength-days',
+              text: 'Enter the days. Enter ‘0’ if there are no days',
+              errorId: 'missingTotalSentenceLengthDays',
+            },
+          ],
+        },
+        {
+          description: 'non-numeric values',
+          body: { years: 'a', months: '-1', days: '1.5' },
+          expected: [
+            {
+              href: '#totalSentenceLength-years',
+              text: 'Years must be a whole number, like 2',
+              errorId: 'invalidTotalSentenceLengthYears',
+            },
+            {
+              href: '#totalSentenceLength-months',
+              text: 'Months must be a whole number, like 6',
+              errorId: 'invalidTotalSentenceLengthMonths',
+            },
+            {
+              href: '#totalSentenceLength-days',
+              text: 'Days must be a whole number, like 14',
+              errorId: 'invalidTotalSentenceLengthDays',
+            },
+          ],
+        },
+      ]
+
+      it.each(testCases)('- $description', async ({ body, expected }) => {
+        const { req, res } = await callPost(body)
+
+        expect(updateRecommendation).not.toHaveBeenCalled()
+        expect(res.redirect).toHaveBeenCalledWith(303, originalUrl)
+        expect(req.session.errors).toEqual(
+          expected.map(e => expect.objectContaining({ href: e.href, text: e.text, errorId: e.errorId })),
+        )
+        expect(req.session.unsavedValues).toEqual({
+          totalSentenceLength: {
+            years: body.years.trim(),
+            months: body.months.trim(),
+            days: body.days.trim(),
+          },
         })
       })
     })

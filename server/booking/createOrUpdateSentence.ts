@@ -8,6 +8,7 @@ import CUSTODY_GROUP from '../@types/make-recall-decision-api/models/ppud/Custod
 import { SentenceGroup } from '../controllers/recommendations/sentenceInformation/formOptions'
 import SENTENCED_AS_YOUTH from '../@types/make-recall-decision-api/models/ppud/SentencedAsYouth'
 import { Term } from '../@types/make-recall-decision-api/models/PrisonSentence'
+import getTotalSentenceLength from '../utils/totalSentenceLength'
 
 function calculateOffenceDays(offenceTerm: Term): number {
   const days = offenceTerm?.days ?? 0
@@ -20,17 +21,26 @@ function buildDeterminateSentenceRequest(recommendation: RecommendationResponse)
     o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
   )
 
+  const totalSentenceLength = getTotalSentenceLength(recommendation)
   const offenceTerm = nomisOffence.terms.find(term => term.code === 'IMP')
-  const sentenceLength =
-    offenceTerm != null
-      ? {
-          // MRD-3238 - PPUD simply doesn't support weeks,
-          // so any part of the term in weeks needs to be converted into days.
-          partDays: calculateOffenceDays(offenceTerm),
-          partMonths: offenceTerm?.months || 0,
-          partYears: offenceTerm?.years || 0,
-        }
-      : null
+  let sentenceLength: PpudUpdateSentenceRequest['sentenceLength'] = null
+  if (totalSentenceLength) {
+    // MRD-3362 - for a consecutive sequence, PPCS enter the total sentence length (already converted to
+    // years, months and days), which replaces the index offence's own term
+    sentenceLength = {
+      partYears: totalSentenceLength.partYears ?? 0,
+      partMonths: totalSentenceLength.partMonths ?? 0,
+      partDays: totalSentenceLength.partDays ?? 0,
+    }
+  } else if (offenceTerm != null) {
+    sentenceLength = {
+      // MRD-3238 - PPUD simply doesn't support weeks,
+      // so any part of the term in weeks needs to be converted into days.
+      partDays: calculateOffenceDays(offenceTerm),
+      partMonths: offenceTerm?.months || 0,
+      partYears: offenceTerm?.years || 0,
+    }
+  }
 
   return {
     custodyType: recommendation.bookRecallToPpud?.custodyType,

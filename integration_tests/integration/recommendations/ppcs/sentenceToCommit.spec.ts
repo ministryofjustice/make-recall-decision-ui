@@ -208,6 +208,40 @@ context('Sentence to commit', () => {
       )
     })
 
+    it('consecutive sequence - shows the entered total sentence length instead of the NOMIS term', () => {
+      const recommendation = RecommendationResponseGenerator.generate({
+        bookRecallToPpud: {
+          custodyGroup: CUSTODY_GROUP.DETERMINATE,
+          custodyTypeBasedOnGroup: CUSTODY_GROUP.DETERMINATE,
+        },
+      })
+      const selectedNomisSentence = recommendation.nomisIndexOffence.allOptions.find(
+        o => o.offenderChargeId === recommendation.nomisIndexOffence.selected,
+      )
+      selectedNomisSentence.consecutiveCount = 2
+      recommendation.bookRecallToPpud.totalSentenceLength = { partYears: 5, partMonths: 2, partDays: 10 }
+
+      testPageData(
+        recommendation,
+        {
+          custodyType: recommendation.bookRecallToPpud.custodyType,
+          offence: recommendation.bookRecallToPpud.indexOffence,
+          offenceComment: recommendation.bookRecallToPpud.indexOffenceComment,
+          offenceDate: formatDateTimeFromIsoString({ isoDate: selectedNomisSentence.offenceDate }),
+          releaseDate: formatDateTimeFromIsoString({ isoDate: selectedNomisSentence.releaseDate }),
+          sentencingCourt: selectedNomisSentence.courtDescription,
+          dateOfSentence: formatDateTimeFromIsoString({ isoDate: selectedNomisSentence.sentenceDate }),
+          licenceExpiryDate: formatDateTimeFromIsoString({ isoDate: selectedNomisSentence.licenceExpiryDate }),
+        },
+        [{ key: 'Sentence length', value: '5 years, 2 months, 10 days' }],
+        {
+          key: 'Sentence expiry date',
+          value: formatDateTimeFromIsoString({ isoDate: selectedNomisSentence.sentenceEndDate }),
+        },
+        [],
+      )
+    })
+
     // This test case is skipped, as it would be identical to one of the cases above (depending on how the terms are set up)
     // it('NOMIS sentence is part of single-sentence sequence (non-null sentenceEndDate)', () => {})
 
