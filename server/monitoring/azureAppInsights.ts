@@ -1,5 +1,5 @@
 import { config } from 'dotenv'
-import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
+import { initialiseTelemetry, telemetry, flushTelemetry } from '@ministryofjustice/hmpps-azure-telemetry'
 import { performance } from 'perf_hooks'
 import applicationPackageInfo from '../applicationPackageInfo'
 import appConfig from '../config'
@@ -22,22 +22,24 @@ function version(): string {
 export function initialiseAppInsights(): void {
   // Loads .env file contents into | process.env
   config()
-  if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
+  const connectionString =
+    process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || process.env.APPINSIGHTS_INSTRUMENTATIONKEY
+  if (connectionString) {
     // eslint-disable-next-line no-console
     console.log('Enabling azure application insights')
 
-    setup().setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C).start()
+    initialiseTelemetry({
+      serviceName: defaultName(),
+      serviceVersion: version(),
+      connectionString,
+    })
+      .addFilter(telemetry.processors.filterSpanWherePath(['/health', '/ping', '/assets/*']))
+      .addModifier(telemetry.processors.enrichSpanNameWithHttpRoute())
+      .startRecording()
   }
 }
 
-export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
-  if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
-    defaultClient.context.tags['ai.cloud.role'] = name
-    defaultClient.context.tags['ai.application.ver'] = version()
-    return defaultClient
-  }
-  return null
-}
+export { flushTelemetry }
 
 export const appInsightsEvent = (
   eventName: string,
@@ -45,17 +47,27 @@ export const appInsightsEvent = (
   eventData: Record<string, unknown>,
   _: FeatureFlags,
 ) => {
-  if (defaultClient && eventName) {
+  if (eventName) {
     try {
-      defaultClient.trackEvent({ name: eventName, properties: { ...eventData, userName } })
+      const attributes: Record<string, string | number | boolean> = { userName }
+      for (const [key, value] of Object.entries(eventData)) {
+        if (value !== undefined && value !== null) {
+          attributes[key] = String(value)
+        }
+      }
+      telemetry.trackEvent(eventName, attributes)
     } catch (err) {
       logger.warn('AppInsights error:', err)
     }
   } else {
-    logger.warn('No default client found for appInsights')
+    logger.warn('No event name provided for appInsights')
   }
 }
 
 export const appInsightsTimingMetric = ({ name, startTime }: { name: string; startTime: number }) => {
-  defaultClient?.trackMetric({ name, value: Math.round(performance.now() - startTime) })
+  try {
+    telemetry.trackEvent(name, { durationMs: Math.round(performance.now() - startTime) })
+  } catch {
+    // silently ignore timing metric failures
+  }
 }
