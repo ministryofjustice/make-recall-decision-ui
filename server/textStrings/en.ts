@@ -1,18 +1,6 @@
 import type { StringsDefinition } from '../@types/strings'
-import ModuleLoader from '../services/moduleLoader'
 
-const buildStrings = (): StringsDefinition => {
-  const modules = ModuleLoader()
-
-  const moduleStrings = modules.reduce((acc, module) => {
-    const { strings } = module
-    Object.keys(strings).map((section: string): void => {
-      acc[section] = { ...acc[section], ...strings[section] }
-      return null
-    })
-    return acc
-  }, {} as StringsDefinition)
-
+export const buildStrings = (moduleStrings: StringsDefinition = {}): StringsDefinition => {
   return {
     errors: {
       ...moduleStrings?.errors,

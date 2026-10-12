@@ -2,6 +2,7 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "compileOnSave": true,
   "compilerOptions": {
+    "baseUrl": ".",
     "isolatedModules": true,
     "outDir": "./dist",
     "sourceMap": true,
@@ -12,7 +13,10 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
-    "typeRoots": ["./server/@types", "./node_modules/@types"]
+    "typeRoots": ["./server/@types", "./node_modules/@types"],
+    "paths": {
+      "@car-types/*": ["server/@types/*"]
+    }
   },
   "exclude": [
     "node_modules",

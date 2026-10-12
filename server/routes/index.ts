@@ -3,7 +3,6 @@ import bodyParser from 'body-parser'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import getStoredSessionData from '../middleware/getStoredSessionData'
-import { readFeatureFlags } from '../middleware/featureFlags'
 import { authorisationCheck, hasRole, not, or } from '../middleware/check'
 import parseUrl from '../middleware/parseUrl'
 import setUpMaintenance from '../middleware/setUpMaintenance'
@@ -19,7 +18,7 @@ export default function routes(router: Router, moduleRoutes: RouteDefinition[]):
   router.use(setUpMaintenance())
   router.use(bodyParser.json())
   router.use(bodyParser.urlencoded({ extended: true }))
-  router.use(parseUrl, getStoredSessionData, readFeatureFlags())
+  router.use(parseUrl, getStoredSessionData)
 
   const route = ({
     path,

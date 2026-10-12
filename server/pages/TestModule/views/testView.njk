@@ -6,6 +6,39 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h1 class="govuk-heading-xl">Test Module!</h1>
+            {% include '../../../views/partials/error-summary.njk' %}
+
+            <h2>Missing field should be here: {{ formOptions.myFormField | dump }}</h2>
+
+            <form method="POST" novalidate>
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                  {{ govukTextarea({
+                    name: "whatLedToRecall",
+                    id: "whatLedToRecall",
+                    label: {
+                        text: pageHeadings[page.id],
+                        classes: "govuk-label--l",
+                        isPageHeading: true
+                    },
+                    hint: {
+                        html: hintHtml
+                    },
+                    value: formValues.whatLedToRecall,
+                    errorMessage: errorMessage(errors.whatLedToRecall)
+                }) }}
+
+                {{ govukRadios({
+                    idPrefix: "radioFormField",
+                    name: "radioFormField",
+                    items: radioCheckboxItems({
+                        items: formOptions.radioFormField
+                    }),
+                    errorMessage: errorMessage(errors.radioFormField)
+                }) }}
+                <button class="govuk-button" data-module="govuk-button">
+                    Search
+                </button>
+            </form>
         </div>
     </div>
 {% endblock %}

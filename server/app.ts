@@ -18,7 +18,7 @@ import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpSentry from './middleware/setUpSentry'
-import setUpWebRequestParsing from './middleware/setUpRequestParsing'
+import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import authorisationMiddleware, { HMPPS_AUTH_ROLE } from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
 import appInsightsOperationId from './middleware/appInsightsOperationId'
@@ -27,8 +27,9 @@ import { setupRecommendationStatusCheck } from './middleware/recommendationStatu
 import { hasRole, authorisationCheck } from './middleware/check'
 import config from './config'
 import logger from '../logger'
-import ModuleLoader from './services/moduleLoader'
+import ModuleLoader, { ModuleRoutes } from './services/moduleLoader'
 import multiPartRoutes from './routes/multipartRoutes'
+import { readFeatureFlags } from './middleware/featureFlags'
 
 export default function createApp(userService: UserService): express.Application {
   const app = express()
@@ -40,6 +41,7 @@ export default function createApp(userService: UserService): express.Application
     res.locals.env = process.env.ENVIRONMENT // dev/ preprod / prod / TEST
     next()
   })
+
   app.use(cookieParser())
   app.use(setUpSentry())
   app.use(appInsightsOperationId)
@@ -49,16 +51,19 @@ export default function createApp(userService: UserService): express.Application
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
-  // Setup modules goes here
-  const modules = ModuleLoader()
-  const modulePaths = modules.map(module => module.path)
-  const moduleRoutes = modules.flatMap(module => module.routes)
 
-  nunjucksSetup(app, path, modulePaths)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware)
   app.use(authorisationCheck(hasRole(HMPPS_AUTH_ROLE.PO)))
   app.use(setupRecommendationStatusCheck())
+  app.use(readFeatureFlags())
+
+  // Setup modules goes here
+  const modules = ModuleLoader()
+  const modulePaths = modules.map(module => module.path)
+  const moduleRoutes = ModuleRoutes()
+
+  nunjucksSetup(app, path, modulePaths)
 
   app.get(
     '*',

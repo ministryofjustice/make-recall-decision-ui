@@ -10,7 +10,7 @@ import errorHandler from '../../errorHandler'
 import standardRouter from '../standardRouter'
 import UserService from '../../services/userService'
 import * as auth from '../../authentication/auth'
-import ModuleLoader from '../../services/moduleLoader'
+import ModuleLoader, { ModuleRoutes } from '../../services/moduleLoader'
 
 const user = {
   name: 'joe bloggs',
@@ -38,8 +38,9 @@ function appSetup(route: Router): Express {
   const app = express()
 
   app.set('view engine', 'njk')
+  const modules = ModuleLoader()
+  const modulePaths = modules.map(module => module.path)
 
-  const { paths: modulePaths } = ModuleLoader()
   nunjucksSetup(app, path, modulePaths)
 
   app.use((req, res, next) => {
@@ -60,7 +61,7 @@ function appSetup(route: Router): Express {
 }
 
 export default function appWithAllRoutes(): Express {
-  const { routes: moduleRoutes } = ModuleLoader()
+  const moduleRoutes = ModuleRoutes()
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
   return appSetup(allRoutes(standardRouter(new MockUserService()), moduleRoutes))
 }

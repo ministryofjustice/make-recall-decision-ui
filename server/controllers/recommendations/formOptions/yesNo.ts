@@ -7,8 +7,8 @@ export enum YesNoValues {
 
 export const yesNoOptions = (
   labels: Record<YesNoValues, string> = {
-    [YesNoValues.YES]: strings.labels.yes,
-    [YesNoValues.NO]: strings.labels.no,
+    [YesNoValues.YES]: strings?.labels.yes,
+    [YesNoValues.NO]: strings?.labels.no,
   },
 ): { value: YesNoValues; text: string }[] => {
   return [

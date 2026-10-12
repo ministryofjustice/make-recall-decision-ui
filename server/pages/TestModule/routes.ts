@@ -1,21 +1,38 @@
-
-
-import customizeMessages from '../../controllers/customizeMessages'
-import ModuleRoutesHelper from '../../helpers/modules/routesHelper'
-import { createRecommendationRouteTemplate, RECOMMENDATION_PREFIX } from '../../routes/recommendations'
+import retrieveRecommendation from '../../controllers/retrieveRecommendation'
+import retrieveStatuses from '../../controllers/retrieveStatuses'
+import { HMPPS_AUTH_ROLE } from '../../middleware/authorisationMiddleware'
+import guardAgainstModifyingClosedRecommendation from '../../middleware/guardAgainstModifyingClosedRecommendation'
+import parseRecommendationUrl from '../../middleware/parseRecommendationUrl'
 import { RouteDefinition } from '../../routes/standardRouter'
 import Controller from './controller'
+
+const RECOMMENDATION_PREFIX = '/recommendations/:recommendationId'
 
 /**
  * Define routes and middleware here
  */
-// const routes: RouteDefinition[] = ModuleRoutesHelper.generateRoutes('/module-test', Controller)
+
+const path: string = `${RECOMMENDATION_PREFIX}/module-test`
 
 const routes: RouteDefinition[] = [
   {
-    ...createRecommendationRouteTemplate('get', [], {}),
+    method: 'get',
+    roles: { allow: [HMPPS_AUTH_ROLE.PO] },
     handler: Controller.get,
-    path: `${RECOMMENDATION_PREFIX}/module-test`,
+    path,
+    additionalMiddleware: [
+      retrieveStatuses,
+      retrieveRecommendation,
+      parseRecommendationUrl,
+      guardAgainstModifyingClosedRecommendation,
+    ],
+  },
+  {
+    method: 'post',
+    roles: { allow: [HMPPS_AUTH_ROLE.PO] },
+    handler: Controller.post,
+    path,
+    additionalMiddleware: [retrieveStatuses, retrieveRecommendation, parseRecommendationUrl],
   },
 ]
 

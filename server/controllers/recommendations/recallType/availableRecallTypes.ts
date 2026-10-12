@@ -1,9 +1,10 @@
-import { RecommendationResponse } from '../../../@types/make-recall-decision-api'
+import type { FormOption } from '@car-types/FormOptions'
+import type { RecommendationResponse } from '@car-types/make-recall-decision-api'
 import {
   isFixedTermRecallMandatoryForRecommendation,
   isStandardRecallMandatoryForRecommendation,
 } from '../../../utils/fixedTermRecallUtils'
-import { FormOption, formOptions } from '../formOptions/formOptions'
+import { formOptions } from '../formOptions/formOptions'
 
 export function availableRecallTypes(isFtrMandatory: boolean, isStandardMandatory: boolean): FormOption[] {
   if (isFtrMandatory) {

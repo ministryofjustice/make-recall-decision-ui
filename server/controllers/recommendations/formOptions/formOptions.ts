@@ -1,7 +1,7 @@
 import custodyStatus from '../custodyStatus/formOptions'
 import recallType from '../recallType/formOptions'
 import { yesNoOptions, YesNoValues } from './yesNo'
-import strings from '../../../textStrings/en'
+// import strings from '../../../textStrings/en'
 import { UiListItem } from '../../../@types/pagesForms'
 import { renderTemplateString } from '../../../utils/nunjucks'
 import alternativesToRecallTried from '../alternativesToRecallTried/formOptions'
@@ -18,11 +18,9 @@ import whyConsideredRecall from '../whyConsideredRecall/formOptions'
 import standardLicenceConditions from './licenceConditions'
 import spoRecallTypeEnum from './spoRecallTypeEnum'
 import { sentenceGroup } from '../sentenceInformation/formOptions'
-import ModuleLoader from '../../../services/moduleLoader'
-import { FormOptionsType } from '../../../@types/FormOptions'
+import { FormOption, FormOptionsType } from '../../../@types/FormOptions'
 
 const buildFormOptions = (): FormOptionsType => {
-  console.log('buildFormOptions happening')
   return {
     sentenceGroup,
     recallType,
@@ -43,8 +41,8 @@ const buildFormOptions = (): FormOptionsType => {
     hasVictimsInContactScheme,
     roshLevels,
     yesNoOffenceChanges: yesNoOptions({
-      [YesNoValues.YES]: strings.labels.yesOffenceChanges,
-      [YesNoValues.NO]: strings.labels.no,
+      [YesNoValues.YES]: 'Yes', // strings.labels.yesOffenceChanges,
+      [YesNoValues.NO]: 'No', // strings.labels.no,
     }),
   }
 }
@@ -57,10 +55,16 @@ export const isValueValid = (val: string, optionId: string) =>
 export const optionTextFromValue = (val: string, optionId: string) =>
   formOptions[optionId].find((option: UiListItem) => option.value === val)?.text
 
-export const renderFormOptions = (renderParams: Record<string, string>): Record<string, UiListItem[]> => {
+export const renderFormOptions = (
+  renderParams: Record<string, string>,
+  moduleFormOptions: Record<string, FormOption[]> = {},
+): Record<string, UiListItem[]> => {
   const copy: Record<string, UiListItem[]> = {}
-  Object.keys(formOptions).forEach(key => {
-    const options = formOptions[key]
+  const consolidatedFormOptions = { ...formOptions, ...moduleFormOptions }
+
+  Object.keys(consolidatedFormOptions).forEach(key => {
+    const options = consolidatedFormOptions[key]
+
     copy[key] = options.map((option: UiListItem) => ({
       ...option,
       text: renderTemplateString(option.text, renderParams),

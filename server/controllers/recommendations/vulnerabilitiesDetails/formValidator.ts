@@ -1,5 +1,6 @@
+import type { FormOption } from '@car-types/FormOptions'
 import { cleanseUiList, findListItemByValue, ItemWithValue } from '../../../utils/lists'
-import { FormOption, formOptions, optionTextFromValue } from '../formOptions/formOptions'
+import { formOptions, optionTextFromValue } from '../formOptions/formOptions'
 import { FormValidatorArgs, FormValidatorReturn, NamedFormError, UiFormOption } from '../../../@types/pagesForms'
 import { isEmptyStringOrWhitespace, isString, stripHtmlTags } from '../../../utils/utils'
 import { makeErrorObject } from '../../../utils/errors'

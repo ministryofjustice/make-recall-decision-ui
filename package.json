@@ -148,7 +148,8 @@
     "url-value-parser": "^2.2.0",
     "util": "0.12.5",
     "util.inherits": "1.0.3",
-    "web-vitals": "^4.0.0"
+    "web-vitals": "^4.0.0",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.667.0",

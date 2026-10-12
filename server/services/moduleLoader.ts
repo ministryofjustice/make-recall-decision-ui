@@ -1,26 +1,42 @@
-// So here we're looking to try and load a bunch of modules and return a bunch of config for them
-// So it needs to loook for:
-// 1) routes,
-// 2) middleware
-// 3) views? We need to do the nunjucksSetup at some point
-// 4) bind handlers (With correct middleware)
+import { StringsDefinition } from '../@types/strings'
+import customizeMessagesWith from '../controllers/customizeMessagesWith'
+import formValidationMiddleware from '../middleware/formValidationMiddleware'
 
 import TestModule from '../pages/TestModule'
+import { buildStrings } from '../textStrings/en'
+
+// Need to move this out to somewhere where it makes sense.
+const modules = [TestModule]
+
+export function ModuleRoutes() {
+  const moduleStrings = modules.reduce((acc, module) => {
+    const { strings } = module
+    Object.keys(strings).map((section: string): void => {
+      acc[section] = { ...acc[section], ...strings[section] }
+      return null
+    })
+    return acc
+  }, {} as StringsDefinition)
+
+  const moduleFormOptions = modules.reduce((acc, module) => {
+    return { ...acc, ...module.formOptions }
+  }, {})
+
+  // Customize messages with strings from any modules we have loaded
+  const customizeMessages = customizeMessagesWith(buildStrings(moduleStrings), moduleFormOptions)
+  return modules.flatMap(module =>
+    module.routes.map(route => ({
+      ...route,
+      additionalMiddleware: [
+        ...(route.additionalMiddleware ?? []),
+        ...(route.method === 'post' && module.autoValidate ? [formValidationMiddleware(module.formValidation)] : []),
+        // Insert validation middleware here
+        customizeMessages,
+      ],
+    })),
+  )
+}
 
 export default function ModuleLoader() {
-  // console.log('Flibble', TestModule)
-
-  return [TestModule]
-
-  // const routes = [...TestModule.routes]
-  // const paths = [TestModule.path]
-  // const strings = [TestModule.strings]
-  // // const formOptions = [{ [TestModule.id]: TestModule.formOptions }]
-
-  // return {
-  //   paths,
-  //   routes,
-  //   strings,
-  //   // formOptions,
-  // }
+  return modules
 }
