@@ -107,7 +107,9 @@
     "@flipt-io/flipt-client-js": "0.5.0",
     "@microsoft/applicationinsights-web": "^3.1.2",
     "@ministryofjustice/frontend": "8.0.0",
+    "@ministryofjustice/hmpps-azure-telemetry": "1.1.0",
     "@ministryofjustice/hmpps-probation-frontend-components": "1.0.1",
+    "@opentelemetry/api": "1.9.0",
     "@sentry/node": "^7.109.0",
     "@sentry/tracing": "^7.109.0",
     "@types/express-serve-static-core": "^4.19.0",
@@ -115,7 +117,6 @@
     "@types/qs": "^6.15.1",
     "accessible-autocomplete": "^3.0.1",
     "agentkeepalive": "^4.2.1",
-    "applicationinsights": "^2.9.8",
     "assert": "2.1.0",
     "body-parser": "^1.20.3",
     "bunyan": "^1.8.15",
@@ -216,7 +217,6 @@
     "xml2js": "^0.6.0"
   },
   "overrides": {
-    "@opentelemetry/core": "2.10.0",
     "csurf": {
       "cookie": "0.7.2"
     },

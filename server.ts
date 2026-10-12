@@ -3,10 +3,17 @@
  * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
  * In particular, applicationinsights automatically collects bunyan logs
  */
-import { initialiseAppInsights, buildAppInsightsClient } from './server/monitoring/azureAppInsights'
+import { initialiseAppInsights, flushTelemetry } from './server/monitoring/azureAppInsights'
 
 initialiseAppInsights()
-buildAppInsightsClient()
+
+const shutdown = async () => {
+  await flushTelemetry()
+  process.exit(0)
+}
+
+process.on('SIGTERM', shutdown)
+process.on('SIGINT', shutdown)
 
 import { app, metricsApp } from './server/index'
 import logger from './logger'
