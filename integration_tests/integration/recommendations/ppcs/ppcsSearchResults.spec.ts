@@ -54,7 +54,7 @@ context('PPCS Search Results Page', () => {
             response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
           })
 
-          cy.visit(`${testPageUrl}?bookingToolAccess=1`)
+          cy.visit(`${testPageUrl}&bookingToolAccess=1`)
 
           cy.pageHeading().should('contain', 'Search results')
           const crnRegexp = new RegExp(`\\s*Case reference number \\(CRN\\):\\s+${crn}\\s*`)
@@ -89,7 +89,7 @@ context('PPCS Search Results Page', () => {
         response: { results: [] },
       })
 
-      cy.visit(`${testPageUrl}?bookingToolAccess=1`)
+      cy.visit(`${testPageUrl}&bookingToolAccess=1`)
 
       cy.pageHeading().should('contain', 'No recall request found')
       cy.get('[data-qa="no-results"]').should(

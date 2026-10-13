@@ -93,9 +93,7 @@ context('Book to PPUD', () => {
 
       cy.get('.govuk-body').should('contain', 'It may take a few minutes to process.')
 
-      cy.get('form').within(() => {
-        cy.contains('button', 'Continue').should('not.be.visible')
-      })
+      cy.get('form').should('not.exist')
     })
   })
 })
