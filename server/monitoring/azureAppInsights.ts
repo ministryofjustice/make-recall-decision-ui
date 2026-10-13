@@ -52,7 +52,11 @@ export const appInsightsEvent = (
       const attributes: Record<string, string | number | boolean> = { userName }
       for (const [key, value] of Object.entries(eventData)) {
         if (value !== undefined && value !== null) {
-          attributes[key] = String(value)
+          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+            attributes[key] = value
+          } else {
+            attributes[key] = JSON.stringify(value)
+          }
         }
       }
       telemetry.trackEvent(eventName, attributes)
