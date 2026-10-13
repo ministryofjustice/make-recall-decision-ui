@@ -21,7 +21,14 @@ describe('get', () => {
       bookingMemento: undefined,
     })
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
+
     const next = mockNext()
     await ppcsSearchResultsController.get(mockReq({ query: { crn: '123' } }), res, next)
 
@@ -55,7 +62,13 @@ describe('get', () => {
       },
     })
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
     const next = mockNext()
     await ppcsSearchResultsController.get(mockReq({ query: { crn: '123' } }), res, next)
 
