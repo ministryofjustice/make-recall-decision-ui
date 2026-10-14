@@ -101,7 +101,7 @@ describe('post request', () => {
         filename: 'samplefile.pdf',
         mimetype: '',
         recommendationId: '123',
-        title: '',
+        title: 'samplefile.pdf',
         token: 'token',
         type: 'OtherDocument',
       })
@@ -220,7 +220,7 @@ describe('post request', () => {
         filename: 'samplefile.pdf',
         mimetype: '',
         recommendationId: '123',
-        title: '',
+        title: 'samplefile.pdf',
         token: 'token',
         type: 'OtherDocument',
       })

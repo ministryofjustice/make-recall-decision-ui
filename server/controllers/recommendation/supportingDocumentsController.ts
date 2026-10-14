@@ -146,7 +146,7 @@ async function handleUpload(req: Request, res: Response) {
     uploadResult = await uploadSupportingDocument({
       recommendationId,
       token,
-      title: '',
+      title: file.originalname,
       filename: file.originalname,
       mimetype: file.mimetype,
       // We no longer have visibility on the document type, so all documents
