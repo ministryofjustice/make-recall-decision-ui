@@ -38,7 +38,7 @@ context('PPCS Start Page', () => {
       cy.task('searchMappedUsers', { statusCode: 200, response: searchMappedUserResponse })
       cy.task('ppudSearchActiveUsers', { statusCode: 200, response: searchActiveUsersResponse })
 
-      cy.visit(`${sharedPaths.start}`)
+      cy.visit(`${sharedPaths.start}?bookingToolAccess=1`)
 
       cy.pageHeading().should('contain', 'Check and book a recall')
 
@@ -74,7 +74,7 @@ context('PPCS Start Page', () => {
         },
       })
 
-      cy.visit(sharedPaths.start)
+      cy.visit(`${sharedPaths.start}?bookingToolAccess=1`)
 
       assertPpudUserNotMappedPageContent()
     })
