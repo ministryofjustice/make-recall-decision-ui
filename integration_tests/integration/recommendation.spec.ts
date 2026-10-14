@@ -2143,7 +2143,7 @@ context('Make a recommendation', () => {
       })
       cy.task('updateRecommendation', { statusCode: 200, response: recommendationResponse })
 
-      cy.visit(`/ppcs-search-results?crn=X098092`)
+      cy.visit(`/ppcs-search-results?crn=X098092&bookingToolAccess=1`)
 
       cy.pageHeading().should('contain', 'Search results')
     })

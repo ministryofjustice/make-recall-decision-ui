@@ -6,7 +6,13 @@ async function get(req: Request, res: Response, next: NextFunction) {
   const { crn } = req.query
   const {
     user: { token },
+    flags,
   } = res.locals
+
+  if (!flags.bookingToolAccess) {
+    res.redirect(303, `no-ppcs-search-results?crn=${crn}`)
+    return
+  }
 
   if (!isDefined(crn) || isEmptyStringOrWhitespace(crn as string)) {
     res.redirect(303, `no-ppcs-search-results?crn=`)

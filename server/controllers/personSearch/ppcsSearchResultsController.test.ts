@@ -21,7 +21,14 @@ describe('get', () => {
       bookingMemento: undefined,
     })
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
+
     const next = mockNext()
     await ppcsSearchResultsController.get(mockReq({ query: { crn: '123' } }), res, next)
 
@@ -55,7 +62,13 @@ describe('get', () => {
       },
     })
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
     const next = mockNext()
     await ppcsSearchResultsController.get(mockReq({ query: { crn: '123' } }), res, next)
 
@@ -66,7 +79,13 @@ describe('get', () => {
       results: [],
     })
 
-    const res = mockRes()
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
     const next = mockNext()
     await ppcsSearchResultsController.get(mockReq({ query: { crn: '123' } }), res, next)
 
@@ -74,6 +93,22 @@ describe('get', () => {
     expect(next).not.toHaveBeenCalled()
   })
   it('redirect if crn is blank', async () => {
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
+    const next = mockNext()
+    await ppcsSearchResultsController.get(mockReq({ query: { crn: '' } }), res, next)
+
+    expect(ppcsSearch).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith(303, 'no-ppcs-search-results?crn=')
+    expect(next).not.toHaveBeenCalled()
+  })
+
+  it('redirects if the bookingToolAccess flag is disabled', async () => {
     const res = mockRes()
     const next = mockNext()
     await ppcsSearchResultsController.get(mockReq({ query: { crn: '' } }), res, next)

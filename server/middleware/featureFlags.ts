@@ -10,6 +10,7 @@ const featureFlagDescriptions: Record<string, string> = {
   flagRecommendationsPage:
     'Shows a "Recommendations" tab in Case summary, with a list of all recommendations that have been created for that CRN',
   ppcsIndeterminateJourney: 'Enables the indeterminate sentence journey for CaR PPCS users',
+  bookingToolAccess: 'Enable access to the PPCS booking tool',
 }
 
 export const featureFlagsDefaults = async (user: HmppsAuthUser) => {

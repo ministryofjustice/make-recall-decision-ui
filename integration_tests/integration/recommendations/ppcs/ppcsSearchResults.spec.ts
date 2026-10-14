@@ -54,7 +54,7 @@ context('PPCS Search Results Page', () => {
             response: [{ name: RECOMMENDATION_STATUS.SENT_TO_PPCS, active: true }],
           })
 
-          cy.visit(testPageUrl)
+          cy.visit(`${testPageUrl}&bookingToolAccess=1`)
 
           cy.pageHeading().should('contain', 'Search results')
           const crnRegexp = new RegExp(`\\s*Case reference number \\(CRN\\):\\s+${crn}\\s*`)
@@ -84,6 +84,28 @@ context('PPCS Search Results Page', () => {
 
   describe('No results', () => {
     it('displays no results page when search returns empty results', () => {
+      cy.task('ppcsSearch', {
+        statusCode: 200,
+        response: { results: [] },
+      })
+
+      cy.visit(`${testPageUrl}&bookingToolAccess=1`)
+
+      cy.pageHeading().should('contain', 'No recall request found')
+      cy.get('[data-qa="no-results"]').should(
+        'contain.text',
+        'No results found. Double-check you entered the right CRN.',
+      )
+
+      const crnRegexp = new RegExp(`\\s*Case reference number \\(CRN\\):\\s+${crn}\\s*`)
+      cy.get('.govuk-body').invoke('text').should('match', crnRegexp)
+
+      cy.get('a.govuk-button').should('contain.text', 'Search for another CRN').and('have.attr', 'href', '/ppcs-search')
+    })
+  })
+
+  describe('Booking tool access is disabled', () => {
+    it('displays no results page when bookingToolAccess flag is disabled', () => {
       cy.task('ppcsSearch', {
         statusCode: 200,
         response: { results: [] },

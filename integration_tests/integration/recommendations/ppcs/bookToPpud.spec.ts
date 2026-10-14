@@ -40,7 +40,7 @@ context('Book to PPUD', () => {
 
     it('When PPUD record exists', () => {
       cy.task('getRecommendation', { statusCode: 200, response: recommendation })
-      cy.visit(testPageUrl)
+      cy.visit(`${testPageUrl}?bookingToolAccess=1`)
 
       cy.get('.govuk-heading-l').should('contain.text', 'Book John Doe onto PPUD')
 
@@ -61,7 +61,7 @@ context('Book to PPUD', () => {
         statusCode: 200,
         response: { ...recommendation, ppudOffender: undefined },
       })
-      cy.visit(testPageUrl)
+      cy.visit(`${testPageUrl}?bookingToolAccess=1`)
 
       cy.get('.govuk-heading-l').should('contain.text', 'Create new PPUD record for John Doe')
 
@@ -75,6 +75,25 @@ context('Book to PPUD', () => {
       cy.get('form').within(() => {
         cy.contains('button', 'Continue').should('be.visible')
       })
+    })
+
+    it('When bookingToolAccess flag is disabled', () => {
+      cy.task('getRecommendation', {
+        statusCode: 200,
+        response: { ...recommendation, ppudOffender: undefined },
+      })
+      cy.visit(testPageUrl)
+
+      cy.get('.govuk-heading-l').should('contain.text', 'Create new PPUD record for John Doe')
+
+      cy.get('.govuk-body').should(
+        'contain',
+        'You are creating a new PPUD record for John Doe. This will include all the information you’ve just checked.',
+      )
+
+      cy.get('.govuk-body').should('contain', 'It may take a few minutes to process.')
+
+      cy.get('form').should('not.exist')
     })
   })
 })

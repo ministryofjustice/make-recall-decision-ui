@@ -24,6 +24,12 @@ export default [
     description: 'Enables the indeterminate sentence journey for CaR PPCS users',
     enabled: false,
   },
+  {
+    name: 'PPCS Booking tool access',
+    key: 'ui-bookingToolAccess',
+    description: 'Enables the booking tool for PPCS users',
+    enabled: false,
+  },
   // Note that the flags listed in this file will be recognised as flags in the integration tests, but the enabled value
   // won't have any effect. It looks like this is due to the evaluation step (featureFlagService.isFeatureEnabled) not
   // being mocked or influenced in any way for the tests, resulting in their results not having any 'enabled' value.
