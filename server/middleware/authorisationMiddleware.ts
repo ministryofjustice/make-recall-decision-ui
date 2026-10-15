@@ -14,9 +14,15 @@ export enum HMPPS_AUTH_ROLE {
 
 export default function authorisationMiddleware(req: Request, res: Response, next: NextFunction) {
   if (res?.locals?.user?.token) {
-    const { authorities: roles = [] } = jwtDecode(res.locals.user.token) as { authorities?: string[] }
+    const {
+      authorities: roles = [],
+      user_uuid: userUuid,
+      user_id: userId,
+    } = jwtDecode(res.locals.user.token) as { authorities?: string[]; user_uuid?: string; user_id?: string }
 
     res.locals.user.roles = roles
+    res.locals.user.userId = userId
+    res.locals.user.userUuid = userUuid
     res.locals.user.hasSpoRole = roles.includes(HMPPS_AUTH_ROLE.SPO)
     res.locals.user.hasPpcsRole = roles.includes(HMPPS_AUTH_ROLE.PPCS)
     res.locals.user.hasPpcsAdminRole = roles.includes(HMPPS_AUTH_ROLE.PPCS) // should be HMPPS_AUTH_ROLE.PPCS_ADMIN but the role is not yet available

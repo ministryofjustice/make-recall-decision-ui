@@ -3,7 +3,7 @@ import type { Request, Response } from 'express'
 
 import authorisationMiddleware, { HMPPS_AUTH_ROLE } from './authorisationMiddleware'
 
-function createToken(authorities: string[]) {
+function createToken(authorities: string[], extra: Record<string, string> = {}) {
   const payload = {
     user_name: 'USER1',
     scope: ['read', 'write'],
@@ -11,6 +11,7 @@ function createToken(authorities: string[]) {
     authorities,
     jti: 'a610a10-cca6-41db-985f-e87efb303aaf',
     client_id: 'clientid',
+    ...extra,
   }
 
   return jwt.sign(payload, 'secret', { expiresIn: '1h' })
@@ -20,11 +21,22 @@ describe('authorisationMiddleware', () => {
   let req: Request
   const next = jest.fn()
 
-  function createResWithToken({ authorities }: { authorities: string[] }): Response {
+  function createResWithToken({
+    authorities,
+    userUuid,
+    userId,
+  }: {
+    authorities: string[]
+    userUuid?: string
+    userId?: string
+  }): Response {
     return {
       locals: {
         user: {
-          token: createToken(authorities),
+          token: createToken(authorities, {
+            ...(userUuid && { user_uuid: userUuid }),
+            ...(userId && { user_id: userId }),
+          }),
         },
       },
       redirect: (redirectUrl: string) => {
@@ -79,5 +91,27 @@ describe('authorisationMiddleware', () => {
     authorisationMiddleware(req, res, next)
 
     expect(res.locals.user.hasSpoRole).toEqual(false)
+  })
+
+  it('sets userUuid and userId from token claims', () => {
+    const res = createResWithToken({
+      authorities: [HMPPS_AUTH_ROLE.PO],
+      userUuid: 'abc-def-123',
+      userId: '12345',
+    })
+
+    authorisationMiddleware(req, res, next)
+
+    expect(res.locals.user.userUuid).toEqual('abc-def-123')
+    expect(res.locals.user.userId).toEqual('12345')
+  })
+
+  it('sets userUuid and userId to undefined when not present in token', () => {
+    const res = createResWithToken({ authorities: [HMPPS_AUTH_ROLE.PO] })
+
+    authorisationMiddleware(req, res, next)
+
+    expect(res.locals.user.userUuid).toBeUndefined()
+    expect(res.locals.user.userId).toBeUndefined()
   })
 })
