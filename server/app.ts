@@ -5,6 +5,7 @@ import path from 'path'
 import createError from 'http-errors'
 import cookieParser from 'cookie-parser'
 
+import { telemetryMiddleware } from '@ministryofjustice/hmpps-azure-telemetry'
 import pdsComponents from '@ministryofjustice/hmpps-probation-frontend-components'
 import indexRoutes from './routes'
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -51,6 +52,7 @@ export default function createApp(userService: UserService): express.Application
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware)
+  app.use(telemetryMiddleware.addUserMetadataToTelemetry())
   app.use(authorisationCheck(hasRole(HMPPS_AUTH_ROLE.PO)))
   app.use(setupRecommendationStatusCheck())
 
