@@ -11,7 +11,7 @@ const createToken = opts => {
     authorities.push(...opts.roles)
   }
   const payload = {
-    user_name: 'USER1',
+    user_name: opts?.username ?? 'USER1',
     scope: ['read'],
     auth_source: 'nomis',
     authorities,
@@ -127,7 +127,7 @@ const token = opts =>
     },
   })
 
-const stubUser = () =>
+const stubUser = (opts: AuthStubOpts = {}) =>
   stubFor({
     request: {
       method: 'GET',
@@ -139,7 +139,7 @@ const stubUser = () =>
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: {
-        username: 'USER1',
+        username: opts.username ?? 'USER1',
         active: true,
         name: 'joe bloggs',
         authSource: 'delius',
@@ -169,7 +169,12 @@ const stubUserEmail = () =>
 export default {
   getSignInUrl,
   stubPing: (): Promise<[Response, Response]> => Promise.all([ping(), tokenVerification.stubPing()]),
-  stubSignIn: (opts): Promise<[Response, Response, Response, Response, Response, Response]> =>
+  stubSignIn: (opts: AuthStubOpts): Promise<[Response, Response, Response, Response, Response, Response]> =>
     Promise.all([favicon(), redirect(), signOut(), manageDetails(), token(opts), tokenVerification.stubVerifyToken()]),
-  stubUser: (): Promise<[Response, Response]> => Promise.all([stubUser(), stubUserEmail()]),
+  stubUser: (opts: AuthStubOpts): Promise<[Response, Response]> => Promise.all([stubUser(opts), stubUserEmail()]),
+}
+
+export type AuthStubOpts = {
+  username?: string
+  roles?: string[]
 }
