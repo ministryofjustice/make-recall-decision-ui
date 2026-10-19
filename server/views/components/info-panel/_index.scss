@@ -14,7 +14,7 @@
 
   @include govuk-media-query($media-type: print) {
     border-color: currentcolor;
-    color: $govuk-print-text-colour;
+    color: govuk-functional-colour(print-text);
     background: none;
   }
 

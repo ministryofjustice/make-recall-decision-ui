@@ -28,7 +28,7 @@ pre {
 }
 
 .text-secondary {
-  color: $govuk-secondary-text-colour
+  color: govuk-functional-colour(secondary-text)
 }
 
 .text-uppercase {
@@ -78,7 +78,7 @@ pre {
 
 .link-button {
   @extend %govuk-link;
-  color: $govuk-link-colour;
+  color: govuk-functional-colour(link);
   text-align: left;
 }
 
@@ -87,11 +87,11 @@ pre {
 }
 
 .border {
-  border: 1px solid $govuk-border-colour;
+  border: 1px solid govuk-functional-colour(border);
 }
 
 .border-top {
-  border-top: 1px solid $govuk-border-colour;
+  border-top: 1px solid govuk-functional-colour(border);
 }
 
 .mid-grey-panel {
@@ -100,8 +100,8 @@ pre {
 }
 
 [data-js="focus-on-page-load"]:focus {
-  outline: $govuk-focus-width solid $govuk-focus-colour;
-  background-color: $govuk-focus-colour;
+  outline: $govuk-focus-width solid govuk-functional-colour(focus);
+  background-color: govuk-functional-colour(focus);
 }
 
 .js-display-block {
