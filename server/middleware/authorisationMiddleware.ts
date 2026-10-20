@@ -1,3 +1,4 @@
+import type {} from 'express-session'
 import { jwtDecode } from 'jwt-decode'
 import { NextFunction, Request, Response } from 'express'
 
