@@ -185,16 +185,16 @@ $boarder-colour: #B1B4B6;
   }
 
   & h3 {
-    @include govuk-font(14, "bold");
+    @include govuk-font(16, "bold");
   }
 
   & p {
-    @include govuk-font(14, "regular");
+    @include govuk-font(16, "regular");
   }
 }
 
 .scale-marker__card-bottom p {
-  @include govuk-font(14, "bold");
+  @include govuk-font(16, "bold");
 
   margin: 0;
 }
@@ -226,7 +226,7 @@ $boarder-colour: #B1B4B6;
 
       content:"LOW";
       bottom: -15px;
-      color: $govuk-secondary-text-colour;
+      color: govuk-functional-colour(secondary-text);
     }
     background-color: $low-score-colour;
   }
@@ -238,7 +238,7 @@ $boarder-colour: #B1B4B6;
 
       content:"MEDIUM";
       bottom: -15px;
-      color: $govuk-secondary-text-colour;
+      color: govuk-functional-colour(secondary-text);
     }
     background-color: $medium-score-colour;
   }
@@ -250,7 +250,7 @@ $boarder-colour: #B1B4B6;
 
       content:"HIGH";
       bottom: -15px;
-      color: $govuk-secondary-text-colour;
+      color: govuk-functional-colour(secondary-text);
     }
     background-color: $high-score-colour;
   }
@@ -269,7 +269,7 @@ $boarder-colour: #B1B4B6;
 
       content:"VERY HIGH";
       bottom: -15px;
-      color: $govuk-secondary-text-colour;
+      color: govuk-functional-colour(secondary-text);
     }
     background-color: $very-high-score-colour;
   }
@@ -306,7 +306,7 @@ $boarder-colour: #B1B4B6;
         left: 50%;
         transform: translateX(-50%);
         white-space: nowrap;
-        color: $govuk-secondary-text-colour;
+        color: govuk-functional-colour(secondary-text);
       }
     }
 
