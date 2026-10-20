@@ -1,12 +1,12 @@
 $fontSize: 19;
 
 .app-summary-card {
-  border: 1px solid $govuk-border-colour;
+  border: 1px solid govuk-functional-colour(border);
 
   /* Card header */
   .app-summary-card__header {
     align-items: center;
-    background-color: govuk-colour("light-grey");
+    background-color: govuk-colour("black", $variant: "tint-95");
     padding: govuk-spacing(3);
 
     @include govuk-media-query($from: desktop) {
@@ -116,7 +116,7 @@ $fontSize: 19;
 }
 
 .app-summary-card--highlight {
-  border: 1px solid govuk-colour("light-blue");
+  border: 1px solid govuk-colour("blue", $variant: "tint-25");
 }
 .app-summary-card--white  .app-summary-card__header {
   background-color: white;

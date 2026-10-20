@@ -77,14 +77,14 @@ $predictor-score-background-colour: #f3f2f1;
   }
 
   & .predictor-timeline-item__level {
-    @include govuk-font(14, "regular");
+    @include govuk-font(16, "regular");
 
     float: left;
     color: $text-colour;
   }
 
   & .predictor-timeline-item__score {
-    @include govuk-font(14, "bold");
+    @include govuk-font(16, "bold");
 
     float: right;
     color: govuk-colour("black");
@@ -93,7 +93,7 @@ $predictor-score-background-colour: #f3f2f1;
 }
 
 .predictor-timeline-item {
-  @include predictor-timeline-item-base($govuk-secondary-text-colour, govuk-colour("light-grey"), $govuk-secondary-text-colour);
+  @include predictor-timeline-item-base(govuk-functional-colour(secondary-text), govuk-colour("black", $variant: "tint-95"), govuk-functional-colour(secondary-text));
 }
 
 .predictor-timeline-item--very-high {
@@ -240,16 +240,16 @@ $predictor-score-background-colour: #f3f2f1;
   }
 
   & h3 {
-    @include govuk-font(14, "bold");
+    @include govuk-font(16, "bold");
   }
 
   & p {
-    @include govuk-font(14, "regular");
+    @include govuk-font(16, "regular");
   }
 }
 
 .score-label__card-bottom p {
-  @include govuk-font(14, "bold");
+  @include govuk-font(16, "bold");
 
   margin: 0;
 }

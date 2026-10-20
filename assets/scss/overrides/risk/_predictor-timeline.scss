@@ -10,8 +10,8 @@ $medium-score-colour__text: #a34e00;
 $low-score-colour: #85994b;
 $low-score-colour--light: #dee9bd;
 $low-score-colour__text: #485b10;
-$default-colour: govuk-colour("mid-grey");
-$default-colour--light: govuk-colour("light-grey");
+$default-colour: govuk-colour("black", $variant: "tint-80");
+$default-colour--light: govuk-colour("black", $variant: "tint-95");
 $default-colour__text: govuk-colour("black");
 
 .predictor-timeline {
@@ -20,7 +20,7 @@ $default-colour__text: govuk-colour("black");
   position: relative;
 
   &:before {
-    background-color: $govuk-brand-colour;
+    background-color: govuk-functional-colour(brand);
     content: "";
     height: 100%;
     left: 0;
@@ -44,7 +44,7 @@ $default-colour__text: govuk-colour("black");
   position: relative;
 
   &:before {
-    background-color: $govuk-brand-colour;
+    background-color: govuk-functional-colour(brand);
     content: "";
     height: 5px;
     left: 0;
@@ -62,7 +62,7 @@ $default-colour__text: govuk-colour("black");
 
 .predictor-timeline__byline {
   @include govuk-font($size: 19);
-  color: $govuk-text-colour;
+  color: govuk-functional-colour(text);
   display: inline;
   margin: 0;
 }
@@ -187,7 +187,7 @@ $default-colour__text: govuk-colour("black");
   text-underline-offset: $govuk-link-underline-offset;
   background: none;
   border: none;
-  color: $govuk-link-colour;
+  color: govuk-functional-colour(link);
   padding: 0 !important;
   text-decoration: underline;
   cursor: pointer;
@@ -196,7 +196,7 @@ $default-colour__text: govuk-colour("black");
 }
 
 .predictor-timeline-link-btn:hover {
-  color: $govuk-link-hover-colour;
+  color: govuk-functional-colour(link-hover);
   text-decoration-thickness: $govuk-link-hover-underline-thickness;
   // Disable ink skipping on underlines on hover. Browsers haven't
   // standardised on this part of the spec yet, so set both properties
@@ -206,10 +206,10 @@ $default-colour__text: govuk-colour("black");
 
 .predictor-timeline-link-btn:focus {
   outline: 3px solid transparent;
-  background-color: $govuk-focus-colour;
-  box-shadow: 0 -2px $govuk-focus-colour, 0 4px $govuk-link-active-colour;
+  background-color: govuk-functional-colour(focus);
+  box-shadow: 0 -2px govuk-functional-colour(focus), 0 4px govuk-functional-colour(link-active);
   text-decoration: none;
-  color: $govuk-link-active-colour;
+  color: govuk-functional-colour(link-active);
 }
 
 @mixin legacy-predictor-timeline-item-base($primary-colour, $secondary-colour, $text-colour) {
