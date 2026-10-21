@@ -100,6 +100,7 @@ jobs:
         with:
           name: 'npm_integration_test_artifacts_${{ strategy.job-index }}'
           path: |
+            app.log
             integration_tests/videos/
             integration_tests/screenshots/
             coverage/
