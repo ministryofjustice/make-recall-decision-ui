@@ -72,12 +72,13 @@ jobs:
       - uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/actions/cypress/create_timings_file@bd2ccc17cfc6c285638a4be7bbb280527a30c328 # v1.1.0
         with:
           timings: ${{ needs.get-timings.outputs.timings }}
-      - name: Start application
-        shell: bash
-        env:
-          FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
-        run: |
-          nohup npm run start-feature > startup.log 2>&1 &
+      # - name: Start application
+      #   shell: bash
+      #   env:
+      #     # enabled so the UI app can be tested with different flags
+      #     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
+      #   run: |
+      #     nohup npm run start-feature > startup.log 2>&1 &
       - name: Run the tests
         uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
         with:
@@ -85,20 +86,17 @@ jobs:
           browser: chrome
           config-file: 'integration_tests/cypress.config.ts'
           spec: 'integration_tests/integration/**/*.spec.ts'
+          start: npm run start-feature
           wait-on: http://localhost:3007/ping
         env:
           # used to split the tests by times for parallel runs
           SPLIT: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
           SPLIT_FILE: 'timings.json'
-          # enabled so the UI app can be tested with different flags
-          FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
-          DEBUG: '@cypress/github-action'
-      - name: Show application logs
-        if: always()
-        run: |
-          cat startup.log app.log || true
-          curl -v --max-time 5 http://127.0.0.1:3007/ping || true
+      # - name: Show application logs
+      #   if: failure()
+      #   run: |
+      #     cat startup.log app.log || true
       - name: Output updated timings
         if: success() # failure timings could skew the results; they should happen infrequently, so best left out
         id: timings

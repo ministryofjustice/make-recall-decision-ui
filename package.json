@@ -9,7 +9,7 @@
     "build": "node esbuild/esbuild",
     "start": "node $NODE_OPTIONS dist/server.js | bunyan -o short",
     "start:dev": "node esbuild/esbuild --watch",
-    "start-feature": "bash -o pipefail -c 'node $NODE_DEBUG_OPTION --env-file=feature.env dist/server.js 2>&1 | tee app.log'",
+    "start-feature": "node $NODE_DEBUG_OPTION --env-file=feature.env dist/server.js | bunyan -o short",
     "start-feature:dev": "node esbuild/esbuild --watch --env feature.env",
     "start:e2e": "node esbuild/esbuild --watch --env e2e.env",
     "lint": "eslint . --cache --max-warnings 0",
