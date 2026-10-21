@@ -88,6 +88,9 @@ jobs:
           SPLIT_FILE: 'timings.json'
           # enabled so the UI app can be tested with different flags
           FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
+      - name: Show application logs
+        if: always()
+        run: cat app.log || true
 
       - name: Output updated timings
         if: success() # failure timings could skew the results; they should happen infrequently, so best left out
@@ -95,12 +98,11 @@ jobs:
         run: echo "t${{ matrix.container }}=$(jq -c . < timings.json)" >> $GITHUB_OUTPUT
 
       - name: upload results
-        # if: ${{ !cancelled() }}
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: 'npm_integration_test_artifacts_${{ strategy.job-index }}'
           path: |
-            app.log
             integration_tests/videos/
             integration_tests/screenshots/
             coverage/
