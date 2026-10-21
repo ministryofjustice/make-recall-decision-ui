@@ -72,13 +72,6 @@ jobs:
       - uses: ministryofjustice/hmpps-assess-risks-and-needs-github-actions/.github/actions/cypress/create_timings_file@bd2ccc17cfc6c285638a4be7bbb280527a30c328 # v1.1.0
         with:
           timings: ${{ needs.get-timings.outputs.timings }}
-      # - name: Start application
-      #   shell: bash
-      #   env:
-      #     # enabled so the UI app can be tested with different flags
-      #     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
-      #   run: |
-      #     nohup npm run start-feature > startup.log 2>&1 &
       - name: Run the tests
         uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6
         with:
@@ -93,10 +86,8 @@ jobs:
           SPLIT: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
           SPLIT_FILE: 'timings.json'
-      # - name: Show application logs
-      #   if: failure()
-      #   run: |
-      #     cat startup.log app.log || true
+          # enabled so the UI app can be tested with different flags
+          FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
       - name: Output updated timings
         if: success() # failure timings could skew the results; they should happen infrequently, so best left out
         id: timings
