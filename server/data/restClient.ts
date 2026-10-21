@@ -1,12 +1,6 @@
-import superagent, { Response } from 'superagent'
-import Agent, { HttpsAgent } from 'agentkeepalive'
 import { Readable } from 'stream'
-
+import { RestClient as HmppsRestClient, ApiConfig } from '@ministryofjustice/hmpps-rest-client'
 import logger from '../../logger'
-import type { UnsanitisedError } from '../sanitisedError'
-import sanitiseError from '../sanitisedError'
-import { ApiConfig } from '../config'
-import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 
 interface GetRequest {
   path?: string
@@ -27,22 +21,18 @@ interface PostRequest {
 interface StreamRequest {
   path?: string
   headers?: Record<string, string>
-  errorLogger?: (e: UnsanitisedError) => void
+  errorLogger?: (path: string, method: string, error: Error) => void
 }
 
 export default class RestClient {
-  agent: Agent
+  private readonly client: HmppsRestClient
 
   constructor(
     private readonly name: string,
     protected readonly config: ApiConfig,
     private readonly token: string,
   ) {
-    this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
-  }
-
-  private apiUrl() {
-    return this.config.url
+    this.client = new HmppsRestClient(name, config, logger)
   }
 
   protected timeoutConfig(): {
@@ -54,33 +44,17 @@ export default class RestClient {
 
   async get({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<unknown> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path} ${query}`)
-    try {
-      const result = await superagent
-        .get(`${this.apiUrl()}${path}`)
-        .agent(this.agent)
-        .use(restClientMetricsMiddleware)
-        .query(query)
-        .auth(this.token, { type: 'bearer' })
-        .set(headers)
-        .responseType(responseType)
-        .timeout(this.timeoutConfig())
-      logger.info(`Response status from: ${path} ${query} - ${result.statusCode}`)
-
-      if (raw) {
-        return result
-      }
-
-      const { body } = result
-      if (!Array.isArray(body) && Object.keys(body).length === 0) {
-        return null
-      }
-
-      return body
-    } catch (error) {
-      const sanitisedError = sanitiseError(error)
-      logger.warn({ ...sanitisedError, query }, `Error calling ${this.name}, path: '${path}', verb: 'GET'`)
-      throw sanitisedError
-    }
+    return this.client.get(
+      {
+        path,
+        query,
+        headers,
+        responseType,
+        raw,
+        timeout: this.timeoutConfig(),
+      },
+      this.token,
+    )
   }
 
   async post({
@@ -91,23 +65,17 @@ export default class RestClient {
     raw = false,
   }: PostRequest = {}): Promise<unknown> {
     logger.info(`Post using user credentials: calling ${this.name}: ${path}`)
-    try {
-      const result = await superagent
-        .post(`${this.apiUrl()}${path}`)
-        .send(data)
-        .agent(this.agent)
-        .use(restClientMetricsMiddleware)
-        .auth(this.token, { type: 'bearer' })
-        .set(headers)
-        .responseType(responseType)
-        .timeout(this.timeoutConfig())
-
-      return raw ? result : result.body
-    } catch (error) {
-      const sanitisedError = sanitiseError(error)
-      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'POST'`)
-      throw sanitisedError
-    }
+    return this.client.post(
+      {
+        path,
+        headers,
+        responseType,
+        data,
+        raw,
+        timeout: this.timeoutConfig(),
+      },
+      this.token,
+    )
   }
 
   async put({
@@ -117,91 +85,63 @@ export default class RestClient {
     data = {},
     raw = false,
   }: PostRequest = {}): Promise<unknown> {
-    logger.info(`Post using user credentials: calling ${this.name}: ${path}`)
-    try {
-      const result = await superagent
-        .put(`${this.apiUrl()}${path}`)
-        .send(data)
-        .agent(this.agent)
-        .use(restClientMetricsMiddleware)
-        .auth(this.token, { type: 'bearer' })
-        .set(headers)
-        .responseType(responseType)
-        .timeout(this.timeoutConfig())
-
-      return raw ? result : result.body
-    } catch (error) {
-      const sanitisedError = sanitiseError(error)
-      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'PUT'`)
-      throw sanitisedError
-    }
+    logger.info(`Put using user credentials: calling ${this.name}: ${path}`)
+    return this.client.put(
+      {
+        path,
+        headers,
+        responseType,
+        data,
+        raw,
+        timeout: this.timeoutConfig(),
+      },
+      this.token,
+    )
   }
 
   async delete({ path = null, headers = {}, responseType = '', raw = false }: PostRequest = {}): Promise<unknown> {
-    logger.info(`Post using user credentials: calling ${this.name}: ${path}`)
-    try {
-      const result = await superagent
-        .delete(`${this.apiUrl()}${path}`)
-        .send()
-        .agent(this.agent)
-        .use(restClientMetricsMiddleware)
-        .auth(this.token, { type: 'bearer' })
-        .set(headers)
-        .responseType(responseType)
-        .timeout(this.timeoutConfig())
-
-      return raw ? result : result.body
-    } catch (error) {
-      const sanitisedError = sanitiseError(error)
-      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'DELETE'`)
-      throw sanitisedError
-    }
+    logger.info(`Delete using user credentials: calling ${this.name}: ${path}`)
+    return this.client.delete(
+      {
+        path,
+        headers,
+        responseType,
+        raw,
+        timeout: this.timeoutConfig(),
+      },
+      this.token,
+    )
   }
 
-  async patch<T>({ path = null, headers = {}, responseType = '', data = {}, raw = false }: PostRequest = {}): Promise<
-    T | Response
-  > {
-    try {
-      const result = await superagent
-        .patch(`${this.apiUrl()}${path}`)
-        .send(data)
-        .agent(this.agent)
-        .auth(this.token, { type: 'bearer' })
-        .set(headers)
-        .responseType(responseType)
-        .timeout(this.timeoutConfig())
-
-      return raw ? result : result.body
-    } catch (error) {
-      const sanitisedError = sanitiseError(error)
-      logger.error({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'PATCH'`)
-      throw sanitisedError
-    }
+  async patch<T>({
+    path = null,
+    headers = {},
+    responseType = '',
+    data = {},
+    raw = false,
+  }: PostRequest = {}): Promise<T> {
+    return this.client.patch<T>(
+      {
+        path,
+        headers,
+        responseType,
+        data,
+        raw,
+        timeout: this.timeoutConfig(),
+      },
+      this.token,
+    )
   }
 
-  async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<unknown> {
+  async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<Readable> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path}`)
-    return new Promise((resolve, reject) => {
-      superagent
-        .get(`${this.apiUrl()}${path}`)
-        .agent(this.agent)
-        .auth(this.token, { type: 'bearer' })
-        .use(restClientMetricsMiddleware)
-        .timeout(this.timeoutConfig())
-        .set(headers)
-        .end((error, response) => {
-          if (error) {
-            logger.warn(sanitiseError(error), `Error calling ${this.name}`)
-            reject(error)
-          } else if (response) {
-            const s = new Readable()
-            // eslint-disable-next-line no-underscore-dangle
-            s._read = () => {}
-            s.push(response.body)
-            s.push(null)
-            resolve(s)
-          }
-        })
-    })
+    return this.client.stream(
+      {
+        path,
+        headers,
+        timeout: this.timeoutConfig(),
+      },
+      this.token,
+    )
   }
 }

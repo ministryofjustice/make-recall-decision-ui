@@ -1,4 +1,3 @@
-import { Response } from 'superagent'
 import RestClient from './restClient'
 import PpudRestClient from './ppudRestClient'
 import config from '../config'
@@ -404,12 +403,12 @@ export const updateStatuses = ({
   }) as Promise<RecommendationStatusResponse[]>
 }
 
-export const getDocumentContents = (crn: string, documentId: string, token: string): Promise<Response> => {
+export const getDocumentContents = (crn: string, documentId: string, token: string): Promise<unknown> => {
   return restClient(token).get({
     path: `${routes.getCaseSummary}/${crn}/documents/${documentId}`,
     raw: true,
     responseType: 'arraybuffer',
-  }) as Promise<Response>
+  })
 }
 
 export const createDocument = (
