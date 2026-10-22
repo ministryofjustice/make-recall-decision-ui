@@ -44,7 +44,8 @@ export default class RestClient {
 
   async get({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<unknown> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path} ${query}`)
-    return this.client.get(
+
+    const result = await this.client.get(
       {
         path,
         query,
@@ -55,6 +56,18 @@ export default class RestClient {
       },
       this.token,
     )
+
+    if (
+      !raw &&
+      result !== null &&
+      typeof result === 'object' &&
+      !Array.isArray(result) &&
+      Object.keys(result).length === 0
+    ) {
+      return null
+    }
+
+    return result
   }
 
   async post({
