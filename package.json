@@ -32,51 +32,6 @@
     "node": "^24",
     "npm": "^11"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "transform": {
-      "^.+\\.(t|j)sx?$": [
-        "ts-jest",
-        {
-          "isolatedModules": true
-        }
-      ]
-    },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(@faker-js/faker)/)"
-    ],
-    "collectCoverageFrom": [
-      "server/**/*.{ts,js,jsx,mjs}"
-    ],
-    "coveragePathIgnorePatterns": [
-      "@types"
-    ],
-    "coverageReporters": [
-      "text",
-      "html"
-    ],
-    "testMatch": [
-      "<rootDir>/(server|job)/**/?(*.)(spec|test).{ts,js,jsx,mjs}"
-    ],
-    "testEnvironment": "node",
-    "reporters": [
-      "default",
-      [
-        "jest-junit",
-        {
-          "outputDirectory": "test_results/jest/"
-        }
-      ]
-    ],
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "node",
-      "ts"
-    ],
-    "resetMocks": true
-  },
   "nodemonConfig": {
     "ignore": [
       ".github/*",
