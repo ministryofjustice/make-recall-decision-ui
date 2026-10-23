@@ -1,5 +1,4 @@
-import superagent from 'superagent'
-import Agent, { HttpsAgent } from 'agentkeepalive'
+import { RestClient as HmppsRestClient } from '@ministryofjustice/hmpps-rest-client'
 import logger from '../../logger'
 import { AgentConfig } from '../config'
 
@@ -17,27 +16,19 @@ export function serviceCheckFactory(
   agentOptions: AgentConfig,
   serviceTimeout: ServiceTimeout = new ServiceTimeout(),
 ): ServiceCheck {
-  const keepaliveAgent = url.startsWith('https') ? new HttpsAgent(agentOptions) : new Agent(agentOptions)
+  const parsedUrl = new URL(url)
+  const baseUrl = `${parsedUrl.protocol}//${parsedUrl.host}`
+  const healthPath = parsedUrl.pathname || '/'
 
-  return () =>
-    new Promise((resolve, reject) => {
-      superagent
-        .get(url)
-        .agent(keepaliveAgent)
-        .retry(2, (err, res) => {
-          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message} when calling ${name}`)
-          return undefined // retry handler only for logging retries, not to influence retry logic
-        })
-        .timeout(serviceTimeout)
-        .end((error, result) => {
-          if (error) {
-            logger.error(error.stack, `Error calling ${name}`)
-            reject(error)
-          } else if (result.status === 200) {
-            resolve('OK')
-          } else {
-            reject(result.status)
-          }
-        })
-    })
+  const client = new HmppsRestClient(name, { url: baseUrl, timeout: serviceTimeout, agent: agentOptions }, logger)
+
+  return async () => {
+    try {
+      await client.get({ path: healthPath, retries: 2 })
+      return 'OK'
+    } catch (error) {
+      logger.error(error.stack, `Error calling ${name}`)
+      throw error
+    }
+  }
 }

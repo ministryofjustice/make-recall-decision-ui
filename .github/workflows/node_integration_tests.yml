@@ -88,7 +88,6 @@ jobs:
           SPLIT_FILE: 'timings.json'
           # enabled so the UI app can be tested with different flags
           FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
-
       - name: Output updated timings
         if: success() # failure timings could skew the results; they should happen infrequently, so best left out
         id: timings

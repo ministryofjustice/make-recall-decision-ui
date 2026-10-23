@@ -8,7 +8,10 @@ const downloadDocument = async (req: Request, res: Response, next: NextFunction)
   const {
     user: { token },
   } = res.locals
-  const response = await getDocumentContents(normalizedCrn, documentId, token)
+  const response = (await getDocumentContents(normalizedCrn, documentId, token)) as {
+    headers: Record<string, string>
+    body: Buffer
+  }
   res.set(response.headers)
   res.send(response.body)
 }
