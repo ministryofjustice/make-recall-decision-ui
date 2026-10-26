@@ -135,7 +135,7 @@
     "jwt-decode": "^4.0.0",
     "luxon": "^3.2.1",
     "mammoth": "^1.13.0",
-    "multer": "^2.4.0",
+    "multer": "^2.5.0",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.3",
     "openapi-typescript-codegen": "^0.29.0",
