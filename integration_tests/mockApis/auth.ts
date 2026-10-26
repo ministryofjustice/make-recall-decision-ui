@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import { Response } from 'superagent'
 
 import { stubFor, getRequests } from './wiremock'
 import tokenVerification from './tokenVerification'
@@ -24,8 +23,9 @@ const createToken = opts => {
 
 const getSignInUrl = (): Promise<string> =>
   getRequests()
+    .then(data => data.json())
     .then(data => {
-      const { requests } = data.body
+      const { requests } = data
       const stateParam = requests[0].request.queryParams.state
       const stateValue = stateParam ? stateParam.values[0] : requests[1].request.queryParams.state.values[0]
       return `/sign-in/callback?code=codexxxx&state=${stateValue}`
@@ -169,7 +169,7 @@ const stubUserEmail = () =>
 export default {
   getSignInUrl,
   stubPing: (): Promise<[Response, Response]> => Promise.all([ping(), tokenVerification.stubPing()]),
-  stubSignIn: (opts): Promise<[Response, Response, Response, Response, Response, Response]> =>
+  stubSignIn: (opts): Promise<Response[]> =>
     Promise.all([favicon(), redirect(), signOut(), manageDetails(), token(opts), tokenVerification.stubVerifyToken()]),
   stubUser: (): Promise<[Response, Response]> => Promise.all([stubUser(), stubUserEmail()]),
 }

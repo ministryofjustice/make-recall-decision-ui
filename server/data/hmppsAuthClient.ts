@@ -1,5 +1,5 @@
-import superagent from 'superagent'
 import querystring from 'querystring'
+import { RestClient as HmppsRestClient } from '@ministryofjustice/hmpps-rest-client'
 import type TokenStore from './tokenStore'
 
 import logger from '../../logger'
@@ -7,10 +7,9 @@ import config from '../config'
 import generateOauthClientToken from '../authentication/clientCredentials'
 import RestClient from './restClient'
 
-const timeoutSpec = config.apis.hmppsAuth.timeout
-const hmppsAuthUrl = config.apis.hmppsAuth.url
-
-function getSystemClientTokenFromHmppsAuth(username?: string): Promise<superagent.Response> {
+async function getSystemClientTokenFromHmppsAuth(
+  username?: string,
+): Promise<{ access_token: string; expires_in: number }> {
   const clientToken = generateOauthClientToken(
     config.apis.hmppsAuth.systemClientId,
     config.apis.hmppsAuth.systemClientSecret,
@@ -24,12 +23,19 @@ function getSystemClientTokenFromHmppsAuth(username?: string): Promise<superagen
     `HMPPS Auth request '${authRequest}' for client id '${config.apis.hmppsAuth.systemClientId}' and user '${username}'`,
   )
 
-  return superagent
-    .post(`${hmppsAuthUrl}/oauth/token`)
-    .set('Authorization', clientToken)
-    .set('content-type', 'application/x-www-form-urlencoded')
-    .send(authRequest)
-    .timeout(timeoutSpec)
+  const client = new HmppsRestClient('HMPPS Auth Client', config.apis.hmppsAuth, logger)
+  const result = await client.makeRestClientCall(undefined, async ({ superagent: sa, agent }) => {
+    const response = await sa
+      .post(`${config.apis.hmppsAuth.url}/oauth/token`)
+      .agent(agent)
+      .set('Authorization', clientToken)
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(authRequest)
+      .timeout(config.apis.hmppsAuth.timeout)
+    return response.body
+  })
+
+  return result as { access_token: string; expires_in: number }
 }
 
 export interface User {
@@ -87,8 +93,8 @@ export default class HmppsAuthClient {
     const newToken = await getSystemClientTokenFromHmppsAuth(username)
 
     // set TTL slightly less than expiry of token. Async but no need to wait
-    await this.tokenStore.setToken(key, newToken.body.access_token, newToken.body.expires_in - 60)
+    await this.tokenStore.setToken(key, newToken.access_token, newToken.expires_in - 60)
 
-    return newToken.body.access_token
+    return newToken.access_token
   }
 }

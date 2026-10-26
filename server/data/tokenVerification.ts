@@ -1,19 +1,23 @@
-import superagent from 'superagent'
 import type { Request } from 'express'
 import { performance } from 'perf_hooks'
-import getSanitisedError from '../sanitisedError'
+import { RestClient as HmppsRestClient } from '@ministryofjustice/hmpps-rest-client'
 import config from '../config'
 import logger from '../../logger'
 import { appInsightsTimingMetric } from '../monitoring/azureAppInsights'
 
 function getApiClientToken(token: string) {
-  return superagent
-    .post(`${config.apis.tokenVerification.url}/token/verify`)
-    .auth(token, { type: 'bearer' })
-    .timeout(config.apis.tokenVerification.timeout)
-    .then(response => Boolean(response.body && response.body.active))
+  const client = new HmppsRestClient('Token Verification API', config.apis.tokenVerification, logger)
+  return client
+    .post(
+      {
+        path: '/token/verify',
+        timeout: config.apis.tokenVerification.timeout,
+      },
+      token,
+    )
+    .then(response => Boolean(response && (response as { active: boolean }).active))
     .catch(error => {
-      logger.error(getSanitisedError(error), 'Error calling tokenVerificationApi')
+      logger.error(error, 'Error calling tokenVerificationApi')
     })
 }
 

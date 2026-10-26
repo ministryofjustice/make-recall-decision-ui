@@ -1,4 +1,4 @@
-import type { ResponseError } from 'superagent'
+import { SanitisedError as HmppsSanitisedError } from '@ministryofjustice/hmpps-rest-client'
 
 export interface SanitisedError {
   text?: string
@@ -9,15 +9,26 @@ export interface SanitisedError {
   message: string
 }
 
-export type UnsanitisedError = ResponseError
+export type UnsanitisedError = HmppsSanitisedError | Error
 
 export default function sanitise(error: UnsanitisedError): SanitisedError {
-  if (error.response) {
+  if ('responseStatus' in error) {
     return {
-      text: error.response.text,
-      status: error.response.status,
-      headers: error.response.headers,
-      data: error.response.body,
+      text: error.text,
+      status: error.responseStatus,
+      headers: error.headers,
+      data: error.data as Record<string, string>,
+      message: error.message,
+      stack: error.stack,
+    }
+  }
+  if ('response' in error && error.response) {
+    const resp = error.response as { text?: string; status?: number; headers?: unknown; body?: Record<string, string> }
+    return {
+      text: resp.text,
+      status: resp.status,
+      headers: resp.headers,
+      data: resp.body,
       message: error.message,
       stack: error.stack,
     }
