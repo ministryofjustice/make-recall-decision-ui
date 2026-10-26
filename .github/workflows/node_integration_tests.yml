@@ -73,7 +73,7 @@ jobs:
         with:
           timings: ${{ needs.get-timings.outputs.timings }}
       - name: Run the tests
-        uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
+        uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6
         with:
           publish-summary: false
           browser: chrome
