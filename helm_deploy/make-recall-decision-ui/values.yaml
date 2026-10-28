@@ -38,6 +38,8 @@ generic-service:
   # Environment variables to load into the deployment
   env:
     NODE_ENV: "production"
+    NODE_USE_ENV_PROXY: "1"
+    APPLICATION_INSIGHTS_NO_STATSBEAT: "true"
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
     SENTRY_DSN: https://5c9e4014e8064f8c846bfbeb1810a32f@o345774.ingest.sentry.io/6360608
@@ -74,6 +76,15 @@ generic-service:
       AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
     make-recall-decision-ui-application-insights:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
+    hmpps-envoy-https-proxy-env:
+      # used by most HTTP clients including hmpps-rest-client/Node.js
+      HTTP_PROXY: "HTTP_PROXY"
+      HTTPS_PROXY: "HTTPS_PROXY"
+      NO_PROXY: "NO_PROXY"
+      # specifically needed for the Application Insights SDK
+      http_proxy: "HTTP_PROXY"
+      https_proxy: "HTTPS_PROXY"
+      no_proxy: "NO_PROXY"
 
 generic-prometheus-alerts:
   targetApplication: make-recall-decision-ui
