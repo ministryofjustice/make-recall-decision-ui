@@ -27,7 +27,7 @@ generic-service:
 
   readinessProbe:
     httpGet:
-      path: /health
+      path: /ping
 
   custommetrics:
     enabled: true
