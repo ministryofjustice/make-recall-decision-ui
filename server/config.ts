@@ -120,7 +120,7 @@ export default {
         'https://probation-frontend-components-dev.hmpps.service.justice.gov.uk',
         requiredInProduction,
       ),
-      healthPath: '/health/ping',
+      healthPath: '/health',
     },
     fliptClient: {
       namespace: get('FLIPT_NAMESPACE', 'consider-a-recall', requiredInProduction),
