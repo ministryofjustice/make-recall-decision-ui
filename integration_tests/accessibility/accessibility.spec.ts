@@ -222,7 +222,6 @@ const ppcsUrls = [
   recommendationEndpoint('supporting-documents', ['SENT_TO_PPCS']),
   recommendationEndpoint('add-minute', ['SENT_TO_PPCS']),
   recommendationEndpoint('book-to-ppud', ['SENT_TO_PPCS']),
-  recommendationEndpoint('booked-to-ppud', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
   recommendationEndpoint('booking-summary', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
 ]
 
