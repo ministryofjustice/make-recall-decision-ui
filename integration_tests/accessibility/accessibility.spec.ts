@@ -222,6 +222,11 @@ const ppcsUrls = [
   recommendationEndpoint('supporting-documents', ['SENT_TO_PPCS']),
   recommendationEndpoint('add-minute', ['SENT_TO_PPCS']),
   recommendationEndpoint('book-to-ppud', ['SENT_TO_PPCS']),
+  recommendationEndpoint('booked-to-ppud-success', ['BOOKED_TO_PPUD']),
+  recommendationEndpoint('booked-to-ppud-fail', ['BOOKING_ON_STARTED'], false, {}, {
+    ...(completeRecommendationResponse as RecommendationResponse),
+    bookingMemento: { failed: true },
+  } as RecommendationResponse),
   recommendationEndpoint('booking-summary', ['SENT_TO_PPCS', 'BOOKED_TO_PPUD']),
 ]
 
@@ -460,6 +465,7 @@ context('Accessibility (a11y) PPCS Checks', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
+          ...item.customRecommendation,
           prisonOffender: {
             firstName: 'Joe',
             middleName: 'Arthur',
