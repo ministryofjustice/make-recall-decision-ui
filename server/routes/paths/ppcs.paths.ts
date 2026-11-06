@@ -53,7 +53,6 @@ export default {
   editLegislationReleasedUnder: 'edit-legislation-released-under',
   supportingDocuments: 'supporting-documents',
   addMinute: 'add-minute',
-  bookedToPpud: 'booked-to-ppud',
   bookToPpud: 'book-to-ppud',
   bookedToPpudFail: 'booked-to-ppud-fail',
   bookedToPpudSuccess: 'booked-to-ppud-success',

@@ -39,7 +39,6 @@ import sentenceToCommitIndeterminateController from '../../controllers/recommend
 import editReleaseDateController from '../../controllers/recommendation/ppcs/indeterminateSentence/edit/editReleaseDateController'
 import editDateOfSentenceController from '../../controllers/recommendation/ppcs/indeterminateSentence/edit/editDateOfSentenceController'
 import determinateSentenceDetailsController from '../../controllers/recommendation/ppcs/determinateSentence/determinateSentenceDetailsController'
-import bookedToPpudController from '../../controllers/recommendation/bookedToPpudController'
 import bookToPpudController from '../../controllers/recommendation/bookToPpudController'
 import bookingSummaryController from '../../controllers/recommendation/bookingSummaryController'
 import editOffenceController from '../../controllers/recommendation/ppcs/indeterminateSentence/edit/editOffenceController'
@@ -576,16 +575,6 @@ const ppcsRoutes: RouteDefinition[] = [
     handler: noPpcsSearchResultsController.get,
     roles,
     additionalMiddleware: [],
-  },
-  {
-    ...createRecommendationRouteTemplate(
-      'get',
-      [recommendationStatusCheck(statusIsActive(STATUSES.BOOKED_TO_PPUD))],
-      roles,
-    ),
-    path: `${RECOMMENDATION_PREFIX}/${ppcsPaths.bookedToPpud}`,
-    method: 'get',
-    handler: bookedToPpudController.get,
   },
   {
     ...createRecommendationRouteTemplate(

@@ -2728,7 +2728,7 @@ context('Make a recommendation', () => {
         response: [{ name: RECOMMENDATION_STATUS.BOOKED_TO_PPUD, active: true }],
       })
 
-      cy.visit(`/recommendations/252523937/booked-to-ppud`)
+      cy.visit(`/recommendations/252523937/booked-to-ppud-success`)
       cy.pageHeading().should('contain', 'Booked onto PPUD')
     })
 
