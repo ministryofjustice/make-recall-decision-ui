@@ -1,9 +1,9 @@
 /* eslint-disable import/first */
 /*
  * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
- * In particular, applicationinsights automatically collects bunyan logs
+ * In particular, OpenTelemetry needs to instrument bunyan before it is loaded to collect logs as traces
  */
-import { initialiseAppInsights, flushTelemetry } from './server/monitoring/azureAppInsights'
+import { initialiseAppInsights, flushTelemetry } from './server/monitoring/initialiseAppInsights'
 
 initialiseAppInsights()
 
