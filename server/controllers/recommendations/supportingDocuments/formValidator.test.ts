@@ -73,6 +73,31 @@ describe('validateFileUploadRequest', () => {
       ])
     })
 
+    it('file type - .msg with application/octet-stream is allowed', () => {
+      const file = { ...mockFile, originalname: 'email.msg', mimetype: 'application/octet-stream' }
+
+      const result = validateFileUploadRequest(file, [])
+
+      expect(result).toEqual([])
+    })
+
+    it('file type - non-supported extension with application/octet-stream is rejected', () => {
+      const file = { ...mockFile, originalname: 'image.png', mimetype: 'application/octet-stream' }
+
+      const result = validateFileUploadRequest(file, [])
+
+      expect(result).toEqual([
+        {
+          errorId: 'invalidFiletype',
+          href: '#file',
+          invalidParts: undefined,
+          name: 'file',
+          text: "'image.png' must be a Word, PDF, plain text (txt), Outlook (.msg) or email (.eml) file. Delete it to upload again",
+          values: undefined,
+        },
+      ])
+    })
+
     it('duplicate filename', () => {
       const result = validateFileUploadRequest(mockFile, [
         {
