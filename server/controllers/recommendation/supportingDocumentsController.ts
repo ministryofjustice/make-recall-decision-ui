@@ -176,7 +176,9 @@ async function handleUpload(req: Request, res: Response) {
     if (errors.length) {
       status = 400
       response = {
-        success: false,
+        error: {
+          message: errors.map(err => err.text).join(' '),
+        },
       }
     } else {
       response = {

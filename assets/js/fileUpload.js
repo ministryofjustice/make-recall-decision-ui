@@ -83,7 +83,7 @@ class CaRMultiFileUpload extends MultiFileUpload {
       )
       $progress.innerHTML = this.getErrorHtml(error)
       $rowFormGroup.classList.add('govuk-form-group--error')
-      $actions.append(this.getDeleteButton(xhr.response.file))
+      $actions.append(this.getDeleteButton(xhr.response?.file))
       this.$status.textContent = error.message
       this.config.hooks.errorHook(this, file, xhr, xhr.statusText, error)
     }

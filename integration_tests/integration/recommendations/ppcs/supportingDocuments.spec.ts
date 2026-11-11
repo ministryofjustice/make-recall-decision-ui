@@ -56,7 +56,9 @@ context('Supporting documents upload page', () => {
         })
 
       cy.getElement('Upload files').should('exist')
-      cy.getElement('You can upload Word, PDF or plain text (txt) files. The maximum size is 25MB.').should('exist')
+      cy.getElement(
+        'You can upload Word, PDF, plain text (txt), Outlook (.msg) or email (.eml) files. The maximum size is 25MB.',
+      ).should('exist')
 
       cy.get('.moj-multi-file-upload__dropzone')
         .should('exist')

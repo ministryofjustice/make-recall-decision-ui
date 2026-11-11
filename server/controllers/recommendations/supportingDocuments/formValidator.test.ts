@@ -67,7 +67,7 @@ describe('validateFileUploadRequest', () => {
           href: '#file',
           invalidParts: undefined,
           name: 'file',
-          text: "'filename.pdf' must be a Word, PDF or plain text (txt) file. Delete it to upload again",
+          text: "'filename.pdf' must be a Word, PDF, plain text (txt), Outlook (.msg) or email (.eml) file. Delete it to upload again",
           values: undefined,
         },
       ])

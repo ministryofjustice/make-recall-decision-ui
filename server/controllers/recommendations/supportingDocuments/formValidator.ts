@@ -12,6 +12,10 @@ const supportedFileTypes = [
   'application/msword',
   // .docx
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  // .msg (Outlook)
+  'application/vnd.ms-outlook',
+  // .eml
+  'message/rfc822',
 ]
 
 const validateFileUploadRequest = (
