@@ -8,7 +8,14 @@ import {
 import validateFileUploadRequest from '../recommendations/supportingDocuments/formValidator'
 
 jest.mock('../../data/makeDecisionApiClient')
-jest.mock('../recommendations/supportingDocuments/formValidator')
+jest.mock('../recommendations/supportingDocuments/formValidator', () => {
+  const actual = jest.requireActual('../recommendations/supportingDocuments/formValidator')
+  return {
+    __esModule: true,
+    ...actual,
+    default: jest.fn(),
+  }
+})
 
 const mockFile: Express.Multer.File = {
   fieldname: 'documents',
@@ -107,6 +114,29 @@ describe('post request', () => {
       })
       expect(res.status).toHaveBeenCalledWith(201)
       expect(req.session.errors).toBe(undefined)
+    })
+
+    it('corrects the mimetype for .msg files uploaded as application/octet-stream', async () => {
+      const msgFile = { ...mockFile, originalname: 'test.msg', mimetype: 'application/octet-stream' }
+      const req = mockReq({
+        xhr: true,
+        files: [msgFile],
+        params: {
+          recommendationId: '123',
+        },
+      })
+
+      ;(validateFileUploadRequest as jest.Mock).mockReturnValueOnce([])
+      ;(uploadSupportingDocument as jest.Mock).mockReturnValueOnce([])
+
+      await supportingDocumentsController.post(req, res, mockNext())
+
+      expect(uploadSupportingDocument).toHaveBeenCalledWith(
+        expect.objectContaining({
+          mimetype: 'application/vnd.ms-outlook',
+          filename: 'test.msg',
+        }),
+      )
     })
 
     it('handles file upload client side validation errors correctly', async () => {

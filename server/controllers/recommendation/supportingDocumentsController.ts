@@ -7,9 +7,7 @@ import {
 import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
 import { SupportingDocument } from '../../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
-import validateFileUploadRequest, {
-  octetStreamMimeTypes,
-} from '../recommendations/supportingDocuments/formValidator'
+import validateFileUploadRequest, { octetStreamMimeTypes } from '../recommendations/supportingDocuments/formValidator'
 import { NamedFormError } from '../../@types/pagesForms'
 
 async function get(req: Request, res: Response, next: NextFunction) {
