@@ -5,7 +5,7 @@ import { makeErrorObject } from '../../../utils/errors'
 import { renderTemplateString } from '../../../utils/nunjucks'
 
 const maxFileSize = 25 * 1024 * 1024
-const supportedFileTypes = [
+const supportedMimeTypes = [
   'application/pdf',
   'text/plain',
   // .doc
@@ -17,6 +17,14 @@ const supportedFileTypes = [
   // .eml
   'message/rfc822',
 ]
+
+// Browsers don't recognise all file types and may send application/octet-stream instead.
+// This maps extensions that are known to have this problem to their correct MIME types.
+export const octetStreamMimeTypes: Record<string, string> = {
+  '.msg': 'application/vnd.ms-outlook',
+}
+
+const getFileExtension = (filename: string): string => filename.slice(filename.lastIndexOf('.')).toLowerCase()
 
 const validateFileUploadRequest = (
   file: Express.Multer.File,
@@ -47,7 +55,11 @@ const validateFileUploadRequest = (
     )
   }
 
-  if (!supportedFileTypes.includes(file.mimetype)) {
+  const extension = getFileExtension(file.originalname)
+  const isSupportedMimetype = supportedMimeTypes.includes(file.mimetype)
+  const isSupportedOctetStream = file.mimetype === 'application/octet-stream' && extension in octetStreamMimeTypes
+
+  if (!isSupportedMimetype && !isSupportedOctetStream) {
     const errorId = 'invalidFiletype'
     errors.push(
       makeErrorObject({

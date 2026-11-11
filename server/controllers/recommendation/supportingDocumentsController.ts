@@ -7,7 +7,9 @@ import {
 import { makeErrorObject } from '../../utils/errors'
 import strings from '../../textStrings/en'
 import { SupportingDocument } from '../../@types/make-recall-decision-api/models/SupportingDocumentsResponse'
-import validateFileUploadRequest from '../recommendations/supportingDocuments/formValidator'
+import validateFileUploadRequest, {
+  octetStreamMimeTypes,
+} from '../recommendations/supportingDocuments/formValidator'
 import { NamedFormError } from '../../@types/pagesForms'
 
 async function get(req: Request, res: Response, next: NextFunction) {
@@ -140,6 +142,13 @@ async function handleUpload(req: Request, res: Response) {
 
   const data = file.buffer.toString('base64')
 
+  // Browsers send application/octet-stream for .msg files — correct the MIME type for the API
+  const extension = file.originalname.slice(file.originalname.lastIndexOf('.')).toLowerCase()
+  const mimetype =
+    file.mimetype === 'application/octet-stream' && extension in octetStreamMimeTypes
+      ? octetStreamMimeTypes[extension]
+      : file.mimetype
+
   let uploadResult: SupportingDocument
 
   try {
@@ -148,7 +157,7 @@ async function handleUpload(req: Request, res: Response) {
       token,
       title: file.originalname,
       filename: file.originalname,
-      mimetype: file.mimetype,
+      mimetype,
       // We no longer have visibility on the document type, so all documents
       // are "OtherDocument" now to allow for uploading to PPUD
       type: 'OtherDocument',
