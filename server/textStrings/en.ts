@@ -143,7 +143,8 @@ const strings: Record<string, Record<string, string>> = {
     fileSizeExceeded: "'{{ filename }}' must be smaller than 25MB. Delete it and upload a smaller version",
     invalidFilename:
       'The filename should not contain the following characters: < > : " / \\ | ? *. Delete it to upload again',
-    invalidFiletype: "'{{ filename }}' must be a Word, PDF or plain text (txt) file. Delete it to upload again",
+    invalidFiletype:
+      "'{{ filename }}' must be a Word, PDF, plain text (txt), Outlook (.msg) or email (.eml) file. Delete it to upload again",
     uploadFileFailure: 'The selected file could not be uploaded - try again',
     deleteFileFailure: 'The selected file could not be deleted - try again',
     missingTitle: 'Enter a document title',

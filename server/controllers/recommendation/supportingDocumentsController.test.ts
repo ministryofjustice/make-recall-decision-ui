@@ -144,7 +144,11 @@ describe('post request', () => {
       await supportingDocumentsController.post(req, res, mockNext())
 
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.json).toHaveBeenCalledWith({ success: false })
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: 'The selected file could not be uploaded - try again',
+        },
+      })
     })
 
     it('deletes a file correctly', async () => {
