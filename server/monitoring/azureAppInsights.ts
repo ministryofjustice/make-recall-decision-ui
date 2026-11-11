@@ -12,7 +12,6 @@ export function defaultName(): string {
   return name
 }
 
-
 export const appInsightsEvent = (
   eventName: string,
   userName: string,
