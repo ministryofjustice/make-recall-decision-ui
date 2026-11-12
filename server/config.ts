@@ -41,6 +41,8 @@ export interface PpudApiConfig extends ApiConfig {
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
+  branchName: get('GIT_BRANCH', 'main'),
+  productId: get('PRODUCT_ID', 'HMPPS520'),
   https: production,
   applicationName: 'Consider a recall',
   staticResourceCacheDuration: '1h',
