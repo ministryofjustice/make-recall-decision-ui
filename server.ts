@@ -1,11 +1,11 @@
-/* eslint-disable import/first */
 /*
  * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
- * In particular, OpenTelemetry needs to instrument bunyan before it is loaded to collect logs as traces
+ * In particular, OpenTelemetry needs to instrument bunyan before it is loaded to collect logs as traces.
+ * This must be a side-effect import because esbuild hoists all require() calls above executable code.
  */
-import { initialiseAppInsights, flushTelemetry } from './server/monitoring/initialiseAppInsights'
-
-initialiseAppInsights()
+import flushTelemetry from './server/monitoring/initialiseAppInsights'
+import { app, metricsApp } from './server/index'
+import logger from './logger'
 
 const shutdown = async () => {
   await flushTelemetry()
@@ -14,9 +14,6 @@ const shutdown = async () => {
 
 process.on('SIGTERM', shutdown)
 process.on('SIGINT', shutdown)
-
-import { app, metricsApp } from './server/index'
-import logger from './logger'
 
 app.listen(app.get('port'), () => {
   logger.info(`Server listening on port ${app.get('port')}`)
