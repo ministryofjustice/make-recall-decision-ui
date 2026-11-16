@@ -127,7 +127,11 @@
                                     Licence expiry date
                                 </dt>
                                 <dd class="govuk-summary-list__value" data-qa="licenceExpiryDate">
-                                    {{ hyphenForBlank( formatDateTimeFromIsoString({ isoDate: offence.licenceExpiryDate }) ) }}
+                                    {% if offence.licenceExpiryDate %}
+                                        {{ formatDateTimeFromIsoString({ isoDate: offence.licenceExpiryDate }) }}
+                                    {% else %}
+                                        {{ warningIcon() }} No licence expiry date found
+                                    {% endif %}
                                 </dd>
                             </div>
                             {% if offence.sentenceEndDate %}
