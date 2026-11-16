@@ -121,7 +121,7 @@ context('Sentence to commit', () => {
           releaseDate: '-',
           sentencingCourt: '-',
           dateOfSentence: '-',
-          licenceExpiryDate: '-',
+          licenceExpiryDate: 'No licence expiry date found in NOMIS',
         },
         [],
         { key: 'Latest sentence expiry date', value: '-' },

@@ -160,7 +160,7 @@ context('Sentence to commit existing offender', () => {
           releaseDate: '-',
           sentencingCourt: '-',
           dateOfSentence: '-',
-          licenceExpiryDate: '-',
+          licenceExpiryDate: 'No licence expiry date found',
         },
         [],
         { key: 'Latest sentence expiry date', value: '-' },
