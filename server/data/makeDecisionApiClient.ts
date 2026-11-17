@@ -80,7 +80,7 @@ export const searchForPrisonOffender = async (token: string, nomsId: string): Pr
       data: body,
     })) as Promise<PrisonOffenderSearchResponse>
   } catch (err) {
-    if (err.data?.status === 404) {
+    if (err?.data?.status === 404) {
       return undefined
     }
     throw err
@@ -99,7 +99,7 @@ export const prisonSentences = async (token: string, nomsId: string): Promise<Pr
       data: body,
     })) as Promise<PrisonSentenceSequence[]>
   } catch (err) {
-    if (err.data?.status === 404) {
+    if (err?.data?.status === 404) {
       return undefined
     }
     throw err
@@ -118,7 +118,7 @@ export const offenderMovements = async (token: string, nomisId: string): Promise
       }
     })
   } catch (err) {
-    if (err.data?.status === 404) {
+    if (err?.data?.status === 404) {
       return null
     }
     throw err
