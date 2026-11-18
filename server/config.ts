@@ -40,7 +40,9 @@ export interface PpudApiConfig extends ApiConfig {
 
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
+  productId: get('PRODUCT_ID', 'UNASSIGNED'),
   gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
+  branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   https: production,
   applicationName: 'Consider a recall',
   staticResourceCacheDuration: '1h',
@@ -61,6 +63,7 @@ export default {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
       externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('HMPPS_AUTH_TIMEOUT_DEADLINE', 10000)),
@@ -81,6 +84,7 @@ export default {
     },
     makeRecallDecisionApi: {
       url: get('MAKE_RECALL_DECISION_API_URL', 'http://localhost:9091', requiredInProduction),
+      healthPath: '/health',
       timeout: {
         response: Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_RESPONSE', 30000)),
         deadline: Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_DEADLINE', 30000)),
@@ -93,6 +97,7 @@ export default {
     },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),

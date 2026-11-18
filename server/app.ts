@@ -11,7 +11,7 @@ import indexRoutes from './routes'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import standardRouter from './routes/standardRouter'
-import type UserService from './services/userService'
+import type { Services } from './services'
 
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpStaticResources from './middleware/setUpStaticResources'
@@ -30,7 +30,7 @@ import config from './config'
 import logger from '../logger'
 import multiPartRoutes from './routes/multipartRoutes'
 
-export default function createApp(userService: UserService): express.Application {
+export default function createApp(services: Services): express.Application {
   const app = express()
 
   app.set('json spaces', 2)
@@ -44,7 +44,7 @@ export default function createApp(userService: UserService): express.Application
   app.use(setUpSentry())
   app.use(appInsightsOperationId)
   app.use(metricsMiddleware)
-  app.use(setUpHealthChecks())
+  app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
@@ -76,7 +76,7 @@ export default function createApp(userService: UserService): express.Application
 
   app.use(setUpCsrf())
 
-  app.use('/', indexRoutes(standardRouter(userService)))
+  app.use('/', indexRoutes(standardRouter(services.userService)))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
 

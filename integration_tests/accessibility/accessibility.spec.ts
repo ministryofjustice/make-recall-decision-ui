@@ -465,7 +465,6 @@ context('Accessibility (a11y) PPCS Checks', () => {
         statusCode: 200,
         response: {
           ...completeRecommendationResponse,
-          ...item.customRecommendation,
           prisonOffender: {
             firstName: 'Joe',
             middleName: 'Arthur',

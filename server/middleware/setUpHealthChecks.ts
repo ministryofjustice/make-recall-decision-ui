@@ -1,24 +1,27 @@
 import express, { Router } from 'express'
 
-import healthcheck from '../services/healthCheck'
+import { monitoringMiddleware, endpointHealthComponent } from '@ministryofjustice/hmpps-monitoring'
+import type { ApplicationInfo } from '../applicationInfo'
+import logger from '../../logger'
+import config from '../config'
 
-export default function setUpHealthChecks(): Router {
+export default function setUpHealthChecks(applicationInfo: ApplicationInfo): Router {
   const router = express.Router()
 
-  router.get('/health', (req, res, next) => {
-    healthcheck(result => {
-      if (!result.healthy) {
-        res.status(503)
-      }
-      res.json(result)
-    })
+  const { hmppsAuth, makeRecallDecisionApi, tokenVerification } = config.apis
+
+  const middleware = monitoringMiddleware({
+    applicationInfo,
+    healthComponents: [
+      endpointHealthComponent(logger, 'hmppsAuth', hmppsAuth),
+      endpointHealthComponent(logger, 'makeRecallDecisionApi', makeRecallDecisionApi),
+      endpointHealthComponent(logger, 'tokenVerification', tokenVerification),
+    ],
   })
 
-  router.get('/ping', (req, res) =>
-    res.send({
-      status: 'UP',
-    }),
-  )
+  router.get('/health', middleware.health)
+  router.get('/info', middleware.info)
+  router.get('/ping', middleware.ping)
 
   return router
 }
