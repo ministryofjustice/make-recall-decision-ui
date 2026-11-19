@@ -36,6 +36,7 @@ export interface PpudApiConfig extends ApiConfig {
     response: number
     deadline: number
   }
+  ppudAgent: AgentConfig
 }
 
 export default {
@@ -89,6 +90,7 @@ export default {
         response: Number(get('MAKE_RECALL_DECISION_API_PPUD_TIMEOUT_RESPONSE', 300000)),
         deadline: Number(get('MAKE_RECALL_DECISION_API_PPUD_TIMEOUT_DEADLINE', 300000)),
       },
+      ppudAgent: new AgentConfig(Number(get('MAKE_RECALL_DECISION_API_PPUD_TIMEOUT_RESPONSE', 300000))),
       agent: new AgentConfig(Number(get('MAKE_RECALL_DECISION_API_TIMEOUT_RESPONSE', 90000))),
     },
     tokenVerification: {

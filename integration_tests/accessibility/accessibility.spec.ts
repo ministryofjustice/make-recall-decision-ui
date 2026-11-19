@@ -17,7 +17,7 @@ const noRecallResponse = {
   recallType: { selected: { value: 'NO_RECALL' } },
 }
 
-const urls: {
+type TestUrlDefinition = {
   url: string
   fullRecommendationData?: boolean
   validationError?: boolean
@@ -28,7 +28,9 @@ const urls: {
   }[]
   bookRecallToPpud?: Partial<BookRecallToPpud>
   customRecommendation?: RecommendationResponse
-}[] = [
+}
+
+const urls: TestUrlDefinition[] = [
   { url: '/' },
   { url: '/search-by-crn' },
   { url: '/search-by-name' },
@@ -140,7 +142,7 @@ const urls: {
   { url: `${sharedPaths.recommendations}/456/preview-no-recall`, noRecallData: true, fullRecommendationData: false },
 ]
 
-const spoUrls = [
+const spoUrls: TestUrlDefinition[] = [
   recommendationEndpoint('spo-task-list-consider-recall', ['SPO_CONSIDER_RECALL']),
   recommendationEndpoint('review-practitioners-concerns', ['SPO_CONSIDER_RECALL']),
   recommendationEndpoint('spo-rationale', ['SPO_CONSIDER_RECALL']),
@@ -158,7 +160,7 @@ const spoUrls = [
   recommendationEndpoint('spo-delete-confirmation', ['REC_DELETED', 'SPO_CONSIDER_RECALL']),
 ]
 
-const ppcsUrls = [
+const ppcsUrls: TestUrlDefinition[] = [
   {
     url: `/${ppcsPaths.search}`,
     validationError: false,

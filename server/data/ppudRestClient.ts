@@ -1,5 +1,5 @@
 import RestClient from './restClient'
-import { PpudApiConfig } from '../config'
+import { PpudApiConfig, AgentConfig } from '../config'
 
 export default class PpudRestClient extends RestClient {
   ppudTimeout: {
@@ -7,9 +7,12 @@ export default class PpudRestClient extends RestClient {
     deadline: number
   }
 
+  protected ppudAgentConfig: AgentConfig
+
   constructor(name: string, ppudApiConfig: PpudApiConfig, token: string) {
     super(name, ppudApiConfig, token)
     this.ppudTimeout = ppudApiConfig.ppudTimeout
+    this.ppudAgentConfig = ppudApiConfig.ppudAgent
   }
 
   protected override timeoutConfig(): {
