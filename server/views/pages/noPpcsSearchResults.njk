@@ -2,25 +2,31 @@
 
 {% set pageTitle = makePageTitle({ pageHeading: 'No recall request found' }) %}
 
+{% block beforeContent %}
+    {{ backLink() }}
+{% endblock %}
+
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">No recall request found</h1>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-6">
+        You entered case reference number (CRN):
+        <span class="govuk-!-font-weight-regular"> {{ crn }}</span>
+      </h2>
+      <p class="govuk-body">Double-check you entered the right CRN. If it’s correct, contact probation staff to check if:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>another recall recommendation has been started - this may need to be deleted</li>
+        <li>a contact has been recorded in NDelius called ‘Management oversight - recall’ - a probation line manager needs to complete this</li>
+      </ul>
+      <p class="govuk-body">One or both of these issues may need to be fixed.</p>
 
-    <h1 class='govuk-heading-l'>No recall request found</h1>
-
-    {{ mojBanner({
-        type: 'information',
-        html: '<span data-qa="no-results">No results found. Double-check you entered the right CRN.</span>',
-        iconFallbackText: 'information'
-    }) }}
-
-    <p class="govuk-body">
-        <p class="govuk-body govuk-!-margin-bottom-5">
-            <span class='govuk-!-padding-right-2 govuk-!-font-weight-bold'>Case reference number (CRN):</span>
-             <span>{{ crn }}</span>
-        </p>
-       {{ govukButton({
-               text: 'Search for another CRN',
-               href: '/ppcs-search'
+      <p class="govuk-body govuk-!-margin-top-6">
+        {{ govukButton({
+                text: 'Search for another CRN',
+                href: '/ppcs-search'
         }) }}
-    </p>
-
+      </p>
+    </div>
+  </div>
 {% endblock %}
