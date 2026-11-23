@@ -108,6 +108,63 @@ describe('get', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
+  it('redirect if search response has no results property', async () => {
+    ;(ppcsSearch as jest.Mock).mockResolvedValue({})
+
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
+    const next = mockNext()
+    await ppcsSearchResultsController.get(mockReq({ query: { crn: '123' } }), res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith(303, 'no-ppcs-search-results?crn=123')
+    expect(next).not.toHaveBeenCalled()
+  })
+
+  it('handles undefined recommendation response', async () => {
+    ;(ppcsSearch as jest.Mock).mockResolvedValue({
+      results: [{ name: 'Joe Bloggs', crn: 'X098092', recommendationId: 799270715 }],
+    })
+    ;(getRecommendation as jest.Mock).mockResolvedValue(undefined)
+
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
+    const next = mockNext()
+    await ppcsSearchResultsController.get(mockReq({ query: { crn: '123' } }), res, next)
+
+    expect(res.locals.bookingOnStarted).toEqual(false)
+    expect(res.render).toHaveBeenCalledWith('pages/ppcsSearchResults')
+  })
+
+  it('rethrows if the api call fails', async () => {
+    const error = new Error('API failure')
+    ;(ppcsSearch as jest.Mock).mockRejectedValue(error)
+
+    const res = mockRes({
+      locals: {
+        flags: {
+          bookingToolAccess: true,
+        },
+      },
+    })
+    const next = mockNext()
+
+    await expect(ppcsSearchResultsController.get(mockReq({ query: { crn: '123' } }), res, next)).rejects.toThrow(
+      'API failure',
+    )
+    expect(res.render).not.toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
+  })
+
   it('redirects if the bookingToolAccess flag is disabled', async () => {
     const res = mockRes()
     const next = mockNext()
