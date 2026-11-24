@@ -4,8 +4,7 @@ import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
   const crn = req?.query?.crn
-  const token = res?.locals?.user?.token
-  const flags = res?.locals?.flags
+  const { user: { token } = {}, flags } = res.locals
 
   if (!flags?.bookingToolAccess) {
     res.redirect(303, `no-ppcs-search-results?crn=${crn}`)
