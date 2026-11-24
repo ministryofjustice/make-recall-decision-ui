@@ -3,13 +3,10 @@ import { getRecommendation, ppcsSearch } from '../../data/makeDecisionApiClient'
 import { isDefined, isEmptyStringOrWhitespace } from '../../utils/utils'
 
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { crn } = req.query
-  const {
-    user: { token },
-    flags,
-  } = res.locals
+  const crn = req?.query?.crn
+  const { user: { token } = {}, flags } = res.locals
 
-  if (!flags.bookingToolAccess) {
+  if (!flags?.bookingToolAccess) {
     res.redirect(303, `no-ppcs-search-results?crn=${crn}`)
     return
   }
@@ -19,14 +16,18 @@ async function get(req: Request, res: Response, next: NextFunction) {
     return
   }
 
-  const { results } = await ppcsSearch(token, crn as string)
+  const searchResponse = await ppcsSearch(token, crn as string)
+  const results = searchResponse?.results ?? []
 
-  if (results.length === 0) {
+  if (results?.length === 0) {
     res.redirect(303, `no-ppcs-search-results?crn=${crn}`)
     return
   }
 
-  const recommendation = await getRecommendation(String(results[0].recommendationId), token)
+  const result = results?.[0]
+  const recommendationId = result?.recommendationId
+
+  const recommendation = await getRecommendation(String(recommendationId), token)
 
   res.locals = {
     ...res.locals,
@@ -34,8 +35,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
       id: 'ppcsSearchResults',
     },
     crn,
-    bookingOnStarted: !!recommendation.bookingMemento,
-    result: results[0],
+    bookingOnStarted: !!recommendation?.bookingMemento,
+    result,
   }
 
   res.render(`pages/ppcsSearchResults`)
