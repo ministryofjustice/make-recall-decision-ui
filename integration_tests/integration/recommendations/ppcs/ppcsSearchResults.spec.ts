@@ -92,13 +92,32 @@ context('PPCS Search Results Page', () => {
       cy.visit(`${testPageUrl}&bookingToolAccess=1`)
 
       cy.pageHeading().should('contain', 'No recall request found')
-      cy.get('[data-qa="no-results"]').should(
-        'contain.text',
-        'No results found. Double-check you entered the right CRN.',
-      )
+      cy.get('h2')
+        .should('contain', `You entered case reference number (CRN):`)
+        .within(() => {
+          cy.get('span').should('contain', crn)
+        })
 
-      const crnRegexp = new RegExp(`\\s*Case reference number \\(CRN\\):\\s+${crn}\\s*`)
-      cy.get('.govuk-body').invoke('text').should('match', crnRegexp)
+      cy.get('p.govuk-body')
+        .eq(0)
+        .should(
+          'contain',
+          'Double-check you entered the right CRN. If it’s correct, contact probation staff to check if:',
+        )
+
+      cy.get('.govuk-list').within(() => {
+        cy.get('li')
+          .eq(0)
+          .should('contain', 'another recall recommendation has been started - this may need to be deleted')
+        cy.get('li')
+          .eq(1)
+          .should(
+            'contain',
+            'a contact has been recorded in NDelius called ‘Management oversight - recall’ - a probation line manager needs to complete this',
+          )
+      })
+
+      cy.get('p.govuk-body').eq(1).should('contain', 'One or both of these issues may need to be fixed.')
 
       cy.get('a.govuk-button').should('contain.text', 'Search for another CRN').and('have.attr', 'href', '/ppcs-search')
     })
@@ -114,14 +133,6 @@ context('PPCS Search Results Page', () => {
       cy.visit(testPageUrl)
 
       cy.pageHeading().should('contain', 'No recall request found')
-      cy.get('[data-qa="no-results"]').should(
-        'contain.text',
-        'No results found. Double-check you entered the right CRN.',
-      )
-
-      const crnRegexp = new RegExp(`\\s*Case reference number \\(CRN\\):\\s+${crn}\\s*`)
-      cy.get('.govuk-body').invoke('text').should('match', crnRegexp)
-
       cy.get('a.govuk-button').should('contain.text', 'Search for another CRN').and('have.attr', 'href', '/ppcs-search')
     })
   })
