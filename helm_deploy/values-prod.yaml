@@ -3,7 +3,6 @@
 generic-service:
   ingress:
     host: consider-a-recall.hmpps.service.justice.gov.uk
-    contextColour: green
 
   env:
     INGRESS_URL: "https://consider-a-recall.hmpps.service.justice.gov.uk"
@@ -13,8 +12,8 @@ generic-service:
     MANAGE_USERS_API_URL: "https://manage-users-api.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius.hmpps.service.justice.gov.uk"
     COMPONENT_API_URL: "https://probation-frontend-components.hmpps.service.justice.gov.uk"
-    SENTRY_ENVIRONMENT: "PROD"
     ENVIRONMENT: "prod"
+    SENTRY_ENVIRONMENT: "PROD"
     FLIPT_SERVER_URL: "https://feature-toggles.hmpps.service.justice.gov.uk/"
     FLIPT_NAMESPACE: "consider-a-recall"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: false
@@ -39,4 +38,4 @@ generic-service:
       - probation
 
 generic-prometheus-alerts:
-  alertSeverity: make-recall-decision-prod
+  alertSeverityOverride: make-recall-decision-prod

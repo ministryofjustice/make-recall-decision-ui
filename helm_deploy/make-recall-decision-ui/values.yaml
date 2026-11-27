@@ -1,21 +1,20 @@
 ---
 generic-service:
   nameOverride: make-recall-decision-ui
+  productId: 'HMPPS520'
   serviceAccountName: make-recall-decision
 
   replicaCount: 4
 
   image:
     repository: ghcr.io/ministryofjustice/make-recall-decision-ui
-    tag: app_version    # override at deployment time
+    tag: app_version  # override at deployment time
     port: 3000
 
   ingress:
     enabled: true
-    host: app-hostname.local    # override per environment
+    host: app-hostname.local  # override per environment
     tlsSecretName: make-recall-decision-cert
-    v1_2_enabled: true
-    v0_47_enabled: false
     annotations:
       nginx.ingress.kubernetes.io/limit-rpm: "200"
       nginx.ingress.kubernetes.io/proxy-send-timeout: "240"
@@ -38,11 +37,13 @@ generic-service:
   # Environment variables to load into the deployment
   env:
     NODE_ENV: "production"
+    LOG_LEVEL: "info"
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
-    SENTRY_DSN: https://5c9e4014e8064f8c846bfbeb1810a32f@o345774.ingest.sentry.io/6360608
     AUDIT_SERVICE_NAME: "make-recall-decision"
     AUDIT_SQS_REGION: "eu-west-2"
+    HMPPS_SQS_USE_WEB_TOKEN: "true"
+    SENTRY_DSN: https://5c9e4014e8064f8c846bfbeb1810a32f@o345774.ingest.sentry.io/6360608
     MAINTENANCE_BANNER_HEADER: "Scheduled maintenance"
     MAINTENANCE_BANNER_BODY: "Consider a recall will be unavailable between 8pm and 11pm on Tuesday 10th February 2025. This is so we can update our database."
     # datetimes must be written in ISO format eg/YYYY-MM-DDTHH:MM:SS
@@ -51,7 +52,6 @@ generic-service:
     MAINTENANCE_PAGE_BODY: Please follow your business continuity procedures to deal with recalls.
     MAINTENANCE_PAGE_START_DATE_TIME: 2026-02-10T20:00:00
     MAINTENANCE_PAGE_END_DATE_TIME: 2026-02-10T23:00:00
-    HMPPS_SQS_USE_WEB_TOKEN: "true"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -69,11 +69,11 @@ generic-service:
     elasticache-redis:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"
+    make-recall-decision-ui-application-insights:
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
     sqs-hmpps-audit-secret:
       AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
       AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
-    make-recall-decision-ui-application-insights:
-      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
 
 generic-prometheus-alerts:
   targetApplication: make-recall-decision-ui
