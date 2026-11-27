@@ -38,4 +38,4 @@ generic-service:
       - probation
 
 generic-prometheus-alerts:
-  alertSeverityOverride: make-recall-decision-prod
+  alertSeverity: make-recall-decision-prod

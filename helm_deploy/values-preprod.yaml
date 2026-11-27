@@ -36,4 +36,4 @@ generic-service:
 
 generic-prometheus-alerts:
   businessHoursOnly: true
-  alertSeverityOverride: make-recall-decision-nonprod
+  alertSeverity: make-recall-decision-nonprod

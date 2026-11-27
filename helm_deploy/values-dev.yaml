@@ -16,6 +16,7 @@ generic-service:
     MANAGE_USERS_API_URL: "https://manage-users-api-dev.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-dev.hmpps.service.justice.gov.uk"
     COMPONENT_API_URL: "https://probation-frontend-components-dev.hmpps.service.justice.gov.uk"
+    SENTRY_ENVIRONMENT: "DEV"
     ENVIRONMENT_NAME: "DEV"
     ENVIRONMENT: "dev"
     FLIPT_SERVER_URL: "https://feature-toggles-dev.hmpps.service.justice.gov.uk/"
@@ -37,4 +38,4 @@ generic-service:
 
 generic-prometheus-alerts:
   businessHoursOnly: true
-  alertSeverityOverride: make-recall-decision-nonprod
+  alertSeverity: make-recall-decision-nonprod
