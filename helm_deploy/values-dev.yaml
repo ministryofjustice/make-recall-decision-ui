@@ -6,9 +6,9 @@ generic-service:
 
   ingress:
     host: consider-a-recall-dev.hmpps.service.justice.gov.uk
-    contextColour: green
 
   env:
+    LOG_LEVEL: "debug"
     INGRESS_URL: "https://consider-a-recall-dev.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
@@ -17,12 +17,15 @@ generic-service:
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-dev.hmpps.service.justice.gov.uk"
     COMPONENT_API_URL: "https://probation-frontend-components-dev.hmpps.service.justice.gov.uk"
     SENTRY_ENVIRONMENT: "DEV"
+    ENVIRONMENT_NAME: "DEV"
     ENVIRONMENT: "dev"
     FLIPT_SERVER_URL: "https://feature-toggles-dev.hmpps.service.justice.gov.uk/"
     FLIPT_NAMESPACE: "consider-a-recall"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
     PPUD_URL: "https://internaltest.ppud.justice.gov.uk"
 
+  scheduledDowntime:
+    enabled: true
 
   allowlist:
     north_shields_user: 194.33.192.1/24
@@ -32,9 +35,6 @@ generic-service:
       - internal
       - prisons # do not remove, the prisons group also covers probation
       - probation
-
-  scheduledDowntime:
-    enabled: true
 
 generic-prometheus-alerts:
   businessHoursOnly: true

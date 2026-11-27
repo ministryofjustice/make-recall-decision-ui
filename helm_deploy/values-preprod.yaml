@@ -1,9 +1,9 @@
 # Per environment values which override defaults in make-recall-decision-ui/values.yaml
 
 generic-service:
+  replicaCount: 2
   ingress:
     host: consider-a-recall-preprod.hmpps.service.justice.gov.uk
-    contextColour: green
 
   env:
     INGRESS_URL: "https://consider-a-recall-preprod.hmpps.service.justice.gov.uk"
@@ -13,12 +13,16 @@ generic-service:
     MANAGE_USERS_API_URL: "https://manage-users-api-preprod.hmpps.service.justice.gov.uk"
     MAKE_RECALL_DECISIONS_AND_DELIUS_API_URL: "https://make-recall-decisions-and-delius-preprod.hmpps.service.justice.gov.uk"
     COMPONENT_API_URL: "https://probation-frontend-components-preprod.hmpps.service.justice.gov.uk"
+    ENVIRONMENT_NAME: "PRE-PRODUCTION"
+    ENVIRONMENT: "preprod"
+    SENTRY_ENVIRONMENT: "PRE-PROD"
     FLIPT_SERVER_URL: "https://feature-toggles-preprod.hmpps.service.justice.gov.uk/"
     FLIPT_NAMESPACE: "consider-a-recall"
-    SENTRY_ENVIRONMENT: "PRE-PROD"
-    ENVIRONMENT: "preprod"
     FEATURE_FLAG_QUERY_PARAMETERS_ENABLED: true
     PPUD_URL: "https://uat.ppud.justice.gov.uk"
+
+  scheduledDowntime:
+    enabled: true
 
   allowlist:
     north_shields_user: 194.33.192.1/24
@@ -29,8 +33,6 @@ generic-service:
       - prisons # do not remove, the prisons group also covers probation
       - probation
 
-  scheduledDowntime:
-    enabled: true
 
 generic-prometheus-alerts:
   businessHoursOnly: true
